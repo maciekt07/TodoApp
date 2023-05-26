@@ -1,5 +1,5 @@
 import { Task, UserProps } from "../types/user";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { AddTaskButton, BackBtn, Container, Header } from "../styles";
 import { AddReaction, ArrowBackIosNew, Edit } from "@mui/icons-material";
@@ -7,6 +7,7 @@ import EmojiPicker, { Emoji } from "emoji-picker-react";
 import { Avatar, Badge, TextField, Typography } from "@mui/material";
 import styled from "@emotion/styled";
 import { DESCRIPTION_MAX_LENGTH, TASK_NAME_MAX_LENGTH } from "../constants";
+import { getFontColorFromHex } from "../utils";
 
 export const AddTask = ({ user, setUser }: UserProps) => {
   const [name, setName] = useState<string>("");
@@ -20,6 +21,10 @@ export const AddTask = ({ user, setUser }: UserProps) => {
   const [descriptionError, setDescriptionError] = useState<string>("");
 
   const n = useNavigate();
+
+  useEffect(() => {
+    document.title = "Todo App - Add Task";
+  }, []);
 
   const handleNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const newName = event.target.value;
@@ -110,6 +115,7 @@ export const AddTask = ({ user, setUser }: UserProps) => {
                 width: "96px",
                 height: "96px",
                 background: color,
+                color: getFontColorFromHex(color),
                 cursor: "pointer",
               }}
             >

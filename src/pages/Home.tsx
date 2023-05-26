@@ -11,6 +11,7 @@ export const Home = ({ user, setUser }: UserProps) => {
   const [completedTasksCount, setCompletedTasksCount] = useState<number>(0);
   useEffect(() => {
     setRandomGreeting(getRandomGreeting());
+    document.title = "Todo App";
   }, []);
 
   const handleDeleteDone = () => {

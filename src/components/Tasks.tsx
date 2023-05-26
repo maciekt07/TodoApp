@@ -225,8 +225,8 @@ export const Tasks = ({ user, setUser }: UserProps) => {
           ))
         ) : (
           <NoTasks>
-            You don't have any tasks yet <br />
-            Click on the plus button to add one
+            <b>You don't have any tasks yet</b> <br />
+            Click on the <b>+</b> button to add one
           </NoTasks>
         )}
 
@@ -324,6 +324,12 @@ const NoTasks = styled.div`
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
+  min-width: 100vw;
+  opacity: 0.9;
+  font-size: 18px;
+  /* @media (max-width: 1024px) {
+    font-size: 16px;
+  } */
 `;
 
 const Container = styled.div`

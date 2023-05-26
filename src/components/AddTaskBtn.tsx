@@ -45,7 +45,7 @@ const Btn = styled.button<{ animate: boolean }>`
   ${({ animate }) =>
     animate &&
     css`
-      animation: ${pulseAnimation} 2s infinite;
+      animation: ${pulseAnimation} 1.3s infinite;
     `}
 
   @media (max-width: 1024px) {
