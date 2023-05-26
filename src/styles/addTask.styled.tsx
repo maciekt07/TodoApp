@@ -83,15 +83,21 @@ export const AddTaskButton = styled.button`
   border: none;
   padding: 18px 48px;
   font-size: 24px;
-  background: #7614ff;
+  background: #b624ff;
   color: #ffffffd8;
   border-radius: 20px;
   font-weight: bold;
   cursor: pointer;
   transition: 0.3s all;
+  margin: 20px;
   width: 400px;
   &:hover {
     box-shadow: 0px 0px 24px 0px #7614ff;
+  }
+  &:disabled {
+    box-shadow: none;
+    cursor: not-allowed;
+    opacity: 0.8;
   }
 `;
 

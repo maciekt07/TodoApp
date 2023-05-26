@@ -14,6 +14,7 @@ import { Task, User } from "../types/user";
 import EmojiPicker, { Emoji } from "emoji-picker-react";
 import styled from "@emotion/styled";
 import { AddReaction, Edit } from "@mui/icons-material";
+import { DESCRIPTION_MAX_LENGTH, TASK_NAME_MAX_LENGTH } from "../constants";
 interface EditTaskProps {
   open: boolean;
   task?: Task;
@@ -31,12 +32,28 @@ export const EditTask = ({
 }: EditTaskProps) => {
   const [editedTask, setEditedTask] = React.useState<Task | undefined>(task);
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
+  const [nameError, setNameError] = useState(false);
+  const [descriptionError, setDescriptionError] = useState(false);
+
   React.useEffect(() => {
     setEditedTask(task);
   }, [task]);
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
+
+    if (name === "name" && value.length > TASK_NAME_MAX_LENGTH) {
+      setNameError(true);
+    } else {
+      setNameError(false);
+    }
+
+    if (name === "description" && value.length > DESCRIPTION_MAX_LENGTH) {
+      setDescriptionError(true);
+    } else {
+      setDescriptionError(false);
+    }
+
     setEditedTask((prevTask) => ({
       ...(prevTask as Task),
       [name]: value,
@@ -44,7 +61,7 @@ export const EditTask = ({
   };
 
   const handleSave = () => {
-    if (editedTask) {
+    if (editedTask && !nameError && !descriptionError) {
       onSave(editedTask);
     }
   };
@@ -91,7 +108,11 @@ export const EditTask = ({
               <Emoji size={64} unified={editedTask?.emoji || ""} />
               )} */}
               {editedTask?.emoji ? (
-                <Emoji size={64} unified={editedTask?.emoji || ""} />
+                <Emoji
+                  size={64}
+                  emojiStyle={user.emojisStyle}
+                  unified={editedTask?.emoji || ""}
+                />
               ) : (
                 <AddReaction sx={{ fontSize: "52px" }} />
               )}
@@ -126,7 +147,11 @@ export const EditTask = ({
           value={editedTask?.name || ""}
           onChange={handleInputChange}
           fullWidth
-          autoFocus
+          error={nameError || editedTask?.name === ""}
+          helperText={
+            (nameError || editedTask?.name === "") &&
+            `Name is required and should be less than or equal to ${TASK_NAME_MAX_LENGTH} characters`
+          }
         />
         <StyledInput
           label="Description"
@@ -137,7 +162,29 @@ export const EditTask = ({
           multiline
           rows={4}
           margin="normal"
+          error={descriptionError}
+          helperText={
+            descriptionError &&
+            `Description is too long (maximum ${DESCRIPTION_MAX_LENGTH} characters)`
+          }
         />
+        <br />
+        <br />
+        <StyledInput
+          label="Deadline date"
+          name="deadline"
+          type="datetime-local"
+          value={
+            editedTask?.deadline
+              ? new Date(editedTask.deadline).toISOString().slice(0, 16)
+              : ""
+          }
+          onChange={handleInputChange}
+          focused
+          fullWidth
+        />
+        <br />
+        <br />
         <Typography>Color:</Typography>
         <ColorPicker
           type="color"

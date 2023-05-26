@@ -72,9 +72,9 @@ export const Tasks = ({ user, setUser }: UserProps) => {
     newName: string,
     newColor: string,
     newEmoji?: string,
-    newDescription?: string
+    newDescription?: string,
+    newDeadline?: Date
   ) => {
-    // Znajdź wybrany task na podstawie taskId i zaktualizuj jego nazwę i opis
     const updatedTasks = user.tasks.map((task) => {
       if (task.id === taskId) {
         return {
@@ -83,11 +83,11 @@ export const Tasks = ({ user, setUser }: UserProps) => {
           color: newColor,
           emoji: newEmoji,
           description: newDescription,
+          deadline: newDeadline,
         };
       }
       return task;
     });
-    // Zaktualizuj użytkownika, przekazując zaktualizowaną tablicę zadan
     setUser({ ...user, tasks: updatedTasks });
   };
   return (
@@ -241,7 +241,8 @@ export const Tasks = ({ user, setUser }: UserProps) => {
               editedTask.name,
               editedTask.color,
               editedTask.emoji || undefined,
-              editedTask.description || undefined
+              editedTask.description || undefined,
+              editedTask.deadline || undefined
             );
             setEditModalOpen(false);
           }}
@@ -303,7 +304,7 @@ const TaskName = styled.h3`
 `;
 
 const TaskDate = styled.p`
-  margin: 0;
+  margin: 6px;
   text-align: right;
   margin-left: auto;
   font-size: 14px;
@@ -334,8 +335,8 @@ const Container = styled.div`
 `;
 
 const TimeLeft = styled.span<{ timeUp: boolean; done: boolean }>`
-  color: ${(props) => props.timeUp && !props.done && "#ff0000"};
-  text-shadow: ${(props) => props.timeUp && !props.done && "0 0 6px #ff000071"};
+  color: ${(props) => props.timeUp && !props.done && "#ff2a23d5"};
+  text-shadow: ${(props) => props.timeUp && !props.done && "0 0 8px #ff2a23d5"};
   transition: 0.3s all;
   font-size: 14px;
   margin: 4px 0;
