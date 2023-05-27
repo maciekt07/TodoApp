@@ -19,7 +19,7 @@ export const DeleteDoneBtn = styled.button`
   cursor: pointer;
   border: none;
   font-weight: bold;
-  bottom: 16px;
+  bottom: 24px;
   width: auto;
   height: 64px;
   font-size: 17px;

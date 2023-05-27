@@ -70,7 +70,7 @@ export const AddTask = ({ user, setUser }: UserProps) => {
       }
 
       const newTask: Task = {
-        id: new Date().getTime(), // Generate a unique ID for the new task
+        id: new Date().getTime() + Math.random(), // Generate a unique ID for the new task
         done: false,
         pinned: false,
         name,
@@ -91,7 +91,7 @@ export const AddTask = ({ user, setUser }: UserProps) => {
         <BackBtn onClick={() => n("/")}>
           <ArrowBackIosNew /> &nbsp; Back
         </BackBtn>
-        <Header>Add new task</Header>
+        <Header>Add New Task</Header>
         <EmojiContaier>
           <Badge
             overlap="circular"
@@ -206,6 +206,7 @@ const StyledInput = styled(TextField)`
   margin: 12px;
   .MuiOutlinedInput-root {
     border-radius: 16px;
+    transition: 0.3s all;
     width: 400px;
     color: white;
   }
@@ -217,8 +218,7 @@ const ColorPicker = styled.input`
   border-radius: 8px;
   border: none;
   cursor: pointer;
-  background-color: #ffffff;
-
+  background-color: #ffffff3e;
   &::-webkit-color-swatch {
     border-radius: 100px;
     border: none;

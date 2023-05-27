@@ -11,7 +11,17 @@ import {
   MoreVert,
   PushPin,
 } from "@mui/icons-material";
-import { Divider, IconButton, Menu, MenuItem } from "@mui/material";
+import {
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  Divider,
+  IconButton,
+  Menu,
+  MenuItem,
+} from "@mui/material";
 import { Emoji } from "emoji-picker-react";
 import { EditTask } from "./EditTask";
 
@@ -19,6 +29,8 @@ export const Tasks = ({ user, setUser }: UserProps) => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [selectedTaskId, setSelectedTaskId] = useState<number | null>(null);
   const open = Boolean(anchorEl);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+
   const handleClick = (
     event: React.MouseEvent<HTMLButtonElement>,
     taskId: number
@@ -57,13 +69,23 @@ export const Tasks = ({ user, setUser }: UserProps) => {
       setUser({ ...user, tasks: updatedTasks });
     }
   };
+
   const handleDeleteTask = () => {
+    if (selectedTaskId) {
+      setDeleteDialogOpen(true);
+    }
+  };
+  const confirmDeleteTask = () => {
     if (selectedTaskId) {
       const updatedTasks = user.tasks.filter(
         (task) => task.id !== selectedTaskId
       );
       setUser({ ...user, tasks: updatedTasks });
+      setDeleteDialogOpen(false);
     }
+  };
+  const cancelDeleteTask = () => {
+    setDeleteDialogOpen(false);
   };
   const [editModalOpen, setEditModalOpen] = useState(false);
 
@@ -159,6 +181,7 @@ export const Tasks = ({ user, setUser }: UserProps) => {
               >
                 <MoreVert />
               </IconButton>
+
               <Menu
                 id="task-menu"
                 anchorEl={anchorEl}
@@ -225,8 +248,9 @@ export const Tasks = ({ user, setUser }: UserProps) => {
           ))
         ) : (
           <NoTasks>
-            <b>You don't have any tasks yet</b> <br />
-            Click on the <b>+</b> button to add one
+            <b>You don't have any tasks yet</b>
+            <br />
+            Click on the <b>+</b> button to add one <br />
           </NoTasks>
         )}
 
@@ -248,7 +272,39 @@ export const Tasks = ({ user, setUser }: UserProps) => {
           }}
         />
       </Container>
-
+      <Dialog
+        open={deleteDialogOpen}
+        onClose={cancelDeleteTask}
+        PaperProps={{
+          style: {
+            borderRadius: "24px",
+            padding: "10px",
+            // border: `6px solid ${
+            //   user.tasks.find((task) => task.id === selectedTaskId)?.color
+            // }`,
+          },
+        }}
+      >
+        <DialogTitle>Are you sure you want to delete the task?</DialogTitle>
+        <DialogContent>
+          <p>
+            <b>Task Name:</b>{" "}
+            {user.tasks.find((task) => task.id === selectedTaskId)?.name}
+          </p>
+          <p>
+            <b>Task Description:</b>{" "}
+            {user.tasks.find((task) => task.id === selectedTaskId)?.description}
+          </p>
+        </DialogContent>
+        <DialogActions>
+          <DialogBtn onClick={cancelDeleteTask} color="primary">
+            Cancel
+          </DialogBtn>
+          <DialogBtn onClick={confirmDeleteTask} color="error">
+            Delete
+          </DialogBtn>
+        </DialogActions>
+      </Dialog>
       <div style={{ paddingTop: "100px" }} />
     </>
   );
@@ -266,8 +322,8 @@ const TaskContainer = styled.div<{
   background-color: ${(props) => props.backgroundColor};
   opacity: ${(props) => (props.done ? 0.7 : 1)};
   color: ${(props) => props.color};
-  border: ${(props) =>
-    props.done ? "4px solid #00ff0d" : "4px solid transparent"};
+  border-left: ${(props) =>
+    props.done ? "6px solid #00ff0d" : "6px solid transparent"};
   padding: 16px;
   border-radius: 20px;
 `;
@@ -327,6 +383,7 @@ const NoTasks = styled.div`
   min-width: 100vw;
   opacity: 0.9;
   font-size: 18px;
+
   /* @media (max-width: 1024px) {
     font-size: 16px;
   } */
@@ -368,4 +425,11 @@ const StyledMenuItem = styled(MenuItem)`
   &:hover {
     background-color: #f0f0f0;
   }
+`;
+
+const DialogBtn = styled(Button)`
+  padding: 10px 16px;
+  border-radius: 12px;
+  font-size: 16px;
+  margin: 8px;
 `;

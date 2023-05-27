@@ -245,9 +245,4 @@ const ColorPicker = styled.input`
     border-radius: 100px;
     border: none;
   }
-
-  /* &::-moz-color-swatch {
-    border-radius: 50%;
-    border: none;
-  } */
 `;

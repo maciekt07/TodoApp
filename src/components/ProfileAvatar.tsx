@@ -1,6 +1,11 @@
 import { useState } from "react";
 import {
   Avatar,
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
   Divider,
   IconButton,
   Menu,
@@ -17,11 +22,25 @@ export const ProfileAvatar = ({ user, setUser }: UserProps) => {
   const n = useNavigate();
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
+  const [logoutConfirmationOpen, setLogoutConfirmationOpen] = useState(false);
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
   };
   const handleClose = () => {
     setAnchorEl(null);
+  };
+  const handleLogoutConfirmationOpen = () => {
+    setLogoutConfirmationOpen(true);
+    setAnchorEl(null);
+  };
+
+  const handleLogoutConfirmationClose = () => {
+    setLogoutConfirmationOpen(false);
+  };
+
+  const handleLogout = () => {
+    setUser(defaultUser);
+    handleLogoutConfirmationClose();
   };
   return (
     <Container>
@@ -39,8 +58,6 @@ export const ProfileAvatar = ({ user, setUser }: UserProps) => {
               height: "48px",
               background: "#8e8e8e",
               transition: ".2s all",
-
-              // "&:hover": { transform: "scale(1.05)" },
             }}
           />
         </IconButton>
@@ -67,12 +84,34 @@ export const ProfileAvatar = ({ user, setUser }: UserProps) => {
         </StyledMenuItem>
         <Divider />
         <StyledMenuItem
-          onClick={() => setUser(defaultUser)}
+          onClick={handleLogoutConfirmationOpen}
           sx={{ color: "#ff4040" }}
         >
           <Logout /> &nbsp; Logout
         </StyledMenuItem>
       </Menu>
+
+      <Dialog
+        open={logoutConfirmationOpen}
+        onClose={handleLogoutConfirmationClose}
+        PaperProps={{
+          style: {
+            borderRadius: "24px",
+            padding: "10px",
+          },
+        }}
+      >
+        <DialogTitle>Logout Confirmation</DialogTitle>
+        <DialogContent>
+          Are you sure you want to logout? <b>Your tasks will not be saved.</b>
+        </DialogContent>
+        <DialogActions>
+          <DialogBtn onClick={handleLogoutConfirmationClose}>Cancel</DialogBtn>
+          <DialogBtn onClick={handleLogout} color="error">
+            Logout
+          </DialogBtn>
+        </DialogActions>
+      </Dialog>
     </Container>
   );
 };
@@ -93,4 +132,10 @@ const StyledMenuItem = styled(MenuItem)`
   &:hover {
     background-color: #f0f0f0;
   }
+`;
+const DialogBtn = styled(Button)`
+  padding: 8px 12px;
+  border-radius: 12px;
+  font-size: 16px;
+  margin: 8px;
 `;

@@ -14,15 +14,15 @@ export const AddTaskBtn = ({ animate }: { animate: boolean }) => {
 
 const pulseAnimation = keyframes`
   0% {
-    /* transform: scale(0.95); */
+    transform: scale(0.95);
     box-shadow: 0 0 0 0 rgba(182, 36, 255, 0.7);
   }
   70% {
-    /* transform: scale(1); */
+    transform: scale(1);
     box-shadow: 0 0 0 12px rgba(182, 36, 255, 0);
   }
   100% {
-    /* transform: scale(0.95); */
+    transform: scale(0.95);
     box-shadow: 0 0 0 0 rgba(182, 36, 255, 0);
   }
 `;
@@ -34,7 +34,7 @@ const Btn = styled.button<{ animate: boolean }>`
   align-items: center;
   justify-content: center;
   position: fixed;
-  bottom: 16px;
+  bottom: 24px;
   width: 64px;
   height: 64px;
   border-radius: 100%;
@@ -45,10 +45,10 @@ const Btn = styled.button<{ animate: boolean }>`
   ${({ animate }) =>
     animate &&
     css`
-      animation: ${pulseAnimation} 1.3s infinite;
+      animation: ${pulseAnimation} 1.2s infinite;
     `}
 
   @media (max-width: 1024px) {
-    right: 16px;
+    right: 24px;
   }
 `;

@@ -8,11 +8,8 @@ export const MuiTheme = createTheme({
     primary: {
       main: "#b624ff",
     },
-    // secondary: {
-    //   main: ,
-    // },
-    // error: {
-    //   main: ,
-    // },
+    error: {
+      main: "#ff3131",
+    },
   },
 });

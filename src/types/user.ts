@@ -3,6 +3,7 @@ import { EmojiStyle } from "emoji-picker-react";
 export interface User {
   name: string | null;
   createdAt: Date;
+  profilePicture: string | null;
   emojisStyle: EmojiStyle;
   tasks: Task[];
 }

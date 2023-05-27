@@ -6,7 +6,7 @@ export const calculateDateDifference = (date: Date): string => {
   const differenceDays = Math.floor(difference / (1000 * 60 * 60 * 24)) + 1;
 
   if (date < currentDate) {
-    return "You failed to complete the task on time";
+    return "Task not completed on time";
   } else if (targetDay === currentDay) {
     return "Today";
   } else if (targetDay === currentDay + 1) {
