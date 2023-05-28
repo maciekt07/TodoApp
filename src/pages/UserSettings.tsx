@@ -119,7 +119,7 @@ export const UserSettings = ({ user, setUser }: UserProps) => {
         <Button
           color="error"
           variant="outlined"
-          sx={{ padding: "8px 20px", borderRadius: "14px" }}
+          sx={{ padding: "8px 20px", borderRadius: "14px", marginTop: "8px" }}
         >
           <Logout />
           &nbsp; Logout

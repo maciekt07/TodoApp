@@ -35,10 +35,10 @@ const globalStyles = css`
     background-size: cover;
   }
   body {
-    margin: 0 16vw;
+    margin: 8px 16vw;
 
     @media (max-width: 1024px) {
-      margin: 0 16px;
+      margin: 20px;
     }
   }
   .MuiDialog-container {
