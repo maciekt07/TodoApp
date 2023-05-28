@@ -87,11 +87,12 @@ export const AddTask = ({ user, setUser }: UserProps) => {
 
   return (
     <>
+      <Header>Add New Task</Header>
       <Container>
         <BackBtn onClick={() => n("/")}>
           <ArrowBackIosNew /> &nbsp; Back
         </BackBtn>
-        <Header>Add New Task</Header>
+
         <EmojiContaier>
           <Badge
             overlap="circular"

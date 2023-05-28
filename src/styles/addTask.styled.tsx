@@ -10,6 +10,7 @@ export const Container = styled.div`
 export const Header = styled.h2`
   font-size: 28px;
   margin-bottom: 64px;
+  text-align: center;
 `;
 
 export const BackBtn = styled.button`
