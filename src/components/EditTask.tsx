@@ -170,15 +170,12 @@ export const EditTask = ({
         />
         <br />
         <br />
+
         <StyledInput
           label="Deadline date"
           name="deadline"
           type="datetime-local"
-          value={
-            editedTask?.deadline
-              ? new Date(editedTask.deadline).toISOString().slice(0, 16)
-              : ""
-          }
+          value={editedTask?.deadline || ""}
           onChange={handleInputChange}
           focused
           fullWidth
