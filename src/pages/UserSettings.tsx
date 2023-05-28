@@ -2,13 +2,15 @@ import {
   Avatar,
   Badge,
   Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
   FormControl,
   FormHelperText,
-  InputLabel,
   MenuItem,
   Select,
   TextField,
-  Typography,
 } from "@mui/material";
 import { UserProps } from "../types/user";
 import { EmojiStyle } from "emoji-picker-react";
@@ -16,16 +18,18 @@ import { useState } from "react";
 import styled from "@emotion/styled";
 import {
   AddAPhoto,
-  AddPhotoAlternate,
   ArrowBackIosNew,
+  Delete,
   Logout,
-  Photo,
 } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
+import { PROFILE_PICTURE_MAX_LENGTH } from "../constants";
 
 export const UserSettings = ({ user, setUser }: UserProps) => {
   const n = useNavigate();
-  const [name, setName] = useState("");
+  const [name, setName] = useState<string>("");
+  const [profilePictureURL, setProfilePictureURL] = useState<string>("");
+  const [openChangeImage, setOpenChangeImage] = useState<boolean>(false);
   const emojiStyles = [
     { label: "Apple", style: EmojiStyle.APPLE },
     { label: "Facebook, Messenger", style: EmojiStyle.FACEBOOK },
@@ -43,6 +47,12 @@ export const UserSettings = ({ user, setUser }: UserProps) => {
     setName("");
   };
 
+  const handleOpenImageDialog = () => {
+    setOpenChangeImage(true);
+  };
+  const handleCloseImageDialog = () => {
+    setOpenChangeImage(false);
+  };
   return (
     <>
       <BackBtn onClick={() => n("/")}>
@@ -55,6 +65,7 @@ export const UserSettings = ({ user, setUser }: UserProps) => {
           anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
           badgeContent={
             <Avatar
+              onClick={handleOpenImageDialog}
               sx={{
                 background: "#9c9c9c81",
                 backdropFilter: "blur(6px)",
@@ -66,6 +77,12 @@ export const UserSettings = ({ user, setUser }: UserProps) => {
           }
         >
           <Avatar
+            onClick={handleOpenImageDialog}
+            src={user.profilePicture || ""}
+            onError={() => {
+              setUser({ ...user, profilePicture: null });
+              console.error("Error in profile picture URL");
+            }}
             sx={{
               width: "96px",
               height: "96px",
@@ -108,6 +125,59 @@ export const UserSettings = ({ user, setUser }: UserProps) => {
           &nbsp; Logout
         </Button>
       </Container>
+      <Dialog
+        open={openChangeImage}
+        onClose={handleCloseImageDialog}
+        PaperProps={{
+          style: { borderRadius: "24px", padding: "12px" },
+        }}
+      >
+        <DialogTitle>Change Profile Picture</DialogTitle>
+        <DialogContent>
+          <StyledInput
+            label="Link to profile picture"
+            sx={{ margin: "8px 0" }}
+            value={profilePictureURL}
+            error={profilePictureURL.length > PROFILE_PICTURE_MAX_LENGTH}
+            helperText={
+              profilePictureURL.length > PROFILE_PICTURE_MAX_LENGTH
+                ? `URL is too long maximum ${PROFILE_PICTURE_MAX_LENGTH} characters`
+                : ""
+            }
+            onChange={(e) => {
+              setProfilePictureURL(e.target.value);
+            }}
+          />
+          <br />
+          <Button
+            onClick={() => {
+              handleCloseImageDialog();
+              setUser({ ...user, profilePicture: null });
+            }}
+            color="error"
+            variant="outlined"
+            sx={{ margin: "16px 0", padding: "8px 18px", borderRadius: "12px" }}
+          >
+            <Delete /> &nbsp; Delete Image
+          </Button>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseImageDialog}>Cancel</Button>
+          <Button
+            onClick={() => {
+              if (
+                profilePictureURL.length <= PROFILE_PICTURE_MAX_LENGTH &&
+                profilePictureURL.startsWith("https://")
+              ) {
+                handleCloseImageDialog();
+                setUser({ ...user, profilePicture: profilePictureURL });
+              }
+            }}
+          >
+            Save
+          </Button>
+        </DialogActions>
+      </Dialog>
     </>
   );
 };
@@ -175,5 +245,6 @@ const UserName = styled.span`
 
 const CreatedAtDate = styled.span`
   font-style: italic;
+  font-weight: 300;
   opacity: 0.8;
 `;

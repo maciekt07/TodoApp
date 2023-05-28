@@ -53,6 +53,11 @@ export const ProfileAvatar = ({ user, setUser }: UserProps) => {
           onClick={handleClick}
         >
           <Avatar
+            src={user.profilePicture || ""}
+            onError={() => {
+              setUser({ ...user, profilePicture: null });
+              console.error("Error in profile picture URL");
+            }}
             sx={{
               width: "48px",
               height: "48px",

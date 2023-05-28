@@ -162,6 +162,8 @@ export const AddTask = ({ user, setUser }: UserProps) => {
           multiline
           rows={4}
           focused
+          error={descriptionError !== ""}
+          helperText={descriptionError}
         />
         <StyledInput
           label="Task Deadline (optional)"
@@ -171,8 +173,6 @@ export const AddTask = ({ user, setUser }: UserProps) => {
           value={deadline}
           onChange={handleDeadlineChange}
           focused
-          error={descriptionError !== ""}
-          helperText={descriptionError}
         />
         <Typography>Color</Typography>
         <ColorPicker type="color" value={color} onChange={handleColorChange} />

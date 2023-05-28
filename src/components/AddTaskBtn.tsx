@@ -41,7 +41,7 @@ const Btn = styled.button<{ animate: boolean }>`
   background-color: #b624ff;
   color: white;
   right: 16vw;
-  /* box-shadow: 0px 0px 20px 0px #b624ff; */
+  box-shadow: 0px 0px 20px 0px #b624ff;
   ${({ animate }) =>
     animate &&
     css`

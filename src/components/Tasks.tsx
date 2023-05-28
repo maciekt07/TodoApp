@@ -2,9 +2,14 @@ import { Task, UserProps } from "../types/user";
 import { useState } from "react";
 
 import styled from "@emotion/styled";
-import { calculateDateDifference, getFontColorFromHex } from "../utils";
+import {
+  calculateDateDifference,
+  formatDate,
+  getFontColorFromHex,
+} from "../utils";
 import {
   Alarm,
+  ContentCopy,
   Delete,
   Done,
   Edit,
@@ -112,6 +117,24 @@ export const Tasks = ({ user, setUser }: UserProps) => {
     });
     setUser({ ...user, tasks: updatedTasks });
   };
+  const handleDuplicateTask = () => {
+    if (selectedTaskId) {
+      setAnchorEl(null);
+      const selectedTask = user.tasks.find(
+        (task) => task.id === selectedTaskId
+      );
+      if (selectedTask) {
+        const duplicatedTask = {
+          ...selectedTask,
+          id: new Date().getTime() + Math.random(),
+          date: new Date(), // Set current date
+        };
+        const updatedTasks = [...user.tasks, duplicatedTask];
+        setUser({ ...user, tasks: updatedTasks });
+      }
+    }
+  };
+
   return (
     <>
       <Container>
@@ -126,9 +149,10 @@ export const Tasks = ({ user, setUser }: UserProps) => {
               {task.emoji || task.done ? (
                 <EmojiContainer color={getFontColorFromHex(task.color)}>
                   {task.done ? (
-                    <Done />
+                    <Done fontSize="large" />
                   ) : (
                     <Emoji
+                      size={46}
                       unified={task.emoji || ""}
                       emojiStyle={user.emojisStyle}
                     />
@@ -145,12 +169,14 @@ export const Tasks = ({ user, setUser }: UserProps) => {
                   {task.name}
 
                   <TaskDate>
-                    {new Date(task.date).toLocaleDateString()}
+                    {/* {new Date(task.date).toLocaleDateString()}
                     {" • "}
-                    {new Date(task.date).toLocaleTimeString()}
+                    {new Date(task.date).toLocaleTimeString()} */}
+                    {formatDate(new Date(task.date))}
                   </TaskDate>
                 </TaskName>
                 <TaskDescription>{task.description}</TaskDescription>
+
                 {task.deadline && (
                   <TimeLeft
                     done={task.done}
@@ -218,8 +244,8 @@ export const Tasks = ({ user, setUser }: UserProps) => {
                 >
                   <PushPin /> &nbsp;{" "}
                   {user.tasks.find((task) => task.id === selectedTaskId)?.pinned
-                    ? "Unpin task"
-                    : "Pin task"}
+                    ? "Unpin"
+                    : "Pin"}
                 </StyledMenuItem>
 
                 <Divider />
@@ -229,9 +255,12 @@ export const Tasks = ({ user, setUser }: UserProps) => {
                     setEditModalOpen(true);
                   }}
                 >
-                  <Edit /> &nbsp; Edit task
+                  <Edit /> &nbsp; Edit
                 </StyledMenuItem>
-
+                <StyledMenuItem onClick={handleDuplicateTask}>
+                  <ContentCopy /> &nbsp; Duplicate
+                </StyledMenuItem>
+                <Divider />
                 <StyledMenuItem
                   sx={{
                     color: "#ff4040",
@@ -277,9 +306,12 @@ export const Tasks = ({ user, setUser }: UserProps) => {
         onClose={cancelDeleteTask}
         PaperProps={{
           style: {
-            borderRadius: "24px",
+            borderRadius: "28px",
             padding: "10px",
             // border: `6px solid ${
+            //   user.tasks.find((task) => task.id === selectedTaskId)?.color
+            // }`,
+            // boxShadow: `0 0 8px 0 ${
             //   user.tasks.find((task) => task.id === selectedTaskId)?.color
             // }`,
           },
@@ -287,6 +319,23 @@ export const Tasks = ({ user, setUser }: UserProps) => {
       >
         <DialogTitle>Are you sure you want to delete the task?</DialogTitle>
         <DialogContent>
+          <p
+            style={{
+              display: "flex",
+              justifyContent: "left",
+              alignItems: "center",
+              gap: "6px",
+            }}
+          >
+            <b>Emoji:</b>{" "}
+            <Emoji
+              size={28}
+              unified={
+                user.tasks.find((task) => task.id === selectedTaskId)?.emoji ||
+                ""
+              }
+            />
+          </p>
           <p>
             <b>Task Name:</b>{" "}
             {user.tasks.find((task) => task.id === selectedTaskId)?.name}
@@ -336,11 +385,11 @@ const EmojiContainer = styled.span<{ color: string }>`
   justify-content: center;
   background-color: ${(props) =>
     props.color === "#1A1A1A" ? "#4b4b4b6e" : "#dddddd9d"};
-  font-size: 28px;
+  font-size: 32px;
   padding: 12px;
-  width: 38px;
-  height: 38px;
-  border-radius: 20px;
+  width: 42px;
+  height: 42px;
+  border-radius: 18px;
   overflow: hidden;
   text-overflow: ellipsis;
 `;
@@ -357,21 +406,30 @@ const TaskName = styled.h3`
   display: flex;
   align-items: center;
   font-size: 20px;
+  /* @media (max-width: 600px) {
+    flex-direction: column;
+    align-items: flex-start;
+  } */
 `;
 
 const TaskDate = styled.p`
-  margin: 6px;
+  margin: 0 6px;
   text-align: right;
   margin-left: auto;
   font-size: 14px;
   font-style: italic;
-  font-weight: lighter;
-  opacity: 0.9;
+  font-weight: 300;
+  opacity: 0.8;
+  /* @media (max-width: 600px) {
+    margin-left: 0;
+    margin-top: 4px;
+    text-align: left;
+  } */
 `;
 
 const TaskDescription = styled.p`
   margin: 0;
-  font-size: 16px;
+  font-size: 18px;
 `;
 
 const NoTasks = styled.div`
@@ -399,11 +457,12 @@ const Container = styled.div`
 
 const TimeLeft = styled.span<{ timeUp: boolean; done: boolean }>`
   color: ${(props) => props.timeUp && !props.done && "#ff2a23d5"};
-  text-shadow: ${(props) => props.timeUp && !props.done && "0 0 8px #ff2a23d5"};
+  text-shadow: ${(props) =>
+    props.timeUp && !props.done ? "0 0 8px #ff2a23d5" : "none"};
   transition: 0.3s all;
   font-size: 14px;
-  margin: 4px 0;
-  font-weight: 300;
+  margin: 6px 0;
+  font-weight: 500;
   font-style: italic;
   display: flex;
   opacity: ${(props) => (props.timeUp ? 1 : 0.9)};
@@ -413,7 +472,7 @@ const Pinned = styled.div`
   display: flex;
   justify-content: left;
   align-items: center;
-  opacity: 0.7;
+  opacity: 0.8;
   font-size: 16px;
 `;
 const StyledMenuItem = styled(MenuItem)`
