@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 export const AddTaskBtn = ({ animate }: { animate: boolean }) => {
   const n = useNavigate();
   return (
-    <Btn animate={animate} onClick={() => n("add")}>
+    <Btn animate={animate} onClick={() => n("add")} aria-label="Add Task">
       <Add fontSize="large" />
     </Btn>
   );

@@ -195,7 +195,7 @@ export const Tasks = ({ user, setUser }: UserProps) => {
                 )}
               </TaskInfo>
               <IconButton
-                id="more-button"
+                aria-label="Task Menu"
                 aria-controls={open ? "task-menu" : undefined}
                 aria-haspopup="true"
                 aria-expanded={open ? "true" : undefined}
@@ -419,7 +419,7 @@ const TaskDate = styled.p`
   font-size: 14px;
   font-style: italic;
   font-weight: 300;
-  opacity: 0.8;
+  opacity: 0.9;
   /* @media (max-width: 600px) {
     margin-left: 0;
     margin-top: 4px;
