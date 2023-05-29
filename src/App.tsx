@@ -7,6 +7,7 @@ import { AddTask } from "./pages/AddTask";
 import { GlobalStyles, MuiTheme } from "./styles";
 import { UserSettings } from "./pages/UserSettings";
 import { ThemeProvider } from "@mui/material";
+import { NotFount } from "./pages/NotFount";
 
 function App() {
   const [user, setUser] = useStorageState<User>(defaultUser, "user");
@@ -25,6 +26,7 @@ function App() {
             path="/user"
             element={<UserSettings user={user} setUser={setUser} />}
           />
+          <Route path="*" element={<NotFount />} />
         </Routes>
       </ThemeProvider>
     </>
