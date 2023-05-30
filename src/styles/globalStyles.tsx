@@ -1,7 +1,8 @@
-import { Global, css } from "@emotion/react";
+import { Global, css, keyframes } from "@emotion/react";
 const globalStyles = css`
   * {
     font-family: "Poppins", sans-serif !important;
+    -webkit-tap-highlight-color: transparent;
     &::selection {
       background-color: #9a52ff;
     }
@@ -36,7 +37,7 @@ const globalStyles = css`
   }
   body {
     margin: 8px 16vw;
-
+    touch-action: manipulation;
     @media (max-width: 1024px) {
       margin: 20px;
     }
@@ -46,3 +47,30 @@ const globalStyles = css`
   }
 `;
 export const GlobalStyles = () => <Global styles={globalStyles} />;
+
+export const fadeInLeft = keyframes`
+from {
+  opacity: 0;
+  transform: translateX(-40px)
+}
+to {
+  opacity: 1;
+  transform: translateX(0px)
+  }
+`;
+export const fadeIn = keyframes`
+from {
+  opacity: 0;
+}
+to {
+  opacity: 1;
+  }
+`;
+export const slideIn = keyframes`
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(0);
+  }
+`;

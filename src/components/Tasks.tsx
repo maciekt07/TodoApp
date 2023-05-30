@@ -29,6 +29,7 @@ import {
 } from "@mui/material";
 import { Emoji } from "emoji-picker-react";
 import { EditTask } from "./EditTask";
+import { fadeIn } from "../styles";
 
 export const Tasks = ({ user, setUser }: UserProps) => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
@@ -219,6 +220,8 @@ export const Tasks = ({ user, setUser }: UserProps) => {
                     minWidth: "200px",
                     boxShadow: "none",
                     padding: "2px",
+                    // background: "#ffffffa9",
+                    // backdropFilter: "blur(4px)",
                   },
                 }}
                 MenuListProps={{
@@ -375,6 +378,7 @@ const TaskContainer = styled.div<{
     props.done ? "6px solid #00ff0d" : "6px solid transparent"};
   padding: 16px;
   border-radius: 20px;
+  animation: ${fadeIn} 0.5s ease-in;
 `;
 
 const EmojiContainer = styled.span<{ color: string }>`

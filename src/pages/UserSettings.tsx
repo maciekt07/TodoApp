@@ -23,7 +23,7 @@ import {
   Logout,
 } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
-import { PROFILE_PICTURE_MAX_LENGTH } from "../constants";
+import { PROFILE_PICTURE_MAX_LENGTH, USER_NAME_MAX_LENGTH } from "../constants";
 
 export const UserSettings = ({ user, setUser }: UserProps) => {
   const n = useNavigate();
@@ -112,9 +112,20 @@ export const UserSettings = ({ user, setUser }: UserProps) => {
           label={user.name === null ? "Add Name" : "Change Name"}
           value={name}
           onChange={(e) => setName(e.target.value)}
+          error={name.length > USER_NAME_MAX_LENGTH}
+          helperText={
+            name.length > USER_NAME_MAX_LENGTH
+              ? `Name is too long maximum ${USER_NAME_MAX_LENGTH} characters`
+              : ""
+          }
         />
         {name !== "" && name !== user.name && (
-          <SaveBtn onClick={handleSaveName}>Save name</SaveBtn>
+          <SaveBtn
+            onClick={handleSaveName}
+            disabled={name.length > USER_NAME_MAX_LENGTH}
+          >
+            Save name
+          </SaveBtn>
         )}
         <Button
           color="error"
@@ -184,9 +195,8 @@ export const UserSettings = ({ user, setUser }: UserProps) => {
 
 const Container = styled.div`
   margin: 0 auto;
-  margin-top: 60px;
   max-width: 400px;
-  padding: 85px 10px;
+  padding: 80px 90px;
   border-radius: 50px;
   box-shadow: 0px 4px 50px rgba(0, 0, 0, 0.25);
   background: #f5f5f5;
@@ -198,6 +208,10 @@ const Container = styled.div`
   flex-direction: column;
   align-items: center;
   flex-direction: column;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 `;
 
 const Header = styled.h2`

@@ -1,5 +1,10 @@
-export { GlobalStyles } from "./globalStyles";
-export { GreetingHeader, GreetingText, DeleteDoneBtn } from "./home.styled";
+export { GlobalStyles, fadeInLeft, fadeIn, slideIn } from "./globalStyles";
+export {
+  GreetingHeader,
+  GreetingText,
+  DeleteDoneBtn,
+  TasksCount,
+} from "./home.styled";
 export {
   Container,
   Input,
