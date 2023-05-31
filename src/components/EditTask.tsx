@@ -5,7 +5,6 @@ import {
   DialogContent,
   DialogActions,
   TextField,
-  Button,
   Avatar,
   Badge,
   Typography,
@@ -15,6 +14,7 @@ import EmojiPicker, { Emoji } from "emoji-picker-react";
 import styled from "@emotion/styled";
 import { AddReaction, Edit } from "@mui/icons-material";
 import { DESCRIPTION_MAX_LENGTH, TASK_NAME_MAX_LENGTH } from "../constants";
+import { DialogBtn } from "../styles";
 interface EditTaskProps {
   open: boolean;
   task?: Task;
@@ -170,7 +170,7 @@ export const EditTask = ({
         />
         <br />
         <br />
-
+        {/* FIXME: default date doesnt work (new amazing chrome update) */}
         <StyledInput
           label="Deadline date"
           name="deadline"
@@ -196,17 +196,17 @@ export const EditTask = ({
         />
       </DialogContent>
       <DialogActions>
-        <Btn
+        <DialogBtn
           onClick={() => {
             onClose();
             setEditedTask(task);
           }}
         >
           Cancel
-        </Btn>
-        <Btn onClick={handleSave} color="primary">
+        </DialogBtn>
+        <DialogBtn onClick={handleSave} color="primary">
           Save
-        </Btn>
+        </DialogBtn>
       </DialogActions>
     </Dialog>
   );
@@ -222,13 +222,6 @@ const StyledInput = styled(TextField)`
   & .MuiInputBase-root {
     border-radius: 16px;
   }
-`;
-
-const Btn = styled(Button)`
-  border-radius: 14px;
-  padding: 8px 14px;
-  font-size: 16px;
-  margin: 6px;
 `;
 
 const ColorPicker = styled.input`

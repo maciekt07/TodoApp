@@ -17,7 +17,6 @@ import {
   PushPin,
 } from "@mui/icons-material";
 import {
-  Button,
   Dialog,
   DialogActions,
   DialogContent,
@@ -29,7 +28,7 @@ import {
 } from "@mui/material";
 import { Emoji } from "emoji-picker-react";
 import { EditTask } from "./EditTask";
-import { fadeIn } from "../styles";
+import { DialogBtn, fadeIn } from "../styles";
 
 export const Tasks = ({ user, setUser }: UserProps) => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
@@ -378,7 +377,7 @@ const TaskContainer = styled.div<{
     props.done ? "6px solid #00ff0d" : "6px solid transparent"};
   padding: 16px;
   border-radius: 20px;
-  animation: ${fadeIn} 0.5s ease-in;
+  animation: ${fadeIn} 0.5s ease;
 `;
 
 const EmojiContainer = styled.span<{ color: string }>`
@@ -445,7 +444,6 @@ const NoTasks = styled.div`
   min-width: 100vw;
   opacity: 0.9;
   font-size: 18px;
-
   /* @media (max-width: 1024px) {
     font-size: 16px;
   } */
@@ -488,11 +486,4 @@ const StyledMenuItem = styled(MenuItem)`
   &:hover {
     background-color: #f0f0f0;
   }
-`;
-
-const DialogBtn = styled(Button)`
-  padding: 10px 16px;
-  border-radius: 12px;
-  font-size: 16px;
-  margin: 8px;
 `;

@@ -1,4 +1,6 @@
 import { Global, css, keyframes } from "@emotion/react";
+import styled from "@emotion/styled";
+import { Button } from "@mui/material";
 const globalStyles = css`
   * {
     font-family: "Poppins", sans-serif !important;
@@ -45,8 +47,22 @@ const globalStyles = css`
   .MuiDialog-container {
     backdrop-filter: blur(4px);
   }
+  .MuiPaper-elevation8 {
+    border-radius: 16px !important;
+  }
+  .MuiSelect-select {
+    display: flex !important;
+    gap: 4px;
+  }
 `;
 export const GlobalStyles = () => <Global styles={globalStyles} />;
+
+export const DialogBtn = styled(Button)`
+  padding: 10px 16px;
+  border-radius: 16px;
+  font-size: 16px;
+  margin: 8px;
+`;
 
 export const fadeInLeft = keyframes`
 from {
@@ -62,15 +78,13 @@ export const fadeIn = keyframes`
 from {
   opacity: 0;
 }
-to {
-  opacity: 1;
-  }
+
 `;
 export const slideIn = keyframes`
-  0% {
+  from{
     transform: translateX(-100%);
   }
-  100% {
+  to {
     transform: translateX(0);
   }
 `;

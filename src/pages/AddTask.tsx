@@ -1,13 +1,14 @@
 import { Task, UserProps } from "../types/user";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { AddTaskButton, BackBtn, Container, Header } from "../styles";
-import { AddReaction, ArrowBackIosNew, Edit } from "@mui/icons-material";
+import { AddTaskButton, Container } from "../styles";
+import { AddReaction, Edit } from "@mui/icons-material";
 import EmojiPicker, { Emoji } from "emoji-picker-react";
 import { Avatar, Badge, TextField, Typography } from "@mui/material";
 import styled from "@emotion/styled";
 import { DESCRIPTION_MAX_LENGTH, TASK_NAME_MAX_LENGTH } from "../constants";
 import { getFontColorFromHex } from "../utils";
+import { TopBar } from "../components";
 
 export const AddTask = ({ user, setUser }: UserProps) => {
   const [name, setName] = useState<string>("");
@@ -87,11 +88,12 @@ export const AddTask = ({ user, setUser }: UserProps) => {
 
   return (
     <>
-      <Header>Add New Task</Header>
+      {/* <Header>Add New Task</Header> */}
+      <TopBar title="Add New Task" />
       <Container>
-        <BackBtn onClick={() => n("/")}>
+        {/* <BackBtn onClick={() => n("/")}>
           <ArrowBackIosNew /> &nbsp; Back
-        </BackBtn>
+        </BackBtn> */}
 
         <EmojiContaier>
           <Badge

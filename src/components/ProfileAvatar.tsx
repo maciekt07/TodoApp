@@ -59,8 +59,8 @@ export const ProfileAvatar = ({ user, setUser }: UserProps) => {
               console.error("Error in profile picture URL");
             }}
             sx={{
-              width: "56px",
-              height: "56px",
+              width: "52px",
+              height: "52px",
               background: "#8e8e8e",
               transition: ".2s all",
             }}

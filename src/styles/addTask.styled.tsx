@@ -7,28 +7,6 @@ export const Container = styled.div`
   flex-direction: column;
 `;
 
-export const Header = styled.h2`
-  font-size: 28px;
-  margin-bottom: 64px;
-  text-align: center;
-`;
-
-export const BackBtn = styled.button`
-  position: absolute;
-  top: 20px;
-  left: 20px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-size: 18px;
-  padding: 8px 12px;
-  background-color: transparent;
-  color: #efefef;
-  border: none;
-  border-radius: 12px;
-  cursor: pointer;
-`;
-
 export const Input = styled.input`
   font-size: 24px;
   border: none;

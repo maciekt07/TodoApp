@@ -13,20 +13,15 @@ import {
   TextField,
 } from "@mui/material";
 import { UserProps } from "../types/user";
-import { EmojiStyle } from "emoji-picker-react";
-import { useState } from "react";
+import { Emoji, EmojiStyle } from "emoji-picker-react";
+import { useEffect, useState } from "react";
 import styled from "@emotion/styled";
-import {
-  AddAPhoto,
-  ArrowBackIosNew,
-  Delete,
-  Logout,
-} from "@mui/icons-material";
-import { useNavigate } from "react-router-dom";
+import { AddAPhoto, Delete, Logout } from "@mui/icons-material";
 import { PROFILE_PICTURE_MAX_LENGTH, USER_NAME_MAX_LENGTH } from "../constants";
+import { TopBar } from "../components";
+import { DialogBtn } from "../styles";
 
 export const UserSettings = ({ user, setUser }: UserProps) => {
-  const n = useNavigate();
   const [name, setName] = useState<string>("");
   const [profilePictureURL, setProfilePictureURL] = useState<string>("");
   const [openChangeImage, setOpenChangeImage] = useState<boolean>(false);
@@ -34,9 +29,16 @@ export const UserSettings = ({ user, setUser }: UserProps) => {
     { label: "Apple", style: EmojiStyle.APPLE },
     { label: "Facebook, Messenger", style: EmojiStyle.FACEBOOK },
     { label: "Twitter, Discord", style: EmojiStyle.TWITTER },
-    // { label: "Native", style: EmojiStyle.NATIVE },
     { label: "Google", style: EmojiStyle.GOOGLE },
+    // { label: "Native", style: EmojiStyle.NATIVE },
   ];
+
+  useEffect(() => {
+    document.title = `Todo App - User ${
+      user.name ? "(" + user.name + ")" : ""
+    }`;
+  }, []);
+
   const handleEmojiStyleChange = (event: any) => {
     const selectedEmojiStyle = event.target.value;
     setUser({ ...user, emojisStyle: selectedEmojiStyle });
@@ -55,10 +57,7 @@ export const UserSettings = ({ user, setUser }: UserProps) => {
   };
   return (
     <>
-      <BackBtn onClick={() => n("/")}>
-        <ArrowBackIosNew /> &nbsp; Back
-      </BackBtn>
-      <Header>User Profile</Header>
+      <TopBar title="User Profile" />
       <Container>
         <Badge
           overlap="circular"
@@ -99,10 +98,26 @@ export const UserSettings = ({ user, setUser }: UserProps) => {
           <Select
             value={user.emojisStyle}
             onChange={handleEmojiStyleChange}
-            sx={{ width: "250px", borderRadius: "18px", color: "black" }}
+            sx={{
+              width: "250px",
+              borderRadius: "18px",
+              color: "black",
+            }}
           >
             {emojiStyles.map((style) => (
-              <MenuItem key={style.style} value={style.style}>
+              <MenuItem
+                key={style.style}
+                value={style.style}
+                sx={{
+                  padding: "12px 20px",
+                  borderRadius: "12px",
+                  margin: "8px",
+                  display: "flex",
+                  gap: "4px",
+                }}
+              >
+                <Emoji size={24} unified="1f60e" emojiStyle={style.style} />
+                &nbsp;
                 {style.label}
               </MenuItem>
             ))}
@@ -173,8 +188,8 @@ export const UserSettings = ({ user, setUser }: UserProps) => {
           </Button>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleCloseImageDialog}>Cancel</Button>
-          <Button
+          <DialogBtn onClick={handleCloseImageDialog}>Cancel</DialogBtn>
+          <DialogBtn
             onClick={() => {
               if (
                 profilePictureURL.length <= PROFILE_PICTURE_MAX_LENGTH &&
@@ -186,7 +201,7 @@ export const UserSettings = ({ user, setUser }: UserProps) => {
             }}
           >
             Save
-          </Button>
+          </DialogBtn>
         </DialogActions>
       </Dialog>
     </>
@@ -214,27 +229,6 @@ const Container = styled.div`
   transform: translate(-50%, -50%);
 `;
 
-const Header = styled.h2`
-  font-size: 28px;
-  margin-bottom: 64px;
-  text-align: center;
-`;
-
-const BackBtn = styled.button`
-  position: absolute;
-  top: 20px;
-  left: 20px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-size: 18px;
-  padding: 8px 12px;
-  background-color: transparent;
-  color: #efefef;
-  border: none;
-  border-radius: 12px;
-  cursor: pointer;
-`;
 const StyledInput = styled(TextField)`
   & .MuiInputBase-root {
     border-radius: 16px;
