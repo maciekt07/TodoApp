@@ -101,7 +101,7 @@ export const UserSettings = ({ user, setUser }: UserProps) => {
             value={user.emojisStyle}
             onChange={handleEmojiStyleChange}
             sx={{
-              width: "250px",
+              width: "300px",
               borderRadius: "18px",
               color: "black",
             }}
@@ -151,13 +151,15 @@ export const UserSettings = ({ user, setUser }: UserProps) => {
             display: "flex",
             justifyContent: "center",
             alignItems: "center",
+            gap: "32px",
           }}
         >
           <Typography sx={{ fontWeight: 500 }}>
             Enable Categories &nbsp;<Beta>BETA</Beta>
           </Typography>
-          &nbsp;
+
           <Switch
+            defaultChecked={user.enableCategories}
             onChange={(e) =>
               setUser({ ...user, enableCategories: e.target.checked })
             }
@@ -233,7 +235,7 @@ export const UserSettings = ({ user, setUser }: UserProps) => {
 const Container = styled.div`
   margin: 0 auto;
   max-width: 400px;
-  padding: 80px 90px;
+  padding: 70px 70px;
   border-radius: 50px;
   box-shadow: 0px 4px 50px rgba(0, 0, 0, 0.25);
   background: #f5f5f5;
@@ -254,11 +256,11 @@ const Container = styled.div`
 const StyledInput = styled(TextField)`
   & .MuiInputBase-root {
     border-radius: 16px;
-    width: 250px;
+    width: 300px;
   }
 `;
 const SaveBtn = styled.button`
-  width: 250px;
+  width: 300px;
   border: none;
   background: #b624ff;
   color: white;
@@ -283,7 +285,9 @@ const Beta = styled.span`
   background: #0e8e0e;
   color: #00ff00;
   font-size: 12px;
-  letter-spacing: 0.05em;
-  padding: 2px 4px;
-  border-radius: 4px;
+  letter-spacing: 0.03em;
+  padding: 2px 6px;
+  border-radius: 5px;
+  font-weight: 600;
+  box-shadow: 0 0 4px 0 #0e8e0e91;
 `;

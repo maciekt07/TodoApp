@@ -196,6 +196,7 @@ export const Tasks = ({ user, setUser }: UserProps) => {
                   </TimeLeft>
                 )}
                 {task.category &&
+                  user.enableCategories &&
                   task.category.map((category) => (
                     <div>
                       <Chip
@@ -210,7 +211,6 @@ export const Tasks = ({ user, setUser }: UserProps) => {
                             task.color
                           )}`,
                           margin: "6px 0",
-                          opacity: 0.9,
                         }}
                         avatar={
                           <Avatar

@@ -17,6 +17,9 @@ function App() {
     if (user.categories === undefined) {
       setUser({ ...user, categories: defaultUser.categories });
     }
+    if (user.enableCategories === undefined) {
+      setUser({ ...user, enableCategories: defaultUser.enableCategories });
+    }
   }, []);
   return (
     <>
