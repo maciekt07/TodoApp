@@ -38,6 +38,7 @@ export const Tasks = ({ user, setUser }: UserProps) => {
   const open = Boolean(anchorEl);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
 
+  // Handler for clicking the more options button in a task
   const handleClick = (
     event: React.MouseEvent<HTMLButtonElement>,
     taskId: number
@@ -50,11 +51,13 @@ export const Tasks = ({ user, setUser }: UserProps) => {
     setAnchorEl(null);
   };
   const reorderTasks = (tasks: Task[]): Task[] => {
+    // Reorders tasks by moving pinned tasks to the top
     const pinnedTasks = tasks.filter((task) => task.pinned);
     const unpinnedTasks = tasks.filter((task) => !task.pinned);
     return [...pinnedTasks, ...unpinnedTasks];
   };
   const handleMarkAsDone = () => {
+    // Toggles the "done" property of the selected task
     if (selectedTaskId) {
       const updatedTasks = user.tasks.map((task) => {
         if (task.id === selectedTaskId) {
@@ -66,6 +69,7 @@ export const Tasks = ({ user, setUser }: UserProps) => {
     }
   };
   const handlePin = () => {
+    // Toggles the "pinned" property of the selected task
     if (selectedTaskId) {
       const updatedTasks = user.tasks.map((task) => {
         if (task.id === selectedTaskId) {
@@ -78,11 +82,13 @@ export const Tasks = ({ user, setUser }: UserProps) => {
   };
 
   const handleDeleteTask = () => {
+    // Opens the delete task dialog
     if (selectedTaskId) {
       setDeleteDialogOpen(true);
     }
   };
   const confirmDeleteTask = () => {
+    // Deletes the selected task
     if (selectedTaskId) {
       const updatedTasks = user.tasks.filter(
         (task) => task.id !== selectedTaskId
@@ -92,6 +98,7 @@ export const Tasks = ({ user, setUser }: UserProps) => {
     }
   };
   const cancelDeleteTask = () => {
+    // Cancels the delete task operation
     setDeleteDialogOpen(false);
   };
   const [editModalOpen, setEditModalOpen] = useState(false);
@@ -104,6 +111,7 @@ export const Tasks = ({ user, setUser }: UserProps) => {
     newDescription?: string,
     newDeadline?: Date
   ) => {
+    // Update the selected task with the new values
     const updatedTasks = user.tasks.map((task) => {
       if (task.id === taskId) {
         return {
@@ -117,21 +125,27 @@ export const Tasks = ({ user, setUser }: UserProps) => {
       }
       return task;
     });
+    // Update the user object with the updated tasks
     setUser({ ...user, tasks: updatedTasks });
   };
   const handleDuplicateTask = () => {
     if (selectedTaskId) {
+      // Close the menu
       setAnchorEl(null);
+      // Find the selected task
       const selectedTask = user.tasks.find(
         (task) => task.id === selectedTaskId
       );
       if (selectedTask) {
+        // Create a duplicated task with a new ID and current date
         const duplicatedTask = {
           ...selectedTask,
           id: new Date().getTime() + Math.random(),
-          date: new Date(), // Set current date
+          date: new Date(),
         };
+        // Add the duplicated task to the existing tasks
         const updatedTasks = [...user.tasks, duplicatedTask];
+        // Update the user object with the updated tasks
         setUser({ ...user, tasks: updatedTasks });
       }
     }
@@ -198,19 +212,22 @@ export const Tasks = ({ user, setUser }: UserProps) => {
                 {task.category &&
                   user.enableCategories &&
                   task.category.map((category) => (
-                    <div>
+                    <div key={category.id}>
                       <Chip
-                        key={category.id}
                         label={category.name}
                         size="medium"
                         style={{
                           backgroundColor: category.color,
                           color: getFontColorFromHex(category.color),
+                          boxShadow: `0 0 8px 0 ${category.color}`,
                           fontWeight: "bold",
+                          fontSize: "14px",
                           border: `2px solid ${getFontColorFromHex(
                             task.color
                           )}`,
-                          margin: "6px 0",
+                          margin: "8px 0",
+                          padding: "8px",
+                          opacity: 0.9,
                         }}
                         avatar={
                           <Avatar
@@ -218,7 +235,7 @@ export const Tasks = ({ user, setUser }: UserProps) => {
                             sx={{ background: "transparent" }}
                           >
                             {category.emoji && (
-                              <Emoji size={18} unified={category.emoji} />
+                              <Emoji size={20} unified={category.emoji} />
                             )}
                           </Avatar>
                         }

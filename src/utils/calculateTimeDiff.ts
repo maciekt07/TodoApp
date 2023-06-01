@@ -1,3 +1,8 @@
+/**
+ * Calculates the difference between a given date and the current date.
+ * @param {Date} date - The target date.
+ * @returns {string} - A string indicating the date difference.
+ */
 export const calculateDateDifference = (date: Date): string => {
   const currentDate = new Date();
   const currentDay = currentDate.getDate();

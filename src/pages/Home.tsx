@@ -1,9 +1,10 @@
 import { useState, useEffect } from "react";
 import { AddTaskBtn, ProfileAvatar, Tasks } from "../components";
 import {
-  DeleteDoneBtn,
+  // DeleteDoneBtn,
   GreetingHeader,
   GreetingText,
+  ProgressPercentageContainer,
   TaskCompletionText,
   TaskCountHeader,
   TaskCountTextContainer,
@@ -16,7 +17,7 @@ import {
   getRandomGreeting,
   getTaskCompletionText,
 } from "../utils";
-import { Delete } from "@mui/icons-material";
+// import { Delete } from "@mui/icons-material";
 import { Emoji } from "emoji-picker-react";
 import { Box, CircularProgress, Typography } from "@mui/material";
 
@@ -32,21 +33,17 @@ export const Home = ({ user, setUser }: UserProps) => {
   useEffect(() => {
     setRandomGreeting(getRandomGreeting());
     document.title = "Todo App";
-  }, []);
-
-  useEffect(() => {
-    const count = user.tasks.filter((task) => task.done).length;
-    setCompletedTasksCount(count);
-  }, [user.tasks]);
-
-  useEffect(() => {
     const interval = setInterval(() => {
       setRandomGreeting(getRandomGreeting());
     }, 6000);
 
     return () => clearInterval(interval);
   }, []);
+
   useEffect(() => {
+    const completedCount = user.tasks.filter((task) => task.done).length;
+    setCompletedTasksCount(completedCount);
+
     const today = new Date().setHours(0, 0, 0, 0);
     const count = user.tasks.filter((task) => {
       if (task.deadline) {
@@ -57,12 +54,13 @@ export const Home = ({ user, setUser }: UserProps) => {
     }).length;
     setTasksWithDeadlineTodayCount(count);
   }, [user.tasks]);
-  const handleDeleteDone = () => {
-    setUser((prevUser) => {
-      const updatedTasks = prevUser.tasks.filter((task) => !task.done);
-      return { ...prevUser, tasks: updatedTasks };
-    });
-  };
+
+  // const handleDeleteDone = () => {
+  //   setUser((prevUser) => {
+  //     const updatedTasks = prevUser.tasks.filter((task) => !task.done);
+  //     return { ...prevUser, tasks: updatedTasks };
+  //   });
+  // };
 
   return (
     <>
@@ -86,25 +84,14 @@ export const Home = ({ user, setUser }: UserProps) => {
                   filter: "drop-shadow(0 0 6px #b624ff)",
                 }}
               />
-              <Box
-                sx={{
-                  top: 0,
-                  left: 0,
-                  bottom: 0,
-                  right: 0,
-                  position: "absolute",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                }}
-              >
+              <ProgressPercentageContainer>
                 <Typography
                   variant="caption"
                   component="div"
                   color="white"
                   sx={{ fontSize: "16px" }}
                 >{`${Math.round(completedTaskPercentage)}%`}</Typography>
-              </Box>
+              </ProgressPercentageContainer>
             </Box>
             <TaskCountTextContainer>
               <TaskCountHeader>
@@ -123,11 +110,11 @@ export const Home = ({ user, setUser }: UserProps) => {
         </TasksCountContainer>
       )}
       <Tasks user={user} setUser={setUser} />
-      {user.tasks.some((task) => task.done) && (
+      {/* {user.tasks.some((task) => task.done) && (
         <DeleteDoneBtn onClick={handleDeleteDone}>
           <Delete /> &nbsp; Delete done
         </DeleteDoneBtn>
-      )}
+      )} */}
       <AddTaskBtn animate={user.tasks.length === 0} />
     </>
   );

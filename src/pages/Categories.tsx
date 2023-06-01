@@ -14,6 +14,7 @@ export const Categories = ({ user }: UserProps) => {
   return (
     <>
       <TopBar title="Categories" />
+      <h4 style={{ textAlign: "center" }}>Work in progress</h4>
     </>
   );
 };

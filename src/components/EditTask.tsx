@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   Dialog,
   DialogTitle,
@@ -30,12 +30,12 @@ export const EditTask = ({
   onSave,
   user,
 }: EditTaskProps) => {
-  const [editedTask, setEditedTask] = React.useState<Task | undefined>(task);
-  const [showEmojiPicker, setShowEmojiPicker] = useState(false);
-  const [nameError, setNameError] = useState(false);
-  const [descriptionError, setDescriptionError] = useState(false);
+  const [editedTask, setEditedTask] = useState<Task | undefined>(task);
+  const [showEmojiPicker, setShowEmojiPicker] = useState<boolean>(false);
+  const [nameError, setNameError] = useState<boolean>(false);
+  const [descriptionError, setDescriptionError] = useState<boolean>(false);
 
-  React.useEffect(() => {
+  useEffect(() => {
     setEditedTask(task);
   }, [task]);
 

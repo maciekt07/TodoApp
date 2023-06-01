@@ -22,7 +22,8 @@ export const ProfileAvatar = ({ user, setUser }: UserProps) => {
   const n = useNavigate();
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
-  const [logoutConfirmationOpen, setLogoutConfirmationOpen] = useState(false);
+  const [logoutConfirmationOpen, setLogoutConfirmationOpen] =
+    useState<boolean>(false);
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
   };

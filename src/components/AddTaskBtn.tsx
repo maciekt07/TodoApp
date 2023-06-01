@@ -35,8 +35,8 @@ const Btn = styled.button<{ animate: boolean }>`
   justify-content: center;
   position: fixed;
   bottom: 24px;
-  width: 64px;
-  height: 64px;
+  width: 68px;
+  height: 68px;
   border-radius: 100%;
   background-color: #b624ff;
   color: white;

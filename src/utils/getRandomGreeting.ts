@@ -1,3 +1,7 @@
+/**
+ * Returns a random greeting message to inspire productivity.
+ * @returns {string} A random greeting message.
+ */
 export const getRandomGreeting = (): string => {
   const greetingsText: string[] = [
     "Let's make today count!",

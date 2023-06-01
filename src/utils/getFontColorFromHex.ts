@@ -1,3 +1,8 @@
+/**
+ * Returns the appropriate font color (either black or white) based on the provided background color in hex format.
+ * @param {string} backgroundColor - The background color in hexformat (e.g., "#FFFFFF").
+ * @returns {string} The font color in hex format.
+ */
 export const getFontColorFromHex = (backgroundColor: string): string => {
   const hexColor = backgroundColor.replace("#", "");
   const red = parseInt(hexColor.substr(0, 2), 16);

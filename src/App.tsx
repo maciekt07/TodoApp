@@ -13,6 +13,7 @@ import { Categories } from "./pages/Categories";
 
 function App() {
   const [user, setUser] = useStorageState<User>(defaultUser, "user");
+  // Initialize user properties if they are undefined
   useEffect(() => {
     if (user.categories === undefined) {
       setUser({ ...user, categories: defaultUser.categories });

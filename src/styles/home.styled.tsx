@@ -1,5 +1,6 @@
 import styled from "@emotion/styled";
 import { fadeIn, fadeInLeft } from "./globalStyles";
+import { Box } from "@mui/material";
 
 export const GreetingHeader = styled.div`
   display: flex;
@@ -65,10 +66,22 @@ export const DeleteDoneBtn = styled.button`
   font-weight: bold;
   bottom: 24px;
   width: auto;
-  height: 64px;
+
   font-size: 17px;
   padding: 18px;
   background-color: #ff453f;
   color: white;
   border-radius: 18px;
+  box-shadow: 0 0 6px 0 #ff453fd6;
+`;
+
+export const ProgressPercentageContainer = styled(Box)`
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 `;

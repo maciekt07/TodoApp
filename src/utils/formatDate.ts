@@ -1,41 +1,43 @@
-export function formatDate(date: Date): string {
+export const formatDate = (date: Date): string => {
   const today = new Date();
   const yesterday = new Date(today);
   yesterday.setDate(today.getDate() - 1);
+  const oneDay = 24 * 60 * 60 * 1000; // One day in milliseconds
+  const oneWeek = 7 * oneDay; // One week in milliseconds
 
   if (isSameDay(date, today)) {
-    return `today at ${formatTime(date)}`;
+    return `Today at ${formatTime(date)}`;
   } else if (isSameDay(date, yesterday)) {
-    return `yesterday at ${formatTime(date)}`;
+    return `Yesterday at ${formatTime(date)}`;
+  } else if (date.getTime() > today.getTime() - oneWeek) {
+    return `${getDayOfWeek(date)} ${formatTime(date)}`;
   } else {
-    return formatFullDate(date);
+    return formatDateOnly(date);
   }
-}
+};
 
-function isSameDay(date1: Date, date2: Date): boolean {
+const isSameDay = (date1: Date, date2: Date): boolean => {
   return (
-    date1.getDate() === date2.getDate() &&
+    date1.getFullYear() === date2.getFullYear() &&
     date1.getMonth() === date2.getMonth() &&
-    date1.getFullYear() === date2.getFullYear()
+    date1.getDate() === date2.getDate()
   );
-}
+};
 
-function formatTime(date: Date): string {
+const formatTime = (date: Date): string => {
+  const hours = date.getHours().toString().padStart(2, "0");
+  const minutes = date.getMinutes().toString().padStart(2, "0");
+  return `${hours}:${minutes}`;
+};
+
+const formatDateOnly = (date: Date): string => {
   const options: Intl.DateTimeFormatOptions = {
-    hour: "numeric",
-    minute: "numeric",
-    hour12: false,
+    year: "2-digit",
+    month: "2-digit",
+    day: "2-digit",
   };
+  return date.toLocaleDateString(navigator.language, options);
+};
 
-  return date.toLocaleTimeString([], options);
-}
-
-function formatFullDate(date: Date): string {
-  const options: Intl.DateTimeFormatOptions = {
-    year: "numeric",
-    month: "long",
-    day: "numeric",
-  };
-
-  return date.toLocaleDateString([], options);
-}
+const getDayOfWeek = (date: Date): string =>
+  date.toLocaleDateString(navigator.language, { weekday: "long" });

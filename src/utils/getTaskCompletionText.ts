@@ -1,3 +1,8 @@
+/**
+ * Returns a task completion message based on the completion percentage.
+ * @param {number} completionPercentage - The completion percentage of tasks.
+ * @returns {string} A task completion message.
+ */
 export function getTaskCompletionText(completionPercentage: number): string {
   switch (true) {
     case completionPercentage === 0:

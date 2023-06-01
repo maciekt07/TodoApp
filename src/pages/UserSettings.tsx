@@ -10,6 +10,7 @@ import {
   FormHelperText,
   MenuItem,
   Select,
+  SelectChangeEvent,
   Switch,
   TextField,
   Typography,
@@ -27,7 +28,8 @@ export const UserSettings = ({ user, setUser }: UserProps) => {
   const [name, setName] = useState<string>("");
   const [profilePictureURL, setProfilePictureURL] = useState<string>("");
   const [openChangeImage, setOpenChangeImage] = useState<boolean>(false);
-  const emojiStyles = [
+
+  const emojiStyles: { label: string; style: EmojiStyle }[] = [
     { label: "Apple", style: EmojiStyle.APPLE },
     { label: "Facebook, Messenger", style: EmojiStyle.FACEBOOK },
     { label: "Twitter, Discord", style: EmojiStyle.TWITTER },
@@ -36,13 +38,11 @@ export const UserSettings = ({ user, setUser }: UserProps) => {
   ];
 
   useEffect(() => {
-    document.title = `Todo App - User ${
-      user.name ? "(" + user.name + ")" : ""
-    }`;
+    document.title = `Todo App - User ${user.name ? `(${user.name})` : ""}`;
   }, []);
 
-  const handleEmojiStyleChange = (event: any) => {
-    const selectedEmojiStyle = event.target.value;
+  const handleEmojiStyleChange = (event: SelectChangeEvent<EmojiStyle>) => {
+    const selectedEmojiStyle = event.target.value as EmojiStyle;
     setUser({ ...user, emojisStyle: selectedEmojiStyle });
   };
 
