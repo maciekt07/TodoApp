@@ -50,8 +50,11 @@ const globalStyles = css`
   .MuiPaper-elevation8 {
     border-radius: 16px !important;
   }
+  .MuiSelect-select,
   .MuiSelect-select {
     display: flex !important;
+    justify-content: left;
+    align-items: center;
     gap: 4px;
   }
 `;

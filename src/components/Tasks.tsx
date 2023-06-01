@@ -17,6 +17,8 @@ import {
   PushPin,
 } from "@mui/icons-material";
 import {
+  Avatar,
+  Chip,
   Dialog,
   DialogActions,
   DialogContent,
@@ -193,6 +195,36 @@ export const Tasks = ({ user, setUser }: UserProps) => {
                     )}
                   </TimeLeft>
                 )}
+                {task.category &&
+                  task.category.map((category) => (
+                    <div>
+                      <Chip
+                        key={category.id}
+                        label={category.name}
+                        size="medium"
+                        style={{
+                          backgroundColor: category.color,
+                          color: getFontColorFromHex(category.color),
+                          fontWeight: "bold",
+                          border: `2px solid ${getFontColorFromHex(
+                            task.color
+                          )}`,
+                          margin: "6px 0",
+                          opacity: 0.9,
+                        }}
+                        avatar={
+                          <Avatar
+                            alt={category.name}
+                            sx={{ background: "transparent" }}
+                          >
+                            {category.emoji && (
+                              <Emoji size={18} unified={category.emoji} />
+                            )}
+                          </Avatar>
+                        }
+                      />
+                    </div>
+                  ))}
               </TaskInfo>
               <IconButton
                 aria-label="Task Menu"

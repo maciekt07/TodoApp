@@ -8,10 +8,16 @@ import { GlobalStyles, MuiTheme } from "./styles";
 import { UserSettings } from "./pages/UserSettings";
 import { ThemeProvider } from "@mui/material";
 import { NotFound } from "./pages/NotFound";
+import { useEffect } from "react";
+import { Categories } from "./pages/Categories";
 
 function App() {
   const [user, setUser] = useStorageState<User>(defaultUser, "user");
-
+  useEffect(() => {
+    if (user.categories === undefined) {
+      setUser({ ...user, categories: defaultUser.categories });
+    }
+  }, []);
   return (
     <>
       <ThemeProvider theme={MuiTheme}>
@@ -25,6 +31,10 @@ function App() {
           <Route
             path="/user"
             element={<UserSettings user={user} setUser={setUser} />}
+          />
+          <Route
+            path="/categories"
+            element={<Categories user={user} setUser={setUser} />}
           />
           <Route path="*" element={<NotFound />} />
         </Routes>

@@ -1,10 +1,19 @@
-import { Task, UserProps } from "../types/user";
+import { Category, Task, UserProps } from "../types/user";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { AddTaskButton, Container } from "../styles";
 import { AddReaction, Edit } from "@mui/icons-material";
 import EmojiPicker, { Emoji } from "emoji-picker-react";
-import { Avatar, Badge, TextField, Typography } from "@mui/material";
+import {
+  Avatar,
+  Badge,
+  Button,
+  MenuItem,
+  Select,
+  SelectChangeEvent,
+  TextField,
+  Typography,
+} from "@mui/material";
 import styled from "@emotion/styled";
 import { DESCRIPTION_MAX_LENGTH, TASK_NAME_MAX_LENGTH } from "../constants";
 import { getFontColorFromHex } from "../utils";
@@ -16,6 +25,7 @@ export const AddTask = ({ user, setUser }: UserProps) => {
   const [color, setColor] = useState<string>("#b624ff");
   const [description, setDescription] = useState<string>("");
   const [deadline, setDeadline] = useState<string>("");
+
   const [openEmojiPicker, setOpenEmojiPicker] = useState<boolean>(false);
 
   const [nameError, setNameError] = useState<string>("");
@@ -60,7 +70,15 @@ export const AddTask = ({ user, setUser }: UserProps) => {
   const handleDeadlineChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setDeadline(event.target.value);
   };
+  const [selectedCategory, setSelectedCategory] = useState<Category | null>(
+    null
+  );
 
+  const handleCategoryChange = (event: SelectChangeEvent<unknown>) => {
+    const categoryId = event.target.value;
+    const category = user.categories.find((cat) => cat.id === categoryId);
+    setSelectedCategory(category || null);
+  };
   const handleAddTask = () => {
     if (name !== "") {
       if (
@@ -71,7 +89,7 @@ export const AddTask = ({ user, setUser }: UserProps) => {
       }
 
       const newTask: Task = {
-        id: new Date().getTime() + Math.random(), // Generate a unique ID for the new task
+        id: new Date().getTime() + Math.random(),
         done: false,
         pinned: false,
         name,
@@ -80,6 +98,7 @@ export const AddTask = ({ user, setUser }: UserProps) => {
         color,
         date: new Date(),
         deadline: deadline !== "" ? new Date(deadline) : undefined,
+        category: selectedCategory ? [selectedCategory] : [],
       };
       setUser({ ...user, tasks: [...user.tasks, newTask] });
       n("/");
@@ -88,13 +107,8 @@ export const AddTask = ({ user, setUser }: UserProps) => {
 
   return (
     <>
-      {/* <Header>Add New Task</Header> */}
       <TopBar title="Add New Task" />
       <Container>
-        {/* <BackBtn onClick={() => n("/")}>
-          <ArrowBackIosNew /> &nbsp; Back
-        </BackBtn> */}
-
         <EmojiContaier>
           <Badge
             overlap="circular"
@@ -177,6 +191,53 @@ export const AddTask = ({ user, setUser }: UserProps) => {
           onChange={handleDeadlineChange}
           focused
         />
+        {user.enableCategories && (
+          <>
+            <p>Category (optional)</p>
+            <StyledSelect
+              color="primary"
+              variant="outlined"
+              value={selectedCategory !== null ? selectedCategory.id : "none"}
+              onChange={handleCategoryChange}
+            >
+              <MenuItem value="" disabled>
+                Select a category
+              </MenuItem>
+              <StyledMenu
+                value={[]}
+                sx={{
+                  border: `2px solid black`,
+                }}
+              >
+                None
+              </StyledMenu>
+              {user.categories &&
+                user.categories.map((category) => (
+                  <StyledMenu
+                    key={category.id}
+                    value={category.id}
+                    sx={{
+                      border: `2px solid ${category.color}`,
+                    }}
+                  >
+                    {category.emoji && <Emoji unified={category.emoji} />}{" "}
+                    &nbsp;
+                    {category.name}
+                  </StyledMenu>
+                ))}
+            </StyledSelect>
+            <Button
+              sx={{
+                margin: "8px 0 24px 0 ",
+                padding: "12px 24px",
+                borderRadius: "12px",
+              }}
+              onClick={() => n("/categories")}
+            >
+              <Edit /> &nbsp; Modify Categories
+            </Button>
+          </>
+        )}
         <Typography>Color</Typography>
         <ColorPicker type="color" value={color} onChange={handleColorChange} />
         <AddTaskButton
@@ -214,6 +275,16 @@ const StyledInput = styled(TextField)`
     color: white;
   }
 `;
+
+const StyledSelect = styled(Select)`
+  margin: 12px;
+  border-radius: 16px;
+  transition: 0.3s all;
+  width: 400px;
+  color: white;
+  border: 2px solid #b624ff;
+`;
+
 const ColorPicker = styled.input`
   width: 400px;
   margin: 12px;
@@ -226,4 +297,12 @@ const ColorPicker = styled.input`
     border-radius: 100px;
     border: none;
   }
+`;
+
+const StyledMenu = styled(MenuItem)`
+  padding: 12px 20px;
+  border-radius: 12px;
+  margin: 8px;
+  display: flex;
+  gap: 4px;
 `;

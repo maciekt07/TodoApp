@@ -22,7 +22,7 @@ interface EditTaskProps {
   onSave: (editedTask: Task) => void;
   user: User;
 }
-
+//TODO: add option to change category
 export const EditTask = ({
   open,
   task,

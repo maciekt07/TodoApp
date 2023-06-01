@@ -10,7 +10,9 @@ import {
   FormHelperText,
   MenuItem,
   Select,
+  Switch,
   TextField,
+  Typography,
 } from "@mui/material";
 import { UserProps } from "../types/user";
 import { Emoji, EmojiStyle } from "emoji-picker-react";
@@ -123,6 +125,7 @@ export const UserSettings = ({ user, setUser }: UserProps) => {
             ))}
           </Select>
         </FormControl>
+
         <StyledInput
           label={user.name === null ? "Add Name" : "Change Name"}
           value={name}
@@ -142,6 +145,25 @@ export const UserSettings = ({ user, setUser }: UserProps) => {
             Save name
           </SaveBtn>
         )}
+
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          <Typography sx={{ fontWeight: 500 }}>
+            Enable Categories &nbsp;<Beta>BETA</Beta>
+          </Typography>
+          &nbsp;
+          <Switch
+            onChange={(e) =>
+              setUser({ ...user, enableCategories: e.target.checked })
+            }
+          />
+        </div>
+
         <Button
           color="error"
           variant="outlined"
@@ -255,4 +277,13 @@ const CreatedAtDate = styled.span`
   font-style: italic;
   font-weight: 300;
   opacity: 0.8;
+`;
+
+const Beta = styled.span`
+  background: #0e8e0e;
+  color: #00ff00;
+  font-size: 12px;
+  letter-spacing: 0.05em;
+  padding: 2px 4px;
+  border-radius: 4px;
 `;
