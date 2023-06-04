@@ -109,7 +109,8 @@ export const Tasks = ({ user, setUser }: UserProps) => {
     newColor: string,
     newEmoji?: string,
     newDescription?: string,
-    newDeadline?: Date
+    newDeadline?: Date,
+    newCategory?: any
   ) => {
     // Update the selected task with the new values
     const updatedTasks = user.tasks.map((task) => {
@@ -121,6 +122,7 @@ export const Tasks = ({ user, setUser }: UserProps) => {
           emoji: newEmoji,
           description: newDescription,
           deadline: newDeadline,
+          category: newCategory,
         };
       }
       return task;
@@ -225,7 +227,7 @@ export const Tasks = ({ user, setUser }: UserProps) => {
                           border: `2px solid ${getFontColorFromHex(
                             task.color
                           )}`,
-                          margin: "8px 0",
+                          margin: "6px 0 0 0",
                           padding: "8px",
                           opacity: 0.9,
                         }}
@@ -235,7 +237,11 @@ export const Tasks = ({ user, setUser }: UserProps) => {
                             sx={{ background: "transparent" }}
                           >
                             {category.emoji && (
-                              <Emoji size={20} unified={category.emoji} />
+                              <Emoji
+                                size={20}
+                                unified={category.emoji}
+                                emojiStyle={user.emojisStyle}
+                              />
                             )}
                           </Avatar>
                         }
@@ -267,7 +273,7 @@ export const Tasks = ({ user, setUser }: UserProps) => {
                     borderRadius: "18px",
                     minWidth: "200px",
                     boxShadow: "none",
-                    padding: "2px",
+                    padding: "2px 4px",
                     // background: "#ffffffa9",
                     // backdropFilter: "blur(4px)",
                   },
@@ -346,7 +352,8 @@ export const Tasks = ({ user, setUser }: UserProps) => {
               editedTask.color,
               editedTask.emoji || undefined,
               editedTask.description || undefined,
-              editedTask.deadline || undefined
+              editedTask.deadline || undefined,
+              editedTask.category || undefined
             );
             setEditModalOpen(false);
           }}
@@ -528,8 +535,8 @@ const Pinned = styled.div`
 `;
 const StyledMenuItem = styled(MenuItem)`
   margin: 6px;
-  padding: 8px;
-  border-radius: 8px;
+  padding: 10px;
+  border-radius: 12px;
   box-shadow: none;
 
   &:hover {

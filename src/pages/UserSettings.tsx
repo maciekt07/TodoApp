@@ -23,12 +23,14 @@ import { AddAPhoto, Delete, Logout } from "@mui/icons-material";
 import { PROFILE_PICTURE_MAX_LENGTH, USER_NAME_MAX_LENGTH } from "../constants";
 import { TopBar } from "../components";
 import { DialogBtn } from "../styles";
+import { defaultUser } from "../constants/defaultUser";
 
 export const UserSettings = ({ user, setUser }: UserProps) => {
   const [name, setName] = useState<string>("");
   const [profilePictureURL, setProfilePictureURL] = useState<string>("");
   const [openChangeImage, setOpenChangeImage] = useState<boolean>(false);
-
+  const [logoutConfirmationOpen, setLogoutConfirmationOpen] =
+    useState<boolean>(false);
   const emojiStyles: { label: string; style: EmojiStyle }[] = [
     { label: "Apple", style: EmojiStyle.APPLE },
     { label: "Facebook, Messenger", style: EmojiStyle.FACEBOOK },
@@ -56,6 +58,14 @@ export const UserSettings = ({ user, setUser }: UserProps) => {
   };
   const handleCloseImageDialog = () => {
     setOpenChangeImage(false);
+  };
+
+  const handleLogoutConfirmationClose = () => {
+    setLogoutConfirmationOpen(false);
+  };
+  const handleLogout = () => {
+    setUser(defaultUser);
+    handleLogoutConfirmationClose();
   };
   return (
     <>
@@ -170,6 +180,7 @@ export const UserSettings = ({ user, setUser }: UserProps) => {
           color="error"
           variant="outlined"
           sx={{ padding: "8px 20px", borderRadius: "14px", marginTop: "8px" }}
+          onClick={() => setLogoutConfirmationOpen(true)}
         >
           <Logout />
           &nbsp; Logout
@@ -225,6 +236,27 @@ export const UserSettings = ({ user, setUser }: UserProps) => {
             }}
           >
             Save
+          </DialogBtn>
+        </DialogActions>
+      </Dialog>
+      <Dialog
+        open={logoutConfirmationOpen}
+        onClose={handleLogoutConfirmationClose}
+        PaperProps={{
+          style: {
+            borderRadius: "24px",
+            padding: "10px",
+          },
+        }}
+      >
+        <DialogTitle>Logout Confirmation</DialogTitle>
+        <DialogContent>
+          Are you sure you want to logout? <b>Your tasks will not be saved.</b>
+        </DialogContent>
+        <DialogActions>
+          <DialogBtn onClick={handleLogoutConfirmationClose}>Cancel</DialogBtn>
+          <DialogBtn onClick={handleLogout} color="error">
+            Logout
           </DialogBtn>
         </DialogActions>
       </Dialog>

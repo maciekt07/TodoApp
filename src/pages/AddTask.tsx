@@ -193,32 +193,28 @@ export const AddTask = ({ user, setUser }: UserProps) => {
         />
         {user.enableCategories && (
           <>
-            <p>Category (optional)</p>
+            <br />
+            <Typography>Category (optional)</Typography>
             <StyledSelect
               color="primary"
               variant="outlined"
               value={selectedCategory !== null ? selectedCategory.id : "none"}
               onChange={handleCategoryChange}
             >
-              <MenuItem value="" disabled>
+              <MenuItem
+                value=""
+                disabled
+                sx={{ opacity: "1 !important", fontWeight: 500 }}
+              >
                 Select a category
               </MenuItem>
-              <StyledMenu
-                value={[]}
-                sx={{
-                  border: `2px solid black`,
-                }}
-              >
-                None
-              </StyledMenu>
+              <StyledMenu value={[]}>None</StyledMenu>
               {user.categories &&
                 user.categories.map((category) => (
                   <StyledMenu
                     key={category.id}
                     value={category.id}
-                    sx={{
-                      border: `2px solid ${category.color}`,
-                    }}
+                    clr={category.color}
                   >
                     {category.emoji && <Emoji unified={category.emoji} />}{" "}
                     &nbsp;
@@ -248,13 +244,8 @@ export const AddTask = ({ user, setUser }: UserProps) => {
             name === ""
           }
         >
-          Add task
+          Add Task
         </AddTaskButton>
-        {/* {openEmojiPicker && (
-          <CloseEmojiBtn onClick={() => setOpenEmojiPicker(false)}>
-            <Close /> &nbsp; Close emoji picker
-          </CloseEmojiBtn>
-        )} */}
       </Container>
     </>
   );
@@ -282,7 +273,7 @@ const StyledSelect = styled(Select)`
   transition: 0.3s all;
   width: 400px;
   color: white;
-  border: 2px solid #b624ff;
+  border: 3px solid #b624ff;
 `;
 
 const ColorPicker = styled.input`
@@ -299,10 +290,28 @@ const ColorPicker = styled.input`
   }
 `;
 
-const StyledMenu = styled(MenuItem)`
+const StyledMenu = styled(MenuItem)<{ clr?: string }>`
   padding: 12px 20px;
-  border-radius: 12px;
+  border-radius: 16px;
   margin: 8px;
   display: flex;
   gap: 4px;
+  font-weight: 500;
+  transition: 0.2s all;
+  color: ${(props) => getFontColorFromHex(props.clr || "#ffffff")};
+  background: ${(props) => props.clr || "#bcbcbc"};
+  &:hover {
+    background: ${(props) => props.clr || "#bcbcbc"};
+    opacity: 0.7;
+  }
+
+  &.Mui-selected {
+    background: ${(props) => props.clr || "#bcbcbc"};
+    color: ${(props) => getFontColorFromHex(props.clr || "#ffffff")};
+    box-shadow: 0 0 14px 4px ${(props) => props.clr || "#bcbcbc"};
+    &:hover {
+      background: ${(props) => props.clr || "#bcbcbc"};
+      opacity: 0.7;
+    }
+  }
 `;

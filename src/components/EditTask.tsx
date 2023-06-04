@@ -8,6 +8,9 @@ import {
   Avatar,
   Badge,
   Typography,
+  MenuItem,
+  Select,
+  SelectChangeEvent,
 } from "@mui/material";
 import { Task, User } from "../types/user";
 import EmojiPicker, { Emoji } from "emoji-picker-react";
@@ -15,6 +18,7 @@ import styled from "@emotion/styled";
 import { AddReaction, Edit } from "@mui/icons-material";
 import { DESCRIPTION_MAX_LENGTH, TASK_NAME_MAX_LENGTH } from "../constants";
 import { DialogBtn } from "../styles";
+import { getFontColorFromHex } from "../utils";
 interface EditTaskProps {
   open: boolean;
   task?: Task;
@@ -64,6 +68,17 @@ export const EditTask = ({
     if (editedTask && !nameError && !descriptionError) {
       onSave(editedTask);
     }
+  };
+  const handleCategoryChange = (event: SelectChangeEvent<unknown>) => {
+    const categoryId = event.target.value as number;
+    const selectedCategory = user.categories.find(
+      (category) => category.id === categoryId
+    );
+
+    setEditedTask((prevTask) => ({
+      ...(prevTask as Task),
+      category: selectedCategory ? [selectedCategory] : undefined,
+    }));
   };
 
   return (
@@ -182,6 +197,35 @@ export const EditTask = ({
         />
         <br />
         <br />
+        <Typography>Category (optional)</Typography>
+
+        <StyledSelect
+          color="primary"
+          fullWidth
+          variant="outlined"
+          value={editedTask?.category?.[0]?.id ?? ""}
+          onChange={handleCategoryChange}
+        >
+          <MenuItem
+            value=""
+            disabled
+            sx={{ opacity: "1 !important", fontWeight: 500 }}
+          >
+            Select a category
+          </MenuItem>
+          <StyledMenu value={[]}>None</StyledMenu>
+          {user.categories &&
+            user.categories.map((category) => (
+              <StyledMenu
+                key={category.id}
+                value={category.id}
+                clr={category.color}
+              >
+                {category.emoji && <Emoji unified={category.emoji} />} &nbsp;
+                {category.name}
+              </StyledMenu>
+            ))}
+        </StyledSelect>
         <Typography>Color:</Typography>
         <ColorPicker
           type="color"
@@ -235,4 +279,35 @@ const ColorPicker = styled.input`
     border-radius: 100px;
     border: none;
   }
+`;
+const StyledMenu = styled(MenuItem)<{ clr?: string }>`
+  padding: 12px 20px;
+  border-radius: 16px;
+  margin: 8px;
+  display: flex;
+  gap: 4px;
+  font-weight: 500;
+  transition: 0.2s all;
+  color: ${(props) => getFontColorFromHex(props.clr || "#ffffff")};
+  background: ${(props) => props.clr || "#bcbcbc"};
+  &:hover {
+    background: ${(props) => props.clr || "#bcbcbc"};
+    opacity: 0.7;
+  }
+
+  &.Mui-selected {
+    background: ${(props) => props.clr || "#bcbcbc"};
+    color: ${(props) => getFontColorFromHex(props.clr || "#ffffff")};
+    box-shadow: 0 0 14px 4px ${(props) => props.clr || "#bcbcbc"};
+    &:hover {
+      background: ${(props) => props.clr || "#bcbcbc"};
+      opacity: 0.7;
+    }
+  }
+`;
+const StyledSelect = styled(Select)`
+  border-radius: 16px;
+  transition: 0.3s all;
+
+  margin: 8px 0;
 `;
