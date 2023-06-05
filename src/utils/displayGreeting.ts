@@ -5,9 +5,7 @@
 export const displayGreeting = (): string => {
   const currentTime = new Date();
   const currentHour = currentTime.getHours();
-
   let greeting: string;
-  console.log(currentHour);
   if (currentHour < 12 && currentHour >= 5) {
     greeting = "Good morning";
   } else if (currentHour < 18 && currentHour > 12) {

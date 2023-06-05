@@ -5,20 +5,19 @@ import {
   DialogContent,
   DialogActions,
   TextField,
-  Avatar,
-  Badge,
   Typography,
   MenuItem,
   Select,
   SelectChangeEvent,
 } from "@mui/material";
 import { Task, User } from "../types/user";
-import EmojiPicker, { Emoji } from "emoji-picker-react";
+import { Emoji } from "emoji-picker-react";
 import styled from "@emotion/styled";
-import { AddReaction, Edit } from "@mui/icons-material";
+
 import { DESCRIPTION_MAX_LENGTH, TASK_NAME_MAX_LENGTH } from "../constants";
 import { DialogBtn } from "../styles";
 import { getFontColorFromHex } from "../utils";
+import { CustomEmojiPicker } from ".";
 interface EditTaskProps {
   open: boolean;
   task?: Task;
@@ -35,9 +34,17 @@ export const EditTask = ({
   user,
 }: EditTaskProps) => {
   const [editedTask, setEditedTask] = useState<Task | undefined>(task);
-  const [showEmojiPicker, setShowEmojiPicker] = useState<boolean>(false);
   const [nameError, setNameError] = useState<boolean>(false);
   const [descriptionError, setDescriptionError] = useState<boolean>(false);
+
+  const [emoji, setEmoji] = useState<string | undefined>();
+
+  useEffect(() => {
+    setEditedTask((prevTask) => ({
+      ...(prevTask as Task),
+      emoji: emoji,
+    }));
+  }, [emoji]);
 
   useEffect(() => {
     setEditedTask(task);
@@ -89,73 +96,12 @@ export const EditTask = ({
     >
       <DialogTitle>Edit Task</DialogTitle>
       <DialogContent>
-        <EmojiContaier>
-          <Badge
-            overlap="circular"
-            anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
-            badgeContent={
-              <Avatar
-                sx={{
-                  background: "#9c9c9c81",
-                  backdropFilter: "blur(6px)",
-                  cursor: "pointer",
-                }}
-                onClick={() => {
-                  setShowEmojiPicker(!showEmojiPicker);
-                }}
-              >
-                <Edit />
-              </Avatar>
-            }
-          >
-            <Avatar
-              onClick={() => {
-                setShowEmojiPicker(!showEmojiPicker);
-              }}
-              sx={{
-                width: "96px",
-                height: "96px",
-                background: editedTask?.color || "",
-                cursor: "pointer",
-              }}
-            >
-              {/* {editedTask?.emoji ? (
-              <Emoji size={64} unified={editedTask?.emoji || ""} />
-              )} */}
-              {editedTask?.emoji ? (
-                <Emoji
-                  size={64}
-                  emojiStyle={user.emojisStyle}
-                  unified={editedTask?.emoji || ""}
-                />
-              ) : (
-                <AddReaction sx={{ fontSize: "52px" }} />
-              )}
-            </Avatar>
-          </Badge>
-        </EmojiContaier>
-        {showEmojiPicker && (
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-              margin: "24px",
-            }}
-          >
-            <EmojiPicker
-              emojiStyle={user.emojisStyle}
-              lazyLoadEmojis
-              onEmojiClick={(e) => {
-                setShowEmojiPicker(!showEmojiPicker);
-                setEditedTask((prevTask) => ({
-                  ...(prevTask as Task),
-                  emoji: e.unified,
-                }));
-              }}
-            />
-          </div>
-        )}
+        <CustomEmojiPicker
+          emojiStyle={user.emojisStyle}
+          emoji={editedTask?.emoji || undefined}
+          setEmoji={setEmoji}
+          color={editedTask?.color}
+        />
         <StyledInput
           label="Name"
           name="name"
@@ -197,35 +143,47 @@ export const EditTask = ({
         />
         <br />
         <br />
-        <Typography>Category (optional)</Typography>
+        {user.enableCategories && (
+          <>
+            <Typography>Category (optional)</Typography>
 
-        <StyledSelect
-          color="primary"
-          fullWidth
-          variant="outlined"
-          value={editedTask?.category?.[0]?.id ?? ""}
-          onChange={handleCategoryChange}
-        >
-          <MenuItem
-            value=""
-            disabled
-            sx={{ opacity: "1 !important", fontWeight: 500 }}
-          >
-            Select a category
-          </MenuItem>
-          <StyledMenu value={[]}>None</StyledMenu>
-          {user.categories &&
-            user.categories.map((category) => (
-              <StyledMenu
-                key={category.id}
-                value={category.id}
-                clr={category.color}
+            <StyledSelect
+              color="primary"
+              fullWidth
+              variant="outlined"
+              value={editedTask?.category?.[0]?.id ?? ""}
+              onChange={handleCategoryChange}
+              MenuProps={{
+                PaperProps: {
+                  style: {
+                    maxHeight: 400,
+                  },
+                },
+              }}
+            >
+              <MenuItem
+                value=""
+                disabled
+                sx={{ opacity: "1 !important", fontWeight: 500 }}
               >
-                {category.emoji && <Emoji unified={category.emoji} />} &nbsp;
-                {category.name}
-              </StyledMenu>
-            ))}
-        </StyledSelect>
+                Select a category
+              </MenuItem>
+              <StyledMenu value={[]}>None</StyledMenu>
+              {user.categories &&
+                user.categories.map((category) => (
+                  <StyledMenu
+                    key={category.id}
+                    value={category.id}
+                    clr={category.color}
+                  >
+                    {category.emoji && <Emoji unified={category.emoji} />}{" "}
+                    &nbsp;
+                    {category.name}
+                  </StyledMenu>
+                ))}
+            </StyledSelect>
+          </>
+        )}
         <Typography>Color:</Typography>
         <ColorPicker
           type="color"
@@ -255,12 +213,6 @@ export const EditTask = ({
     </Dialog>
   );
 };
-const EmojiContaier = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin: 20px;
-`;
 
 const StyledInput = styled(TextField)`
   & .MuiInputBase-root {

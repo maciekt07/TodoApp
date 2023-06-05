@@ -21,6 +21,7 @@ export interface Task {
   date: Date;
   deadline?: Date;
   category?: Category[];
+  lastSave?: Date;
 }
 
 export interface Category {

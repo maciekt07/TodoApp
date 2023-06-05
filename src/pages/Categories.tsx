@@ -1,26 +1,20 @@
 import { useEffect, useState } from "react";
-import { TopBar } from "../components";
+import { CustomEmojiPicker, TopBar } from "../components";
 import { Category, UserProps } from "../types/user";
 import { useNavigate } from "react-router-dom";
-import EmojiPicker, { Emoji } from "emoji-picker-react";
+import { Emoji } from "emoji-picker-react";
 import styled from "@emotion/styled";
-import {
-  Avatar,
-  Badge,
-  IconButton,
-  TextField,
-  Typography,
-} from "@mui/material";
-import { AddReaction, Delete, Edit } from "@mui/icons-material";
+import { IconButton, TextField, Typography } from "@mui/material";
+import { Delete } from "@mui/icons-material";
 import { CATEGORY_NAME_MAX_LENGTH } from "../constants";
 import { getFontColorFromHex } from "../utils";
+import { fadeIn } from "../styles";
 
 //TODO: add option to add/delete categories
 export const Categories = ({ user, setUser }: UserProps) => {
-  const [openEmojiPicker, setOpenEmojiPicker] = useState<boolean>(false);
   const [name, setName] = useState<string>("");
   const [nameError, setNameError] = useState<string>("");
-  const [emoji, setEmoji] = useState<string>("");
+  const [emoji, setEmoji] = useState<string | undefined>();
   const [color, setColor] = useState<string>("#b624ff");
   const n = useNavigate();
   useEffect(() => {
@@ -109,56 +103,11 @@ export const Categories = ({ user, setUser }: UserProps) => {
         </CategoriesContainer>
         <AddContainer>
           <h2>Add New Category</h2>
-
-          <Badge
-            overlap="circular"
-            anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
-            badgeContent={
-              <Avatar
-                sx={{
-                  background: "#9c9c9c81",
-                  backdropFilter: "blur(6px)",
-                  cursor: "pointer",
-                }}
-                onClick={() => setOpenEmojiPicker(!openEmojiPicker)}
-              >
-                <Edit />
-              </Avatar>
-            }
-          >
-            <Avatar
-              onClick={() => setOpenEmojiPicker(!openEmojiPicker)}
-              sx={{
-                width: "96px",
-                height: "96px",
-                cursor: "pointer",
-                background: "#b624ff",
-              }}
-            >
-              {emoji ? (
-                <Emoji
-                  size={64}
-                  emojiStyle={user.emojisStyle}
-                  unified={emoji || ""}
-                />
-              ) : (
-                <AddReaction sx={{ fontSize: "52px" }} />
-              )}
-            </Avatar>
-          </Badge>
-          {!openEmojiPicker && <br />}
-          {openEmojiPicker && (
-            <div style={{ margin: "16px" }}>
-              <EmojiPicker
-                emojiStyle={user.emojisStyle}
-                lazyLoadEmojis
-                onEmojiClick={(e) => {
-                  setEmoji(e.unified);
-                  setOpenEmojiPicker(false);
-                }}
-              />
-            </div>
-          )}
+          <CustomEmojiPicker
+            emojiStyle={user.emojisStyle}
+            setEmoji={setEmoji}
+            color={color}
+          />
           <StyledInput
             focused
             label="Category name"
@@ -243,6 +192,7 @@ const CategoryDiv = styled.div<{ clr: string }>`
   border-radius: 18px;
   background: ${(props) => props.clr};
   color: ${(props) => getFontColorFromHex(props.clr)};
+  animation: ${fadeIn} 0.5s ease-in-out;
 `;
 
 const CategoryContent = styled.div`

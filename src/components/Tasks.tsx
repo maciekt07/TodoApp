@@ -1,4 +1,4 @@
-import { Task, UserProps } from "../types/user";
+import { Category, Task, UserProps } from "../types/user";
 import { useState } from "react";
 
 import styled from "@emotion/styled";
@@ -110,7 +110,7 @@ export const Tasks = ({ user, setUser }: UserProps) => {
     newEmoji?: string,
     newDescription?: string,
     newDeadline?: Date,
-    newCategory?: any
+    newCategory?: Category[]
   ) => {
     // Update the selected task with the new values
     const updatedTasks = user.tasks.map((task) => {
@@ -366,12 +366,6 @@ export const Tasks = ({ user, setUser }: UserProps) => {
           style: {
             borderRadius: "28px",
             padding: "10px",
-            // border: `6px solid ${
-            //   user.tasks.find((task) => task.id === selectedTaskId)?.color
-            // }`,
-            // boxShadow: `0 0 8px 0 ${
-            //   user.tasks.find((task) => task.id === selectedTaskId)?.color
-            // }`,
           },
         }}
       >
@@ -388,6 +382,7 @@ export const Tasks = ({ user, setUser }: UserProps) => {
             <b>Emoji:</b>{" "}
             <Emoji
               size={28}
+              emojiStyle={user.emojisStyle}
               unified={
                 user.tasks.find((task) => task.id === selectedTaskId)?.emoji ||
                 ""
