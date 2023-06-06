@@ -50,12 +50,24 @@ export const Tasks = ({ user, setUser }: UserProps) => {
   const handleCloseMoreMenu = () => {
     setAnchorEl(null);
   };
+
   const reorderTasks = (tasks: Task[]): Task[] => {
     // Reorders tasks by moving pinned tasks to the top
     const pinnedTasks = tasks.filter((task) => task.pinned);
     const unpinnedTasks = tasks.filter((task) => !task.pinned);
     return [...pinnedTasks, ...unpinnedTasks];
   };
+
+  // const reorderTasks = (tasks: Task[]): Task[] => {
+  //   // Reorders tasks by moving pinned tasks to the top
+  //   const pinnedTasks = tasks.filter((task) => task.pinned);
+  //   const unpinnedTasks = tasks.filter((task) => !task.pinned);
+  //   const doneTasks = unpinnedTasks.filter((task) => task.done);
+  //   const notDoneTasks = unpinnedTasks.filter((task) => !task.done);
+
+  //   return [...pinnedTasks, ...notDoneTasks, ...doneTasks];
+  // };
+
   const handleMarkAsDone = () => {
     // Toggles the "done" property of the selected task
     if (selectedTaskId) {
@@ -186,12 +198,7 @@ export const Tasks = ({ user, setUser }: UserProps) => {
                 <TaskName>
                   {task.name}
 
-                  <TaskDate>
-                    {/* {new Date(task.date).toLocaleDateString()}
-                    {" • "}
-                    {new Date(task.date).toLocaleTimeString()} */}
-                    {formatDate(new Date(task.date))}
-                  </TaskDate>
+                  <TaskDate>{formatDate(new Date(task.date))}</TaskDate>
                 </TaskName>
                 <TaskDescription>{task.description}</TaskDescription>
 
@@ -215,35 +222,28 @@ export const Tasks = ({ user, setUser }: UserProps) => {
                   user.enableCategories &&
                   task.category.map((category) => (
                     <div key={category.id}>
-                      <Chip
+                      <CategoryChip
+                        backgroundcolor={category.color}
+                        bordercolor={getFontColorFromHex(task.color)}
                         label={category.name}
                         size="medium"
-                        style={{
-                          backgroundColor: category.color,
-                          color: getFontColorFromHex(category.color),
-                          boxShadow: `0 0 8px 0 ${category.color}`,
-                          fontWeight: "bold",
-                          fontSize: "14px",
-                          border: `2px solid ${getFontColorFromHex(
-                            task.color
-                          )}`,
-                          margin: "6px 0 0 0",
-                          padding: "8px",
-                          opacity: 0.9,
-                        }}
                         avatar={
-                          <Avatar
-                            alt={category.name}
-                            sx={{ background: "transparent" }}
-                          >
-                            {category.emoji && (
-                              <Emoji
-                                size={20}
-                                unified={category.emoji}
-                                emojiStyle={user.emojisStyle}
-                              />
-                            )}
-                          </Avatar>
+                          category.emoji ? (
+                            <Avatar
+                              alt={category.name}
+                              sx={{ background: "transparent" }}
+                            >
+                              {category.emoji && (
+                                <Emoji
+                                  size={20}
+                                  unified={category.emoji}
+                                  emojiStyle={user.emojisStyle}
+                                />
+                              )}
+                            </Avatar>
+                          ) : (
+                            <></>
+                          )
                         }
                       />
                     </div>
@@ -274,8 +274,6 @@ export const Tasks = ({ user, setUser }: UserProps) => {
                     minWidth: "200px",
                     boxShadow: "none",
                     padding: "2px 4px",
-                    // background: "#ffffffa9",
-                    // backdropFilter: "blur(4px)",
                   },
                 }}
                 MenuListProps={{
@@ -537,4 +535,19 @@ const StyledMenuItem = styled(MenuItem)`
   &:hover {
     background-color: #f0f0f0;
   }
+`;
+
+const CategoryChip = styled(Chip)<{
+  backgroundcolor: string;
+  bordercolor?: string;
+}>`
+  color: ${(props) => getFontColorFromHex(props.backgroundcolor)};
+  background-color: ${(props) => props.backgroundcolor};
+  box-shadow: 0 0 8px 0 ${(props) => props.backgroundcolor};
+  border: 2px solid ${(props) => props.bordercolor};
+  font-weight: bold;
+  font-size: 14px;
+  margin: 6px 0 0 0;
+  padding: 8px;
+  opacity: 0.9;
 `;

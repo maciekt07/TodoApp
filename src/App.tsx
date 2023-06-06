@@ -22,24 +22,16 @@ function App() {
       setUser({ ...user, enableCategories: defaultUser.enableCategories });
     }
   }, []);
+  const userProps = { user, setUser };
   return (
     <>
       <ThemeProvider theme={MuiTheme}>
         <GlobalStyles />
         <Routes>
-          <Route path="/" element={<Home user={user} setUser={setUser} />} />
-          <Route
-            path="/add"
-            element={<AddTask user={user} setUser={setUser} />}
-          />
-          <Route
-            path="/user"
-            element={<UserSettings user={user} setUser={setUser} />}
-          />
-          <Route
-            path="/categories"
-            element={<Categories user={user} setUser={setUser} />}
-          />
+          <Route path="/" element={<Home {...userProps} />} />
+          <Route path="/add" element={<AddTask {...userProps} />} />
+          <Route path="/user" element={<UserSettings {...userProps} />} />
+          <Route path="/categories" element={<Categories {...userProps} />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </ThemeProvider>

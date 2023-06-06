@@ -14,5 +14,5 @@ export const defaultUser: User = {
     { id: 4, name: "Health/Fitness", emoji: "1f4aa", color: "#ffdf3d" },
     { id: 5, name: "Education", emoji: "1f4da", color: "#ff8e24" },
   ],
-  enableCategories: false,
+  enableCategories: true,
 };

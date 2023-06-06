@@ -15,7 +15,7 @@ import { Emoji } from "emoji-picker-react";
 import styled from "@emotion/styled";
 
 import { DESCRIPTION_MAX_LENGTH, TASK_NAME_MAX_LENGTH } from "../constants";
-import { DialogBtn } from "../styles";
+import { ColorPalette, DialogBtn } from "../styles";
 import { getFontColorFromHex } from "../utils";
 import { CustomEmojiPicker } from ".";
 interface EditTaskProps {
@@ -240,7 +240,7 @@ const StyledMenu = styled(MenuItem)<{ clr?: string }>`
   gap: 4px;
   font-weight: 500;
   transition: 0.2s all;
-  color: ${(props) => getFontColorFromHex(props.clr || "#ffffff")};
+  color: ${(props) => getFontColorFromHex(props.clr || ColorPalette.fontLight)};
   background: ${(props) => props.clr || "#bcbcbc"};
   &:hover {
     background: ${(props) => props.clr || "#bcbcbc"};
@@ -249,7 +249,8 @@ const StyledMenu = styled(MenuItem)<{ clr?: string }>`
 
   &.Mui-selected {
     background: ${(props) => props.clr || "#bcbcbc"};
-    color: ${(props) => getFontColorFromHex(props.clr || "#ffffff")};
+    color: ${(props) =>
+      getFontColorFromHex(props.clr || ColorPalette.fontLight)};
     box-shadow: 0 0 14px 4px ${(props) => props.clr || "#bcbcbc"};
     &:hover {
       background: ${(props) => props.clr || "#bcbcbc"};

@@ -2,13 +2,17 @@ import { css, keyframes } from "@emotion/react";
 import styled from "@emotion/styled";
 import { Add } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
+import { ColorPalette } from "../styles";
+import { Tooltip } from "@mui/material";
 
 export const AddTaskBtn = ({ animate }: { animate: boolean }) => {
   const n = useNavigate();
   return (
-    <Btn animate={animate} onClick={() => n("add")} aria-label="Add Task">
-      <Add fontSize="large" />
-    </Btn>
+    <Tooltip title="Add new task" placement="left">
+      <Btn animate={animate} onClick={() => n("add")} aria-label="Add Task">
+        <Add fontSize="large" />
+      </Btn>
+    </Tooltip>
   );
 };
 
@@ -38,10 +42,10 @@ const Btn = styled.button<{ animate: boolean }>`
   width: 68px;
   height: 68px;
   border-radius: 100%;
-  background-color: #b624ff;
+  background-color: ${ColorPalette.purple};
   color: white;
   right: 16vw;
-  box-shadow: 0px 0px 20px 0px #b624ff;
+  box-shadow: 0px 0px 20px 0px ${ColorPalette.purple};
   ${({ animate }) =>
     animate &&
     css`

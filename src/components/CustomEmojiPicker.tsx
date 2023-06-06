@@ -1,9 +1,10 @@
 import { useState, useEffect, Dispatch, SetStateAction } from "react";
 import styled from "@emotion/styled";
-import { Avatar, Badge } from "@mui/material";
+import { Avatar, Badge, Tooltip } from "@mui/material";
 import { AddReaction, Edit } from "@mui/icons-material";
 import EmojiPicker, { Emoji, EmojiStyle } from "emoji-picker-react";
 import { getFontColorFromHex } from "../utils";
+import { ColorPalette } from "../styles";
 
 interface EmojiPickerProps {
   emoji?: string;
@@ -27,6 +28,12 @@ export const CustomEmojiPicker = ({
     setEmoji(currentEmoji);
   }, [currentEmoji]);
 
+  useEffect(() => {
+    if (emoji === "") {
+      setCurrentEmoji(undefined);
+    }
+  }, [emoji]);
+
   const toggleEmojiPicker = () => {
     setShowEmojiPicker(!showEmojiPicker);
   };
@@ -46,7 +53,7 @@ export const CustomEmojiPicker = ({
         <AddReaction
           sx={{
             fontSize: "52px",
-            color: color ? getFontColorFromHex(color) : "#ffffff",
+            color: color ? getFontColorFromHex(color) : ColorPalette.fontLight,
           }}
         />
       );
@@ -56,34 +63,36 @@ export const CustomEmojiPicker = ({
   return (
     <>
       <EmojiContainer>
-        <Badge
-          overlap="circular"
-          anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
-          badgeContent={
+        <Tooltip title={currentEmoji ? "Change Emoji" : "Choose an emoji"}>
+          <Badge
+            overlap="circular"
+            anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+            badgeContent={
+              <Avatar
+                sx={{
+                  background: "#9c9c9c81",
+                  backdropFilter: "blur(6px)",
+                  cursor: "pointer",
+                }}
+                onClick={toggleEmojiPicker}
+              >
+                <Edit />
+              </Avatar>
+            }
+          >
             <Avatar
+              onClick={toggleEmojiPicker}
               sx={{
-                background: "#9c9c9c81",
-                backdropFilter: "blur(6px)",
+                width: "96px",
+                height: "96px",
+                background: color || ColorPalette.purple,
                 cursor: "pointer",
               }}
-              onClick={toggleEmojiPicker}
             >
-              <Edit />
+              {renderAvatarContent()}
             </Avatar>
-          }
-        >
-          <Avatar
-            onClick={toggleEmojiPicker}
-            sx={{
-              width: "96px",
-              height: "96px",
-              background: color || "#b624ff",
-              cursor: "pointer",
-            }}
-          >
-            {renderAvatarContent()}
-          </Avatar>
-        </Badge>
+          </Badge>
+        </Tooltip>
       </EmojiContainer>
       {showEmojiPicker && (
         <EmojiPickerContainer>

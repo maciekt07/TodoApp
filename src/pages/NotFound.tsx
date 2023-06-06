@@ -3,9 +3,15 @@ import { ArrowBackIosNew } from "@mui/icons-material";
 import { Button } from "@mui/material";
 
 import { useNavigate } from "react-router-dom";
+import { ColorPalette } from "../styles";
+import { useEffect } from "react";
 
 export const NotFound = () => {
   const n = useNavigate();
+
+  useEffect(() => {
+    document.title = "Todo App - Page Not Found";
+  }, []);
 
   return (
     <Container>
@@ -30,7 +36,7 @@ const Container = styled.div`
 
 const ErrorCode = styled.h1`
   font-size: 96px;
-  color: #b624ff;
+  color: ${ColorPalette.purple};
   text-shadow: 0 0 10px #b624ffa9;
 `;
 

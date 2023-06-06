@@ -1,7 +1,7 @@
 import { Category, Task, UserProps } from "../types/user";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { AddTaskButton, Container } from "../styles";
+import { AddTaskButton, ColorPalette, Container } from "../styles";
 import { Edit } from "@mui/icons-material";
 import { Emoji } from "emoji-picker-react";
 import {
@@ -149,7 +149,7 @@ export const AddTask = ({ user, setUser }: UserProps) => {
             <StyledSelect
               color="primary"
               variant="outlined"
-              value={selectedCategory !== null ? selectedCategory.id : "none"}
+              value={selectedCategory !== null ? selectedCategory.id : ""}
               onChange={handleCategoryChange}
               MenuProps={{
                 PaperProps: {
@@ -225,7 +225,7 @@ const StyledSelect = styled(Select)`
   transition: 0.3s all;
   width: 400px;
   color: white;
-  border: 3px solid #b624ff;
+  border: 3px solid ${ColorPalette.purple};
 `;
 
 const ColorPicker = styled.input`
@@ -250,7 +250,7 @@ const StyledMenu = styled(MenuItem)<{ clr?: string }>`
   gap: 4px;
   font-weight: 500;
   transition: 0.2s all;
-  color: ${(props) => getFontColorFromHex(props.clr || "#ffffff")};
+  color: ${(props) => getFontColorFromHex(props.clr || ColorPalette.fontLight)};
   background: ${(props) => props.clr || "#bcbcbc"};
   &:hover {
     background: ${(props) => props.clr || "#bcbcbc"};
@@ -259,7 +259,8 @@ const StyledMenu = styled(MenuItem)<{ clr?: string }>`
 
   &.Mui-selected {
     background: ${(props) => props.clr || "#bcbcbc"};
-    color: ${(props) => getFontColorFromHex(props.clr || "#ffffff")};
+    color: ${(props) =>
+      getFontColorFromHex(props.clr || ColorPalette.fontLight)};
     box-shadow: 0 0 14px 4px ${(props) => props.clr || "#bcbcbc"};
     &:hover {
       background: ${(props) => props.clr || "#bcbcbc"};

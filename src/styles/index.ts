@@ -25,4 +25,4 @@ export {
   OpenPickerBtn,
   ColorPreview,
 } from "./addTask.styled";
-export { MuiTheme } from "./theme";
+export { MuiTheme, ColorPalette } from "./theme";

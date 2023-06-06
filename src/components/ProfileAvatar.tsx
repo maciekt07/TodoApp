@@ -81,7 +81,7 @@ export const ProfileAvatar = ({ user, setUser }: UserProps) => {
             borderRadius: "18px",
             minWidth: "150px",
             boxShadow: "none",
-            padding: "2px",
+            padding: "2px 4px",
           },
         }}
       >
@@ -131,8 +131,8 @@ const Container = styled.div`
 `;
 const StyledMenuItem = styled(MenuItem)`
   margin: 6px;
-  padding: 8px;
-  border-radius: 8px;
+  padding: 10px 12px;
+  border-radius: 14px;
   box-shadow: none;
 
   &:hover {

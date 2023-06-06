@@ -8,14 +8,14 @@ import { IconButton, TextField, Typography } from "@mui/material";
 import { Delete } from "@mui/icons-material";
 import { CATEGORY_NAME_MAX_LENGTH } from "../constants";
 import { getFontColorFromHex } from "../utils";
-import { fadeIn } from "../styles";
+import { ColorPalette, fadeIn } from "../styles";
 
 //TODO: add option to add/delete categories
 export const Categories = ({ user, setUser }: UserProps) => {
   const [name, setName] = useState<string>("");
   const [nameError, setNameError] = useState<string>("");
   const [emoji, setEmoji] = useState<string | undefined>();
-  const [color, setColor] = useState<string>("#b624ff");
+  const [color, setColor] = useState<string>(ColorPalette.purple);
   const n = useNavigate();
   useEffect(() => {
     document.title = "Todo App - Categories";
@@ -60,7 +60,7 @@ export const Categories = ({ user, setUser }: UserProps) => {
       };
       setUser({ ...user, categories: [...user.categories, newCategory] });
       setName("");
-      setColor("#b624ff");
+      setColor(ColorPalette.purple);
       setEmoji("");
     }
   };
@@ -69,42 +69,47 @@ export const Categories = ({ user, setUser }: UserProps) => {
     <>
       <TopBar title="Categories" />
       <Container>
-        <CategoriesContainer>
-          {/* {user.categories
+        {user.categories.length > 0 ? (
+          <CategoriesContainer>
+            {/* {user.categories
           .sort((a, b) => a.name.localeCompare(b.name)) */}
-          {user.categories.map((category) => {
-            return (
-              <CategoryDiv key={category.id} clr={category.color}>
-                <CategoryContent>
-                  <span>
-                    {category.emoji && (
-                      <Emoji
-                        unified={category.emoji}
-                        emojiStyle={user.emojisStyle}
-                      />
-                    )}
-                  </span>{" "}
-                  &nbsp;
-                  {category.name}
-                </CategoryContent>
-                <DeleteButton>
-                  <IconButton
-                    color="error"
-                    onClick={() => {
-                      handleDelete(category.id);
-                    }}
-                  >
-                    <Delete />
-                  </IconButton>
-                </DeleteButton>
-              </CategoryDiv>
-            );
-          })}
-        </CategoriesContainer>
+            {user.categories.map((category) => {
+              return (
+                <CategoryDiv key={category.id} clr={category.color}>
+                  <CategoryContent>
+                    <span>
+                      {category.emoji && (
+                        <Emoji
+                          unified={category.emoji}
+                          emojiStyle={user.emojisStyle}
+                        />
+                      )}
+                    </span>{" "}
+                    &nbsp;
+                    {category.name}
+                  </CategoryContent>
+                  <DeleteButton>
+                    <IconButton
+                      color="error"
+                      onClick={() => {
+                        handleDelete(category.id);
+                      }}
+                    >
+                      <Delete />
+                    </IconButton>
+                  </DeleteButton>
+                </CategoryDiv>
+              );
+            })}
+          </CategoriesContainer>
+        ) : (
+          <p>You don't have any categories</p>
+        )}
         <AddContainer>
           <h2>Add New Category</h2>
           <CustomEmojiPicker
             emojiStyle={user.emojisStyle}
+            emoji={emoji}
             setEmoji={setEmoji}
             color={color}
           />
@@ -220,7 +225,7 @@ export const AddCategoryButton = styled.button`
   border: none;
   padding: 18px 48px;
   font-size: 24px;
-  background: #b624ff;
+  background: ${ColorPalette.purple};
   color: #ffffff;
   border-radius: 20px;
   font-weight: bold;

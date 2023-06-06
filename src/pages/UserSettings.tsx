@@ -13,6 +13,7 @@ import {
   SelectChangeEvent,
   Switch,
   TextField,
+  Tooltip,
   Typography,
 } from "@mui/material";
 import { UserProps } from "../types/user";
@@ -22,7 +23,7 @@ import styled from "@emotion/styled";
 import { AddAPhoto, Delete, Logout } from "@mui/icons-material";
 import { PROFILE_PICTURE_MAX_LENGTH, USER_NAME_MAX_LENGTH } from "../constants";
 import { TopBar } from "../components";
-import { DialogBtn } from "../styles";
+import { ColorPalette, DialogBtn } from "../styles";
 import { defaultUser } from "../constants/defaultUser";
 
 export const UserSettings = ({ user, setUser }: UserProps) => {
@@ -71,36 +72,44 @@ export const UserSettings = ({ user, setUser }: UserProps) => {
     <>
       <TopBar title="User Profile" />
       <Container>
-        <Badge
-          overlap="circular"
-          anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
-          badgeContent={
-            <Avatar
-              onClick={handleOpenImageDialog}
-              sx={{
-                background: "#9c9c9c81",
-                backdropFilter: "blur(6px)",
-                cursor: "pointer",
-              }}
-            >
-              <AddAPhoto />
-            </Avatar>
+        <Tooltip
+          title={
+            user.profilePicture
+              ? "Change profile picture"
+              : "Add profile picture"
           }
         >
-          <Avatar
-            onClick={handleOpenImageDialog}
-            src={user.profilePicture || ""}
-            onError={() => {
-              setUser({ ...user, profilePicture: null });
-              console.error("Error in profile picture URL");
-            }}
-            sx={{
-              width: "96px",
-              height: "96px",
-              cursor: "pointer",
-            }}
-          />
-        </Badge>
+          <Badge
+            overlap="circular"
+            anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+            badgeContent={
+              <Avatar
+                onClick={handleOpenImageDialog}
+                sx={{
+                  background: "#9c9c9c81",
+                  backdropFilter: "blur(6px)",
+                  cursor: "pointer",
+                }}
+              >
+                <AddAPhoto />
+              </Avatar>
+            }
+          >
+            <Avatar
+              onClick={handleOpenImageDialog}
+              src={user.profilePicture || ""}
+              onError={() => {
+                setUser({ ...user, profilePicture: null });
+                console.error("Error in profile picture URL");
+              }}
+              sx={{
+                width: "96px",
+                height: "96px",
+                cursor: "pointer",
+              }}
+            />
+          </Badge>
+        </Tooltip>
         <UserName>{user.name || "User"}</UserName>
         <CreatedAtDate>
           Registered since {new Date(user.createdAt).toLocaleDateString()}
@@ -167,7 +176,7 @@ export const UserSettings = ({ user, setUser }: UserProps) => {
           <Typography sx={{ fontWeight: 500 }}>
             Enable Categories &nbsp;<Beta>BETA</Beta>
           </Typography>
-
+          {/* FIXME: mui error in console*/}
           <Switch
             defaultChecked={user.enableCategories}
             onChange={(e) =>
@@ -271,8 +280,8 @@ const Container = styled.div`
   border-radius: 50px;
   box-shadow: 0px 4px 50px rgba(0, 0, 0, 0.25);
   background: #f5f5f5;
-  color: black;
-  border: 4px solid #b624ff;
+  color: ${ColorPalette.fontDark};
+  border: 4px solid ${ColorPalette.purple};
   box-shadow: 0 0 18px 0 #b624ffbf;
   display: flex;
   gap: 14px;
@@ -294,7 +303,7 @@ const StyledInput = styled(TextField)`
 const SaveBtn = styled.button`
   width: 300px;
   border: none;
-  background: #b624ff;
+  background: ${ColorPalette.purple};
   color: white;
   font-size: 18px;
   padding: 14px;

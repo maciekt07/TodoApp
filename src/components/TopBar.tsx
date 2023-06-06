@@ -1,6 +1,7 @@
 import styled from "@emotion/styled";
 import { ArrowBackIosNew } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
+import { ColorPalette } from "../styles";
 interface TopBarProps {
   title: string;
 }
@@ -33,10 +34,10 @@ const BackBtn = styled.button`
   display: flex;
   justify-content: center;
   align-items: center;
-  font-size: 18px;
+  font-size: 20px;
   padding: 8px 12px;
   background-color: transparent;
-  color: #efefef;
+  color: ${ColorPalette.fontLight};
   border: none;
   border-radius: 12px;
   cursor: pointer;

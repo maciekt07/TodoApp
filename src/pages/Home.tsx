@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { AddTaskBtn, ProfileAvatar, Tasks } from "../components";
 import {
+  ColorPalette,
   // DeleteDoneBtn,
   GreetingHeader,
   GreetingText,
@@ -81,7 +82,7 @@ export const Home = ({ user, setUser }: UserProps) => {
                 size={64}
                 thickness={5}
                 style={{
-                  filter: "drop-shadow(0 0 6px #b624ff)",
+                  filter: `drop-shadow(0 0 6px ${ColorPalette.purple})`,
                 }}
               />
               <ProgressPercentageContainer>
