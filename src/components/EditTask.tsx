@@ -25,7 +25,6 @@ interface EditTaskProps {
   onSave: (editedTask: Task) => void;
   user: User;
 }
-//TODO: add option to change category
 export const EditTask = ({
   open,
   task,
@@ -151,7 +150,7 @@ export const EditTask = ({
           label="Deadline date"
           name="deadline"
           type="datetime-local"
-          value={editedTask?.deadline || ""}
+          value={editedTask?.deadline}
           onChange={handleInputChange}
           focused
           fullWidth

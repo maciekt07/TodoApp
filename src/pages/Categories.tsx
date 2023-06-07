@@ -10,7 +10,6 @@ import { CATEGORY_NAME_MAX_LENGTH } from "../constants";
 import { getFontColorFromHex } from "../utils";
 import { ColorPalette, fadeIn } from "../styles";
 
-//TODO: add option to add/delete categories
 export const Categories = ({ user, setUser }: UserProps) => {
   const [name, setName] = useState<string>("");
   const [nameError, setNameError] = useState<string>("");

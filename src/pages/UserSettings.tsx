@@ -247,6 +247,10 @@ export const UserSettings = ({ user, setUser }: UserProps) => {
         <DialogActions>
           <DialogBtn onClick={handleCloseImageDialog}>Cancel</DialogBtn>
           <DialogBtn
+            disabled={
+              profilePictureURL.length > PROFILE_PICTURE_MAX_LENGTH ||
+              !profilePictureURL.startsWith("https://")
+            }
             onClick={() => {
               if (
                 profilePictureURL.length <= PROFILE_PICTURE_MAX_LENGTH &&

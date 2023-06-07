@@ -25,14 +25,15 @@ const isSameDay = (date1: Date, date2: Date): boolean => {
 };
 
 const formatTime = (date: Date): string => {
-  const hours = date.getHours().toString().padStart(2, "0");
-  const minutes = date.getMinutes().toString().padStart(2, "0");
-  return `${hours}:${minutes}`;
+  return date.toLocaleTimeString(navigator.language, {
+    hour: "2-digit",
+    minute: "2-digit",
+  });
 };
 
 const formatDateOnly = (date: Date): string => {
   const options: Intl.DateTimeFormatOptions = {
-    year: "2-digit",
+    year: "numeric",
     month: "2-digit",
     day: "2-digit",
   };

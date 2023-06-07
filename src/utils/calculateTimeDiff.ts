@@ -17,7 +17,10 @@ export const calculateDateDifference = (date: Date): string => {
   } else if (targetDay === currentDay + 1) {
     return "Tomorrow";
   } else if (differenceDays <= 7) {
-    const dayOfWeek = date.toLocaleString("en-US", { weekday: "long" });
+    // "en-US"
+    const dayOfWeek = date.toLocaleString(navigator.language, {
+      weekday: "long",
+    });
     return `On ${dayOfWeek} (${differenceDays} day${
       differenceDays !== 1 ? "s" : ""
     })`;
