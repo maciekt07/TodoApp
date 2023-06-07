@@ -205,6 +205,7 @@ const CategoryContent = styled.div`
   align-items: center;
   font-weight: 500;
   margin: 0 4px;
+  gap: 4px;
 `;
 
 const DeleteButton = styled.div`

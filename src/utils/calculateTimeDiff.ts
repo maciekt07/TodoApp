@@ -25,7 +25,3 @@ export const calculateDateDifference = (date: Date): string => {
     return `In ${differenceDays} days`;
   }
 };
-
-// const formatTime = (date: Date): string => {
-//   return date.toLocaleTimeString();
-// };

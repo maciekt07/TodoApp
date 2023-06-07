@@ -94,7 +94,22 @@ export const EditTask = ({
       onClose={onClose}
       PaperProps={{ style: { borderRadius: "24px", padding: "12px" } }}
     >
-      <DialogTitle>Edit Task</DialogTitle>
+      <DialogTitle
+        sx={{
+          justifyContent: "space-between",
+          display: "flex",
+          alignItems: "center",
+        }}
+      >
+        <span>Edit Task</span>
+        {editedTask?.lastSave && (
+          <LastEdit>
+            Last Edited: {new Date(editedTask?.lastSave).toLocaleDateString()}
+            {" • "}
+            {new Date(editedTask?.lastSave).toLocaleTimeString()}
+          </LastEdit>
+        )}
+      </DialogTitle>
       <DialogContent>
         <CustomEmojiPicker
           emojiStyle={user.emojisStyle}
@@ -263,4 +278,11 @@ const StyledSelect = styled(Select)`
   transition: 0.3s all;
 
   margin: 8px 0;
+`;
+
+const LastEdit = styled.span`
+  font-size: 14px;
+  font-style: italic;
+  font-weight: 400;
+  opacity: 0.8;
 `;

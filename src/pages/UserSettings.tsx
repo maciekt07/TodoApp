@@ -111,9 +111,17 @@ export const UserSettings = ({ user, setUser }: UserProps) => {
           </Badge>
         </Tooltip>
         <UserName>{user.name || "User"}</UserName>
-        <CreatedAtDate>
-          Registered since {new Date(user.createdAt).toLocaleDateString()}
-        </CreatedAtDate>
+        <Tooltip
+          title={`Created at: ${new Date(
+            user.createdAt
+          ).toLocaleDateString()} • ${new Date(
+            user.createdAt
+          ).toLocaleTimeString()}`}
+        >
+          <CreatedAtDate>
+            Registered since {new Date(user.createdAt).toLocaleDateString()}
+          </CreatedAtDate>
+        </Tooltip>
         <FormControl>
           <FormHelperText>Emoji Style</FormHelperText>
           <Select

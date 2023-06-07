@@ -1,6 +1,6 @@
 import { Category, Task, UserProps } from "../types/user";
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { AddTaskButton, ColorPalette, Container } from "../styles";
 import { Edit } from "@mui/icons-material";
 import { Emoji } from "emoji-picker-react";
@@ -162,7 +162,10 @@ export const AddTask = ({ user, setUser }: UserProps) => {
               <MenuItem
                 value=""
                 disabled
-                sx={{ opacity: "1 !important", fontWeight: 500 }}
+                sx={{
+                  opacity: "1 !important",
+                  fontWeight: 500,
+                }}
               >
                 Select a category
               </MenuItem>
@@ -180,16 +183,18 @@ export const AddTask = ({ user, setUser }: UserProps) => {
                   </StyledMenu>
                 ))}
             </StyledSelect>
-            <Button
-              sx={{
-                margin: "8px 0 24px 0 ",
-                padding: "12px 24px",
-                borderRadius: "12px",
-              }}
-              onClick={() => n("/categories")}
-            >
-              <Edit /> &nbsp; Modify Categories
-            </Button>
+            <Link to="/categories">
+              <Button
+                sx={{
+                  margin: "8px 0 24px 0 ",
+                  padding: "12px 24px",
+                  borderRadius: "12px",
+                }}
+                // onClick={() => n("/categories")}
+              >
+                <Edit /> &nbsp; Modify Categories
+              </Button>
+            </Link>
           </>
         )}
         <Typography>Color</Typography>

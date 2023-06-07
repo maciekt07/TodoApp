@@ -5,8 +5,9 @@
 
 ## 📷 Screenshots
 
-<img src="public/screenshots/1.png" width="350px" />
-<img src="public/screenshots/2.png" width="350px" />
+<img src="public/screenshots/3.png" width="350px" />
+<img src="public/screenshots/4.png" width="350px" />
+<img src="public/screenshots/5.png" width="350px" />
 
 ## ⚡ Features
 

@@ -14,7 +14,7 @@ import {
 } from "@mui/material";
 import { UserProps } from "../types/user";
 import styled from "@emotion/styled";
-import { Logout, ManageAccounts } from "@mui/icons-material";
+import { Category, Logout, ManageAccounts } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
 import { defaultUser } from "../constants/defaultUser";
 
@@ -88,6 +88,11 @@ export const ProfileAvatar = ({ user, setUser }: UserProps) => {
         <StyledMenuItem onClick={() => n("/user")}>
           <ManageAccounts /> &nbsp; Profile
         </StyledMenuItem>
+        {user.enableCategories && (
+          <StyledMenuItem onClick={() => n("/categories")}>
+            <Category /> &nbsp; Categories
+          </StyledMenuItem>
+        )}
         <Divider />
         <StyledMenuItem
           onClick={handleLogoutConfirmationOpen}

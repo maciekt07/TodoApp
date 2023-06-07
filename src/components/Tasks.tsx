@@ -58,6 +58,7 @@ export const Tasks = ({ user, setUser }: UserProps) => {
     return [...pinnedTasks, ...unpinnedTasks];
   };
 
+  // move done tasks to bottom
   // const reorderTasks = (tasks: Task[]): Task[] => {
   //   // Reorders tasks by moving pinned tasks to the top
   //   const pinnedTasks = tasks.filter((task) => task.pinned);
@@ -135,6 +136,7 @@ export const Tasks = ({ user, setUser }: UserProps) => {
           description: newDescription,
           deadline: newDeadline,
           category: newCategory,
+          lastSave: new Date(),
         };
       }
       return task;
@@ -152,10 +154,11 @@ export const Tasks = ({ user, setUser }: UserProps) => {
       );
       if (selectedTask) {
         // Create a duplicated task with a new ID and current date
-        const duplicatedTask = {
+        const duplicatedTask: Task = {
           ...selectedTask,
           id: new Date().getTime() + Math.random(),
           date: new Date(),
+          lastSave: undefined,
         };
         // Add the duplicated task to the existing tasks
         const updatedTasks = [...user.tasks, duplicatedTask];
@@ -482,6 +485,8 @@ const TaskDate = styled.p`
 const TaskDescription = styled.p`
   margin: 0;
   font-size: 18px;
+  /* white-space: pre-line;
+  line-height: 1em; */
 `;
 
 const NoTasks = styled.div`

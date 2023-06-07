@@ -27,9 +27,6 @@ export const TasksCountContainer = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  /* @media (max-width: 1024px) {
-    justify-content: left;
-  } */
 `;
 
 export const TasksCount = styled.div`
