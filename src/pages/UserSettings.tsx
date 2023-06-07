@@ -32,6 +32,11 @@ export const UserSettings = ({ user, setUser }: UserProps) => {
   const [openChangeImage, setOpenChangeImage] = useState<boolean>(false);
   const [logoutConfirmationOpen, setLogoutConfirmationOpen] =
     useState<boolean>(false);
+
+  const [enableCategories, setEnableCategories] = useState(
+    user.enableCategories
+  );
+
   const emojiStyles: { label: string; style: EmojiStyle }[] = [
     { label: "Apple", style: EmojiStyle.APPLE },
     { label: "Facebook, Messenger", style: EmojiStyle.FACEBOOK },
@@ -184,12 +189,12 @@ export const UserSettings = ({ user, setUser }: UserProps) => {
           <Typography sx={{ fontWeight: 500 }}>
             Enable Categories &nbsp;<Beta>BETA</Beta>
           </Typography>
-          {/* FIXME: mui error in console*/}
           <Switch
-            defaultChecked={user.enableCategories}
-            onChange={(e) =>
-              setUser({ ...user, enableCategories: e.target.checked })
-            }
+            checked={enableCategories}
+            onChange={(e) => {
+              setEnableCategories(e.target.checked);
+              setUser({ ...user, enableCategories: e.target.checked });
+            }}
           />
         </div>
 
