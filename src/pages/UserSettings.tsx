@@ -42,7 +42,7 @@ export const UserSettings = ({ user, setUser }: UserProps) => {
     { label: "Facebook, Messenger", style: EmojiStyle.FACEBOOK },
     { label: "Twitter, Discord", style: EmojiStyle.TWITTER },
     { label: "Google", style: EmojiStyle.GOOGLE },
-    // { label: "Native", style: EmojiStyle.NATIVE },
+    { label: "Native", style: EmojiStyle.NATIVE },
   ];
 
   useEffect(() => {
@@ -105,7 +105,7 @@ export const UserSettings = ({ user, setUser }: UserProps) => {
               src={user.profilePicture || ""}
               onError={() => {
                 setUser({ ...user, profilePicture: null });
-                console.error("Error in profile picture URL");
+                throw new Error("Error in profile picture URL");
               }}
               sx={{
                 width: "96px",
@@ -142,6 +142,7 @@ export const UserSettings = ({ user, setUser }: UserProps) => {
               <MenuItem
                 key={style.style}
                 value={style.style}
+                disabled={style.style === EmojiStyle.NATIVE}
                 sx={{
                   padding: "12px 20px",
                   borderRadius: "12px",
@@ -152,6 +153,7 @@ export const UserSettings = ({ user, setUser }: UserProps) => {
               >
                 <Emoji size={24} unified="1f60e" emojiStyle={style.style} />
                 &nbsp;
+                {style.style === EmojiStyle.NATIVE && "\u00A0"}
                 {style.label}
               </MenuItem>
             ))}
@@ -218,6 +220,7 @@ export const UserSettings = ({ user, setUser }: UserProps) => {
         <DialogTitle>Change Profile Picture</DialogTitle>
         <DialogContent>
           <StyledInput
+            autoFocus
             label="Link to profile picture"
             sx={{ margin: "8px 0" }}
             value={profilePictureURL}

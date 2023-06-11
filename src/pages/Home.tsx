@@ -94,6 +94,7 @@ export const Home = ({ user, setUser }: UserProps) => {
                 >{`${Math.round(completedTaskPercentage)}%`}</Typography>
               </ProgressPercentageContainer>
             </Box>
+
             <TaskCountTextContainer>
               <TaskCountHeader>
                 You have {user.tasks.length - completedTasksCount} unfinished
@@ -110,6 +111,7 @@ export const Home = ({ user, setUser }: UserProps) => {
           </TasksCount>
         </TasksCountContainer>
       )}
+
       <Tasks user={user} setUser={setUser} />
       {/* {user.tasks.some((task) => task.done) && (
         <DeleteDoneBtn onClick={handleDeleteDone}>

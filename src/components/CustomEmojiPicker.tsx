@@ -63,7 +63,15 @@ export const CustomEmojiPicker = ({
   return (
     <>
       <EmojiContainer>
-        <Tooltip title={currentEmoji ? "Change Emoji" : "Choose an emoji"}>
+        <Tooltip
+          title={
+            showEmojiPicker
+              ? "Close Emoji Picker"
+              : currentEmoji
+              ? "Change Emoji"
+              : "Choose an Emoji"
+          }
+        >
           <Badge
             overlap="circular"
             anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
@@ -86,6 +94,9 @@ export const CustomEmojiPicker = ({
                 width: "96px",
                 height: "96px",
                 background: color || ColorPalette.purple,
+                // border: `4px solid ${
+                //   color ? getFontColorFromHex(color) : "#c0c0c0"
+                // }`,
                 cursor: "pointer",
               }}
             >
@@ -98,8 +109,14 @@ export const CustomEmojiPicker = ({
         <EmojiPickerContainer>
           <EmojiPicker
             emojiStyle={emojiStyle}
+            autoFocusSearch={false}
             lazyLoadEmojis
             onEmojiClick={handleEmojiClick}
+            searchPlaceHolder="Search emoji"
+            previewConfig={{
+              defaultEmoji: "1f4dd",
+              defaultCaption: "Choose the perfect emoji for your task",
+            }}
           />
         </EmojiPickerContainer>
       )}

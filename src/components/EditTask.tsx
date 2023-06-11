@@ -15,9 +15,10 @@ import { Emoji } from "emoji-picker-react";
 import styled from "@emotion/styled";
 
 import { DESCRIPTION_MAX_LENGTH, TASK_NAME_MAX_LENGTH } from "../constants";
-import { ColorPalette, DialogBtn } from "../styles";
-import { getFontColorFromHex } from "../utils";
+import { DialogBtn } from "../styles";
+
 import { CustomEmojiPicker } from ".";
+import { CategoriesMenu } from "../styles/globalStyles";
 interface EditTaskProps {
   open: boolean;
   task?: Task;
@@ -91,7 +92,12 @@ export const EditTask = ({
     <Dialog
       open={open}
       onClose={onClose}
-      PaperProps={{ style: { borderRadius: "24px", padding: "12px" } }}
+      PaperProps={{
+        style: {
+          borderRadius: "24px",
+          padding: "12px",
+        },
+      }}
     >
       <DialogTitle
         sx={{
@@ -182,18 +188,23 @@ export const EditTask = ({
               >
                 Select a category
               </MenuItem>
-              <StyledMenu value={[]}>None</StyledMenu>
+              <CategoriesMenu value={[]}>None</CategoriesMenu>
               {user.categories &&
                 user.categories.map((category) => (
-                  <StyledMenu
+                  <CategoriesMenu
                     key={category.id}
                     value={category.id}
                     clr={category.color}
                   >
-                    {category.emoji && <Emoji unified={category.emoji} />}{" "}
+                    {category.emoji && (
+                      <Emoji
+                        unified={category.emoji}
+                        emojiStyle={user.emojisStyle}
+                      />
+                    )}{" "}
                     &nbsp;
                     {category.name}
-                  </StyledMenu>
+                  </CategoriesMenu>
                 ))}
             </StyledSelect>
           </>
@@ -246,32 +257,7 @@ const ColorPicker = styled.input`
     border: none;
   }
 `;
-const StyledMenu = styled(MenuItem)<{ clr?: string }>`
-  padding: 12px 20px;
-  border-radius: 16px;
-  margin: 8px;
-  display: flex;
-  gap: 4px;
-  font-weight: 500;
-  transition: 0.2s all;
-  color: ${(props) => getFontColorFromHex(props.clr || ColorPalette.fontLight)};
-  background: ${(props) => props.clr || "#bcbcbc"};
-  &:hover {
-    background: ${(props) => props.clr || "#bcbcbc"};
-    opacity: 0.7;
-  }
 
-  &.Mui-selected {
-    background: ${(props) => props.clr || "#bcbcbc"};
-    color: ${(props) =>
-      getFontColorFromHex(props.clr || ColorPalette.fontLight)};
-    box-shadow: 0 0 14px 4px ${(props) => props.clr || "#bcbcbc"};
-    &:hover {
-      background: ${(props) => props.clr || "#bcbcbc"};
-      opacity: 0.7;
-    }
-  }
-`;
 const StyledSelect = styled(Select)`
   border-radius: 16px;
   transition: 0.3s all;

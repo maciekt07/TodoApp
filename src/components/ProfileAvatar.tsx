@@ -57,12 +57,12 @@ export const ProfileAvatar = ({ user, setUser }: UserProps) => {
             src={user.profilePicture || ""}
             onError={() => {
               setUser({ ...user, profilePicture: null });
-              console.error("Error in profile picture URL");
+              throw new Error("Error in profile picture URL");
             }}
             sx={{
               width: "52px",
               height: "52px",
-              background: "#8e8e8e",
+              background: "#747474",
               transition: ".2s all",
             }}
           />

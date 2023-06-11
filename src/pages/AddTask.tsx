@@ -14,9 +14,9 @@ import {
 } from "@mui/material";
 import styled from "@emotion/styled";
 import { DESCRIPTION_MAX_LENGTH, TASK_NAME_MAX_LENGTH } from "../constants";
-import { getFontColorFromHex } from "../utils";
 import { TopBar } from "../components";
 import { CustomEmojiPicker } from "../components";
+import { CategoriesMenu } from "../styles/globalStyles";
 
 export const AddTask = ({ user, setUser }: UserProps) => {
   const [name, setName] = useState<string>("");
@@ -169,18 +169,23 @@ export const AddTask = ({ user, setUser }: UserProps) => {
               >
                 Select a category
               </MenuItem>
-              <StyledMenu value={[]}>None</StyledMenu>
+              <CategoriesMenu value={[]}>None</CategoriesMenu>
               {user.categories &&
                 user.categories.map((category) => (
-                  <StyledMenu
+                  <CategoriesMenu
                     key={category.id}
                     value={category.id}
                     clr={category.color}
                   >
-                    {category.emoji && <Emoji unified={category.emoji} />}{" "}
+                    {category.emoji && (
+                      <Emoji
+                        unified={category.emoji}
+                        emojiStyle={user.emojisStyle}
+                      />
+                    )}
                     &nbsp;
                     {category.name}
-                  </StyledMenu>
+                  </CategoriesMenu>
                 ))}
             </StyledSelect>
             <Link to="/categories">
@@ -244,32 +249,5 @@ const ColorPicker = styled.input`
   &::-webkit-color-swatch {
     border-radius: 100px;
     border: none;
-  }
-`;
-
-const StyledMenu = styled(MenuItem)<{ clr?: string }>`
-  padding: 12px 20px;
-  border-radius: 16px;
-  margin: 8px;
-  display: flex;
-  gap: 4px;
-  font-weight: 500;
-  transition: 0.2s all;
-  color: ${(props) => getFontColorFromHex(props.clr || ColorPalette.fontLight)};
-  background: ${(props) => props.clr || "#bcbcbc"};
-  &:hover {
-    background: ${(props) => props.clr || "#bcbcbc"};
-    opacity: 0.7;
-  }
-
-  &.Mui-selected {
-    background: ${(props) => props.clr || "#bcbcbc"};
-    color: ${(props) =>
-      getFontColorFromHex(props.clr || ColorPalette.fontLight)};
-    box-shadow: 0 0 14px 4px ${(props) => props.clr || "#bcbcbc"};
-    &:hover {
-      background: ${(props) => props.clr || "#bcbcbc"};
-      opacity: 0.7;
-    }
   }
 `;

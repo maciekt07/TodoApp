@@ -1,12 +1,16 @@
 import { Global, css, keyframes } from "@emotion/react";
 import styled from "@emotion/styled";
-import { Button } from "@mui/material";
+import { Button, MenuItem } from "@mui/material";
+import { ColorPalette } from ".";
+import { getFontColorFromHex } from "../utils";
 const globalStyles = css`
   * {
     font-family: "Poppins", sans-serif !important;
     -webkit-tap-highlight-color: transparent;
     &::selection {
       background-color: #9a52ff;
+      color: #f5f5f5;
+      text-shadow: 0 0 8px #d22eff;
     }
   }
   :root {
@@ -43,7 +47,37 @@ const globalStyles = css`
     @media (max-width: 1024px) {
       margin: 20px;
     }
+
+    /* Custom Scrollbar Styles */
+    ::-webkit-scrollbar {
+      width: 10px;
+
+      background-color: #2a326e;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background-color: #6d2aff;
+      border-radius: 4px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background-color: #8750ff;
+    }
+
+    ::-webkit-scrollbar-track {
+      border-radius: 4px;
+      background-color: #2a326e;
+    }
   }
+
+  .EmojiPickerReact {
+    --epr-hover-bg-color: #b624ffaf;
+    --epr-focus-bg-color: #b624ffaf;
+    --epr-highlight-color: #b624ff;
+    --epr-search-border-color: #b624ff;
+    --epr-category-icon-active-color: #b624ff;
+  }
+
   .MuiDialog-container {
     backdrop-filter: blur(4px);
   }
@@ -73,6 +107,33 @@ export const DialogBtn = styled(Button)`
   border-radius: 16px;
   font-size: 16px;
   margin: 8px;
+`;
+
+export const CategoriesMenu = styled(MenuItem)<{ clr?: string }>`
+  padding: 12px 20px;
+  border-radius: 16px;
+  margin: 8px;
+  display: flex;
+  gap: 4px;
+  font-weight: 500;
+  transition: 0.2s all;
+  color: ${(props) => getFontColorFromHex(props.clr || ColorPalette.fontLight)};
+  background: ${(props) => props.clr || "#bcbcbc"};
+  &:hover {
+    background: ${(props) => props.clr || "#bcbcbc"};
+    opacity: 0.7;
+  }
+
+  &.Mui-selected {
+    background: ${(props) => props.clr || "#bcbcbc"};
+    color: ${(props) =>
+      getFontColorFromHex(props.clr || ColorPalette.fontLight)};
+    box-shadow: 0 0 14px 4px ${(props) => props.clr || "#bcbcbc"};
+    &:hover {
+      background: ${(props) => props.clr || "#bcbcbc"};
+      opacity: 0.7;
+    }
+  }
 `;
 
 export const fadeInLeft = keyframes`

@@ -5,6 +5,7 @@ import styled from "@emotion/styled";
 import {
   calculateDateDifference,
   formatDate,
+  generateLighterOrDarkerColor,
   getFontColorFromHex,
 } from "../utils";
 import {
@@ -27,10 +28,11 @@ import {
   IconButton,
   Menu,
   MenuItem,
+  Tooltip,
 } from "@mui/material";
 import { Emoji } from "emoji-picker-react";
 import { EditTask } from "./EditTask";
-import { DialogBtn, fadeIn } from "../styles";
+import { ColorPalette, DialogBtn, fadeIn } from "../styles";
 
 export const Tasks = ({ user, setUser }: UserProps) => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
@@ -176,11 +178,19 @@ export const Tasks = ({ user, setUser }: UserProps) => {
             <TaskContainer
               key={task.id}
               backgroundColor={task.color}
-              color={getFontColorFromHex(task.color)}
+              clr={getFontColorFromHex(task.color)}
+              selectionClr={generateLighterOrDarkerColor(
+                task.color,
+                task.color === "#000000"
+                  ? 20
+                  : getFontColorFromHex(task.color) === ColorPalette.fontDark
+                  ? -30
+                  : 30
+              )}
               done={task.done}
             >
               {task.emoji || task.done ? (
-                <EmojiContainer color={getFontColorFromHex(task.color)}>
+                <EmojiContainer clr={getFontColorFromHex(task.color)}>
                   {task.done ? (
                     <Done fontSize="large" />
                   ) : (
@@ -201,7 +211,15 @@ export const Tasks = ({ user, setUser }: UserProps) => {
                 <TaskName>
                   {task.name}
 
-                  <TaskDate>{formatDate(new Date(task.date))}</TaskDate>
+                  <Tooltip
+                    title={`Created at ${new Date(
+                      task.date
+                    ).toLocaleDateString()} • ${new Date(
+                      task.date
+                    ).toLocaleTimeString()}`}
+                  >
+                    <TaskDate>{formatDate(new Date(task.date))}</TaskDate>
+                  </Tooltip>
                 </TaskName>
                 <TaskDescription>{task.description}</TaskDescription>
 
@@ -226,8 +244,8 @@ export const Tasks = ({ user, setUser }: UserProps) => {
                   task.category.map((category) => (
                     <div key={category.id}>
                       <CategoryChip
-                        backgroundcolor={category.color}
-                        bordercolor={getFontColorFromHex(task.color)}
+                        backgroundClr={category.color}
+                        borderClr={getFontColorFromHex(task.color)}
                         label={category.name}
                         size="medium"
                         avatar={
@@ -413,33 +431,41 @@ export const Tasks = ({ user, setUser }: UserProps) => {
   );
 };
 
-const TaskContainer = styled.div<{
+interface TaskContainerProps {
   backgroundColor: string;
-  color: string;
+  clr: string;
+  selectionClr: string;
   done: boolean;
-}>`
+}
+
+const TaskContainer = styled.div<TaskContainerProps>`
   display: flex;
   align-items: center;
   margin-top: 16px;
   transition: 0.3s all;
   background-color: ${(props) => props.backgroundColor};
   opacity: ${(props) => (props.done ? 0.7 : 1)};
-  color: ${(props) => props.color};
+  color: ${(props) => props.clr};
   border-left: ${(props) =>
     props.done ? "6px solid #00ff0d" : "6px solid transparent"};
+  box-shadow: 0 0 128px -32px ${(props) => props.backgroundColor};
   padding: 16px;
   border-radius: 20px;
   animation: ${fadeIn} 0.5s ease;
+  /* & *::selection {
+    background-color: ${(props) => props.selectionClr};
+    text-shadow: 0 0 4px #0000009c;
+  } */
 `;
 
-const EmojiContainer = styled.span<{ color: string }>`
+const EmojiContainer = styled.span<{ clr: string }>`
   text-decoration: none;
   margin-right: 12px;
   display: flex;
   align-items: center;
   justify-content: center;
   background-color: ${(props) =>
-    props.color === "#1A1A1A" ? "#4b4b4b6e" : "#dddddd9d"};
+    props.clr === "#1A1A1A" ? "#4b4b4b6e" : "#dddddd9d"};
   font-size: 32px;
   padding: 12px;
   width: 42px;
@@ -542,14 +568,16 @@ const StyledMenuItem = styled(MenuItem)`
   }
 `;
 
-const CategoryChip = styled(Chip)<{
-  backgroundcolor: string;
-  bordercolor?: string;
-}>`
-  color: ${(props) => getFontColorFromHex(props.backgroundcolor)};
-  background-color: ${(props) => props.backgroundcolor};
-  box-shadow: 0 0 8px 0 ${(props) => props.backgroundcolor};
-  border: 2px solid ${(props) => props.bordercolor};
+interface CategoryChipProps {
+  backgroundClr: string;
+  borderClr: string;
+}
+
+const CategoryChip = styled(Chip)<CategoryChipProps>`
+  color: ${(props) => getFontColorFromHex(props.backgroundClr)};
+  background-color: ${(props) => props.backgroundClr};
+  box-shadow: 0 0 8px 0 ${(props) => props.backgroundClr};
+  border: 2px solid ${(props) => props.borderClr};
   font-weight: bold;
   font-size: 14px;
   margin: 6px 0 0 0;
