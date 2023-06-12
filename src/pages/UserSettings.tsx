@@ -142,7 +142,7 @@ export const UserSettings = ({ user, setUser }: UserProps) => {
               <MenuItem
                 key={style.style}
                 value={style.style}
-                disabled={style.style === EmojiStyle.NATIVE}
+                // disabled={style.style === EmojiStyle.NATIVE}
                 sx={{
                   padding: "12px 20px",
                   borderRadius: "12px",

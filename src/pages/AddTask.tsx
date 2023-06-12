@@ -106,11 +106,7 @@ export const AddTask = ({ user, setUser }: UserProps) => {
     <>
       <TopBar title="Add New Task" />
       <Container>
-        <CustomEmojiPicker
-          emojiStyle={user.emojisStyle}
-          setEmoji={setEmoji}
-          color={color}
-        />
+        <CustomEmojiPicker user={user} setEmoji={setEmoji} color={color} />
         <StyledInput
           label="Task Name"
           name="name"

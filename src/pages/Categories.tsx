@@ -107,7 +107,7 @@ export const Categories = ({ user, setUser }: UserProps) => {
         <AddContainer>
           <h2>Add New Category</h2>
           <CustomEmojiPicker
-            emojiStyle={user.emojisStyle}
+            user={user}
             emoji={emoji}
             setEmoji={setEmoji}
             color={color}

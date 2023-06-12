@@ -117,7 +117,7 @@ export const EditTask = ({
       </DialogTitle>
       <DialogContent>
         <CustomEmojiPicker
-          emojiStyle={user.emojisStyle}
+          user={user}
           emoji={editedTask?.emoji || undefined}
           setEmoji={setEmoji}
           color={editedTask?.color}

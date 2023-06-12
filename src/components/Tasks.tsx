@@ -5,7 +5,6 @@ import styled from "@emotion/styled";
 import {
   calculateDateDifference,
   formatDate,
-  generateLighterOrDarkerColor,
   getFontColorFromHex,
 } from "../utils";
 import {
@@ -30,9 +29,9 @@ import {
   MenuItem,
   Tooltip,
 } from "@mui/material";
-import { Emoji } from "emoji-picker-react";
+import { Emoji, EmojiStyle } from "emoji-picker-react";
 import { EditTask } from "./EditTask";
-import { ColorPalette, DialogBtn, fadeIn } from "../styles";
+import { DialogBtn, fadeIn } from "../styles";
 
 export const Tasks = ({ user, setUser }: UserProps) => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
@@ -179,20 +178,28 @@ export const Tasks = ({ user, setUser }: UserProps) => {
               key={task.id}
               backgroundColor={task.color}
               clr={getFontColorFromHex(task.color)}
-              selectionClr={generateLighterOrDarkerColor(
-                task.color,
-                task.color === "#000000"
-                  ? 20
-                  : getFontColorFromHex(task.color) === ColorPalette.fontDark
-                  ? -30
-                  : 30
-              )}
+              // selectionClr={generateLighterOrDarkerColor(
+              //   task.color,
+              //   task.color === "#000000"
+              //     ? 20
+              //     : getFontColorFromHex(task.color) === ColorPalette.fontDark
+              //     ? -30
+              //     : 30
+              // )}
               done={task.done}
             >
               {task.emoji || task.done ? (
                 <EmojiContainer clr={getFontColorFromHex(task.color)}>
                   {task.done ? (
                     <Done fontSize="large" />
+                  ) : user.emojisStyle === EmojiStyle.NATIVE ? (
+                    <div>
+                      <Emoji
+                        size={user.emojisStyle === EmojiStyle.NATIVE ? 36 : 46}
+                        unified={task.emoji || ""}
+                        emojiStyle={user.emojisStyle}
+                      />
+                    </div>
                   ) : (
                     <Emoji
                       size={46}
@@ -254,13 +261,22 @@ export const Tasks = ({ user, setUser }: UserProps) => {
                               alt={category.name}
                               sx={{ background: "transparent" }}
                             >
-                              {category.emoji && (
-                                <Emoji
-                                  size={20}
-                                  unified={category.emoji}
-                                  emojiStyle={user.emojisStyle}
-                                />
-                              )}
+                              {category.emoji &&
+                                (user.emojisStyle === EmojiStyle.NATIVE ? (
+                                  <div>
+                                    <Emoji
+                                      size={20}
+                                      unified={category.emoji}
+                                      emojiStyle={user.emojisStyle}
+                                    />
+                                  </div>
+                                ) : (
+                                  <Emoji
+                                    size={20}
+                                    unified={category.emoji}
+                                    emojiStyle={user.emojisStyle}
+                                  />
+                                ))}
                             </Avatar>
                           ) : (
                             <></>
@@ -434,7 +450,6 @@ export const Tasks = ({ user, setUser }: UserProps) => {
 interface TaskContainerProps {
   backgroundColor: string;
   clr: string;
-  selectionClr: string;
   done: boolean;
 }
 
@@ -452,10 +467,6 @@ const TaskContainer = styled.div<TaskContainerProps>`
   padding: 16px;
   border-radius: 20px;
   animation: ${fadeIn} 0.5s ease;
-  /* & *::selection {
-    background-color: ${(props) => props.selectionClr};
-    text-shadow: 0 0 4px #0000009c;
-  } */
 `;
 
 const EmojiContainer = styled.span<{ clr: string }>`

@@ -5,18 +5,20 @@ import { AddReaction, Edit } from "@mui/icons-material";
 import EmojiPicker, { Emoji, EmojiStyle } from "emoji-picker-react";
 import { getFontColorFromHex } from "../utils";
 import { ColorPalette } from "../styles";
+import { User } from "../types/user";
 
 interface EmojiPickerProps {
   emoji?: string;
   setEmoji: Dispatch<SetStateAction<string | undefined>>;
-  emojiStyle: EmojiStyle;
+  // emojiStyle: EmojiStyle;
+  user: User;
   color?: string;
 }
 
 export const CustomEmojiPicker = ({
   emoji,
   setEmoji,
-  emojiStyle,
+  user,
   color,
 }: EmojiPickerProps) => {
   const [showEmojiPicker, setShowEmojiPicker] = useState<boolean>(false);
@@ -45,8 +47,20 @@ export const CustomEmojiPicker = ({
 
   const renderAvatarContent = () => {
     if (emoji || currentEmoji) {
-      return (
-        <Emoji size={64} emojiStyle={emojiStyle} unified={currentEmoji || ""} />
+      return user.emojisStyle === EmojiStyle.NATIVE ? (
+        <div>
+          <Emoji
+            size={48}
+            emojiStyle={user.emojisStyle}
+            unified={currentEmoji || ""}
+          />
+        </div>
+      ) : (
+        <Emoji
+          size={64}
+          emojiStyle={user.emojisStyle}
+          unified={currentEmoji || ""}
+        />
       );
     } else {
       return (
@@ -108,7 +122,7 @@ export const CustomEmojiPicker = ({
       {showEmojiPicker && (
         <EmojiPickerContainer>
           <EmojiPicker
-            emojiStyle={emojiStyle}
+            emojiStyle={user.emojisStyle}
             autoFocusSearch={false}
             lazyLoadEmojis
             onEmojiClick={handleEmojiClick}
