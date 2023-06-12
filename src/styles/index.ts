@@ -15,6 +15,7 @@ export {
   TaskCountTextContainer,
   TasksCountContainer,
   ProgressPercentageContainer,
+  Offline,
 } from "./home.styled";
 export {
   Container,

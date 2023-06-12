@@ -5,6 +5,7 @@ import {
   // DeleteDoneBtn,
   GreetingHeader,
   GreetingText,
+  Offline,
   ProgressPercentageContainer,
   TaskCompletionText,
   TaskCountHeader,
@@ -21,6 +22,8 @@ import {
 // import { Delete } from "@mui/icons-material";
 import { Emoji } from "emoji-picker-react";
 import { Box, CircularProgress, Typography } from "@mui/material";
+import { useOnlineStatus } from "../hooks/useOnlineStatus";
+import { WifiOff } from "@mui/icons-material";
 
 export const Home = ({ user, setUser }: UserProps) => {
   const [randomGreeting, setRandomGreeting] = useState<string>("");
@@ -62,6 +65,8 @@ export const Home = ({ user, setUser }: UserProps) => {
   //     return { ...prevUser, tasks: updatedTasks };
   //   });
   // };
+
+  const isOnline = useOnlineStatus();
 
   return (
     <>
@@ -111,7 +116,11 @@ export const Home = ({ user, setUser }: UserProps) => {
           </TasksCount>
         </TasksCountContainer>
       )}
-
+      {!isOnline && (
+        <Offline>
+          <WifiOff /> You're offline but you can use the app!
+        </Offline>
+      )}
       <Tasks user={user} setUser={setUser} />
       {/* {user.tasks.some((task) => task.done) && (
         <DeleteDoneBtn onClick={handleDeleteDone}>

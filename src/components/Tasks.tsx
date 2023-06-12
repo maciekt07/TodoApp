@@ -195,9 +195,9 @@ export const Tasks = ({ user, setUser }: UserProps) => {
                   ) : user.emojisStyle === EmojiStyle.NATIVE ? (
                     <div>
                       <Emoji
-                        size={user.emojisStyle === EmojiStyle.NATIVE ? 36 : 46}
+                        size={36}
                         unified={task.emoji || ""}
-                        emojiStyle={user.emojisStyle}
+                        emojiStyle={EmojiStyle.NATIVE}
                       />
                     </div>
                   ) : (
@@ -265,9 +265,9 @@ export const Tasks = ({ user, setUser }: UserProps) => {
                                 (user.emojisStyle === EmojiStyle.NATIVE ? (
                                   <div>
                                     <Emoji
-                                      size={20}
+                                      size={18}
                                       unified={category.emoji}
-                                      emojiStyle={user.emojisStyle}
+                                      emojiStyle={EmojiStyle.NATIVE}
                                     />
                                   </div>
                                 ) : (
@@ -466,7 +466,7 @@ const TaskContainer = styled.div<TaskContainerProps>`
   box-shadow: 0 0 128px -32px ${(props) => props.backgroundColor};
   padding: 16px;
   border-radius: 20px;
-  animation: ${fadeIn} 0.5s ease;
+  animation: ${fadeIn} 0.5s ease-in;
 `;
 
 const EmojiContainer = styled.span<{ clr: string }>`

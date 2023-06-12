@@ -82,3 +82,11 @@ export const ProgressPercentageContainer = styled(Box)`
   align-items: center;
   justify-content: center;
 `;
+
+export const Offline = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 6px;
+  margin: 10px;
+`;

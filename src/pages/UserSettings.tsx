@@ -20,11 +20,12 @@ import { UserProps } from "../types/user";
 import { Emoji, EmojiStyle } from "emoji-picker-react";
 import { useEffect, useState } from "react";
 import styled from "@emotion/styled";
-import { AddAPhoto, Delete, Logout } from "@mui/icons-material";
+import { AddAPhoto, Delete, Logout, WifiOff } from "@mui/icons-material";
 import { PROFILE_PICTURE_MAX_LENGTH, USER_NAME_MAX_LENGTH } from "../constants";
 import { TopBar } from "../components";
 import { ColorPalette, DialogBtn } from "../styles";
 import { defaultUser } from "../constants/defaultUser";
+import { useOnlineStatus } from "../hooks/useOnlineStatus";
 
 export const UserSettings = ({ user, setUser }: UserProps) => {
   const [name, setName] = useState<string>("");
@@ -44,6 +45,10 @@ export const UserSettings = ({ user, setUser }: UserProps) => {
     { label: "Google", style: EmojiStyle.GOOGLE },
     { label: "Native", style: EmojiStyle.NATIVE },
   ];
+
+  const isOnline = useOnlineStatus();
+
+  const [lastStyle] = useState<EmojiStyle>(user.emojisStyle);
 
   useEffect(() => {
     document.title = `Todo App - User ${user.name ? `(${user.name})` : ""}`;
@@ -138,11 +143,31 @@ export const UserSettings = ({ user, setUser }: UserProps) => {
               color: "black",
             }}
           >
+            {!isOnline && (
+              <MenuItem
+                disabled
+                style={{
+                  opacity: 0.8,
+                  display: "flex",
+                  gap: "6px",
+                  fontWeight: 500,
+                }}
+              >
+                <WifiOff /> You can't change the emoji style <br /> when you are
+                offline
+              </MenuItem>
+            )}
             {emojiStyles.map((style) => (
               <MenuItem
                 key={style.style}
                 value={style.style}
                 // disabled={style.style === EmojiStyle.NATIVE}
+                disabled={
+                  !isOnline &&
+                  style.style !== EmojiStyle.NATIVE &&
+                  style.style !== defaultUser.emojisStyle &&
+                  style.style !== lastStyle
+                }
                 sx={{
                   padding: "12px 20px",
                   borderRadius: "12px",

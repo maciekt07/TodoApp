@@ -51,7 +51,7 @@ export const CustomEmojiPicker = ({
         <div>
           <Emoji
             size={48}
-            emojiStyle={user.emojisStyle}
+            emojiStyle={EmojiStyle.NATIVE}
             unified={currentEmoji || ""}
           />
         </div>
