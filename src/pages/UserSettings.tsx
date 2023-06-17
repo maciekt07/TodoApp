@@ -11,10 +11,8 @@ import {
   MenuItem,
   Select,
   SelectChangeEvent,
-  Switch,
   TextField,
   Tooltip,
-  Typography,
 } from "@mui/material";
 import { UserProps } from "../types/user";
 import { Emoji, EmojiStyle } from "emoji-picker-react";
@@ -34,9 +32,9 @@ export const UserSettings = ({ user, setUser }: UserProps) => {
   const [logoutConfirmationOpen, setLogoutConfirmationOpen] =
     useState<boolean>(false);
 
-  const [enableCategories, setEnableCategories] = useState(
-    user.enableCategories
-  );
+  // const [enableCategories, setEnableCategories] = useState(
+  //   user.enableCategories
+  // );
 
   const emojiStyles: { label: string; style: EmojiStyle }[] = [
     { label: "Apple", style: EmojiStyle.APPLE },
@@ -204,7 +202,7 @@ export const UserSettings = ({ user, setUser }: UserProps) => {
             Save name
           </SaveBtn>
         )}
-
+        {/* 
         <div
           style={{
             display: "flex",
@@ -223,7 +221,7 @@ export const UserSettings = ({ user, setUser }: UserProps) => {
               setUser({ ...user, enableCategories: e.target.checked });
             }}
           />
-        </div>
+        </div> */}
 
         <Button
           color="error"
@@ -367,13 +365,13 @@ const CreatedAtDate = styled.span`
   opacity: 0.8;
 `;
 
-const Beta = styled.span`
-  background: #0e8e0e;
-  color: #00ff00;
-  font-size: 12px;
-  letter-spacing: 0.03em;
-  padding: 2px 6px;
-  border-radius: 5px;
-  font-weight: 600;
-  box-shadow: 0 0 4px 0 #0e8e0e91;
-`;
+// const Beta = styled.span`
+//   background: #0e8e0e;
+//   color: #00ff00;
+//   font-size: 12px;
+//   letter-spacing: 0.03em;
+//   padding: 2px 6px;
+//   border-radius: 5px;
+//   font-weight: 600;
+//   box-shadow: 0 0 4px 0 #0e8e0e91;
+// `;

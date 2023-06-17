@@ -18,7 +18,7 @@ export const Categories = ({ user, setUser }: UserProps) => {
   const n = useNavigate();
   useEffect(() => {
     document.title = "Todo App - Categories";
-    if (!user.enableCategories) {
+    if (!user.settings[0].enableCategories) {
       n("/");
     }
   }, []);

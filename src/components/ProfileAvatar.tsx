@@ -14,10 +14,15 @@ import {
 } from "@mui/material";
 import { UserProps } from "../types/user";
 import styled from "@emotion/styled";
-import { Category, Logout, ManageAccounts } from "@mui/icons-material";
+import {
+  Category,
+  Logout,
+  ManageAccounts,
+  Settings,
+} from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
 import { defaultUser } from "../constants/defaultUser";
-import { Settings } from ".";
+import { SettingsDialog } from ".";
 
 export const ProfileAvatar = ({ user, setUser }: UserProps) => {
   const n = useNavigate();
@@ -25,6 +30,9 @@ export const ProfileAvatar = ({ user, setUser }: UserProps) => {
   const open = Boolean(anchorEl);
   const [logoutConfirmationOpen, setLogoutConfirmationOpen] =
     useState<boolean>(false);
+
+  const [openSettings, setOpenSettings] = useState<boolean>(false);
+
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
   };
@@ -89,11 +97,20 @@ export const ProfileAvatar = ({ user, setUser }: UserProps) => {
         <StyledMenuItem onClick={() => n("/user")}>
           <ManageAccounts /> &nbsp; Profile
         </StyledMenuItem>
-        {user.enableCategories && (
-          <StyledMenuItem onClick={() => n("/categories")}>
-            <Category /> &nbsp; Categories
-          </StyledMenuItem>
-        )}
+        <StyledMenuItem
+          onClick={() => {
+            setOpenSettings(true);
+            handleClose();
+          }}
+        >
+          <Settings /> &nbsp; Settings
+        </StyledMenuItem>
+        {user.settings[0].enableCategories !== undefined &&
+          user.settings[0].enableCategories && (
+            <StyledMenuItem onClick={() => n("/categories")}>
+              <Category /> &nbsp; Categories
+            </StyledMenuItem>
+          )}
         <Divider />
         <StyledMenuItem
           onClick={handleLogoutConfirmationOpen}
@@ -124,7 +141,12 @@ export const ProfileAvatar = ({ user, setUser }: UserProps) => {
           </DialogBtn>
         </DialogActions>
       </Dialog>
-      <Settings />
+      <SettingsDialog
+        open={openSettings}
+        onClose={() => setOpenSettings(!openSettings)}
+        user={user}
+        setUser={setUser}
+      />
     </Container>
   );
 };

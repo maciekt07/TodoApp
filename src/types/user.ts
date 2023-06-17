@@ -7,7 +7,7 @@ export interface User {
   emojisStyle: EmojiStyle;
   tasks: Task[];
   categories: Category[];
-  enableCategories: boolean;
+  settings: AppSettings[];
 }
 
 export interface Task {
@@ -29,6 +29,11 @@ export interface Category {
   id: number;
   emoji?: string;
   color: string;
+}
+
+export interface AppSettings {
+  enableCategories: boolean;
+  doneToBottom: boolean;
 }
 
 export interface UserProps {

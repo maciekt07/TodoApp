@@ -3,7 +3,7 @@ import styled from "@emotion/styled";
 import { Add } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
 import { ColorPalette } from "../styles";
-import { IconButton, Tooltip } from "@mui/material";
+import { Tooltip } from "@mui/material";
 
 export const AddTaskBtn = ({ animate }: { animate: boolean }) => {
   const n = useNavigate();
@@ -31,7 +31,7 @@ const pulseAnimation = keyframes`
   }
 `;
 
-const Btn = styled(IconButton)<{ animate: boolean }>`
+const Btn = styled.button<{ animate: boolean }>`
   cursor: pointer;
   border: none;
   display: flex;

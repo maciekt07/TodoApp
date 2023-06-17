@@ -7,6 +7,12 @@ export const defaultUser: User = {
   profilePicture: null,
   emojisStyle: EmojiStyle.APPLE,
   tasks: [],
+  settings: [
+    {
+      enableCategories: true,
+      doneToBottom: false,
+    },
+  ],
   categories: [
     { id: 1, name: "Home", emoji: "1f3e0", color: "#1fff44" },
     { id: 2, name: "Work", emoji: "1f3e2", color: "#248eff" },
@@ -14,5 +20,4 @@ export const defaultUser: User = {
     { id: 4, name: "Health/Fitness", emoji: "1f4aa", color: "#ffdf3d" },
     { id: 5, name: "Education", emoji: "1f4da", color: "#ff8e24" },
   ],
-  enableCategories: true,
 };

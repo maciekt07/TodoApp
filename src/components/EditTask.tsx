@@ -166,52 +166,53 @@ export const EditTask = ({
         />
         <br />
         <br />
-        {user.enableCategories && (
-          <>
-            <Typography>Category (optional)</Typography>
+        {user.settings[0].enableCategories !== undefined &&
+          user.settings[0].enableCategories && (
+            <>
+              <Typography>Category (optional)</Typography>
 
-            <StyledSelect
-              color="primary"
-              fullWidth
-              variant="outlined"
-              value={editedTask?.category?.[0]?.id ?? ""}
-              onChange={handleCategoryChange}
-              MenuProps={{
-                PaperProps: {
-                  style: {
-                    maxHeight: 400,
+              <StyledSelect
+                color="primary"
+                fullWidth
+                variant="outlined"
+                value={editedTask?.category?.[0]?.id ?? ""}
+                onChange={handleCategoryChange}
+                MenuProps={{
+                  PaperProps: {
+                    style: {
+                      maxHeight: 400,
+                    },
                   },
-                },
-              }}
-            >
-              <MenuItem
-                value=""
-                disabled
-                sx={{ opacity: "1 !important", fontWeight: 500 }}
+                }}
               >
-                Select a category
-              </MenuItem>
-              <CategoriesMenu value={[]}>None</CategoriesMenu>
-              {user.categories &&
-                user.categories.map((category) => (
-                  <CategoriesMenu
-                    key={category.id}
-                    value={category.id}
-                    clr={category.color}
-                  >
-                    {category.emoji && (
-                      <Emoji
-                        unified={category.emoji}
-                        emojiStyle={user.emojisStyle}
-                      />
-                    )}{" "}
-                    &nbsp;
-                    {category.name}
-                  </CategoriesMenu>
-                ))}
-            </StyledSelect>
-          </>
-        )}
+                <MenuItem
+                  value=""
+                  disabled
+                  sx={{ opacity: "1 !important", fontWeight: 500 }}
+                >
+                  Select a category
+                </MenuItem>
+                <CategoriesMenu value={[]}>None</CategoriesMenu>
+                {user.categories &&
+                  user.categories.map((category) => (
+                    <CategoriesMenu
+                      key={category.id}
+                      value={category.id}
+                      clr={category.color}
+                    >
+                      {category.emoji && (
+                        <Emoji
+                          unified={category.emoji}
+                          emojiStyle={user.emojisStyle}
+                        />
+                      )}{" "}
+                      &nbsp;
+                      {category.name}
+                    </CategoriesMenu>
+                  ))}
+              </StyledSelect>
+            </>
+          )}
         <Typography>Color:</Typography>
         <ColorPicker
           type="color"

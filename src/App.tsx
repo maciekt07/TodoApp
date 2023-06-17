@@ -18,8 +18,11 @@ function App() {
     if (user.categories === undefined) {
       setUser({ ...user, categories: defaultUser.categories });
     }
-    if (user.enableCategories === undefined) {
-      setUser({ ...user, enableCategories: defaultUser.enableCategories });
+    if (
+      user.settings === undefined ||
+      user.settings[0].enableCategories === undefined
+    ) {
+      setUser({ ...user, settings: defaultUser.settings });
     }
   }, []);
   const userProps = { user, setUser };

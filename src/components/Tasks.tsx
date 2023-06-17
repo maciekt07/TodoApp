@@ -56,19 +56,15 @@ export const Tasks = ({ user, setUser }: UserProps) => {
     // Reorders tasks by moving pinned tasks to the top
     const pinnedTasks = tasks.filter((task) => task.pinned);
     const unpinnedTasks = tasks.filter((task) => !task.pinned);
+    // move done tasks to bottom
+    if (user.settings[0]?.doneToBottom) {
+      const doneTasks = unpinnedTasks.filter((task) => task.done);
+      const notDoneTasks = unpinnedTasks.filter((task) => !task.done);
+      return [...pinnedTasks, ...notDoneTasks, ...doneTasks];
+    }
+
     return [...pinnedTasks, ...unpinnedTasks];
   };
-
-  // move done tasks to bottom
-  // const reorderTasks = (tasks: Task[]): Task[] => {
-  //   // Reorders tasks by moving pinned tasks to the top
-  //   const pinnedTasks = tasks.filter((task) => task.pinned);
-  //   const unpinnedTasks = tasks.filter((task) => !task.pinned);
-  //   const doneTasks = unpinnedTasks.filter((task) => task.done);
-  //   const notDoneTasks = unpinnedTasks.filter((task) => !task.done);
-
-  //   return [...pinnedTasks, ...notDoneTasks, ...doneTasks];
-  // };
 
   const handleMarkAsDone = () => {
     // Toggles the "done" property of the selected task
@@ -239,12 +235,13 @@ export const Tasks = ({ user, setUser }: UserProps) => {
                   </TimeLeft>
                 )}
                 {task.category &&
-                  user.enableCategories &&
+                  user.settings[0].enableCategories !== undefined &&
+                  user.settings[0].enableCategories &&
                   task.category.map((category) => (
                     <div key={category.id}>
                       <CategoryChip
-                        backgroundClr={category.color}
-                        borderClr={getFontColorFromHex(task.color)}
+                        backgroundclr={category.color}
+                        borderclr={getFontColorFromHex(task.color)}
                         label={category.name}
                         size="medium"
                         avatar={
@@ -572,15 +569,15 @@ const StyledMenuItem = styled(MenuItem)`
 `;
 
 interface CategoryChipProps {
-  backgroundClr: string;
-  borderClr: string;
+  backgroundclr: string;
+  borderclr: string;
 }
 
 const CategoryChip = styled(Chip)<CategoryChipProps>`
-  color: ${(props) => getFontColorFromHex(props.backgroundClr)};
-  background-color: ${(props) => props.backgroundClr};
-  box-shadow: 0 0 8px 0 ${(props) => props.backgroundClr};
-  border: 2px solid ${(props) => props.borderClr};
+  color: ${(props) => getFontColorFromHex(props.backgroundclr)};
+  background-color: ${(props) => props.backgroundclr};
+  box-shadow: 0 0 8px 0 ${(props) => props.backgroundclr};
+  border: 2px solid ${(props) => props.borderclr};
   font-weight: bold;
   font-size: 14px;
   margin: 6px 0 0 0;

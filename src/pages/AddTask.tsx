@@ -138,66 +138,67 @@ export const AddTask = ({ user, setUser }: UserProps) => {
           onChange={handleDeadlineChange}
           focused
         />
-        {user.enableCategories && (
-          <>
-            <br />
-            <Typography>Category (optional)</Typography>
-            <StyledSelect
-              color="primary"
-              variant="outlined"
-              value={selectedCategory !== null ? selectedCategory.id : ""}
-              onChange={handleCategoryChange}
-              MenuProps={{
-                PaperProps: {
-                  style: {
-                    maxHeight: 400,
+        {user.settings[0].enableCategories !== undefined &&
+          user.settings[0].enableCategories && (
+            <>
+              <br />
+              <Typography>Category (optional)</Typography>
+              <StyledSelect
+                color="primary"
+                variant="outlined"
+                value={selectedCategory !== null ? selectedCategory.id : ""}
+                onChange={handleCategoryChange}
+                MenuProps={{
+                  PaperProps: {
+                    style: {
+                      maxHeight: 400,
+                    },
                   },
-                },
-              }}
-            >
-              <MenuItem
-                value=""
-                disabled
-                sx={{
-                  opacity: "1 !important",
-                  fontWeight: 500,
                 }}
               >
-                Select a category
-              </MenuItem>
-              <CategoriesMenu value={[]}>None</CategoriesMenu>
-              {user.categories &&
-                user.categories.map((category) => (
-                  <CategoriesMenu
-                    key={category.id}
-                    value={category.id}
-                    clr={category.color}
-                  >
-                    {category.emoji && (
-                      <Emoji
-                        unified={category.emoji}
-                        emojiStyle={user.emojisStyle}
-                      />
-                    )}
-                    &nbsp;
-                    {category.name}
-                  </CategoriesMenu>
-                ))}
-            </StyledSelect>
-            <Link to="/categories">
-              <Button
-                sx={{
-                  margin: "8px 0 24px 0 ",
-                  padding: "12px 24px",
-                  borderRadius: "12px",
-                }}
-                // onClick={() => n("/categories")}
-              >
-                <Edit /> &nbsp; Modify Categories
-              </Button>
-            </Link>
-          </>
-        )}
+                <MenuItem
+                  value=""
+                  disabled
+                  sx={{
+                    opacity: "1 !important",
+                    fontWeight: 500,
+                  }}
+                >
+                  Select a category
+                </MenuItem>
+                <CategoriesMenu value={[]}>None</CategoriesMenu>
+                {user.categories &&
+                  user.categories.map((category) => (
+                    <CategoriesMenu
+                      key={category.id}
+                      value={category.id}
+                      clr={category.color}
+                    >
+                      {category.emoji && (
+                        <Emoji
+                          unified={category.emoji}
+                          emojiStyle={user.emojisStyle}
+                        />
+                      )}
+                      &nbsp;
+                      {category.name}
+                    </CategoriesMenu>
+                  ))}
+              </StyledSelect>
+              <Link to="/categories">
+                <Button
+                  sx={{
+                    margin: "8px 0 24px 0 ",
+                    padding: "12px 24px",
+                    borderRadius: "12px",
+                  }}
+                  // onClick={() => n("/categories")}
+                >
+                  <Edit /> &nbsp; Modify Categories
+                </Button>
+              </Link>
+            </>
+          )}
         <Typography>Color</Typography>
         <ColorPicker type="color" value={color} onChange={handleColorChange} />
         <AddTaskButton
