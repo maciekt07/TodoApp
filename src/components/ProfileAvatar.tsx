@@ -17,6 +17,7 @@ import styled from "@emotion/styled";
 import { Category, Logout, ManageAccounts } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
 import { defaultUser } from "../constants/defaultUser";
+import { Settings } from ".";
 
 export const ProfileAvatar = ({ user, setUser }: UserProps) => {
   const n = useNavigate();
@@ -123,6 +124,7 @@ export const ProfileAvatar = ({ user, setUser }: UserProps) => {
           </DialogBtn>
         </DialogActions>
       </Dialog>
+      <Settings />
     </Container>
   );
 };

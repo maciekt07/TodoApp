@@ -130,8 +130,11 @@ export const EditTask = ({
           fullWidth
           error={nameError || editedTask?.name === ""}
           helperText={
-            (nameError || editedTask?.name === "") &&
-            `Name is required and should be less than or equal to ${TASK_NAME_MAX_LENGTH} characters`
+            editedTask?.name === ""
+              ? "Name is required"
+              : nameError
+              ? `Name should be less than or equal to ${TASK_NAME_MAX_LENGTH} characters`
+              : null
           }
         />
         <StyledInput
@@ -231,7 +234,11 @@ export const EditTask = ({
         >
           Cancel
         </DialogBtn>
-        <DialogBtn onClick={handleSave} color="primary">
+        <DialogBtn
+          onClick={handleSave}
+          color="primary"
+          disabled={nameError || editedTask?.name === ""}
+        >
           Save
         </DialogBtn>
       </DialogActions>

@@ -9,7 +9,7 @@ const globalStyles = css`
     -webkit-tap-highlight-color: transparent;
     &::selection {
       background-color: #9a52ff;
-      color: #f5f5f5;
+      color: #ffffff;
       text-shadow: 0 0 8px #d22eff;
     }
   }

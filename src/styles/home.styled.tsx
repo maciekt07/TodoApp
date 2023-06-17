@@ -89,4 +89,5 @@ export const Offline = styled.div`
   align-items: center;
   gap: 6px;
   margin: 10px;
+  animation: ${fadeIn} 0.5s ease;
 `;

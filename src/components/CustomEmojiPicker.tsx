@@ -10,7 +10,6 @@ import { User } from "../types/user";
 interface EmojiPickerProps {
   emoji?: string;
   setEmoji: Dispatch<SetStateAction<string | undefined>>;
-  // emojiStyle: EmojiStyle;
   user: User;
   color?: string;
 }
@@ -46,28 +45,24 @@ export const CustomEmojiPicker = ({
   };
 
   const renderAvatarContent = () => {
-    if (emoji || currentEmoji) {
-      return user.emojisStyle === EmojiStyle.NATIVE ? (
-        <div>
-          <Emoji
-            size={48}
-            emojiStyle={EmojiStyle.NATIVE}
-            unified={currentEmoji || ""}
-          />
-        </div>
-      ) : (
+    if (currentEmoji) {
+      const emojiSize = user.emojisStyle === EmojiStyle.NATIVE ? 48 : 64;
+      return (
         <Emoji
-          size={64}
+          size={emojiSize}
           emojiStyle={user.emojisStyle}
-          unified={currentEmoji || ""}
+          unified={currentEmoji}
         />
       );
     } else {
+      const fontColor = color
+        ? getFontColorFromHex(color)
+        : ColorPalette.fontLight;
       return (
         <AddReaction
           sx={{
             fontSize: "52px",
-            color: color ? getFontColorFromHex(color) : ColorPalette.fontLight,
+            color: fontColor,
           }}
         />
       );
@@ -108,9 +103,6 @@ export const CustomEmojiPicker = ({
                 width: "96px",
                 height: "96px",
                 background: color || ColorPalette.purple,
-                // border: `4px solid ${
-                //   color ? getFontColorFromHex(color) : "#c0c0c0"
-                // }`,
                 cursor: "pointer",
               }}
             >

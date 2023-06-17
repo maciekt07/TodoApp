@@ -3,12 +3,12 @@ import styled from "@emotion/styled";
 import { Add } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
 import { ColorPalette } from "../styles";
-import { Tooltip } from "@mui/material";
+import { IconButton, Tooltip } from "@mui/material";
 
 export const AddTaskBtn = ({ animate }: { animate: boolean }) => {
   const n = useNavigate();
   return (
-    <Tooltip title="Add new task" placement="left">
+    <Tooltip title="Add New Task" placement="left">
       <Btn animate={animate} onClick={() => n("add")} aria-label="Add Task">
         <Add fontSize="large" />
       </Btn>
@@ -31,7 +31,7 @@ const pulseAnimation = keyframes`
   }
 `;
 
-const Btn = styled.button<{ animate: boolean }>`
+const Btn = styled(IconButton)<{ animate: boolean }>`
   cursor: pointer;
   border: none;
   display: flex;
@@ -46,6 +46,12 @@ const Btn = styled.button<{ animate: boolean }>`
   color: white;
   right: 16vw;
   box-shadow: 0px 0px 20px 0px ${ColorPalette.purple};
+  transition: 0.3s all;
+  &:hover {
+    box-shadow: none;
+    background-color: #b624ffd0;
+  }
+
   ${({ animate }) =>
     animate &&
     css`

@@ -178,14 +178,6 @@ export const Tasks = ({ user, setUser }: UserProps) => {
               key={task.id}
               backgroundColor={task.color}
               clr={getFontColorFromHex(task.color)}
-              // selectionClr={generateLighterOrDarkerColor(
-              //   task.color,
-              //   task.color === "#000000"
-              //     ? 20
-              //     : getFontColorFromHex(task.color) === ColorPalette.fontDark
-              //     ? -30
-              //     : 30
-              // )}
               done={task.done}
             >
               {task.emoji || task.done ? (
