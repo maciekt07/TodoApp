@@ -29,10 +29,11 @@ export const TasksCountContainer = styled.div`
   align-items: center;
 `;
 
-export const TasksCount = styled.div`
+export const TasksCount = styled.div<{ glow: boolean }>`
   /* animation: ${fadeIn} 0.5s ease-in; */
   border: 3px solid #b624ff;
-  box-shadow: 0 0 14px 0 #b624ff;
+  box-shadow: ${(props) => (props.glow ? "0 0 14px 0 #b624ff" : "none")};
+
   display: inline-flex;
   position: relative;
   align-items: center;

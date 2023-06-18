@@ -27,3 +27,19 @@ export {
   ColorPreview,
 } from "./addTask.styled";
 export { MuiTheme, ColorPalette } from "./theme";
+
+export {
+  TaskContainer,
+  EmojiContainer,
+  TaskDate,
+  TaskInfo,
+  TaskDescription,
+  TaskName,
+  NoTasks,
+  CategoriesListContainer,
+  TasksContainer,
+  Pinned,
+  StyledMenuItem,
+  CategoryChip,
+  TimeLeft,
+} from "./tasks.styled";

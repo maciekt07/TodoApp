@@ -10,6 +10,7 @@ import { ThemeProvider } from "@mui/material";
 import { NotFound } from "./pages/NotFound";
 import { useEffect } from "react";
 import { Categories } from "./pages/Categories";
+import { ErrorBoundary } from "./components";
 
 function App() {
   const [user, setUser] = useStorageState<User>(defaultUser, "user");
@@ -20,24 +21,29 @@ function App() {
     }
     if (
       user.settings === undefined ||
-      user.settings[0].enableCategories === undefined
+      user.settings[0].enableCategories === undefined ||
+      user.settings[0].enableGlow === undefined ||
+      user.settings[0] === undefined
     ) {
       setUser({ ...user, settings: defaultUser.settings });
     }
   }, []);
   const userProps = { user, setUser };
+
   return (
     <>
-      <ThemeProvider theme={MuiTheme}>
-        <GlobalStyles />
-        <Routes>
-          <Route path="/" element={<Home {...userProps} />} />
-          <Route path="/add" element={<AddTask {...userProps} />} />
-          <Route path="/user" element={<UserSettings {...userProps} />} />
-          <Route path="/categories" element={<Categories {...userProps} />} />
-          <Route path="*" element={<NotFound />} />
-        </Routes>
-      </ThemeProvider>
+      <ErrorBoundary fallbackUI={<div>Error 🙄</div>}>
+        <ThemeProvider theme={MuiTheme}>
+          <GlobalStyles />
+          <Routes>
+            <Route path="/" element={<Home {...userProps} />} />
+            <Route path="/add" element={<AddTask {...userProps} />} />
+            <Route path="/user" element={<UserSettings {...userProps} />} />
+            <Route path="/categories" element={<Categories {...userProps} />} />
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </ThemeProvider>
+      </ErrorBoundary>
     </>
   );
 }

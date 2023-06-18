@@ -169,7 +169,7 @@ export const EditTask = ({
         {user.settings[0].enableCategories !== undefined &&
           user.settings[0].enableCategories && (
             <>
-              <Typography>Category (optional)</Typography>
+              <Typography>Category</Typography>
 
               <StyledSelect
                 color="primary"

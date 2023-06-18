@@ -88,7 +88,7 @@ export const ProfileAvatar = ({ user, setUser }: UserProps) => {
         sx={{
           "& .MuiPaper-root": {
             borderRadius: "18px",
-            minWidth: "150px",
+            minWidth: "172px",
             boxShadow: "none",
             padding: "2px 4px",
           },

@@ -1,7 +1,6 @@
 import { Category, Task, UserProps } from "../types/user";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
-import styled from "@emotion/styled";
 import {
   calculateDateDifference,
   formatDate,
@@ -18,7 +17,6 @@ import {
 } from "@mui/icons-material";
 import {
   Avatar,
-  Chip,
   Dialog,
   DialogActions,
   DialogContent,
@@ -26,12 +24,26 @@ import {
   Divider,
   IconButton,
   Menu,
-  MenuItem,
   Tooltip,
 } from "@mui/material";
 import { Emoji, EmojiStyle } from "emoji-picker-react";
 import { EditTask } from "./EditTask";
-import { DialogBtn, fadeIn } from "../styles";
+import {
+  CategoriesListContainer,
+  CategoryChip,
+  DialogBtn,
+  EmojiContainer,
+  NoTasks,
+  Pinned,
+  StyledMenuItem,
+  TaskContainer,
+  TaskDate,
+  TaskDescription,
+  TaskInfo,
+  TaskName,
+  TasksContainer,
+  TimeLeft,
+} from "../styles";
 
 export const Tasks = ({ user, setUser }: UserProps) => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
@@ -55,7 +67,21 @@ export const Tasks = ({ user, setUser }: UserProps) => {
   const reorderTasks = (tasks: Task[]): Task[] => {
     // Reorders tasks by moving pinned tasks to the top
     const pinnedTasks = tasks.filter((task) => task.pinned);
-    const unpinnedTasks = tasks.filter((task) => !task.pinned);
+    let unpinnedTasks = tasks.filter((task) => !task.pinned);
+
+    // Filter tasks based on the selected category
+    //FIXME: doesnt work for pins
+    if (selectedCatId !== undefined) {
+      unpinnedTasks = unpinnedTasks.filter((task) => {
+        if (task.category) {
+          return task.category.some(
+            (category) => category.id === selectedCatId
+          );
+        }
+        return false;
+      });
+    }
+
     // move done tasks to bottom
     if (user.settings[0]?.doneToBottom) {
       const doneTasks = unpinnedTasks.filter((task) => task.done);
@@ -165,15 +191,99 @@ export const Tasks = ({ user, setUser }: UserProps) => {
     }
   };
 
+  const [categories, setCategories] = useState<Category[] | undefined>(
+    undefined
+  );
+  const [selectedCatId, setSelectedCatId] = useState<number | undefined>(
+    undefined
+  );
+
+  useEffect(() => {
+    const tasks: Task[] = user.tasks;
+    // Create an empty array to store unique categories
+    const uniqueCategories: Category[] = [];
+    // Iterate over each task
+    tasks.forEach((task) => {
+      // Check if the task has a category
+      if (task.category) {
+        // Iterate over each category of the task
+        task.category.forEach((category) => {
+          // Check if the category is not already in the uniqueCategories array
+          if (!uniqueCategories.some((c) => c.id === category.id)) {
+            // Push the unique category to the array
+            uniqueCategories.push(category);
+          }
+        });
+      }
+    });
+    setCategories(uniqueCategories);
+  }, [user.tasks]);
   return (
     <>
-      <Container>
+      <TasksContainer>
+        <CategoriesListContainer>
+          {categories !== undefined &&
+            categories?.length > 1 &&
+            user.settings[0].enableCategories &&
+            categories?.map((cat) => (
+              <CategoryChip
+                label={cat.name}
+                borderclr="transparent"
+                glow={user.settings[0].enableGlow}
+                backgroundclr={cat.color}
+                onClick={() => setSelectedCatId(cat.id)}
+                key={cat.id}
+                list
+                onDelete={
+                  selectedCatId === cat.id
+                    ? () => setSelectedCatId(undefined)
+                    : undefined
+                }
+                style={{
+                  boxShadow:
+                    selectedCatId === cat.id
+                      ? `0 0 8px 0 ${cat.color}`
+                      : "none",
+                  display:
+                    selectedCatId === undefined || selectedCatId === cat.id
+                      ? "inline-flex"
+                      : "none",
+                  padding: "16px 12px",
+                }}
+                avatar={
+                  cat.emoji ? (
+                    <Avatar alt={cat.name} sx={{ background: "transparent" }}>
+                      {cat.emoji &&
+                        (user.emojisStyle === EmojiStyle.NATIVE ? (
+                          <div>
+                            <Emoji
+                              size={18}
+                              unified={cat.emoji}
+                              emojiStyle={EmojiStyle.NATIVE}
+                            />
+                          </div>
+                        ) : (
+                          <Emoji
+                            size={20}
+                            unified={cat.emoji}
+                            emojiStyle={user.emojisStyle}
+                          />
+                        ))}
+                    </Avatar>
+                  ) : (
+                    <></>
+                  )
+                }
+              />
+            ))}
+        </CategoriesListContainer>
         {user.tasks.length !== 0 ? (
           reorderTasks(user.tasks).map((task) => (
             <TaskContainer
               key={task.id}
               backgroundColor={task.color}
               clr={getFontColorFromHex(task.color)}
+              glow={user.settings[0].enableGlow}
               done={task.done}
             >
               {task.emoji || task.done ? (
@@ -242,6 +352,7 @@ export const Tasks = ({ user, setUser }: UserProps) => {
                       <CategoryChip
                         backgroundclr={category.color}
                         borderclr={getFontColorFromHex(task.color)}
+                        glow={user.settings[0].enableGlow}
                         label={category.name}
                         size="medium"
                         avatar={
@@ -382,7 +493,7 @@ export const Tasks = ({ user, setUser }: UserProps) => {
             setEditModalOpen(false);
           }}
         />
-      </Container>
+      </TasksContainer>
       <Dialog
         open={deleteDialogOpen}
         onClose={cancelDeleteTask}
@@ -435,152 +546,3 @@ export const Tasks = ({ user, setUser }: UserProps) => {
     </>
   );
 };
-
-interface TaskContainerProps {
-  backgroundColor: string;
-  clr: string;
-  done: boolean;
-}
-
-const TaskContainer = styled.div<TaskContainerProps>`
-  display: flex;
-  align-items: center;
-  margin-top: 16px;
-  transition: 0.3s all;
-  background-color: ${(props) => props.backgroundColor};
-  opacity: ${(props) => (props.done ? 0.7 : 1)};
-  color: ${(props) => props.clr};
-  border-left: ${(props) =>
-    props.done ? "6px solid #00ff0d" : "6px solid transparent"};
-  box-shadow: 0 0 128px -32px ${(props) => props.backgroundColor};
-  padding: 16px;
-  border-radius: 20px;
-  animation: ${fadeIn} 0.5s ease-in;
-`;
-
-const EmojiContainer = styled.span<{ clr: string }>`
-  text-decoration: none;
-  margin-right: 12px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background-color: ${(props) =>
-    props.clr === "#1A1A1A" ? "#4b4b4b6e" : "#dddddd9d"};
-  font-size: 32px;
-  padding: 12px;
-  width: 42px;
-  height: 42px;
-  border-radius: 18px;
-  overflow: hidden;
-  text-overflow: ellipsis;
-`;
-
-const TaskInfo = styled.div<{ done: boolean }>`
-  text-decoration: ${(props) => (props.done ? "line-through" : "none")};
-  display: flex;
-  flex-direction: column;
-  flex: 1;
-`;
-
-const TaskName = styled.h3`
-  margin: 0;
-  display: flex;
-  align-items: center;
-  font-size: 20px;
-  /* @media (max-width: 600px) {
-    flex-direction: column;
-    align-items: flex-start;
-  } */
-`;
-
-const TaskDate = styled.p`
-  margin: 0 6px;
-  text-align: right;
-  margin-left: auto;
-  font-size: 14px;
-  font-style: italic;
-  font-weight: 300;
-  opacity: 0.9;
-  /* @media (max-width: 600px) {
-    margin-left: 0;
-    margin-top: 4px;
-    text-align: left;
-  } */
-`;
-
-const TaskDescription = styled.p`
-  margin: 0;
-  font-size: 18px;
-  /* white-space: pre-line;
-  line-height: 1em; */
-`;
-
-const NoTasks = styled.div`
-  text-align: center;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  min-width: 100vw;
-  opacity: 0.9;
-  font-size: 18px;
-  /* @media (max-width: 1024px) {
-    font-size: 16px;
-  } */
-`;
-
-const Container = styled.div`
-  display: flex;
-  justify-content: center;
-  max-width: 700px;
-  margin: 0 auto;
-  flex-direction: column;
-`;
-
-const TimeLeft = styled.span<{ timeUp: boolean; done: boolean }>`
-  color: ${(props) => props.timeUp && !props.done && "#ff2a23d5"};
-  text-shadow: ${(props) =>
-    props.timeUp && !props.done ? "0 0 8px #ff2a23d5" : "none"};
-  transition: 0.3s all;
-  font-size: 14px;
-  margin: 6px 0;
-  font-weight: 500;
-  font-style: italic;
-  display: flex;
-  opacity: ${(props) => (props.timeUp ? 1 : 0.9)};
-`;
-
-const Pinned = styled.div`
-  display: flex;
-  justify-content: left;
-  align-items: center;
-  opacity: 0.8;
-  font-size: 16px;
-`;
-const StyledMenuItem = styled(MenuItem)`
-  margin: 6px;
-  padding: 10px;
-  border-radius: 12px;
-  box-shadow: none;
-
-  &:hover {
-    background-color: #f0f0f0;
-  }
-`;
-
-interface CategoryChipProps {
-  backgroundclr: string;
-  borderclr: string;
-}
-
-const CategoryChip = styled(Chip)<CategoryChipProps>`
-  color: ${(props) => getFontColorFromHex(props.backgroundclr)};
-  background-color: ${(props) => props.backgroundclr};
-  box-shadow: 0 0 8px 0 ${(props) => props.backgroundclr};
-  border: 2px solid ${(props) => props.borderclr};
-  font-weight: bold;
-  font-size: 14px;
-  margin: 6px 0 0 0;
-  padding: 8px;
-  opacity: 0.9;
-`;

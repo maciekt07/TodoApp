@@ -27,6 +27,8 @@ export const SettingsDialog = ({
     user.settings[0].enableCategories
   );
 
+  const [glow, setGlow] = useState(user.settings[0].enableGlow);
+
   const [doneToBottom, setDoneToBottom] = useState(
     user.settings[0].doneToBottom
   );
@@ -43,6 +45,20 @@ export const SettingsDialog = ({
       settings: updatedSettings,
     }));
     setCategories(event.target.checked);
+  };
+
+  const handleGlowChange = (event: ChangeEvent<HTMLInputElement>) => {
+    const updatedSettings = [
+      {
+        ...user.settings[0],
+        enableGlow: event.target.checked,
+      },
+    ];
+    setUser((prevUser) => ({
+      ...prevUser,
+      settings: updatedSettings,
+    }));
+    setGlow(event.target.checked);
   };
 
   const handleDoneToBottomChange = (event: ChangeEvent<HTMLInputElement>) => {
@@ -87,7 +103,13 @@ export const SettingsDialog = ({
             }
           />
         </FormGroup>
-
+        <FormGroup>
+          <FormControlLabel
+            sx={{ opacity: glow ? 1 : 0.8 }}
+            control={<Switch checked={glow} onChange={handleGlowChange} />}
+            label="Enable Glow Effect"
+          />
+        </FormGroup>
         <FormGroup>
           <FormControlLabel
             sx={{ opacity: doneToBottom ? 1 : 0.8 }}

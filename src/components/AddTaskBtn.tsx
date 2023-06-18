@@ -4,12 +4,27 @@ import { Add } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
 import { ColorPalette } from "../styles";
 import { Tooltip } from "@mui/material";
+import { User } from "../types/user";
 
-export const AddTaskBtn = ({ animate }: { animate: boolean }) => {
+export const AddTaskBtn = ({
+  animate,
+  user,
+}: {
+  animate: boolean;
+  user: User;
+}) => {
   const n = useNavigate();
   return (
-    <Tooltip title="Add New Task" placement="left">
-      <Btn animate={animate} onClick={() => n("add")} aria-label="Add Task">
+    <Tooltip
+      title={user.tasks.length > 0 ? "Add New Task" : "Add Task"}
+      placement="left"
+    >
+      <Btn
+        animate={animate}
+        glow={user.settings[0].enableGlow}
+        onClick={() => n("add")}
+        aria-label="Add Task"
+      >
         <Add fontSize="large" />
       </Btn>
     </Tooltip>
@@ -31,7 +46,7 @@ const pulseAnimation = keyframes`
   }
 `;
 
-const Btn = styled.button<{ animate: boolean }>`
+const Btn = styled.button<{ animate: boolean; glow: boolean }>`
   cursor: pointer;
   border: none;
   display: flex;
@@ -45,11 +60,13 @@ const Btn = styled.button<{ animate: boolean }>`
   background-color: ${ColorPalette.purple};
   color: white;
   right: 16vw;
-  box-shadow: 0px 0px 20px 0px ${ColorPalette.purple};
-  transition: 0.3s all;
+  box-shadow: ${(props) =>
+    props.glow ? `0px 0px 20px 0px ${ColorPalette.purple}` : "none"};
+  transition: background-color 0.3s, backdrop-filter 0.3s, box-shadow 0.3s;
   &:hover {
     box-shadow: none;
     background-color: #b624ffd0;
+    backdrop-filter: blur(6px);
   }
 
   ${({ animate }) =>

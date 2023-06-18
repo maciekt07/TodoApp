@@ -34,6 +34,7 @@ export interface Category {
 export interface AppSettings {
   enableCategories: boolean;
   doneToBottom: boolean;
+  enableGlow: boolean;
 }
 
 export interface UserProps {

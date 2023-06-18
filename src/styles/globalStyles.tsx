@@ -3,6 +3,7 @@ import styled from "@emotion/styled";
 import { Button, MenuItem } from "@mui/material";
 import { ColorPalette } from ".";
 import { getFontColorFromHex } from "../utils";
+
 const globalStyles = css`
   * {
     font-family: "Poppins", sans-serif !important;

@@ -8,6 +8,7 @@ import {
   DialogTitle,
   FormControl,
   FormHelperText,
+  IconButton,
   MenuItem,
   Select,
   SelectChangeEvent,
@@ -18,9 +19,15 @@ import { UserProps } from "../types/user";
 import { Emoji, EmojiStyle } from "emoji-picker-react";
 import { useEffect, useState } from "react";
 import styled from "@emotion/styled";
-import { AddAPhoto, Delete, Logout, WifiOff } from "@mui/icons-material";
+import {
+  AddAPhoto,
+  Delete,
+  Logout,
+  Settings,
+  WifiOff,
+} from "@mui/icons-material";
 import { PROFILE_PICTURE_MAX_LENGTH, USER_NAME_MAX_LENGTH } from "../constants";
-import { TopBar } from "../components";
+import { SettingsDialog, TopBar } from "../components";
 import { ColorPalette, DialogBtn } from "../styles";
 import { defaultUser } from "../constants/defaultUser";
 import { useOnlineStatus } from "../hooks/useOnlineStatus";
@@ -32,9 +39,7 @@ export const UserSettings = ({ user, setUser }: UserProps) => {
   const [logoutConfirmationOpen, setLogoutConfirmationOpen] =
     useState<boolean>(false);
 
-  // const [enableCategories, setEnableCategories] = useState(
-  //   user.enableCategories
-  // );
+  const [openSettings, setOpenSettings] = useState<boolean>(false);
 
   const emojiStyles: { label: string; style: EmojiStyle }[] = [
     { label: "Apple", style: EmojiStyle.APPLE },
@@ -80,6 +85,17 @@ export const UserSettings = ({ user, setUser }: UserProps) => {
     <>
       <TopBar title="User Profile" />
       <Container>
+        <IconButton
+          onClick={() => setOpenSettings(true)}
+          size="large"
+          sx={{
+            position: "absolute",
+            top: "24px",
+            right: "24px",
+          }}
+        >
+          <Settings fontSize="large" />
+        </IconButton>
         <Tooltip
           title={
             user.profilePicture
@@ -202,26 +218,6 @@ export const UserSettings = ({ user, setUser }: UserProps) => {
             Save name
           </SaveBtn>
         )}
-        {/* 
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            gap: "32px",
-          }}
-        >
-          <Typography sx={{ fontWeight: 500 }}>
-            Enable Categories &nbsp;<Beta>BETA</Beta>
-          </Typography>
-          <Switch
-            checked={enableCategories}
-            onChange={(e) => {
-              setEnableCategories(e.target.checked);
-              setUser({ ...user, enableCategories: e.target.checked });
-            }}
-          />
-        </div> */}
 
         <Button
           color="error"
@@ -312,6 +308,12 @@ export const UserSettings = ({ user, setUser }: UserProps) => {
           </DialogBtn>
         </DialogActions>
       </Dialog>
+      <SettingsDialog
+        open={openSettings}
+        onClose={() => setOpenSettings(false)}
+        user={user}
+        setUser={setUser}
+      />
     </>
   );
 };
@@ -320,7 +322,7 @@ const Container = styled.div`
   margin: 0 auto;
   max-width: 400px;
   padding: 70px 70px;
-  border-radius: 50px;
+  border-radius: 48px;
   box-shadow: 0px 4px 50px rgba(0, 0, 0, 0.25);
   background: #f5f5f5;
   color: ${ColorPalette.fontDark};

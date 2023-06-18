@@ -79,7 +79,7 @@ export const Home = ({ user, setUser }: UserProps) => {
       <GreetingText key={randomGreeting}>{randomGreeting}</GreetingText>
       {user.tasks.length > 0 && (
         <TasksCountContainer>
-          <TasksCount>
+          <TasksCount glow={user.settings[0].enableGlow}>
             <Box sx={{ position: "relative", display: "inline-flex" }}>
               <CircularProgress
                 variant="determinate"
@@ -87,7 +87,10 @@ export const Home = ({ user, setUser }: UserProps) => {
                 size={64}
                 thickness={5}
                 style={{
-                  filter: `drop-shadow(0 0 6px ${ColorPalette.purple})`,
+                  // filter: `drop-shadow(0 0 6px ${ColorPalette.purple})`,
+                  filter: user.settings[0].enableGlow
+                    ? `drop-shadow(0 0 6px ${ColorPalette.purple})`
+                    : "none",
                 }}
               />
               <ProgressPercentageContainer>
@@ -127,7 +130,7 @@ export const Home = ({ user, setUser }: UserProps) => {
           <Delete /> &nbsp; Delete done
         </DeleteDoneBtn>
       )} */}
-      <AddTaskBtn animate={user.tasks.length === 0} />
+      <AddTaskBtn animate={user.tasks.length === 0} user={user} />
     </>
   );
 };

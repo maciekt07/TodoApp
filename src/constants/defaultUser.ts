@@ -11,6 +11,7 @@ export const defaultUser: User = {
     {
       enableCategories: true,
       doneToBottom: false,
+      enableGlow: true,
     },
   ],
   categories: [

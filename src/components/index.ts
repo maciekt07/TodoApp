@@ -5,3 +5,4 @@ export { EditTask } from "./EditTask";
 export { TopBar } from "./TopBar";
 export { CustomEmojiPicker } from "./CustomEmojiPicker";
 export { SettingsDialog } from "./Settings";
+export { ErrorBoundary } from "./ErrorBoundary";
