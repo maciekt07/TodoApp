@@ -321,7 +321,7 @@ export const UserSettings = ({ user, setUser }: UserProps) => {
 const Container = styled.div`
   margin: 0 auto;
   max-width: 400px;
-  padding: 70px 70px;
+  padding: 64px 48px;
   border-radius: 48px;
   box-shadow: 0px 4px 50px rgba(0, 0, 0, 0.25);
   background: #f5f5f5;
@@ -345,7 +345,7 @@ const StyledInput = styled(TextField)`
     width: 300px;
   }
 `;
-const SaveBtn = styled.button`
+const SaveBtn = styled(Button)`
   width: 300px;
   border: none;
   background: ${ColorPalette.purple};
@@ -354,6 +354,15 @@ const SaveBtn = styled.button`
   padding: 14px;
   border-radius: 16px;
   cursor: pointer;
+  text-transform: capitalize;
+  &:hover {
+    background: ${ColorPalette.purple};
+  }
+  &:disabled {
+    cursor: not-allowed;
+    opacity: 0.7;
+    color: white;
+  }
 `;
 
 const UserName = styled.span`

@@ -3,7 +3,7 @@
  * @param {number} completionPercentage - The completion percentage of tasks.
  * @returns {string} A task completion message.
  */
-export function getTaskCompletionText(completionPercentage: number): string {
+export const getTaskCompletionText = (completionPercentage: number): string => {
   switch (true) {
     case completionPercentage === 0:
       return "No tasks completed yet. Keep going!";
@@ -18,4 +18,4 @@ export function getTaskCompletionText(completionPercentage: number): string {
     default:
       return "You're just getting started. Keep pushing!";
   }
-}
+};

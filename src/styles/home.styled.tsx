@@ -1,6 +1,7 @@
 import styled from "@emotion/styled";
 import { fadeIn, fadeInLeft } from "./globalStyles";
 import { Box } from "@mui/material";
+import { ColorPalette } from ".";
 
 export const GreetingHeader = styled.div`
   display: flex;
@@ -10,8 +11,8 @@ export const GreetingHeader = styled.div`
   margin-top: 16px;
   margin-left: 8px;
 
-  @media (max-width: 600px) {
-    font-size: 24px;
+  @media (max-width: 550px) {
+    font-size: 22px;
   }
 `;
 
@@ -31,8 +32,8 @@ export const TasksCountContainer = styled.div`
 
 export const TasksCount = styled.div<{ glow: boolean }>`
   /* animation: ${fadeIn} 0.5s ease-in; */
-  border: 3px solid #b624ff;
-  box-shadow: ${(props) => (props.glow ? "0 0 14px 0 #b624ff" : "none")};
+  border: 3px solid ${ColorPalette.purple};
+  box-shadow: ${(props) => (props.glow ? "0 0 16px 0 #b624ff" : "none")};
 
   display: inline-flex;
   position: relative;
@@ -41,7 +42,7 @@ export const TasksCount = styled.div<{ glow: boolean }>`
   gap: 8px 16px;
   padding: 16px 24px;
   margin: 24px 0 12px 0;
-  border-radius: 16px;
+  border-radius: 24px;
 `;
 
 export const TaskCountTextContainer = styled.div`

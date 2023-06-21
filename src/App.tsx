@@ -32,9 +32,9 @@ function App() {
 
   return (
     <>
-      <ErrorBoundary fallbackUI={<div>Error 🙄</div>}>
+      <GlobalStyles />
+      <ErrorBoundary user={user}>
         <ThemeProvider theme={MuiTheme}>
-          <GlobalStyles />
           <Routes>
             <Route path="/" element={<Home {...userProps} />} />
             <Route path="/add" element={<AddTask {...userProps} />} />

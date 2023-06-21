@@ -1,4 +1,6 @@
 import styled from "@emotion/styled";
+import { Button } from "@mui/material";
+import { ColorPalette } from ".";
 
 export const Container = styled.div`
   display: flex;
@@ -58,11 +60,11 @@ export const OpenPickerBtn = styled.button`
   cursor: pointer;
 `;
 
-export const AddTaskButton = styled.button`
+export const AddTaskButton = styled(Button)`
   border: none;
   padding: 18px 48px;
   font-size: 24px;
-  background: #b624ff;
+  background: ${ColorPalette.purple};
   color: #ffffff;
   border-radius: 20px;
   font-weight: bold;
@@ -70,13 +72,16 @@ export const AddTaskButton = styled.button`
   transition: 0.3s all;
   margin: 20px;
   width: 400px;
+  text-transform: capitalize;
   &:hover {
     box-shadow: 0px 0px 24px 0px #7614ff;
+    background: ${ColorPalette.purple};
   }
   &:disabled {
     box-shadow: none;
     cursor: not-allowed;
     opacity: 0.7;
+    color: white;
   }
 `;
 

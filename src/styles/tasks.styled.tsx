@@ -7,7 +7,7 @@ interface TaskContainerProps {
   backgroundColor: string;
   clr: string;
   done: boolean;
-  glow: boolean;
+  glow: boolean | string;
 }
 
 export const TaskContainer = styled.div<TaskContainerProps>`
@@ -22,7 +22,7 @@ export const TaskContainer = styled.div<TaskContainerProps>`
     props.done ? "6px solid #00ff0d" : "6px solid transparent"};
   /* box-shadow: 0 0 128px -32px ${(props) => props.backgroundColor}; */
   box-shadow: ${(props) =>
-    props.glow ? `0 0 128px -24px ${props.backgroundColor}` : "none"};
+    props.glow ? `0 0 100px -32px ${props.backgroundColor}` : "none"};
   padding: 16px;
   border-radius: 20px;
   animation: ${fadeIn} 0.5s ease-in;
@@ -140,7 +140,7 @@ export const StyledMenuItem = styled(MenuItem)`
 
 interface CategoryChipProps {
   backgroundclr: string;
-  borderclr: string;
+  borderclr?: string;
   glow: boolean;
   list?: boolean;
 }
@@ -150,7 +150,8 @@ export const CategoryChip = styled(Chip)<CategoryChipProps>`
   background-color: ${(props) => props.backgroundclr};
   box-shadow: ${(props) =>
     props.glow ? `0 0 8px 0 ${props.backgroundclr}` : "none"};
-  border: 2px solid ${(props) => props.borderclr};
+  border: ${(props) =>
+    props.borderclr ? `2px solid ${props.borderclr}` : "none"};
   font-weight: bold;
   font-size: 14px;
   margin: 6px 0 0 0;
@@ -158,18 +159,26 @@ export const CategoryChip = styled(Chip)<CategoryChipProps>`
   transition: 0.3s all;
   opacity: ${(props) => (props.list ? 1 : 0.9)};
   animation: ${fadeIn} 0.5s ease-in;
-  & .MuiChip-deleteIcon {
-    color: ${(props) => getFontColorFromHex(props.backgroundclr)};
-    transition: 0.3s color;
-    &:hover {
-      color: #ff4d4d;
-    }
-  }
   &:hover {
     background-color: ${(props) => props.backgroundclr};
     box-shadow: ${(props) =>
       props.list && `0 0 8px 0px ${props.backgroundclr}`};
     opacity: ${(props) => props.list && 0.8};
+  }
+  & .MuiChip-deleteIcon {
+    color: ${(props) => getFontColorFromHex(props.backgroundclr)};
+    transition: 0.3s all;
+    width: 22px;
+    height: 22px;
+    stroke: transparent;
+    @media (max-width: 1024px) {
+      width: 26px;
+      height: 26px;
+    }
+    &:hover {
+      color: #ff0000e5;
+      stroke: ${(props) => getFontColorFromHex(props.backgroundclr)};
+    }
   }
 `;
 
@@ -177,7 +186,7 @@ export const CategoriesListContainer = styled.div`
   display: flex;
   justify-content: left;
   align-items: left;
-  gap: 6px;
+  gap: 8px;
   overflow-x: auto;
   padding: 0 0 6px 0;
   margin: 8px 0;

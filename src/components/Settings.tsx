@@ -137,6 +137,7 @@ const Container = styled.div`
   flex-direction: column;
   user-select: none;
   margin: 0 18px;
+  gap: 6px;
 `;
 const Beta = styled.span`
   background: #0e8e0e;

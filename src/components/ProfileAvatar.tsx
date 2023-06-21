@@ -54,7 +54,7 @@ export const ProfileAvatar = ({ user, setUser }: UserProps) => {
   };
   return (
     <Container>
-      <Tooltip title={user.name || "user"}>
+      <Tooltip title={user.name || "User"}>
         <IconButton
           id="basic-button"
           aria-controls={open ? "basic-menu" : undefined}

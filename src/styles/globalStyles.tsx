@@ -29,14 +29,6 @@ const globalStyles = css`
     -webkit-text-size-adjust: 100%;
   }
 
-  a {
-    font-weight: 500;
-    color: #646cff;
-    text-decoration: inherit;
-  }
-  a:hover {
-    color: #535bf2;
-  }
   html {
     background: linear-gradient(180deg, #232e58 0%, #171d34 100%);
     background-attachment: fixed;
@@ -71,6 +63,14 @@ const globalStyles = css`
     }
   }
 
+  pre {
+    background-color: black;
+    color: white;
+    padding: 16px;
+    border-radius: 16px;
+    overflow-x: auto;
+  }
+
   .EmojiPickerReact {
     --epr-hover-bg-color: #b624ffaf;
     --epr-focus-bg-color: #b624ffaf;
@@ -101,6 +101,7 @@ const globalStyles = css`
     font-size: 12px !important;
   }
 `;
+
 export const GlobalStyles = () => <Global styles={globalStyles} />;
 
 export const DialogBtn = styled(Button)`
@@ -134,6 +135,42 @@ export const CategoriesMenu = styled(MenuItem)<{ clr?: string }>`
       background: ${(props) => props.clr || "#bcbcbc"};
       opacity: 0.7;
     }
+  }
+`;
+
+export const StyledLink = styled.a`
+  cursor: pointer;
+  color: ${ColorPalette.purple};
+  display: inline-block;
+  position: relative;
+  text-decoration: none;
+  font-weight: 500;
+  transition: 0.3s all;
+  &::after {
+    content: "";
+    position: absolute;
+    width: 100%;
+    transform: scaleX(0);
+    height: 2px;
+    bottom: 0;
+    left: 0;
+    background-color: ${ColorPalette.purple};
+    transform-origin: bottom right;
+    transition: transform 0.25s ease-out;
+    border-radius: 100px;
+  }
+  &:hover::after,
+  &:focus-visible::after {
+    transform: scaleX(1);
+    transform-origin: bottom left;
+  }
+  &:hover {
+    text-shadow: 0px 0px 20px ${ColorPalette.purple};
+  }
+  &:focus,
+  &:focus-visible {
+    outline: none;
+    box-shadow: none;
   }
 `;
 

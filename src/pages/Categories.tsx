@@ -4,7 +4,7 @@ import { Category, UserProps } from "../types/user";
 import { useNavigate } from "react-router-dom";
 import { Emoji } from "emoji-picker-react";
 import styled from "@emotion/styled";
-import { IconButton, TextField, Typography } from "@mui/material";
+import { Button, IconButton, TextField, Typography } from "@mui/material";
 import { Delete } from "@mui/icons-material";
 import { CATEGORY_NAME_MAX_LENGTH } from "../constants";
 import { getFontColorFromHex } from "../utils";
@@ -38,7 +38,7 @@ export const Categories = ({ user, setUser }: UserProps) => {
     setName(newName);
     if (newName.length > CATEGORY_NAME_MAX_LENGTH) {
       setNameError(
-        `Name should be less than or equal to ${CATEGORY_NAME_MAX_LENGTH} characters`
+        `Name is too long maximum ${CATEGORY_NAME_MAX_LENGTH} characters`
       );
     } else {
       setNameError("");
@@ -50,7 +50,6 @@ export const Categories = ({ user, setUser }: UserProps) => {
       if (name.length > CATEGORY_NAME_MAX_LENGTH) {
         return;
       }
-
       const newCategory: Category = {
         id: new Date().getTime() + Math.random(),
         name,
@@ -221,7 +220,7 @@ const StyledInput = styled(TextField)`
     color: white;
   }
 `;
-export const AddCategoryButton = styled.button`
+export const AddCategoryButton = styled(Button)`
   border: none;
   padding: 18px 48px;
   font-size: 24px;
@@ -233,13 +232,16 @@ export const AddCategoryButton = styled.button`
   transition: 0.3s all;
   margin: 20px;
   width: 350px;
+  text-transform: capitalize;
   &:hover {
     box-shadow: 0px 0px 24px 0px #7614ff;
+    background: ${ColorPalette.purple};
   }
   &:disabled {
     box-shadow: none;
     cursor: not-allowed;
     opacity: 0.7;
+    color: white;
   }
 `;
 const ColorPicker = styled.input`

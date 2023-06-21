@@ -66,13 +66,20 @@ export const Tasks = ({ user, setUser }: UserProps) => {
 
   const reorderTasks = (tasks: Task[]): Task[] => {
     // Reorders tasks by moving pinned tasks to the top
-    const pinnedTasks = tasks.filter((task) => task.pinned);
+    let pinnedTasks = tasks.filter((task) => task.pinned);
     let unpinnedTasks = tasks.filter((task) => !task.pinned);
 
     // Filter tasks based on the selected category
-    //FIXME: doesnt work for pins
     if (selectedCatId !== undefined) {
       unpinnedTasks = unpinnedTasks.filter((task) => {
+        if (task.category) {
+          return task.category.some(
+            (category) => category.id === selectedCatId
+          );
+        }
+        return false;
+      });
+      pinnedTasks = pinnedTasks.filter((task) => {
         if (task.category) {
           return task.category.some(
             (category) => category.id === selectedCatId
@@ -221,62 +228,61 @@ export const Tasks = ({ user, setUser }: UserProps) => {
   return (
     <>
       <TasksContainer>
-        <CategoriesListContainer>
-          {categories !== undefined &&
-            categories?.length > 1 &&
-            user.settings[0].enableCategories &&
-            categories?.map((cat) => (
-              <CategoryChip
-                label={cat.name}
-                borderclr="transparent"
-                glow={user.settings[0].enableGlow}
-                backgroundclr={cat.color}
-                onClick={() => setSelectedCatId(cat.id)}
-                key={cat.id}
-                list
-                onDelete={
-                  selectedCatId === cat.id
-                    ? () => setSelectedCatId(undefined)
-                    : undefined
-                }
-                style={{
-                  boxShadow:
+        {categories !== undefined &&
+          categories?.length > 1 &&
+          user.settings[0].enableCategories && (
+            <CategoriesListContainer>
+              {categories?.map((cat) => (
+                <CategoryChip
+                  label={cat.name}
+                  glow={user.settings[0].enableGlow}
+                  backgroundclr={cat.color}
+                  onClick={() => setSelectedCatId(cat.id)}
+                  key={cat.id}
+                  list
+                  onDelete={
                     selectedCatId === cat.id
-                      ? `0 0 8px 0 ${cat.color}`
-                      : "none",
-                  display:
-                    selectedCatId === undefined || selectedCatId === cat.id
-                      ? "inline-flex"
-                      : "none",
-                  padding: "16px 12px",
-                }}
-                avatar={
-                  cat.emoji ? (
-                    <Avatar alt={cat.name} sx={{ background: "transparent" }}>
-                      {cat.emoji &&
-                        (user.emojisStyle === EmojiStyle.NATIVE ? (
-                          <div>
+                      ? () => setSelectedCatId(undefined)
+                      : undefined
+                  }
+                  style={{
+                    boxShadow: "none",
+                    display:
+                      selectedCatId === undefined || selectedCatId === cat.id
+                        ? "inline-flex"
+                        : "none",
+                    padding: "20px 14px",
+                    fontSize: "16px",
+                  }}
+                  avatar={
+                    cat.emoji ? (
+                      <Avatar alt={cat.name} sx={{ background: "transparent" }}>
+                        {cat.emoji &&
+                          (user.emojisStyle === EmojiStyle.NATIVE ? (
+                            <div>
+                              <Emoji
+                                size={20}
+                                unified={cat.emoji}
+                                emojiStyle={EmojiStyle.NATIVE}
+                              />
+                            </div>
+                          ) : (
                             <Emoji
-                              size={18}
+                              size={24}
                               unified={cat.emoji}
-                              emojiStyle={EmojiStyle.NATIVE}
+                              emojiStyle={user.emojisStyle}
                             />
-                          </div>
-                        ) : (
-                          <Emoji
-                            size={20}
-                            unified={cat.emoji}
-                            emojiStyle={user.emojisStyle}
-                          />
-                        ))}
-                    </Avatar>
-                  ) : (
-                    <></>
-                  )
-                }
-              />
-            ))}
-        </CategoriesListContainer>
+                          ))}
+                      </Avatar>
+                    ) : (
+                      <></>
+                    )
+                  }
+                />
+              ))}
+            </CategoriesListContainer>
+          )}
+
         {user.tasks.length !== 0 ? (
           reorderTasks(user.tasks).map((task) => (
             <TaskContainer
@@ -317,7 +323,7 @@ export const Tasks = ({ user, setUser }: UserProps) => {
                   {task.name}
 
                   <Tooltip
-                    title={`Created at ${new Date(
+                    title={`Created at: ${new Date(
                       task.date
                     ).toLocaleDateString()} • ${new Date(
                       task.date
@@ -471,7 +477,7 @@ export const Tasks = ({ user, setUser }: UserProps) => {
           <NoTasks>
             <b>You don't have any tasks yet</b>
             <br />
-            Click on the <b>+</b> button to add one <br />
+            Click on the <b>+</b> button to add one
           </NoTasks>
         )}
 
@@ -506,32 +512,53 @@ export const Tasks = ({ user, setUser }: UserProps) => {
       >
         <DialogTitle>Are you sure you want to delete the task?</DialogTitle>
         <DialogContent>
-          <p
-            style={{
-              display: "flex",
-              justifyContent: "left",
-              alignItems: "center",
-              gap: "6px",
-            }}
-          >
-            <b>Emoji:</b>{" "}
-            <Emoji
-              size={28}
-              emojiStyle={user.emojisStyle}
-              unified={
-                user.tasks.find((task) => task.id === selectedTaskId)?.emoji ||
-                ""
-              }
-            />
-          </p>
+          {user.tasks.find((task) => task.id === selectedTaskId)?.emoji !==
+            undefined && (
+            <p
+              style={{
+                display: "flex",
+                justifyContent: "left",
+                alignItems: "center",
+                gap: "6px",
+              }}
+            >
+              <b>Emoji:</b>{" "}
+              <Emoji
+                size={28}
+                emojiStyle={user.emojisStyle}
+                unified={
+                  user.tasks.find((task) => task.id === selectedTaskId)
+                    ?.emoji || ""
+                }
+              />
+            </p>
+          )}
           <p>
             <b>Task Name:</b>{" "}
             {user.tasks.find((task) => task.id === selectedTaskId)?.name}
           </p>
-          <p>
-            <b>Task Description:</b>{" "}
-            {user.tasks.find((task) => task.id === selectedTaskId)?.description}
-          </p>
+          {user.tasks.find((task) => task.id === selectedTaskId)
+            ?.description !== undefined && (
+            <p>
+              <b>Task Description:</b>{" "}
+              {
+                user.tasks.find((task) => task.id === selectedTaskId)
+                  ?.description
+              }
+            </p>
+          )}
+
+          {selectedTaskId !== null &&
+            user.tasks.find((task) => task.id === selectedTaskId)?.category?.[0]
+              ?.name !== undefined && (
+              <p>
+                <b>Category:</b>{" "}
+                {
+                  user.tasks.find((task) => task.id === selectedTaskId)
+                    ?.category?.[0]?.name
+                }
+              </p>
+            )}
         </DialogContent>
         <DialogActions>
           <DialogBtn onClick={cancelDeleteTask} color="primary">

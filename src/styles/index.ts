@@ -1,9 +1,11 @@
+export { MuiTheme, ColorPalette } from "./theme";
 export {
   GlobalStyles,
   DialogBtn,
   fadeInLeft,
   fadeIn,
   slideIn,
+  StyledLink,
 } from "./globalStyles";
 export {
   GreetingHeader,
@@ -26,7 +28,6 @@ export {
   OpenPickerBtn,
   ColorPreview,
 } from "./addTask.styled";
-export { MuiTheme, ColorPalette } from "./theme";
 
 export {
   TaskContainer,

@@ -87,7 +87,6 @@ export const Home = ({ user, setUser }: UserProps) => {
                 size={64}
                 thickness={5}
                 style={{
-                  // filter: `drop-shadow(0 0 6px ${ColorPalette.purple})`,
                   filter: user.settings[0].enableGlow
                     ? `drop-shadow(0 0 6px ${ColorPalette.purple})`
                     : "none",
@@ -124,6 +123,7 @@ export const Home = ({ user, setUser }: UserProps) => {
           <WifiOff /> You're offline but you can use the app!
         </Offline>
       )}
+
       <Tasks user={user} setUser={setUser} />
       {/* {user.tasks.some((task) => task.done) && (
         <DeleteDoneBtn onClick={handleDeleteDone}>
