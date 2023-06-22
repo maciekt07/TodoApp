@@ -56,7 +56,7 @@ export class ErrorBoundary extends React.Component<
           </h2>
           <h3>
             <span style={{ color: "#ff3131" }}>ERROR:</span> [
-            {this.state.error?.name}] {this.state.error?.message}{" "}
+            {this.state.error?.name}] {this.state.error?.message}
           </h3>
           <pre>
             <code>{JSON.stringify(this.props.user, null, 4)}</code>

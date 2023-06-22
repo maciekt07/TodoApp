@@ -82,7 +82,7 @@ export const TaskDescription = styled.p`
   margin: 0;
   font-size: 18px;
   /* white-space: pre-line;
-    line-height: 1em; */
+  line-height: 1em; */
 `;
 
 export const NoTasks = styled.div`

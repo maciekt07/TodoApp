@@ -86,7 +86,7 @@ export const SettingsDialog = ({
         },
       }}
     >
-      <DialogTitle>Settings {user.name}</DialogTitle>
+      <DialogTitle>Settings</DialogTitle>
       <Container>
         <FormGroup>
           <FormLabel>App Settings</FormLabel>

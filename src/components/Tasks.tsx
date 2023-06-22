@@ -256,7 +256,13 @@ export const Tasks = ({ user, setUser }: UserProps) => {
                   }}
                   avatar={
                     cat.emoji ? (
-                      <Avatar alt={cat.name} sx={{ background: "transparent" }}>
+                      <Avatar
+                        alt={cat.name}
+                        sx={{
+                          background: "transparent",
+                          borderRadius: "0px",
+                        }}
+                      >
                         {cat.emoji &&
                           (user.emojisStyle === EmojiStyle.NATIVE ? (
                             <div>
@@ -365,7 +371,10 @@ export const Tasks = ({ user, setUser }: UserProps) => {
                           category.emoji ? (
                             <Avatar
                               alt={category.name}
-                              sx={{ background: "transparent" }}
+                              sx={{
+                                background: "transparent",
+                                borderRadius: "0px",
+                              }}
                             >
                               {category.emoji &&
                                 (user.emojisStyle === EmojiStyle.NATIVE ? (

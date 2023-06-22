@@ -50,7 +50,7 @@ const globalStyles = css`
 
     ::-webkit-scrollbar-thumb {
       background-color: #6d2aff;
-      border-radius: 4px;
+      border-radius: 64px;
     }
 
     ::-webkit-scrollbar-thumb:hover {
@@ -58,7 +58,7 @@ const globalStyles = css`
     }
 
     ::-webkit-scrollbar-track {
-      border-radius: 4px;
+      border-radius: 64px;
       background-color: #2a326e;
     }
   }

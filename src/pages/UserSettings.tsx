@@ -203,6 +203,7 @@ export const UserSettings = ({ user, setUser }: UserProps) => {
           label={user.name === null ? "Add Name" : "Change Name"}
           value={name}
           onChange={(e) => setName(e.target.value)}
+          onKeyDown={(e) => e.key === "Enter" && handleSaveName()}
           error={name.length > USER_NAME_MAX_LENGTH}
           helperText={
             name.length > USER_NAME_MAX_LENGTH

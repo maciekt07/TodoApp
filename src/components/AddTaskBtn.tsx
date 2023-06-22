@@ -6,13 +6,12 @@ import { ColorPalette } from "../styles";
 import { Tooltip } from "@mui/material";
 import { User } from "../types/user";
 
-export const AddTaskBtn = ({
-  animate,
-  user,
-}: {
+interface Props {
   animate: boolean;
   user: User;
-}) => {
+}
+
+export const AddTaskBtn = ({ animate, user }: Props) => {
   const n = useNavigate();
   return (
     <Tooltip
