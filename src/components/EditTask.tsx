@@ -9,8 +9,9 @@ import {
   MenuItem,
   Select,
   SelectChangeEvent,
+  Button,
 } from "@mui/material";
-import { Task, User } from "../types/user";
+import { Task, UserProps } from "../types/user";
 import { Emoji } from "emoji-picker-react";
 import styled from "@emotion/styled";
 
@@ -19,12 +20,12 @@ import { DialogBtn } from "../styles";
 
 import { CustomEmojiPicker } from ".";
 import { CategoriesMenu } from "../styles/globalStyles";
-interface EditTaskProps {
+import { Restore } from "@mui/icons-material";
+interface EditTaskProps extends UserProps {
   open: boolean;
   task?: Task;
   onClose: () => void;
   onSave: (editedTask: Task) => void;
-  user: User;
 }
 export const EditTask = ({
   open,
@@ -32,6 +33,7 @@ export const EditTask = ({
   onClose,
   onSave,
   user,
+  setUser,
 }: EditTaskProps) => {
   const [editedTask, setEditedTask] = useState<Task | undefined>(task);
   const [nameError, setNameError] = useState<boolean>(false);
@@ -211,6 +213,46 @@ export const EditTask = ({
                     </CategoriesMenu>
                   ))}
               </StyledSelect>
+              <p>
+                {editedTask?.category &&
+                  editedTask.category.length > 0 &&
+                  !user.categories.some(
+                    (category) =>
+                      editedTask.category &&
+                      editedTask.category[0] &&
+                      category.id === editedTask.category[0].id
+                  ) && (
+                    <span>
+                      Category <b>{editedTask.category[0]?.name}</b> has been
+                      deleted
+                      <br />
+                      <Button
+                        sx={{
+                          padding: "8px 12px",
+                          margin: "8px 0",
+                          borderRadius: "12px",
+                        }}
+                        onClick={() => {
+                          if (editedTask.category && editedTask.category[0]) {
+                            // Add the edited task's category to user.categories
+                            const updatedCategories = [
+                              ...user.categories,
+                              editedTask.category[0],
+                            ];
+
+                            // Update the user object
+                            setUser((prevUser) => ({
+                              ...prevUser,
+                              categories: updatedCategories,
+                            }));
+                          }
+                        }}
+                      >
+                        <Restore /> &nbsp; restore category
+                      </Button>
+                    </span>
+                  )}
+              </p>
             </>
           )}
         <Typography>Color:</Typography>

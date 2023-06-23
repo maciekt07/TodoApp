@@ -495,6 +495,7 @@ export const Tasks = ({ user, setUser }: UserProps) => {
           task={user.tasks.find((task) => task.id === selectedTaskId)}
           onClose={() => setEditModalOpen(false)}
           user={user}
+          setUser={setUser}
           onSave={(editedTask) => {
             handleEditTask(
               editedTask.id,

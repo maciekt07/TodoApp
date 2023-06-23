@@ -159,7 +159,9 @@ export const CategoryChip = styled(Chip)<CategoryChipProps>`
   transition: 0.3s all;
   opacity: ${(props) => (props.list ? 1 : 0.9)};
   animation: ${fadeIn} 0.5s ease-in;
-  &:hover {
+  &:hover,
+  &:focus,
+  &:focus-visible {
     background-color: ${(props) => props.backgroundclr};
     box-shadow: ${(props) =>
       props.list && `0 0 8px 0px ${props.backgroundclr}`};
@@ -176,8 +178,10 @@ export const CategoryChip = styled(Chip)<CategoryChipProps>`
       height: 26px;
     }
     &:hover {
-      color: #ff0000e5;
-      stroke: ${(props) => getFontColorFromHex(props.backgroundclr)};
+      /* color: #ff0000e5;
+      stroke: ${(props) => getFontColorFromHex(props.backgroundclr)}; */
+      color: ${(props) => getFontColorFromHex(props.backgroundclr)};
+      opacity: 0.8;
     }
   }
 `;
