@@ -15,13 +15,16 @@ export const Categories = ({ user, setUser }: UserProps) => {
   const [nameError, setNameError] = useState<string>("");
   const [emoji, setEmoji] = useState<string | undefined>();
   const [color, setColor] = useState<string>(ColorPalette.purple);
+
   const n = useNavigate();
+
   useEffect(() => {
     document.title = "Todo App - Categories";
     if (!user.settings[0].enableCategories) {
       n("/");
     }
   }, []);
+
   const handleDelete = (categoryId: number) => {
     if (categoryId) {
       const updatedCategories = user.categories.filter(
@@ -30,9 +33,11 @@ export const Categories = ({ user, setUser }: UserProps) => {
       setUser({ ...user, categories: updatedCategories });
     }
   };
+
   const handleColorChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setColor(event.target.value);
   };
+
   const handleNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const newName = event.target.value;
     setName(newName);

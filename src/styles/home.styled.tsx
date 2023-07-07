@@ -31,7 +31,6 @@ export const TasksCountContainer = styled.div`
 `;
 
 export const TasksCount = styled.div<{ glow: boolean }>`
-  /* animation: ${fadeIn} 0.5s ease-in; */
   border: 3px solid ${ColorPalette.purple};
   box-shadow: ${(props) => (props.glow ? "0 0 16px 0 #b624ff" : "none")};
 

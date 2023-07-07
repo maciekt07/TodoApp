@@ -76,6 +76,7 @@ export const AddTask = ({ user, setUser }: UserProps) => {
     const category = user.categories.find((cat) => cat.id === categoryId);
     setSelectedCategory(category || null);
   };
+
   const handleAddTask = () => {
     if (name !== "") {
       if (

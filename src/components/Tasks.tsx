@@ -1,6 +1,5 @@
 import { Category, Task, UserProps } from "../types/user";
 import { useEffect, useState } from "react";
-
 import {
   calculateDateDifference,
   formatDate,
@@ -205,25 +204,42 @@ export const Tasks = ({ user, setUser }: UserProps) => {
     undefined
   );
 
+  const [categoryCounts, setCategoryCounts] = useState<{
+    [categoryId: number]: number;
+  }>({});
+
   useEffect(() => {
     const tasks: Task[] = user.tasks;
-    // Create an empty array to store unique categories
     const uniqueCategories: Category[] = [];
-    // Iterate over each task
+
     tasks.forEach((task) => {
-      // Check if the task has a category
       if (task.category) {
-        // Iterate over each category of the task
         task.category.forEach((category) => {
-          // Check if the category is not already in the uniqueCategories array
           if (!uniqueCategories.some((c) => c.id === category.id)) {
-            // Push the unique category to the array
             uniqueCategories.push(category);
           }
         });
       }
     });
+
+    // Calculate category counts
+    const counts: { [categoryId: number]: number } = {};
+    uniqueCategories.forEach((category) => {
+      const categoryTasks = tasks.filter((task) =>
+        task.category?.some((cat) => cat.id === category.id)
+      );
+      counts[category.id] = categoryTasks.length;
+    });
+
+    // Sort categories based on count
+    uniqueCategories.sort((a, b) => {
+      const countA = counts[a.id] || 0;
+      const countB = counts[b.id] || 0;
+      return countB - countA;
+    });
+
     setCategories(uniqueCategories);
+    setCategoryCounts(counts);
   }, [user.tasks]);
   return (
     <>
@@ -234,7 +250,20 @@ export const Tasks = ({ user, setUser }: UserProps) => {
             <CategoriesListContainer>
               {categories?.map((cat) => (
                 <CategoryChip
-                  label={cat.name}
+                  label={
+                    <div>
+                      <span style={{ fontWeight: "bold" }}>{cat.name}</span>
+                      <span
+                        style={{
+                          fontSize: "14px",
+                          opacity: 0.9,
+                          marginLeft: "4px",
+                        }}
+                      >
+                        ({categoryCounts[cat.id] || 0})
+                      </span>
+                    </div>
+                  }
                   glow={user.settings[0].enableGlow}
                   backgroundclr={cat.color}
                   onClick={() => setSelectedCatId(cat.id)}

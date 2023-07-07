@@ -1,3 +1,4 @@
+import React, { useState } from "react";
 import {
   Dialog,
   DialogActions,
@@ -10,7 +11,6 @@ import {
 import { UserProps } from "../types/user";
 import { DialogBtn } from "../styles";
 import styled from "@emotion/styled";
-import { ChangeEvent, useState } from "react";
 
 interface SettingsProps extends UserProps {
   open: boolean;
@@ -23,57 +23,20 @@ export const SettingsDialog = ({
   user,
   setUser,
 }: SettingsProps) => {
-  const [categories, setCategories] = useState(
-    user.settings[0].enableCategories
-  );
+  const [settings, setSettings] = useState(user.settings[0]);
 
-  const [glow, setGlow] = useState(user.settings[0].enableGlow);
-
-  const [doneToBottom, setDoneToBottom] = useState(
-    user.settings[0].doneToBottom
-  );
-
-  const handleCategoriesChange = (event: ChangeEvent<HTMLInputElement>) => {
-    const updatedSettings = [
-      {
-        ...user.settings[0],
-        enableCategories: event.target.checked,
-      },
-    ];
-    setUser((prevUser) => ({
-      ...prevUser,
-      settings: updatedSettings,
-    }));
-    setCategories(event.target.checked);
-  };
-
-  const handleGlowChange = (event: ChangeEvent<HTMLInputElement>) => {
-    const updatedSettings = [
-      {
-        ...user.settings[0],
-        enableGlow: event.target.checked,
-      },
-    ];
-    setUser((prevUser) => ({
-      ...prevUser,
-      settings: updatedSettings,
-    }));
-    setGlow(event.target.checked);
-  };
-
-  const handleDoneToBottomChange = (event: ChangeEvent<HTMLInputElement>) => {
-    const updatedSettings = [
-      {
-        ...user.settings[0],
-        doneToBottom: event.target.checked,
-      },
-    ];
-    setUser((prevUser) => ({
-      ...prevUser,
-      settings: updatedSettings,
-    }));
-    setDoneToBottom(event.target.checked);
-  };
+  const handleSettingChange =
+    (name: string) => (event: React.ChangeEvent<HTMLInputElement>) => {
+      const updatedSettings = {
+        ...settings,
+        [name]: event.target.checked,
+      };
+      setSettings(updatedSettings);
+      setUser((prevUser) => ({
+        ...prevUser,
+        settings: [updatedSettings],
+      }));
+    };
 
   return (
     <Dialog
@@ -91,9 +54,12 @@ export const SettingsDialog = ({
         <FormGroup>
           <FormLabel>App Settings</FormLabel>
           <FormControlLabel
-            sx={{ opacity: categories ? 1 : 0.8 }}
+            sx={{ opacity: settings.enableCategories ? 1 : 0.8 }}
             control={
-              <Switch checked={categories} onChange={handleCategoriesChange} />
+              <Switch
+                checked={settings.enableCategories}
+                onChange={handleSettingChange("enableCategories")}
+              />
             }
             label={
               <>
@@ -105,18 +71,23 @@ export const SettingsDialog = ({
         </FormGroup>
         <FormGroup>
           <FormControlLabel
-            sx={{ opacity: glow ? 1 : 0.8 }}
-            control={<Switch checked={glow} onChange={handleGlowChange} />}
+            sx={{ opacity: settings.enableGlow ? 1 : 0.8 }}
+            control={
+              <Switch
+                checked={settings.enableGlow}
+                onChange={handleSettingChange("enableGlow")}
+              />
+            }
             label="Enable Glow Effect"
           />
         </FormGroup>
         <FormGroup>
           <FormControlLabel
-            sx={{ opacity: doneToBottom ? 1 : 0.8 }}
+            sx={{ opacity: settings.doneToBottom ? 1 : 0.8 }}
             control={
               <Switch
-                checked={doneToBottom}
-                onChange={handleDoneToBottomChange}
+                checked={settings.doneToBottom}
+                onChange={handleSettingChange("doneToBottom")}
               />
             }
             label="Move Done Tasks To Bottom"
@@ -139,6 +110,7 @@ const Container = styled.div`
   margin: 0 18px;
   gap: 6px;
 `;
+
 const Beta = styled.span`
   background: #0e8e0e;
   color: #00ff00;
@@ -149,3 +121,5 @@ const Beta = styled.span`
   font-weight: 600;
   box-shadow: 0 0 4px 0 #0e8e0e91;
 `;
+
+export default SettingsDialog;

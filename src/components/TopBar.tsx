@@ -2,9 +2,11 @@ import styled from "@emotion/styled";
 import { ArrowBackIosNew } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
 import { ColorPalette } from "../styles";
+
 interface TopBarProps {
   title: string;
 }
+
 export const TopBar = ({ title }: TopBarProps) => {
   const n = useNavigate();
   return (

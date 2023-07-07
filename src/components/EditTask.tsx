@@ -213,15 +213,16 @@ export const EditTask = ({
                     </CategoriesMenu>
                   ))}
               </StyledSelect>
-              <p>
-                {editedTask?.category &&
-                  editedTask.category.length > 0 &&
-                  !user.categories.some(
-                    (category) =>
-                      editedTask.category &&
-                      editedTask.category[0] &&
-                      category.id === editedTask.category[0].id
-                  ) && (
+
+              {editedTask?.category &&
+                editedTask.category.length > 0 &&
+                !user.categories.some(
+                  (category) =>
+                    editedTask.category &&
+                    editedTask.category[0] &&
+                    category.id === editedTask.category[0].id
+                ) && (
+                  <div style={{ margin: "8px 0" }}>
                     <span>
                       Category <b>{editedTask.category[0]?.name}</b> has been
                       deleted
@@ -234,13 +235,11 @@ export const EditTask = ({
                         }}
                         onClick={() => {
                           if (editedTask.category && editedTask.category[0]) {
-                            // Add the edited task's category to user.categories
                             const updatedCategories = [
                               ...user.categories,
                               editedTask.category[0],
                             ];
 
-                            // Update the user object
                             setUser((prevUser) => ({
                               ...prevUser,
                               categories: updatedCategories,
@@ -251,8 +250,8 @@ export const EditTask = ({
                         <Restore /> &nbsp; restore category
                       </Button>
                     </span>
-                  )}
-              </p>
+                  </div>
+                )}
             </>
           )}
         <Typography>Color:</Typography>

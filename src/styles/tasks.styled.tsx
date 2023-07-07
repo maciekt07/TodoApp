@@ -7,20 +7,19 @@ interface TaskContainerProps {
   backgroundColor: string;
   clr: string;
   done: boolean;
-  glow: boolean | string;
+  glow: boolean;
 }
 
 export const TaskContainer = styled.div<TaskContainerProps>`
   display: flex;
   align-items: center;
-  margin-top: 16px;
+  margin-top: 12px;
   transition: 0.3s all;
   background-color: ${(props) => props.backgroundColor};
   opacity: ${(props) => (props.done ? 0.7 : 1)};
   color: ${(props) => props.clr};
   border-left: ${(props) =>
     props.done ? "6px solid #00ff0d" : "6px solid transparent"};
-  /* box-shadow: 0 0 128px -32px ${(props) => props.backgroundColor}; */
   box-shadow: ${(props) =>
     props.glow ? `0 0 100px -32px ${props.backgroundColor}` : "none"};
   padding: 16px;
@@ -105,6 +104,7 @@ export const TasksContainer = styled.div`
   max-width: 700px;
   margin: 0 auto;
   flex-direction: column;
+  gap: 6px;
 `;
 
 export const TimeLeft = styled.span<{ timeUp: boolean; done: boolean }>`
