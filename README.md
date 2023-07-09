@@ -1,14 +1,16 @@
 <!-- prettier-ignore -->
 # 📝React.js Todo App
 
-[https://react-cool-todo-app.netlify.app/](https://react-cool-todo-app.netlify.app/)
+## [https://react-cool-todo-app.netlify.app/](https://react-cool-todo-app.netlify.app/)
 
 ## 📷 Screenshots
 
 <img src="public/screenshots/3.png" width="350px" />
-<img src="public/screenshots/4.png" width="350px" />
-<img src="public/screenshots/5.png" width="350px" />
 <img src="public/screenshots/6.png" width="350px" />
+<img src="public/screenshots/4.png" width="350px" />
+
+<img src="public/screenshots/5.png" width="350px" />
+
 ## ⚡ Features
 
 - All tasks are stored in local storage
