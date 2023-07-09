@@ -2,7 +2,6 @@ import { useState, useEffect } from "react";
 import { AddTaskBtn, ProfileAvatar, Tasks } from "../components";
 import {
   ColorPalette,
-  // DeleteDoneBtn,
   GreetingHeader,
   GreetingText,
   Offline,
@@ -19,7 +18,6 @@ import {
   getRandomGreeting,
   getTaskCompletionText,
 } from "../utils";
-// import { Delete } from "@mui/icons-material";
 import { Emoji } from "emoji-picker-react";
 import { Box, CircularProgress, Typography } from "@mui/material";
 import { useOnlineStatus } from "../hooks/useOnlineStatus";
@@ -59,13 +57,6 @@ export const Home = ({ user, setUser }: UserProps) => {
     setTasksWithDeadlineTodayCount(count);
   }, [user.tasks]);
 
-  // const handleDeleteDone = () => {
-  //   setUser((prevUser) => {
-  //     const updatedTasks = prevUser.tasks.filter((task) => !task.done);
-  //     return { ...prevUser, tasks: updatedTasks };
-  //   });
-  // };
-
   const isOnline = useOnlineStatus();
 
   return (
@@ -101,7 +92,6 @@ export const Home = ({ user, setUser }: UserProps) => {
                 >{`${Math.round(completedTaskPercentage)}%`}</Typography>
               </ProgressPercentageContainer>
             </Box>
-
             <TaskCountTextContainer>
               <TaskCountHeader>
                 You have {user.tasks.length - completedTasksCount} unfinished
@@ -123,13 +113,7 @@ export const Home = ({ user, setUser }: UserProps) => {
           <WifiOff /> You're offline but you can use the app!
         </Offline>
       )}
-
       <Tasks user={user} setUser={setUser} />
-      {/* {user.tasks.some((task) => task.done) && (
-        <DeleteDoneBtn onClick={handleDeleteDone}>
-          <Delete /> &nbsp; Delete done
-        </DeleteDoneBtn>
-      )} */}
       <AddTaskBtn animate={user.tasks.length === 0} user={user} />
     </>
   );

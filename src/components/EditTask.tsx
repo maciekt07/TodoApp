@@ -14,19 +14,19 @@ import {
 import { Task, UserProps } from "../types/user";
 import { Emoji } from "emoji-picker-react";
 import styled from "@emotion/styled";
-
 import { DESCRIPTION_MAX_LENGTH, TASK_NAME_MAX_LENGTH } from "../constants";
 import { DialogBtn } from "../styles";
-
 import { CustomEmojiPicker } from ".";
 import { CategoriesMenu } from "../styles/globalStyles";
 import { Restore } from "@mui/icons-material";
+
 interface EditTaskProps extends UserProps {
   open: boolean;
   task?: Task;
   onClose: () => void;
   onSave: (editedTask: Task) => void;
 }
+
 export const EditTask = ({
   open,
   task,
@@ -38,7 +38,6 @@ export const EditTask = ({
   const [editedTask, setEditedTask] = useState<Task | undefined>(task);
   const [nameError, setNameError] = useState<boolean>(false);
   const [descriptionError, setDescriptionError] = useState<boolean>(false);
-
   const [emoji, setEmoji] = useState<string | undefined>();
 
   useEffect(() => {
@@ -74,10 +73,12 @@ export const EditTask = ({
   };
 
   const handleSave = () => {
+    document.body.style.overflow = "auto";
     if (editedTask && !nameError && !descriptionError) {
       onSave(editedTask);
     }
   };
+
   const handleCategoryChange = (event: SelectChangeEvent<unknown>) => {
     const categoryId = event.target.value as number;
     const selectedCategory = user.categories.find(

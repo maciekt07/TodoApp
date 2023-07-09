@@ -24,7 +24,7 @@ export const AddTaskBtn = ({ animate, user }: Props) => {
         onClick={() => n("add")}
         aria-label="Add Task"
       >
-        <Add fontSize="large" />
+        <Add style={{ fontSize: "38px" }} />
       </Btn>
     </Tooltip>
   );
@@ -53,8 +53,8 @@ const Btn = styled.button<{ animate: boolean; glow: boolean }>`
   justify-content: center;
   position: fixed;
   bottom: 24px;
-  width: 68px;
-  height: 68px;
+  width: 72px;
+  height: 72px;
   border-radius: 100%;
   background-color: ${ColorPalette.purple};
   color: white;

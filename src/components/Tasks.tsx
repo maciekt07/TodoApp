@@ -5,28 +5,18 @@ import {
   formatDate,
   getFontColorFromHex,
 } from "../utils";
-import {
-  Alarm,
-  ContentCopy,
-  Delete,
-  Done,
-  Edit,
-  MoreVert,
-  PushPin,
-} from "@mui/icons-material";
+import { Alarm, Done, MoreVert, PushPin } from "@mui/icons-material";
 import {
   Avatar,
   Dialog,
   DialogActions,
   DialogContent,
   DialogTitle,
-  Divider,
   IconButton,
-  Menu,
   Tooltip,
 } from "@mui/material";
 import { Emoji, EmojiStyle } from "emoji-picker-react";
-import { EditTask } from "./EditTask";
+import { EditTask } from ".";
 import {
   CategoriesListContainer,
   CategoryChip,
@@ -34,7 +24,6 @@ import {
   EmojiContainer,
   NoTasks,
   Pinned,
-  StyledMenuItem,
   TaskContainer,
   TaskDate,
   TaskDescription,
@@ -44,6 +33,7 @@ import {
   TimeLeft,
 } from "../styles";
 
+import { TaskMenu } from ".";
 export const Tasks = ({ user, setUser }: UserProps) => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [selectedTaskId, setSelectedTaskId] = useState<number | null>(null);
@@ -61,6 +51,8 @@ export const Tasks = ({ user, setUser }: UserProps) => {
 
   const handleCloseMoreMenu = () => {
     setAnchorEl(null);
+    // TODO: find a better scrollbar bug fix
+    document.body.style.overflow = "visible";
   };
 
   const reorderTasks = (tasks: Task[]): Task[] => {
@@ -125,12 +117,14 @@ export const Tasks = ({ user, setUser }: UserProps) => {
 
   const handleDeleteTask = () => {
     // Opens the delete task dialog
+
     if (selectedTaskId) {
       setDeleteDialogOpen(true);
     }
   };
   const confirmDeleteTask = () => {
     // Deletes the selected task
+
     if (selectedTaskId) {
       const updatedTasks = user.tasks.filter(
         (task) => task.id !== selectedTaskId
@@ -241,8 +235,20 @@ export const Tasks = ({ user, setUser }: UserProps) => {
     setCategories(uniqueCategories);
     setCategoryCounts(counts);
   }, [user.tasks]);
+
   return (
     <>
+      <TaskMenu
+        user={user}
+        selectedTaskId={selectedTaskId}
+        setEditModalOpen={setEditModalOpen}
+        anchorEl={anchorEl}
+        handleMarkAsDone={handleMarkAsDone}
+        handlePin={handlePin}
+        handleDeleteTask={handleDeleteTask}
+        handleDuplicateTask={handleDuplicateTask}
+        handleCloseMoreMenu={handleCloseMoreMenu}
+      />
       <TasksContainer>
         {categories !== undefined &&
           categories?.length > 1 &&
@@ -443,72 +449,6 @@ export const Tasks = ({ user, setUser }: UserProps) => {
               >
                 <MoreVert />
               </IconButton>
-
-              <Menu
-                id="task-menu"
-                anchorEl={anchorEl}
-                open={Boolean(anchorEl)}
-                onClose={handleCloseMoreMenu}
-                sx={{
-                  "& .MuiPaper-root": {
-                    borderRadius: "18px",
-                    minWidth: "200px",
-                    boxShadow: "none",
-                    padding: "2px 4px",
-                  },
-                }}
-                MenuListProps={{
-                  "aria-labelledby": "more-button",
-                }}
-              >
-                <StyledMenuItem
-                  onClick={() => {
-                    handleCloseMoreMenu();
-                    handleMarkAsDone();
-                  }}
-                >
-                  <Done /> &nbsp;{" "}
-                  {user.tasks.find((task) => task.id === selectedTaskId)?.done
-                    ? "Mark as not done"
-                    : "Mark as done"}
-                </StyledMenuItem>
-                <StyledMenuItem
-                  onClick={() => {
-                    handleCloseMoreMenu();
-                    handlePin();
-                  }}
-                >
-                  <PushPin /> &nbsp;{" "}
-                  {user.tasks.find((task) => task.id === selectedTaskId)?.pinned
-                    ? "Unpin"
-                    : "Pin"}
-                </StyledMenuItem>
-
-                <Divider />
-                <StyledMenuItem
-                  onClick={() => {
-                    handleCloseMoreMenu();
-                    setEditModalOpen(true);
-                  }}
-                >
-                  <Edit /> &nbsp; Edit
-                </StyledMenuItem>
-                <StyledMenuItem onClick={handleDuplicateTask}>
-                  <ContentCopy /> &nbsp; Duplicate
-                </StyledMenuItem>
-                <Divider />
-                <StyledMenuItem
-                  sx={{
-                    color: "#ff4040",
-                  }}
-                  onClick={() => {
-                    handleCloseMoreMenu();
-                    handleDeleteTask();
-                  }}
-                >
-                  <Delete /> &nbsp; Delete
-                </StyledMenuItem>
-              </Menu>
             </TaskContainer>
           ))
         ) : (

@@ -40,7 +40,6 @@ export {
   CategoriesListContainer,
   TasksContainer,
   Pinned,
-  StyledMenuItem,
   CategoryChip,
   TimeLeft,
 } from "./tasks.styled";

@@ -1,6 +1,6 @@
 import styled from "@emotion/styled";
 import { fadeIn } from ".";
-import { Chip, MenuItem } from "@mui/material";
+import { Chip } from "@mui/material";
 import { getFontColorFromHex } from "../utils";
 
 interface TaskContainerProps {
@@ -126,16 +126,6 @@ export const Pinned = styled.div`
   align-items: center;
   opacity: 0.8;
   font-size: 16px;
-`;
-export const StyledMenuItem = styled(MenuItem)`
-  margin: 6px;
-  padding: 10px;
-  border-radius: 12px;
-  box-shadow: none;
-
-  &:hover {
-    background-color: #f0f0f0;
-  }
 `;
 
 interface CategoryChipProps {
