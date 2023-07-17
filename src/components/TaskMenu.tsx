@@ -6,6 +6,7 @@ import { BottomSheet } from "react-spring-bottom-sheet";
 import { Emoji } from "emoji-picker-react";
 import styled from "@emotion/styled";
 import "react-spring-bottom-sheet/dist/style.css";
+import { useResponsiveDisplay } from "../hooks/useResponsiveDisplay";
 
 interface TaskMenuProps {
   user: User;
@@ -81,7 +82,7 @@ export const TaskMenu = ({
       </StyledMenuItem>
     </div>
   );
-  const isMobile = window.matchMedia("(max-width: 767px)").matches;
+  const isMobile = useResponsiveDisplay();
   return (
     <>
       {isMobile ? (

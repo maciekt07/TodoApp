@@ -16,6 +16,7 @@ import { UserProps } from "../types/user";
 import styled from "@emotion/styled";
 import {
   Category,
+  GetApp,
   Logout,
   ManageAccounts,
   Settings,
@@ -105,6 +106,11 @@ export const ProfileAvatar = ({ user, setUser }: UserProps) => {
         >
           <Settings /> &nbsp; Settings
         </StyledMenuItem>
+
+        <StyledMenuItem onClick={() => n("/import-export")}>
+          <GetApp /> &nbsp; Import/Export
+        </StyledMenuItem>
+
         {user.settings[0].enableCategories !== undefined &&
           user.settings[0].enableCategories && (
             <StyledMenuItem onClick={() => n("/categories")}>

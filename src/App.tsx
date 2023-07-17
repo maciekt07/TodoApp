@@ -11,6 +11,7 @@ import { NotFound } from "./pages/NotFound";
 import { useEffect } from "react";
 import { Categories } from "./pages/Categories";
 import { ErrorBoundary } from "./components";
+import { ImportExport } from "./pages/ImportExport";
 
 function App() {
   const [user, setUser] = useStorageState<User>(defaultUser, "user");
@@ -39,6 +40,10 @@ function App() {
             <Route path="/" element={<Home {...userProps} />} />
             <Route path="/add" element={<AddTask {...userProps} />} />
             <Route path="/user" element={<UserSettings {...userProps} />} />
+            <Route
+              path="/import-export"
+              element={<ImportExport {...userProps} />}
+            />
             <Route path="/categories" element={<Categories {...userProps} />} />
             <Route path="*" element={<NotFound />} />
           </Routes>

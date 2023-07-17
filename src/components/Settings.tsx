@@ -121,5 +121,3 @@ const Beta = styled.span`
   font-weight: 600;
   box-shadow: 0 0 4px 0 #0e8e0e91;
 `;
-
-export default SettingsDialog;
