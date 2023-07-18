@@ -7,6 +7,7 @@ import { Emoji } from "emoji-picker-react";
 import styled from "@emotion/styled";
 import "react-spring-bottom-sheet/dist/style.css";
 import { useResponsiveDisplay } from "../hooks/useResponsiveDisplay";
+import { ColorPalette } from "../styles";
 
 interface TaskMenuProps {
   user: User;
@@ -135,13 +136,13 @@ const SheetHeader = styled.h3`
   justify-content: center;
   align-items: center;
   gap: 6px;
-  color: black;
+  color: ${ColorPalette.fontDark};
   margin: 10px;
   font-size: 20px;
 `;
 
 const SheetContent = styled.div`
-  color: black;
+  color: ${ColorPalette.fontDark};
   margin: 20px 10px;
   & .MuiMenuItem-root {
     font-size: 16px;

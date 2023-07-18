@@ -2,6 +2,9 @@ import React, { ErrorInfo } from "react";
 import { User } from "../types/user";
 import { StyledLink } from "../styles";
 import { Emoji } from "emoji-picker-react";
+import { Button } from "@mui/material";
+import { exportTasksToJson } from "../utils";
+import { FileDownload } from "@mui/icons-material";
 
 interface ErrorBoundaryProps {
   // fallbackUI: React.ReactNode;
@@ -73,6 +76,15 @@ export class ErrorBoundary extends React.Component<
             {this.state.error?.stack?.replace(this.state.error?.message, "")}
           </div>
           <pre>
+            <Button
+              variant="outlined"
+              sx={{ m: "14px 6px", p: "12px 20px", borderRadius: "14px" }}
+              onClick={() => exportTasksToJson(this.props.user.tasks)}
+            >
+              <FileDownload /> &nbsp; Export Tasks To JSON
+            </Button>
+
+            <br />
             <code>{JSON.stringify(this.props.user, null, 4)}</code>
           </pre>
         </div>

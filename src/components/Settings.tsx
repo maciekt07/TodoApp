@@ -3,14 +3,22 @@ import {
   Dialog,
   DialogActions,
   DialogTitle,
+  FormControl,
   FormControlLabel,
   FormGroup,
   FormLabel,
+  MenuItem,
+  Select,
+  SelectChangeEvent,
   Switch,
 } from "@mui/material";
 import { UserProps } from "../types/user";
 import { DialogBtn } from "../styles";
 import styled from "@emotion/styled";
+import { Emoji, EmojiStyle } from "emoji-picker-react";
+import { useOnlineStatus } from "../hooks/useOnlineStatus";
+import { WifiOff } from "@mui/icons-material";
+import { defaultUser } from "../constants/defaultUser";
 
 interface SettingsProps extends UserProps {
   open: boolean;
@@ -37,7 +45,21 @@ export const SettingsDialog = ({
         settings: [updatedSettings],
       }));
     };
+  const emojiStyles: { label: string; style: EmojiStyle }[] = [
+    { label: "Apple", style: EmojiStyle.APPLE },
+    { label: "Facebook, Messenger", style: EmojiStyle.FACEBOOK },
+    { label: "Twitter, Discord", style: EmojiStyle.TWITTER },
+    { label: "Google", style: EmojiStyle.GOOGLE },
+    { label: "Native", style: EmojiStyle.NATIVE },
+  ];
 
+  const isOnline = useOnlineStatus();
+
+  const [lastStyle] = useState<EmojiStyle>(user.emojisStyle);
+  const handleEmojiStyleChange = (event: SelectChangeEvent<EmojiStyle>) => {
+    const selectedEmojiStyle = event.target.value as EmojiStyle;
+    setUser({ ...user, emojisStyle: selectedEmojiStyle });
+  };
   return (
     <Dialog
       open={open}
@@ -51,6 +73,63 @@ export const SettingsDialog = ({
     >
       <DialogTitle>Settings</DialogTitle>
       <Container>
+        <FormGroup>
+          <FormControl>
+            <FormLabel>Emoji Settings</FormLabel>
+
+            <Select
+              value={user.emojisStyle}
+              onChange={handleEmojiStyleChange}
+              sx={{
+                width: "300px",
+                borderRadius: "18px",
+                color: "black",
+
+                m: "8px 0",
+              }}
+            >
+              {!isOnline && (
+                <MenuItem
+                  disabled
+                  style={{
+                    opacity: 0.8,
+                    display: "flex",
+                    gap: "6px",
+                    fontWeight: 500,
+                  }}
+                >
+                  <WifiOff /> You can't change the emoji style <br /> when you
+                  are offline
+                </MenuItem>
+              )}
+              {emojiStyles.map((style) => (
+                <MenuItem
+                  key={style.style}
+                  value={style.style}
+                  // disabled={style.style === EmojiStyle.NATIVE}
+                  disabled={
+                    !isOnline &&
+                    style.style !== EmojiStyle.NATIVE &&
+                    style.style !== defaultUser.emojisStyle &&
+                    style.style !== lastStyle
+                  }
+                  sx={{
+                    padding: "12px 20px",
+                    borderRadius: "12px",
+                    margin: "8px",
+                    display: "flex",
+                    gap: "4px",
+                  }}
+                >
+                  <Emoji size={24} unified="1f60e" emojiStyle={style.style} />
+                  &nbsp;
+                  {style.style === EmojiStyle.NATIVE && "\u00A0"}
+                  {style.label}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+        </FormGroup>
         <FormGroup>
           <FormLabel>App Settings</FormLabel>
           <FormControlLabel
@@ -69,6 +148,7 @@ export const SettingsDialog = ({
             }
           />
         </FormGroup>
+
         <FormGroup>
           <FormControlLabel
             sx={{ opacity: settings.enableGlow ? 1 : 0.8 }}

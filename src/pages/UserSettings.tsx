@@ -6,31 +6,19 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
-  FormControl,
-  FormHelperText,
   IconButton,
-  MenuItem,
-  Select,
-  SelectChangeEvent,
   TextField,
   Tooltip,
 } from "@mui/material";
 import { UserProps } from "../types/user";
-import { Emoji, EmojiStyle } from "emoji-picker-react";
+
 import { useEffect, useState } from "react";
 import styled from "@emotion/styled";
-import {
-  AddAPhoto,
-  Delete,
-  Logout,
-  Settings,
-  WifiOff,
-} from "@mui/icons-material";
+import { AddAPhoto, Delete, Logout, Settings } from "@mui/icons-material";
 import { PROFILE_PICTURE_MAX_LENGTH, USER_NAME_MAX_LENGTH } from "../constants";
 import { SettingsDialog, TopBar } from "../components";
 import { ColorPalette, DialogBtn } from "../styles";
 import { defaultUser } from "../constants/defaultUser";
-import { useOnlineStatus } from "../hooks/useOnlineStatus";
 
 export const UserSettings = ({ user, setUser }: UserProps) => {
   const [name, setName] = useState<string>("");
@@ -41,26 +29,9 @@ export const UserSettings = ({ user, setUser }: UserProps) => {
 
   const [openSettings, setOpenSettings] = useState<boolean>(false);
 
-  const emojiStyles: { label: string; style: EmojiStyle }[] = [
-    { label: "Apple", style: EmojiStyle.APPLE },
-    { label: "Facebook, Messenger", style: EmojiStyle.FACEBOOK },
-    { label: "Twitter, Discord", style: EmojiStyle.TWITTER },
-    { label: "Google", style: EmojiStyle.GOOGLE },
-    { label: "Native", style: EmojiStyle.NATIVE },
-  ];
-
-  const isOnline = useOnlineStatus();
-
-  const [lastStyle] = useState<EmojiStyle>(user.emojisStyle);
-
   useEffect(() => {
     document.title = `Todo App - User ${user.name ? `(${user.name})` : ""}`;
   }, []);
-
-  const handleEmojiStyleChange = (event: SelectChangeEvent<EmojiStyle>) => {
-    const selectedEmojiStyle = event.target.value as EmojiStyle;
-    setUser({ ...user, emojisStyle: selectedEmojiStyle });
-  };
 
   const handleSaveName = () => {
     setUser({ ...user, name: name });
@@ -146,58 +117,6 @@ export const UserSettings = ({ user, setUser }: UserProps) => {
             Registered since {new Date(user.createdAt).toLocaleDateString()}
           </CreatedAtDate>
         </Tooltip>
-        <FormControl>
-          <FormHelperText>Emoji Style</FormHelperText>
-          <Select
-            value={user.emojisStyle}
-            onChange={handleEmojiStyleChange}
-            sx={{
-              width: "300px",
-              borderRadius: "18px",
-              color: "black",
-            }}
-          >
-            {!isOnline && (
-              <MenuItem
-                disabled
-                style={{
-                  opacity: 0.8,
-                  display: "flex",
-                  gap: "6px",
-                  fontWeight: 500,
-                }}
-              >
-                <WifiOff /> You can't change the emoji style <br /> when you are
-                offline
-              </MenuItem>
-            )}
-            {emojiStyles.map((style) => (
-              <MenuItem
-                key={style.style}
-                value={style.style}
-                // disabled={style.style === EmojiStyle.NATIVE}
-                disabled={
-                  !isOnline &&
-                  style.style !== EmojiStyle.NATIVE &&
-                  style.style !== defaultUser.emojisStyle &&
-                  style.style !== lastStyle
-                }
-                sx={{
-                  padding: "12px 20px",
-                  borderRadius: "12px",
-                  margin: "8px",
-                  display: "flex",
-                  gap: "4px",
-                }}
-              >
-                <Emoji size={24} unified="1f60e" emojiStyle={style.style} />
-                &nbsp;
-                {style.style === EmojiStyle.NATIVE && "\u00A0"}
-                {style.label}
-              </MenuItem>
-            ))}
-          </Select>
-        </FormControl>
 
         <StyledInput
           label={user.name === null ? "Add Name" : "Change Name"}
@@ -211,14 +130,13 @@ export const UserSettings = ({ user, setUser }: UserProps) => {
               : ""
           }
         />
-        {name !== "" && name !== user.name && (
-          <SaveBtn
-            onClick={handleSaveName}
-            disabled={name.length > USER_NAME_MAX_LENGTH}
-          >
-            Save name
-          </SaveBtn>
-        )}
+
+        <SaveBtn
+          onClick={handleSaveName}
+          disabled={name.length > USER_NAME_MAX_LENGTH || name === ""}
+        >
+          Save name
+        </SaveBtn>
 
         <Button
           color="error"

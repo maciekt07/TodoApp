@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, ReactNode } from "react";
 import { AddTaskBtn, ProfileAvatar, Tasks } from "../components";
 import {
   ColorPalette,
@@ -24,7 +24,7 @@ import { useOnlineStatus } from "../hooks/useOnlineStatus";
 import { WifiOff } from "@mui/icons-material";
 
 export const Home = ({ user, setUser }: UserProps) => {
-  const [randomGreeting, setRandomGreeting] = useState<string>("");
+  const [randomGreeting, setRandomGreeting] = useState<string | ReactNode>("");
   const [completedTasksCount, setCompletedTasksCount] = useState<number>(0);
   const [tasksWithDeadlineTodayCount, setTasksWithDeadlineTodayCount] =
     useState<number>(0);
@@ -33,10 +33,10 @@ export const Home = ({ user, setUser }: UserProps) => {
     (completedTasksCount / user.tasks.length) * 100;
 
   useEffect(() => {
-    setRandomGreeting(getRandomGreeting());
+    setRandomGreeting(getRandomGreeting(user.emojisStyle));
     document.title = "Todo App";
     const interval = setInterval(() => {
-      setRandomGreeting(getRandomGreeting());
+      setRandomGreeting(getRandomGreeting(user.emojisStyle));
     }, 6000);
 
     return () => clearInterval(interval);
@@ -67,7 +67,9 @@ export const Home = ({ user, setUser }: UserProps) => {
         {displayGreeting()}
         {user.name && ", " + user.name}
       </GreetingHeader>
-      <GreetingText key={randomGreeting}>{randomGreeting}</GreetingText>
+      <GreetingText key={randomGreeting?.toString()}>
+        {randomGreeting}
+      </GreetingText>
       {user.tasks.length > 0 && (
         <TasksCountContainer>
           <TasksCount glow={user.settings[0].enableGlow}>
@@ -83,6 +85,7 @@ export const Home = ({ user, setUser }: UserProps) => {
                     : "none",
                 }}
               />
+
               <ProgressPercentageContainer>
                 <Typography
                   variant="caption"

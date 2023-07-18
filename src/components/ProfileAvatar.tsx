@@ -18,7 +18,7 @@ import {
   Category,
   GetApp,
   Logout,
-  ManageAccounts,
+  Person,
   Settings,
 } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
@@ -96,8 +96,21 @@ export const ProfileAvatar = ({ user, setUser }: UserProps) => {
         }}
       >
         <StyledMenuItem onClick={() => n("/user")}>
-          <ManageAccounts /> &nbsp; Profile
+          <Person /> &nbsp; Profile
         </StyledMenuItem>
+
+        {user.settings[0].enableCategories !== undefined &&
+          user.settings[0].enableCategories && (
+            <StyledMenuItem onClick={() => n("/categories")}>
+              <Category /> &nbsp; Categories
+            </StyledMenuItem>
+          )}
+        <StyledMenuItem onClick={() => n("/import-export")}>
+          <GetApp /> &nbsp; Import/Export
+        </StyledMenuItem>
+
+        <Divider />
+
         <StyledMenuItem
           onClick={() => {
             setOpenSettings(true);
@@ -107,17 +120,6 @@ export const ProfileAvatar = ({ user, setUser }: UserProps) => {
           <Settings /> &nbsp; Settings
         </StyledMenuItem>
 
-        <StyledMenuItem onClick={() => n("/import-export")}>
-          <GetApp /> &nbsp; Import/Export
-        </StyledMenuItem>
-
-        {user.settings[0].enableCategories !== undefined &&
-          user.settings[0].enableCategories && (
-            <StyledMenuItem onClick={() => n("/categories")}>
-              <Category /> &nbsp; Categories
-            </StyledMenuItem>
-          )}
-        <Divider />
         <StyledMenuItem
           onClick={handleLogoutConfirmationOpen}
           sx={{ color: "#ff4040" }}

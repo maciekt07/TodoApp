@@ -8,6 +8,7 @@ import Box from "@mui/material/Box";
 import { styled } from "@mui/material/styles";
 import { Emoji } from "emoji-picker-react";
 import { FileDownload, FileUpload } from "@mui/icons-material";
+import { exportTasksToJson } from "../utils";
 
 export const ImportExport = ({ user, setUser }: UserProps) => {
   const [selectedTasks, setSelectedTasks] = useState<number[]>([]); // Array of selected task IDs
@@ -19,17 +20,6 @@ export const ImportExport = ({ user, setUser }: UserProps) => {
         : [...prevSelectedTasks, taskId]
     );
   };
-  const exportTasksToJson = (selectedTasks: Task[]) => {
-    const dataStr = JSON.stringify(selectedTasks, null, 2);
-    const dataUri =
-      "data:application/json;charset=utf-8," + encodeURIComponent(dataStr);
-    const exportFileDefaultName = `exported_tasks${new Date().getTime()}.json`;
-
-    const linkElement = document.createElement("a");
-    linkElement.setAttribute("href", dataUri);
-    linkElement.setAttribute("download", exportFileDefaultName);
-    linkElement.click();
-  };
 
   const handleExport = () => {
     const tasksToExport = user.tasks.filter((task: Task) =>
@@ -37,6 +27,8 @@ export const ImportExport = ({ user, setUser }: UserProps) => {
     );
     exportTasksToJson(tasksToExport);
   };
+
+  const handleExportAll = () => exportTasksToJson(user.tasks);
 
   const handleImport = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files && event.target.files[0];
@@ -68,7 +60,7 @@ export const ImportExport = ({ user, setUser }: UserProps) => {
             .join(", ");
 
           // Display the alert with the list of imported task names
-          alert(`Imported Tasks: ${importedTaskNames}`);
+          console.log(`Imported Tasks: ${importedTaskNames}`);
         } catch (error) {
           console.error("Error parsing the imported file:", error);
           alert("Error parsing the imported file");
@@ -82,25 +74,34 @@ export const ImportExport = ({ user, setUser }: UserProps) => {
   return (
     <>
       <TopBar title="Import/Export" />
-      <h3 style={{ textAlign: "center" }}>Select Tasks To Export</h3>
+      <h2 style={{ textAlign: "center" }}>Select Tasks To Export</h2>
       <Container>
-        {user.tasks.map((task: Task) => (
-          <TaskContainer
-            key={task.id}
-            backgroundclr={task.color}
-            onClick={() => handleTaskClick(task.id)}
-            selected={selectedTasks.includes(task.id)}
-          >
-            <Checkbox size="medium" checked={selectedTasks.includes(task.id)} />
-            <Typography
-              variant="body1"
-              component="span"
-              sx={{ display: "flex", alignItems: "center", gap: "6px" }}
+        {user.tasks.length > 0 ? (
+          user.tasks.map((task: Task) => (
+            <TaskContainer
+              key={task.id}
+              backgroundclr={task.color}
+              onClick={() => handleTaskClick(task.id)}
+              selected={selectedTasks.includes(task.id)}
             >
-              <Emoji size={24} unified={task.emoji || ""} /> {task.name}
-            </Typography>
-          </TaskContainer>
-        ))}
+              <Checkbox
+                size="medium"
+                checked={selectedTasks.includes(task.id)}
+              />
+              <Typography
+                variant="body1"
+                component="span"
+                sx={{ display: "flex", alignItems: "center", gap: "6px" }}
+              >
+                <Emoji size={24} unified={task.emoji || ""} /> {task.name}
+              </Typography>
+            </TaskContainer>
+          ))
+        ) : (
+          <h3 style={{ opacity: 0.8, fontStyle: "italic" }}>
+            You don't have any tasks to export
+          </h3>
+        )}
       </Container>
 
       <Box
@@ -121,7 +122,16 @@ export const ImportExport = ({ user, setUser }: UserProps) => {
           <FileDownload /> &nbsp; Export Selected to JSON{" "}
           {selectedTasks.length > 0 && `[${selectedTasks.length}]`}
         </StyledButton>
-        <h3 style={{ textAlign: "center" }}>Import Tasks From JSON</h3>
+
+        <StyledButton
+          onClick={handleExportAll}
+          disabled={user.tasks.length === 0}
+          variant="outlined"
+        >
+          <FileDownload /> &nbsp; Export All Tasks to JSON
+        </StyledButton>
+
+        <h2 style={{ textAlign: "center" }}>Import Tasks From JSON</h2>
         <input
           accept=".json"
           id="import-file"
@@ -198,6 +208,7 @@ const StyledButton = styled(Button)`
   padding: 12px 18px;
   border-radius: 14px;
   width: 300px;
+
   &:disabled {
     color: #ffffff58;
     border-color: #ffffff58;
