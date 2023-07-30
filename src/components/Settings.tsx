@@ -12,7 +12,7 @@ import {
   SelectChangeEvent,
   Switch,
 } from "@mui/material";
-import { UserProps } from "../types/user";
+import { AppSettings, UserProps } from "../types/user";
 import { DialogBtn } from "../styles";
 import styled from "@emotion/styled";
 import { Emoji, EmojiStyle } from "emoji-picker-react";
@@ -32,9 +32,21 @@ export const SettingsDialog = ({
   setUser,
 }: SettingsProps) => {
   const [settings, setSettings] = useState(user.settings[0]);
+  const [lastStyle] = useState<EmojiStyle>(user.emojisStyle);
+
+  const isOnline = useOnlineStatus();
+
+  const emojiStyles: { label: string; style: EmojiStyle }[] = [
+    { label: "Apple", style: EmojiStyle.APPLE },
+    { label: "Facebook, Messenger", style: EmojiStyle.FACEBOOK },
+    { label: "Twitter, Discord", style: EmojiStyle.TWITTER },
+    { label: "Google", style: EmojiStyle.GOOGLE },
+    { label: "Native", style: EmojiStyle.NATIVE },
+  ];
 
   const handleSettingChange =
-    (name: string) => (event: React.ChangeEvent<HTMLInputElement>) => {
+    (name: keyof AppSettings) =>
+    (event: React.ChangeEvent<HTMLInputElement>) => {
       const updatedSettings = {
         ...settings,
         [name]: event.target.checked,
@@ -45,21 +57,12 @@ export const SettingsDialog = ({
         settings: [updatedSettings],
       }));
     };
-  const emojiStyles: { label: string; style: EmojiStyle }[] = [
-    { label: "Apple", style: EmojiStyle.APPLE },
-    { label: "Facebook, Messenger", style: EmojiStyle.FACEBOOK },
-    { label: "Twitter, Discord", style: EmojiStyle.TWITTER },
-    { label: "Google", style: EmojiStyle.GOOGLE },
-    { label: "Native", style: EmojiStyle.NATIVE },
-  ];
 
-  const isOnline = useOnlineStatus();
-
-  const [lastStyle] = useState<EmojiStyle>(user.emojisStyle);
   const handleEmojiStyleChange = (event: SelectChangeEvent<EmojiStyle>) => {
     const selectedEmojiStyle = event.target.value as EmojiStyle;
     setUser({ ...user, emojisStyle: selectedEmojiStyle });
   };
+
   return (
     <Dialog
       open={open}
@@ -76,7 +79,6 @@ export const SettingsDialog = ({
         <FormGroup>
           <FormControl>
             <FormLabel>Emoji Settings</FormLabel>
-
             <Select
               value={user.emojisStyle}
               onChange={handleEmojiStyleChange}
@@ -84,7 +86,6 @@ export const SettingsDialog = ({
                 width: "300px",
                 borderRadius: "18px",
                 color: "black",
-
                 m: "8px 0",
               }}
             >
@@ -106,7 +107,6 @@ export const SettingsDialog = ({
                 <MenuItem
                   key={style.style}
                   value={style.style}
-                  // disabled={style.style === EmojiStyle.NATIVE}
                   disabled={
                     !isOnline &&
                     style.style !== EmojiStyle.NATIVE &&
@@ -140,12 +140,7 @@ export const SettingsDialog = ({
                 onChange={handleSettingChange("enableCategories")}
               />
             }
-            label={
-              <>
-                Enable Categories &nbsp;
-                <Beta>BETA</Beta>
-              </>
-            }
+            label="Enable Categories"
           />
         </FormGroup>
 
@@ -191,13 +186,13 @@ const Container = styled.div`
   gap: 6px;
 `;
 
-const Beta = styled.span`
-  background: #0e8e0e;
-  color: #00ff00;
-  font-size: 12px;
-  letter-spacing: 0.03em;
-  padding: 2px 6px;
-  border-radius: 5px;
-  font-weight: 600;
-  box-shadow: 0 0 4px 0 #0e8e0e91;
-`;
+// const Beta = styled.span`
+//   background: #0e8e0e;
+//   color: #00ff00;
+//   font-size: 12px;
+//   letter-spacing: 0.03em;
+//   padding: 2px 6px;
+//   border-radius: 5px;
+//   font-weight: 600;
+//   box-shadow: 0 0 4px 0 #0e8e0e91;
+// `;

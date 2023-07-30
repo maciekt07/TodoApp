@@ -38,8 +38,8 @@ export const Tasks = ({ user, setUser }: UserProps) => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [selectedTaskId, setSelectedTaskId] = useState<number | null>(null);
   const open = Boolean(anchorEl);
-  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
-
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState<boolean>(false);
+  const [editModalOpen, setEditModalOpen] = useState<boolean>(false);
   // Handler for clicking the more options button in a task
   const handleClick = (
     event: React.MouseEvent<HTMLButtonElement>,
@@ -51,7 +51,6 @@ export const Tasks = ({ user, setUser }: UserProps) => {
 
   const handleCloseMoreMenu = () => {
     setAnchorEl(null);
-    // TODO: find a better scrollbar bug fix
     document.body.style.overflow = "visible";
   };
 
@@ -137,7 +136,6 @@ export const Tasks = ({ user, setUser }: UserProps) => {
     // Cancels the delete task operation
     setDeleteDialogOpen(false);
   };
-  const [editModalOpen, setEditModalOpen] = useState(false);
 
   const handleEditTask = (
     taskId: number,
@@ -272,7 +270,11 @@ export const Tasks = ({ user, setUser }: UserProps) => {
                   }
                   glow={user.settings[0].enableGlow}
                   backgroundclr={cat.color}
-                  onClick={() => setSelectedCatId(cat.id)}
+                  onClick={() =>
+                    selectedCatId !== cat.id
+                      ? setSelectedCatId(cat.id)
+                      : setSelectedCatId(undefined)
+                  }
                   key={cat.id}
                   list
                   onDelete={

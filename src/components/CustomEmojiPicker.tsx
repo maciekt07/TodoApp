@@ -48,11 +48,13 @@ export const CustomEmojiPicker = ({
     if (currentEmoji) {
       const emojiSize = user.emojisStyle === EmojiStyle.NATIVE ? 48 : 64;
       return (
-        <Emoji
-          size={emojiSize}
-          emojiStyle={user.emojisStyle}
-          unified={currentEmoji}
-        />
+        <div>
+          <Emoji
+            size={emojiSize}
+            emojiStyle={user.emojisStyle}
+            unified={currentEmoji}
+          />
+        </div>
       );
     } else {
       const fontColor = color

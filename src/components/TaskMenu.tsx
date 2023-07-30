@@ -1,9 +1,8 @@
 import { ContentCopy, Delete, Done, Edit, PushPin } from "@mui/icons-material";
-
 import { User } from "../types/user";
 import { Divider, Menu, MenuItem } from "@mui/material";
 import { BottomSheet } from "react-spring-bottom-sheet";
-import { Emoji } from "emoji-picker-react";
+import { Emoji, EmojiStyle } from "emoji-picker-react";
 import styled from "@emotion/styled";
 import "react-spring-bottom-sheet/dist/style.css";
 import { useResponsiveDisplay } from "../hooks/useResponsiveDisplay";
@@ -32,7 +31,7 @@ export const TaskMenu = ({
   handleDuplicateTask,
   handleCloseMoreMenu,
 }: TaskMenuProps) => {
-  const menuItems = (
+  const menuItems: JSX.Element = (
     <div>
       <StyledMenuItem
         onClick={() => {
@@ -100,6 +99,7 @@ export const TaskMenu = ({
                     ?.emoji || ""
                 }
               />{" "}
+              {user.emojisStyle === EmojiStyle.NATIVE && "\u00A0 "}
               {user.tasks.find((task) => task.id === selectedTaskId)?.name}
             </SheetHeader>
           }
@@ -146,7 +146,7 @@ const SheetContent = styled.div`
   margin: 20px 10px;
   & .MuiMenuItem-root {
     font-size: 16px;
-    padding: 14px;
+    padding: 16px;
     &::before {
       content: "";
       display: inline-block;

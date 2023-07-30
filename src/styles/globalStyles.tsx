@@ -27,6 +27,24 @@ const globalStyles = css`
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     -webkit-text-size-adjust: 100%;
+    --rsbs-backdrop-bg: rgba(0, 0, 0, 0.3);
+  }
+
+  /* div[data-rsbs-backdrop="true"] {
+    backdrop-filter: blur(2px);
+  } */
+  div[role="dialog"] {
+    border-radius: 32px 32px 0 0;
+  }
+
+  div[data-rsbs-header="true"] {
+    &::before {
+      width: 72px;
+      height: 5px;
+      border-radius: 100px;
+      background: #cfcfcf;
+      margin-top: 2px;
+    }
   }
 
   html {

@@ -25,6 +25,7 @@ import { WifiOff } from "@mui/icons-material";
 
 export const Home = ({ user, setUser }: UserProps) => {
   const [randomGreeting, setRandomGreeting] = useState<string | ReactNode>("");
+  const [greetingKey, setGreetingKey] = useState<number>(0);
   const [completedTasksCount, setCompletedTasksCount] = useState<number>(0);
   const [tasksWithDeadlineTodayCount, setTasksWithDeadlineTodayCount] =
     useState<number>(0);
@@ -37,6 +38,7 @@ export const Home = ({ user, setUser }: UserProps) => {
     document.title = "Todo App";
     const interval = setInterval(() => {
       setRandomGreeting(getRandomGreeting(user.emojisStyle));
+      setGreetingKey((prevKey) => prevKey + 1); // Update the key on each interval
     }, 6000);
 
     return () => clearInterval(interval);
@@ -67,9 +69,7 @@ export const Home = ({ user, setUser }: UserProps) => {
         {displayGreeting()}
         {user.name && ", " + user.name}
       </GreetingHeader>
-      <GreetingText key={randomGreeting?.toString()}>
-        {randomGreeting}
-      </GreetingText>
+      <GreetingText key={greetingKey}>{randomGreeting}</GreetingText>
       {user.tasks.length > 0 && (
         <TasksCountContainer>
           <TasksCount glow={user.settings[0].enableGlow}>

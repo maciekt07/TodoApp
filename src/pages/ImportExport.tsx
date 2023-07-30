@@ -7,8 +7,9 @@ import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 import { styled } from "@mui/material/styles";
 import { Emoji } from "emoji-picker-react";
-import { FileDownload, FileUpload } from "@mui/icons-material";
+import { FileDownload, FileUpload, Info } from "@mui/icons-material";
 import { exportTasksToJson } from "../utils";
+import { IconButton, Tooltip } from "@mui/material";
 
 export const ImportExport = ({ user, setUser }: UserProps) => {
   const [selectedTasks, setSelectedTasks] = useState<number[]>([]); // Array of selected task IDs
@@ -74,7 +75,22 @@ export const ImportExport = ({ user, setUser }: UserProps) => {
   return (
     <>
       <TopBar title="Import/Export" />
-      <h2 style={{ textAlign: "center" }}>Select Tasks To Export</h2>
+      <h2
+        style={{
+          textAlign: "center",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        Select Tasks To Export&nbsp;
+        <Tooltip title="Duplicates will be removed during import">
+          <IconButton style={{ color: "#ffffff" }}>
+            <Info />
+          </IconButton>
+        </Tooltip>
+      </h2>
+
       <Container>
         {user.tasks.length > 0 ? (
           user.tasks.map((task: Task) => (
@@ -163,7 +179,7 @@ const TaskContainer = styled(Box)<{ backgroundclr: string; selected: boolean }>`
   justify-content: left;
   margin: 8px;
   padding: 10px 4px;
-  border-radius: 12px;
+  border-radius: 16px;
   background: #19172b94;
   border: 2px solid ${(props) => props.backgroundclr};
   box-shadow: ${(props) =>

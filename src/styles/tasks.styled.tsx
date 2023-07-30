@@ -56,6 +56,7 @@ export const TaskName = styled.h3`
   display: flex;
   align-items: center;
   font-size: 20px;
+
   /* @media (max-width: 600px) {
       flex-direction: column;
       align-items: flex-start;

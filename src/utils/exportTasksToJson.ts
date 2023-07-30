@@ -3,7 +3,7 @@ import { Task } from "../types/user";
  * Exports an array of tasks to a JSON file and initiates the download.
  * @param {Task[]} selectedTasks - The array of tasks to be exported.
  */
-export const exportTasksToJson = (selectedTasks: Task[]) => {
+export const exportTasksToJson = (selectedTasks: Task[]): void => {
   const dataStr = JSON.stringify(selectedTasks, null, 2);
   const dataUri =
     "data:application/json;charset=utf-8," + encodeURIComponent(dataStr);
