@@ -7,3 +7,4 @@ export { CustomEmojiPicker } from "./CustomEmojiPicker";
 export { SettingsDialog } from "./Settings";
 export { ErrorBoundary } from "./ErrorBoundary";
 export { TaskMenu } from "./TaskMenu";
+export { BottomNav } from "./BottomNav";

@@ -39,8 +39,8 @@ const globalStyles = css`
 
   div[data-rsbs-header="true"] {
     &::before {
-      width: 72px;
-      height: 5px;
+      width: 60px;
+      height: 6px;
       border-radius: 100px;
       background: #cfcfcf;
       margin-top: 2px;
@@ -61,9 +61,9 @@ const globalStyles = css`
 
     /* Custom Scrollbar Styles */
     ::-webkit-scrollbar {
-      width: 10px;
+      width: 8px;
 
-      background-color: #2a326e;
+      background-color: #232e58;
     }
 
     ::-webkit-scrollbar-thumb {

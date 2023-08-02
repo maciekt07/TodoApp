@@ -550,7 +550,6 @@ export const Tasks = ({ user, setUser }: UserProps) => {
           </DialogBtn>
         </DialogActions>
       </Dialog>
-      <div style={{ paddingTop: "100px" }} />
     </>
   );
 };

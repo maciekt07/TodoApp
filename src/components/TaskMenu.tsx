@@ -1,6 +1,6 @@
 import { ContentCopy, Delete, Done, Edit, PushPin } from "@mui/icons-material";
 import { User } from "../types/user";
-import { Divider, Menu, MenuItem } from "@mui/material";
+import { Button, Divider, Menu, MenuItem } from "@mui/material";
 import { BottomSheet } from "react-spring-bottom-sheet";
 import { Emoji, EmojiStyle } from "emoji-picker-react";
 import styled from "@emotion/styled";
@@ -102,6 +102,28 @@ export const TaskMenu = ({
               {user.emojisStyle === EmojiStyle.NATIVE && "\u00A0 "}
               {user.tasks.find((task) => task.id === selectedTaskId)?.name}
             </SheetHeader>
+          }
+          footer={
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              <Button
+                onClick={handleCloseMoreMenu}
+                variant="outlined"
+                sx={{
+                  borderRadius: "100px",
+                  width: "90%",
+                  padding: "12px",
+                  fontSize: "16px",
+                }}
+              >
+                Dimiss
+              </Button>
+            </div>
           }
         >
           <SheetContent>{menuItems}</SheetContent>

@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { ColorPalette } from "../styles";
 import { Tooltip } from "@mui/material";
 import { User } from "../types/user";
+import { useResponsiveDisplay } from "../hooks/useResponsiveDisplay";
 
 interface Props {
   animate: boolean;
@@ -13,6 +14,12 @@ interface Props {
 
 export const AddTaskBtn = ({ animate, user }: Props) => {
   const n = useNavigate();
+  const isMobile = useResponsiveDisplay();
+
+  if (isMobile) {
+    return null;
+  }
+
   return (
     <Tooltip
       title={user.tasks.length > 0 ? "Add New Task" : "Add Task"}
