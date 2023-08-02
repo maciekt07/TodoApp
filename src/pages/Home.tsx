@@ -1,5 +1,5 @@
 import { useState, useEffect, ReactNode } from "react";
-import { AddTaskBtn, BottomNav, ProfileAvatar, Tasks } from "../components";
+import { AddTaskBtn, ProfileAvatar, Tasks } from "../components";
 import {
   ColorPalette,
   GreetingHeader,
@@ -118,7 +118,6 @@ export const Home = ({ user, setUser }: UserProps) => {
       )}
       <Tasks user={user} setUser={setUser} />
       <AddTaskBtn animate={user.tasks.length === 0} user={user} />
-      <BottomNav />
     </>
   );
 };

@@ -36,6 +36,7 @@ export const SettingsDialog = ({
 
   const isOnline = useOnlineStatus();
 
+  // Array of available emoji styles with their labels
   const emojiStyles: { label: string; style: EmojiStyle }[] = [
     { label: "Apple", style: EmojiStyle.APPLE },
     { label: "Facebook, Messenger", style: EmojiStyle.FACEBOOK },
@@ -43,7 +44,7 @@ export const SettingsDialog = ({
     { label: "Google", style: EmojiStyle.GOOGLE },
     { label: "Native", style: EmojiStyle.NATIVE },
   ];
-
+  // Handler for updating individual setting options
   const handleSettingChange =
     (name: keyof AppSettings) =>
     (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -57,7 +58,7 @@ export const SettingsDialog = ({
         settings: [updatedSettings],
       }));
     };
-
+  // Handler for updating the selected emoji style
   const handleEmojiStyleChange = (event: SelectChangeEvent<EmojiStyle>) => {
     const selectedEmojiStyle = event.target.value as EmojiStyle;
     setUser({ ...user, emojisStyle: selectedEmojiStyle });
@@ -76,6 +77,7 @@ export const SettingsDialog = ({
     >
       <DialogTitle>Settings</DialogTitle>
       <Container>
+        {/* Select component to choose the emoji style */}
         <FormGroup>
           <FormControl>
             <FormLabel>Emoji Settings</FormLabel>
@@ -89,6 +91,7 @@ export const SettingsDialog = ({
                 m: "8px 0",
               }}
             >
+              {/* Show a disabled menu item when offline, indicating that the style can't be changed */}
               {!isOnline && (
                 <MenuItem
                   disabled
@@ -103,10 +106,14 @@ export const SettingsDialog = ({
                   are offline
                 </MenuItem>
               )}
+
               {emojiStyles.map((style) => (
                 <MenuItem
                   key={style.style}
                   value={style.style}
+                  // Disable non-native styles when offline or if they are not the default style or last selected style
+                  // This prevents users from selecting styles that require fetching external resources (emojis) when offline,
+                  // as those emojis may not load without an internet connection.
                   disabled={
                     !isOnline &&
                     style.style !== EmojiStyle.NATIVE &&
@@ -123,6 +130,7 @@ export const SettingsDialog = ({
                 >
                   <Emoji size={24} unified="1f60e" emojiStyle={style.style} />
                   &nbsp;
+                  {/* Space For Native Emoji */}
                   {style.style === EmojiStyle.NATIVE && "\u00A0"}
                   {style.label}
                 </MenuItem>
@@ -130,6 +138,8 @@ export const SettingsDialog = ({
             </Select>
           </FormControl>
         </FormGroup>
+
+        {/* Switch components to control different app settings */}
         <FormGroup>
           <FormLabel>App Settings</FormLabel>
           <FormControlLabel
@@ -143,7 +153,6 @@ export const SettingsDialog = ({
             label="Enable Categories"
           />
         </FormGroup>
-
         <FormGroup>
           <FormControlLabel
             sx={{ opacity: settings.enableGlow ? 1 : 0.8 }}
@@ -185,14 +194,3 @@ const Container = styled.div`
   margin: 0 18px;
   gap: 6px;
 `;
-
-// const Beta = styled.span`
-//   background: #0e8e0e;
-//   color: #00ff00;
-//   font-size: 12px;
-//   letter-spacing: 0.03em;
-//   padding: 2px 6px;
-//   border-radius: 5px;
-//   font-weight: 600;
-//   box-shadow: 0 0 4px 0 #0e8e0e91;
-// `;

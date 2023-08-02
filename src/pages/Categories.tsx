@@ -68,6 +68,10 @@ export const Categories = ({ user, setUser }: UserProps) => {
     }
   };
 
+  if (!user.settings[0].enableCategories) {
+    return null;
+  }
+
   return (
     <>
       <TopBar title="Categories" />

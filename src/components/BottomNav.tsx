@@ -3,17 +3,19 @@ import {
   BottomNavigation,
   BottomNavigationAction,
   Box,
+  css,
   styled,
 } from "@mui/material";
-import { ColorPalette } from "../styles";
-import { SyntheticEvent, useEffect, useState } from "react";
+import { ColorPalette, pulseAnimation, slideInBottom } from "../styles";
+import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useResponsiveDisplay } from "../hooks/useResponsiveDisplay";
+import { User } from "../types/user";
 
-export const BottomNav = () => {
+export const BottomNav = ({ user }: { user: User }) => {
   const isMobile = useResponsiveDisplay();
   const location = useLocation();
-  const [value, setValue] = useState<number | SyntheticEvent<Element>>(0);
+  const [value, setValue] = useState<number>();
   const n = useNavigate();
 
   // useEffect hook to set the active button based on the current route
@@ -31,21 +33,24 @@ export const BottomNav = () => {
       case "/user":
         setValue(4);
         break;
+
       default:
         setValue(0); // Fallback for the "Tasks" route
     }
   }, [location.pathname]);
-  if (!isMobile) {
+
+  if (!isMobile || value === undefined) {
     return null;
   }
 
   return (
-    <Box sx={{ position: "fixed", bottom: 0, width: "100%", m: 0 }}>
+    <Container>
       <StyledBottomNavigation
         showLabels
         value={value}
-        onChange={(newValue) => {
-          setValue(newValue); // Cast newValue to number since it is inferred as SyntheticEvent by default
+        onChange={(event, newValue) => {
+          setValue(newValue);
+          console.log(event);
         }}
       >
         <NavigationButton
@@ -57,19 +62,18 @@ export const BottomNav = () => {
           onClick={() => n("/categories")}
           label="Categories"
           icon={<Category />}
+          // disabled={!user.settings[0].enableCategories}
         />
         <NavigationButton
           onClick={() => n("add")}
           showLabel={false}
           label="Add New"
           icon={
-            <Add
+            <AddIcon
               fontSize="large"
-              sx={{
-                border: `2px solid ${ColorPalette.purple}`,
-                borderRadius: "100px",
-                padding: "6px",
-              }}
+              animate={
+                user.tasks.length === 0 && value !== 2 ? true : undefined
+              }
             />
           }
         />
@@ -84,12 +88,31 @@ export const BottomNav = () => {
           icon={<Person />}
         />
       </StyledBottomNavigation>
-    </Box>
+    </Container>
   );
 };
 
+const AddIcon = styled(Add)<{ animate?: boolean }>`
+  border: 2px solid ${ColorPalette.purple};
+  border-radius: 100px;
+  padding: 6px;
+  ${({ animate }) =>
+    animate &&
+    css`
+      animation: ${pulseAnimation} 1.2s infinite;
+    `}
+`;
+
+const Container = styled(Box)`
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  margin: 0;
+  animation: ${slideInBottom} 0.5s ease;
+`;
+
 const StyledBottomNavigation = styled(BottomNavigation)`
-  border-radius: 32px 32px 0 0;
+  border-radius: 30px 30px 0 0;
   background: #232e58;
   margin: 0px 20px 0px -20px;
   padding: 14px 10px;
@@ -97,5 +120,9 @@ const StyledBottomNavigation = styled(BottomNavigation)`
 
 const NavigationButton = styled(BottomNavigationAction)`
   border-radius: 18px;
+  margin: 4px;
   color: white;
+  &:disabled {
+    opacity: 0.6;
+  }
 `;

@@ -11,7 +11,7 @@ export const MainLayout = ({ children, user, setUser }: MainLayoutProps) => {
       <ProfileAvatar user={user} setUser={setUser} />
       {children}
       <div style={{ marginTop: "128px" }} />
-      <BottomNav />
+      <BottomNav user={user} />
     </>
   );
 };

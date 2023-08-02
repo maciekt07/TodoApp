@@ -1,12 +1,14 @@
 import { ContentCopy, Delete, Done, Edit, PushPin } from "@mui/icons-material";
 import { User } from "../types/user";
-import { Button, Divider, Menu, MenuItem } from "@mui/material";
+import { Divider, Menu, MenuItem } from "@mui/material";
 import { BottomSheet } from "react-spring-bottom-sheet";
 import { Emoji, EmojiStyle } from "emoji-picker-react";
 import styled from "@emotion/styled";
 import "react-spring-bottom-sheet/dist/style.css";
 import { useResponsiveDisplay } from "../hooks/useResponsiveDisplay";
 import { ColorPalette } from "../styles";
+
+//TODO: Move all functions to TasksMenu component and leave User and setUser Props only
 
 interface TaskMenuProps {
   user: User;
@@ -103,28 +105,28 @@ export const TaskMenu = ({
               {user.tasks.find((task) => task.id === selectedTaskId)?.name}
             </SheetHeader>
           }
-          footer={
-            <div
-              style={{
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-              }}
-            >
-              <Button
-                onClick={handleCloseMoreMenu}
-                variant="outlined"
-                sx={{
-                  borderRadius: "100px",
-                  width: "90%",
-                  padding: "12px",
-                  fontSize: "16px",
-                }}
-              >
-                Dimiss
-              </Button>
-            </div>
-          }
+          // footer={
+          //   <div
+          //     style={{
+          //       display: "flex",
+          //       justifyContent: "center",
+          //       alignItems: "center",
+          //     }}
+          //   >
+          //     <Button
+          //       onClick={handleCloseMoreMenu}
+          //       variant="outlined"
+          //       sx={{
+          //         borderRadius: "100px",
+          //         width: "90%",
+          //         padding: "12px",
+          //         fontSize: "16px",
+          //       }}
+          //     >
+          //       Dimiss
+          //     </Button>
+          //   </div>
+          // }
         >
           <SheetContent>{menuItems}</SheetContent>
         </BottomSheet>

@@ -5,7 +5,9 @@ export {
   fadeInLeft,
   fadeIn,
   slideIn,
+  slideInBottom,
   StyledLink,
+  pulseAnimation,
 } from "./globalStyles";
 export {
   GreetingHeader,

@@ -39,7 +39,7 @@ export const EditTask = ({
   const [nameError, setNameError] = useState<boolean>(false);
   const [descriptionError, setDescriptionError] = useState<boolean>(false);
   const [emoji, setEmoji] = useState<string | undefined>();
-
+  // Effect hook to update the editedTask with the selected emoji.
   useEffect(() => {
     setEditedTask((prevTask) => ({
       ...(prevTask as Task),
@@ -47,38 +47,41 @@ export const EditTask = ({
     }));
   }, [emoji]);
 
+  // Effect hook to update the editedTask when the task prop changes.
   useEffect(() => {
     setEditedTask(task);
   }, [task]);
 
+  // Event handler for input changes in the form fields.
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
+    // Update name error state if the name length exceeds the maximum allowed.
 
     if (name === "name" && value.length > TASK_NAME_MAX_LENGTH) {
       setNameError(true);
     } else {
       setNameError(false);
     }
-
+    // Update description error state if the description length exceeds the maximum allowed.
     if (name === "description" && value.length > DESCRIPTION_MAX_LENGTH) {
       setDescriptionError(true);
     } else {
       setDescriptionError(false);
     }
-
+    // Update the editedTask state with the changed value.
     setEditedTask((prevTask) => ({
       ...(prevTask as Task),
       [name]: value,
     }));
   };
-
+  // Event handler for saving the edited task.
   const handleSave = () => {
     document.body.style.overflow = "auto";
     if (editedTask && !nameError && !descriptionError) {
       onSave(editedTask);
     }
   };
-
+  // Event handler for category change in the Select dropdown.
   const handleCategoryChange = (event: SelectChangeEvent<unknown>) => {
     const categoryId = event.target.value as number;
     const selectedCategory = user.categories.find(

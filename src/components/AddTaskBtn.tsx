@@ -1,8 +1,8 @@
-import { css, keyframes } from "@emotion/react";
+import { css } from "@emotion/react";
 import styled from "@emotion/styled";
 import { Add } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
-import { ColorPalette } from "../styles";
+import { ColorPalette, pulseAnimation } from "../styles";
 import { Tooltip } from "@mui/material";
 import { User } from "../types/user";
 import { useResponsiveDisplay } from "../hooks/useResponsiveDisplay";
@@ -37,21 +37,6 @@ export const AddTaskBtn = ({ animate, user }: Props) => {
   );
 };
 
-const pulseAnimation = keyframes`
-  0% {
-    transform: scale(0.95);
-    box-shadow: 0 0 0 0 rgba(182, 36, 255, 0.7);
-  }
-  70% {
-    transform: scale(1);
-    box-shadow: 0 0 0 12px rgba(182, 36, 255, 0);
-  }
-  100% {
-    transform: scale(0.95);
-    box-shadow: 0 0 0 0 rgba(182, 36, 255, 0);
-  }
-`;
-
 const Btn = styled.button<{ animate: boolean; glow: boolean }>`
   cursor: pointer;
   border: none;
@@ -69,6 +54,7 @@ const Btn = styled.button<{ animate: boolean; glow: boolean }>`
   box-shadow: ${(props) =>
     props.glow ? `0px 0px 20px 0px ${ColorPalette.purple}` : "none"};
   transition: background-color 0.3s, backdrop-filter 0.3s, box-shadow 0.3s;
+
   &:hover {
     box-shadow: none;
     background-color: #b624ffd0;
