@@ -8,7 +8,7 @@ import "react-spring-bottom-sheet/dist/style.css";
 import { useResponsiveDisplay } from "../hooks/useResponsiveDisplay";
 import { ColorPalette } from "../styles";
 
-//TODO: Move all functions to TasksMenu component and leave User and setUser Props only
+//TODO: Move all functions to TasksMenu component
 
 interface TaskMenuProps {
   user: User;
@@ -91,6 +91,7 @@ export const TaskMenu = ({
         <BottomSheet
           open={Boolean(anchorEl)}
           onDismiss={handleCloseMoreMenu}
+          // snapPoints={({ minHeight, maxHeight }) => [minHeight, maxHeight]}
           header={
             <SheetHeader>
               <Emoji

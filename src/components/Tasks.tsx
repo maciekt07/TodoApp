@@ -27,6 +27,7 @@ import {
   TaskContainer,
   TaskDate,
   TaskDescription,
+  TaskHeader,
   TaskInfo,
   TaskName,
   TasksContainer,
@@ -362,8 +363,8 @@ export const Tasks = ({ user, setUser }: UserProps) => {
                     <PushPin fontSize="small" /> &nbsp; Pinned
                   </Pinned>
                 )}
-                <TaskName>
-                  {task.name}
+                <TaskHeader>
+                  <TaskName done={task.done}> {task.name}</TaskName>
 
                   <Tooltip
                     title={`Created at: ${new Date(
@@ -374,8 +375,10 @@ export const Tasks = ({ user, setUser }: UserProps) => {
                   >
                     <TaskDate>{formatDate(new Date(task.date))}</TaskDate>
                   </Tooltip>
-                </TaskName>
-                <TaskDescription>{task.description}</TaskDescription>
+                </TaskHeader>
+                <TaskDescription done={task.done}>
+                  {task.description}
+                </TaskDescription>
 
                 {task.deadline && (
                   <TimeLeft

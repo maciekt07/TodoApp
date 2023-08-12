@@ -1,8 +1,9 @@
+import { ReactNode } from "react";
 import { BottomNav, ProfileAvatar } from "../components";
 import { UserProps } from "../types/user";
 
 interface MainLayoutProps extends UserProps {
-  children: any;
+  children: ReactNode;
 }
 
 export const MainLayout = ({ children, user, setUser }: MainLayoutProps) => {

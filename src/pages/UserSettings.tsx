@@ -92,7 +92,7 @@ export const UserSettings = ({ user, setUser }: UserProps) => {
           >
             <Avatar
               onClick={handleOpenImageDialog}
-              src={user.profilePicture || ""}
+              src={(user.profilePicture as string) || undefined}
               onError={() => {
                 setUser({ ...user, profilePicture: null });
                 throw new Error("Error in profile picture URL");

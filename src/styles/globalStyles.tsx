@@ -77,7 +77,7 @@ const globalStyles = css`
 
     ::-webkit-scrollbar-track {
       border-radius: 64px;
-      background-color: #2a326e;
+      background-color: #232e58;
     }
   }
 

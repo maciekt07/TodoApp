@@ -34,10 +34,10 @@ export const Home = ({ user, setUser }: UserProps) => {
     (completedTasksCount / user.tasks.length) * 100;
 
   useEffect(() => {
-    setRandomGreeting(getRandomGreeting(user.emojisStyle));
+    setRandomGreeting(getRandomGreeting());
     document.title = "Todo App";
     const interval = setInterval(() => {
-      setRandomGreeting(getRandomGreeting(user.emojisStyle));
+      setRandomGreeting(getRandomGreeting());
       setGreetingKey((prevKey) => prevKey + 1); // Update the key on each interval
     }, 6000);
 

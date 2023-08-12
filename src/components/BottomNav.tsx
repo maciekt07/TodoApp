@@ -33,13 +33,12 @@ export const BottomNav = ({ user }: { user: User }) => {
       case "/user":
         setValue(4);
         break;
-
       default:
         setValue(0); // Fallback for the "Tasks" route
     }
   }, [location.pathname]);
 
-  if (!isMobile || value === undefined) {
+  if (!isMobile) {
     return null;
   }
 
@@ -50,7 +49,7 @@ export const BottomNav = ({ user }: { user: User }) => {
         value={value}
         onChange={(event, newValue) => {
           setValue(newValue);
-          console.log(event);
+          event.preventDefault();
         }}
       >
         <NavigationButton
@@ -62,7 +61,7 @@ export const BottomNav = ({ user }: { user: User }) => {
           onClick={() => n("/categories")}
           label="Categories"
           icon={<Category />}
-          // disabled={!user.settings[0].enableCategories}
+          disabled={!user.settings[0].enableCategories}
         />
         <NavigationButton
           onClick={() => n("add")}
@@ -94,6 +93,8 @@ export const BottomNav = ({ user }: { user: User }) => {
 
 const AddIcon = styled(Add)<{ animate?: boolean }>`
   border: 2px solid ${ColorPalette.purple};
+  background-color: #232e58;
+
   border-radius: 100px;
   padding: 6px;
   ${({ animate }) =>

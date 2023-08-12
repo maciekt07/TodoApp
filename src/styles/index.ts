@@ -37,11 +37,12 @@ export {
   TaskDate,
   TaskInfo,
   TaskDescription,
-  TaskName,
+  TaskHeader,
   NoTasks,
   CategoriesListContainer,
   TasksContainer,
   Pinned,
   CategoryChip,
   TimeLeft,
+  TaskName,
 } from "./tasks.styled";

@@ -1,17 +1,11 @@
-import { Emoji, EmojiStyle } from "emoji-picker-react";
-import { ReactNode } from "react";
-
 /**
  * Returns a random greeting message to inspire productivity.
- * @param {EmojiStyle} emojiStyle - The style for rendering emojis.
- * @returns {string | ReactNode} A random greeting message.
+ * @returns {string} A random greeting message.
  */
-export const getRandomGreeting = (
-  emojiStyle: EmojiStyle
-): string | ReactNode => {
+export const getRandomGreeting = (): string => {
   const hoursLeft = 24 - new Date().getHours();
 
-  const greetingsText: (string | ReactNode)[] = [
+  const greetingsText: string[] = [
     "Let's make today count!",
     "Get things done and conquer the day!",
     "Embrace the power of productivity!",
@@ -29,6 +23,11 @@ export const getRandomGreeting = (
     "Get ready to make things happen!",
     "It's time to check off those tasks!",
 
+    " Start your day with a plan!",
+    "Stay focused, stay productive.",
+    "Unlock your productivity potential.",
+    "Turn your to-do list into a to-done list!",
+
     `Have a wonderful  ${new Date().toLocaleDateString("en", {
       weekday: "long",
     })}!`,
@@ -39,35 +38,35 @@ export const getRandomGreeting = (
       ? `${hoursLeft} hours left in the day. Use them wisely!`
       : `Only ${hoursLeft} hours left in the day. Take a break`,
 
-    <TextWithEmoji emojiStyle={emojiStyle} unified="1f5d3-fe0f">
-      Start your day with a plan!
-    </TextWithEmoji>,
-    <TextWithEmoji emojiStyle={emojiStyle} unified="1f3af">
-      Stay focused, stay productive.
-    </TextWithEmoji>,
-    <TextWithEmoji emojiStyle={emojiStyle} unified="1f513">
-      Unlock your productivity potential.
-    </TextWithEmoji>,
-    <TextWithEmoji emojiStyle={emojiStyle} unified="2705">
-      Turn your to-do list into a to-done list!
-    </TextWithEmoji>,
+    // <TextWithEmoji emojiStyle={emojiStyle} unified="1f5d3-fe0f">
+    //   Start your day with a plan!
+    // </TextWithEmoji>,
+    // <TextWithEmoji emojiStyle={emojiStyle} unified="1f3af">
+    //   Stay focused, stay productive.
+    // </TextWithEmoji>,
+    // <TextWithEmoji emojiStyle={emojiStyle} unified="1f513">
+    //   Unlock your productivity potential.
+    // </TextWithEmoji>,
+    // <TextWithEmoji emojiStyle={emojiStyle} unified="2705">
+    //   Turn your to-do list into a to-done list!
+    // </TextWithEmoji>,
   ];
 
   const randomIndex = Math.floor(Math.random() * greetingsText.length);
   return greetingsText[randomIndex];
 };
 
-interface EmojiTextProps {
-  children: ReactNode;
-  emojiStyle: EmojiStyle;
-  unified: string;
-}
+// interface EmojiTextProps {
+//   children: ReactNode;
+//   emojiStyle: EmojiStyle;
+//   unified: string;
+// }
 
-const TextWithEmoji = ({ children, emojiStyle, unified }: EmojiTextProps) => {
-  return (
-    <span style={{ display: "flex", alignItems: "center" }}>
-      {children}&nbsp;
-      <Emoji emojiStyle={emojiStyle} unified={unified} size={20} />
-    </span>
-  );
-};
+// const TextWithEmoji = ({ children, emojiStyle, unified }: EmojiTextProps) => {
+//   return (
+//     <span style={{ display: "flex", alignItems: "center" }}>
+//       {children}&nbsp;
+//       <Emoji emojiStyle={emojiStyle} unified={unified} size={20} />
+//     </span>
+//   );
+// };

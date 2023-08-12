@@ -66,7 +66,7 @@ export const AddTaskButton = styled(Button)`
   font-size: 24px;
   background: ${ColorPalette.purple};
   color: #ffffff;
-  border-radius: 20px;
+  border-radius: 26px;
   font-weight: bold;
   cursor: pointer;
   transition: 0.3s all;

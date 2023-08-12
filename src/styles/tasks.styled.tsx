@@ -45,22 +45,25 @@ export const EmojiContainer = styled.span<{ clr: string }>`
 `;
 
 export const TaskInfo = styled.div<{ done: boolean }>`
-  text-decoration: ${(props) => (props.done ? "line-through" : "none")};
   display: flex;
   flex-direction: column;
   flex: 1;
 `;
 
-export const TaskName = styled.h3`
-  margin: 0;
+export const TaskHeader = styled.div`
   display: flex;
   align-items: center;
-  font-size: 20px;
 
   /* @media (max-width: 600px) {
       flex-direction: column;
       align-items: flex-start;
     } */
+`;
+
+export const TaskName = styled.h3<{ done: boolean }>`
+  font-size: 20px;
+  margin: 0;
+  text-decoration: ${(props) => (props.done ? "line-through" : "none")};
 `;
 
 export const TaskDate = styled.p`
@@ -78,9 +81,10 @@ export const TaskDate = styled.p`
     } */
 `;
 
-export const TaskDescription = styled.p`
+export const TaskDescription = styled.p<{ done: boolean }>`
   margin: 0;
   font-size: 18px;
+  text-decoration: ${(props) => (props.done ? "line-through" : "none")};
   /* white-space: pre-line;
   line-height: 1em; */
 `;
@@ -112,6 +116,7 @@ export const TimeLeft = styled.span<{ timeUp: boolean; done: boolean }>`
   color: ${(props) => props.timeUp && !props.done && "#ff2a23d5"};
   text-shadow: ${(props) =>
     props.timeUp && !props.done ? "0 0 8px #ff2a23d5" : "none"};
+  text-decoration: ${(props) => (props.done ? "line-through" : "none")};
   transition: 0.3s all;
   font-size: 14px;
   margin: 6px 0;

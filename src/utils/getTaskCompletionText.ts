@@ -10,12 +10,12 @@ export const getTaskCompletionText = (completionPercentage: number): string => {
     case completionPercentage === 100:
       return "Congratulations! All tasks completed!";
     case completionPercentage >= 75:
-      return "You're making great progress!";
+      return "Almost there!";
     case completionPercentage >= 50:
       return "You're halfway there! Keep it up!";
     case completionPercentage >= 25:
-      return "You're making good progress. Keep going!";
+      return "You're making good progress.";
     default:
-      return "You're just getting started. Keep pushing!";
+      return "You're just getting started.";
   }
 };

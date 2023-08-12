@@ -14,6 +14,7 @@ interface EmojiPickerProps {
   color?: string;
 }
 
+// Create the custom EmojiPicker component
 export const CustomEmojiPicker = ({
   emoji,
   setEmoji,
@@ -21,31 +22,38 @@ export const CustomEmojiPicker = ({
   color,
 }: EmojiPickerProps) => {
   const [showEmojiPicker, setShowEmojiPicker] = useState<boolean>(false);
+
   const [currentEmoji, setCurrentEmoji] = useState<string | undefined>(
     emoji || undefined
   );
 
+  // When the currentEmoji state changes, update the parent component's emoji state
   useEffect(() => {
     setEmoji(currentEmoji);
   }, [currentEmoji]);
 
+  // When the emoji prop changes to an empty string, set the currentEmoji state to undefined
   useEffect(() => {
     if (emoji === "") {
       setCurrentEmoji(undefined);
     }
   }, [emoji]);
 
+  // Function to toggle the visibility of the EmojiPicker
   const toggleEmojiPicker = () => {
     setShowEmojiPicker(!showEmojiPicker);
   };
 
+  // Handler function for when an emoji is clicked in the EmojiPicker
   const handleEmojiClick = (e: { unified: string }) => {
     setShowEmojiPicker(!showEmojiPicker);
     setCurrentEmoji(e.unified);
   };
 
+  // Function to render the content of the Avatar based on whether an emoji is selected or not
   const renderAvatarContent = () => {
     if (currentEmoji) {
+      // Determine the size of the emoji based on the user's emoji style preference
       const emojiSize = user.emojisStyle === EmojiStyle.NATIVE ? 48 : 64;
       return (
         <div>
@@ -57,6 +65,7 @@ export const CustomEmojiPicker = ({
         </div>
       );
     } else {
+      // If no emoji is selected, show the AddReaction icon with the specified color or default purple
       const fontColor = color
         ? getFontColorFromHex(color)
         : ColorPalette.fontLight;

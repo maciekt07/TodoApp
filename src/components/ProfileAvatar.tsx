@@ -64,7 +64,7 @@ export const ProfileAvatar = ({ user, setUser }: UserProps) => {
           onClick={handleClick}
         >
           <Avatar
-            src={user.profilePicture || ""}
+            src={(user.profilePicture as string) || undefined}
             onError={() => {
               setUser({ ...user, profilePicture: null });
               throw new Error("Error in profile picture URL");
@@ -95,17 +95,32 @@ export const ProfileAvatar = ({ user, setUser }: UserProps) => {
           },
         }}
       >
-        <StyledMenuItem onClick={() => n("/user")}>
+        <StyledMenuItem
+          onClick={() => {
+            n("/user");
+            handleClose();
+          }}
+        >
           <Person /> &nbsp; Profile
         </StyledMenuItem>
 
         {user.settings[0].enableCategories !== undefined &&
           user.settings[0].enableCategories && (
-            <StyledMenuItem onClick={() => n("/categories")}>
+            <StyledMenuItem
+              onClick={() => {
+                n("/categories");
+                handleClose();
+              }}
+            >
               <Category /> &nbsp; Categories
             </StyledMenuItem>
           )}
-        <StyledMenuItem onClick={() => n("/import-export")}>
+        <StyledMenuItem
+          onClick={() => {
+            n("/import-export");
+            handleClose();
+          }}
+        >
           <GetApp /> &nbsp; Import/Export
         </StyledMenuItem>
 

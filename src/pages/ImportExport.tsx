@@ -10,6 +10,11 @@ import { Emoji } from "emoji-picker-react";
 import { FileDownload, FileUpload, Info } from "@mui/icons-material";
 import { exportTasksToJson } from "../utils";
 import { IconButton, Tooltip } from "@mui/material";
+import {
+  CATEGORY_NAME_MAX_LENGTH,
+  DESCRIPTION_MAX_LENGTH,
+  TASK_NAME_MAX_LENGTH,
+} from "../constants";
 
 export const ImportExport = ({ user, setUser }: UserProps) => {
   const [selectedTasks, setSelectedTasks] = useState<number[]>([]); // Array of selected task IDs
@@ -43,7 +48,50 @@ export const ImportExport = ({ user, setUser }: UserProps) => {
             e.target?.result as string
           ) as Task[];
 
-          // Merge the imported tasks with the existing tasks
+          // Check if any imported task property exceeds the maximum length
+
+          const invalidTasks = importedTasks.filter((task) => {
+            const isInvalid =
+              (task.name && task.name.length > TASK_NAME_MAX_LENGTH) ||
+              (task.description &&
+                task.description.length > DESCRIPTION_MAX_LENGTH) ||
+              (task.category &&
+                task.category.some(
+                  (cat) => cat.name.length > CATEGORY_NAME_MAX_LENGTH
+                ));
+
+            return isInvalid;
+          });
+
+          if (invalidTasks.length > 0) {
+            const invalidTaskNames = invalidTasks
+              .map((task) => task.name)
+              .join(", ");
+            alert(
+              `Some tasks cannot be imported due to exceeding maximum character lengths: ${invalidTaskNames}`
+            );
+            return;
+          }
+          // Update user.categories if imported categories don't exist
+          const updatedCategories = [...user.categories];
+          importedTasks.forEach((task) => {
+            task.category !== undefined &&
+              task.category.forEach((importedCat) => {
+                const existingCategory = updatedCategories.find(
+                  (cat) => cat.name === importedCat.name
+                );
+
+                if (!existingCategory) {
+                  updatedCategories.push(importedCat);
+                }
+              });
+          });
+
+          setUser((prevUser) => ({
+            ...prevUser,
+            categories: updatedCategories,
+          }));
+          // Proceed with merging the imported tasks as before
           const mergedTasks = [...user.tasks, ...importedTasks];
 
           // Remove duplicates based on task IDs (if any)
