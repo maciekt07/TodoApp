@@ -114,12 +114,18 @@ export const TasksContainer = styled.div`
 
 export const TimeLeft = styled.span<{ timeUp: boolean; done: boolean }>`
   color: ${(props) => props.timeUp && !props.done && "#ff2a23d5"};
+  /* background: ${(props) =>
+    props.timeUp && !props.done ? "#ffffff9d" : "transparent"};
+
+  border-radius: 12px; */
+
   text-shadow: ${(props) =>
     props.timeUp && !props.done ? "0 0 8px #ff2a23d5" : "none"};
   text-decoration: ${(props) => (props.done ? "line-through" : "none")};
   transition: 0.3s all;
   font-size: 14px;
-  margin: 6px 0;
+  margin: 4px 0;
+  /* padding: 4px; */
   font-weight: 500;
   font-style: italic;
   display: flex;
@@ -183,6 +189,11 @@ export const CategoryChip = styled(Chip)<CategoryChipProps>`
 `;
 
 export const CategoriesListContainer = styled.div`
+  position: sticky;
+  background: transparent;
+  backdrop-filter: blur(24px);
+  z-index: 1;
+  top: 0;
   display: flex;
   justify-content: left;
   align-items: left;

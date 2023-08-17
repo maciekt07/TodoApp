@@ -1,4 +1,10 @@
-import { useState, useEffect, Dispatch, SetStateAction } from "react";
+import {
+  useState,
+  useEffect,
+  Dispatch,
+  SetStateAction,
+  CSSProperties,
+} from "react";
 import styled from "@emotion/styled";
 import { Avatar, Badge, Tooltip } from "@mui/material";
 import { AddReaction, Edit } from "@mui/icons-material";
@@ -12,6 +18,7 @@ interface EmojiPickerProps {
   setEmoji: Dispatch<SetStateAction<string | undefined>>;
   user: User;
   color?: string;
+  width?: CSSProperties["width"];
 }
 
 // Create the custom EmojiPicker component
@@ -20,6 +27,7 @@ export const CustomEmojiPicker = ({
   setEmoji,
   user,
   color,
+  width,
 }: EmojiPickerProps) => {
   const [showEmojiPicker, setShowEmojiPicker] = useState<boolean>(false);
 
@@ -125,6 +133,7 @@ export const CustomEmojiPicker = ({
       {showEmojiPicker && (
         <EmojiPickerContainer>
           <EmojiPicker
+            width={width || "350px"}
             emojiStyle={user.emojisStyle}
             autoFocusSearch={false}
             lazyLoadEmojis

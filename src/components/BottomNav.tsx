@@ -15,7 +15,7 @@ import { User } from "../types/user";
 export const BottomNav = ({ user }: { user: User }) => {
   const isMobile = useResponsiveDisplay();
   const location = useLocation();
-  const [value, setValue] = useState<number>();
+  const [value, setValue] = useState<number | undefined>();
   const n = useNavigate();
 
   // useEffect hook to set the active button based on the current route
@@ -33,8 +33,11 @@ export const BottomNav = ({ user }: { user: User }) => {
       case "/user":
         setValue(4);
         break;
+      case "/":
+        setValue(0);
+        break;
       default:
-        setValue(0); // Fallback for the "Tasks" route
+        setValue(undefined); // Fallback for the "Tasks" route
     }
   }, [location.pathname]);
 

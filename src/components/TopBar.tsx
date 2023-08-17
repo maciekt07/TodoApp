@@ -26,13 +26,14 @@ const Container = styled.div`
 
 const Title = styled.h2`
   font-size: 28px;
+  margin-top: 28px;
   margin-bottom: 64px;
   text-align: center;
 `;
 const BackBtn = styled.button`
   position: absolute;
-  top: 20px;
-  left: 20px;
+  top: 24px;
+  left: 16px;
   display: flex;
   justify-content: center;
   align-items: center;

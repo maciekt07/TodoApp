@@ -25,12 +25,27 @@ export const Categories = ({ user, setUser }: UserProps) => {
     }
   }, []);
 
-  const handleDelete = (categoryId: number) => {
+  const handleDelete = (categoryId: number): void => {
     if (categoryId) {
       const updatedCategories = user.categories.filter(
         (category) => category.id !== categoryId
       );
-      setUser({ ...user, categories: updatedCategories });
+      // Remove the category from tasks that have it associated
+      const updatedTasks = user.tasks.map((task) => {
+        const updatedCategoryList = task.category?.filter(
+          (category) => category.id !== categoryId
+        );
+        return {
+          ...task,
+          category: updatedCategoryList,
+        };
+      });
+
+      setUser({
+        ...user,
+        categories: updatedCategories,
+        tasks: updatedTasks,
+      });
     }
   };
 

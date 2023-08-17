@@ -91,7 +91,8 @@ export const TaskMenu = ({
         <BottomSheet
           open={Boolean(anchorEl)}
           onDismiss={handleCloseMoreMenu}
-          // snapPoints={({ minHeight, maxHeight }) => [minHeight, maxHeight]}
+          snapPoints={({ minHeight, maxHeight }) => [minHeight, maxHeight]}
+          expandOnContentDrag
           header={
             <SheetHeader>
               <Emoji

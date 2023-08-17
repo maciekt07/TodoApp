@@ -396,50 +396,60 @@ export const Tasks = ({ user, setUser }: UserProps) => {
                     )}
                   </TimeLeft>
                 )}
-                {task.category &&
-                  user.settings[0].enableCategories !== undefined &&
-                  user.settings[0].enableCategories &&
-                  task.category.map((category) => (
-                    <div key={category.id}>
-                      <CategoryChip
-                        backgroundclr={category.color}
-                        borderclr={getFontColorFromHex(task.color)}
-                        glow={user.settings[0].enableGlow}
-                        label={category.name}
-                        size="medium"
-                        avatar={
-                          category.emoji ? (
-                            <Avatar
-                              alt={category.name}
-                              sx={{
-                                background: "transparent",
-                                borderRadius: "0px",
-                              }}
-                            >
-                              {category.emoji &&
-                                (user.emojisStyle === EmojiStyle.NATIVE ? (
-                                  <div>
+                <div
+                  style={{
+                    display: "flex",
+                    flexWrap: "wrap",
+                    gap: "4px",
+                    justifyContent: "left",
+                    alignItems: "center",
+                  }}
+                >
+                  {task.category &&
+                    user.settings[0].enableCategories !== undefined &&
+                    user.settings[0].enableCategories &&
+                    task.category.map((category) => (
+                      <div key={category.id}>
+                        <CategoryChip
+                          backgroundclr={category.color}
+                          borderclr={getFontColorFromHex(task.color)}
+                          glow={user.settings[0].enableGlow}
+                          label={category.name}
+                          size="medium"
+                          avatar={
+                            category.emoji ? (
+                              <Avatar
+                                alt={category.name}
+                                sx={{
+                                  background: "transparent",
+                                  borderRadius: "0px",
+                                }}
+                              >
+                                {category.emoji &&
+                                  (user.emojisStyle === EmojiStyle.NATIVE ? (
+                                    <div>
+                                      <Emoji
+                                        size={18}
+                                        unified={category.emoji}
+                                        emojiStyle={EmojiStyle.NATIVE}
+                                      />
+                                    </div>
+                                  ) : (
                                     <Emoji
-                                      size={18}
+                                      size={20}
                                       unified={category.emoji}
-                                      emojiStyle={EmojiStyle.NATIVE}
+                                      emojiStyle={user.emojisStyle}
                                     />
-                                  </div>
-                                ) : (
-                                  <Emoji
-                                    size={20}
-                                    unified={category.emoji}
-                                    emojiStyle={user.emojisStyle}
-                                  />
-                                ))}
-                            </Avatar>
-                          ) : (
-                            <></>
-                          )
-                        }
-                      />
-                    </div>
-                  ))}
+                                  ))}
+                              </Avatar>
+                            ) : (
+                              <></>
+                            )
+                          }
+                        />
+                      </div>
+                    ))}
+                </div>
               </TaskInfo>
               <IconButton
                 aria-label="Task Menu"
@@ -469,7 +479,6 @@ export const Tasks = ({ user, setUser }: UserProps) => {
           task={user.tasks.find((task) => task.id === selectedTaskId)}
           onClose={() => setEditModalOpen(false)}
           user={user}
-          setUser={setUser}
           onSave={(editedTask) => {
             handleEditTask(
               editedTask.id,

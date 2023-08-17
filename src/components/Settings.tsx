@@ -17,7 +17,7 @@ import { DialogBtn } from "../styles";
 import styled from "@emotion/styled";
 import { Emoji, EmojiStyle } from "emoji-picker-react";
 import { useOnlineStatus } from "../hooks/useOnlineStatus";
-import { WifiOff } from "@mui/icons-material";
+import { Settings, WifiOff } from "@mui/icons-material";
 import { defaultUser } from "../constants/defaultUser";
 
 interface SettingsProps extends UserProps {
@@ -75,7 +75,10 @@ export const SettingsDialog = ({
         },
       }}
     >
-      <DialogTitle>Settings</DialogTitle>
+      <DialogTitle sx={{ display: "flex", alignItems: "center" }}>
+        <Settings />
+        &nbsp;Settings
+      </DialogTitle>
       <Container>
         {/* Select component to choose the emoji style */}
         <FormGroup>

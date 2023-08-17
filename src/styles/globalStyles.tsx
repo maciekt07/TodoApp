@@ -1,8 +1,7 @@
 import { Global, css, keyframes } from "@emotion/react";
 import styled from "@emotion/styled";
-import { Button, MenuItem } from "@mui/material";
+import { Button } from "@mui/material";
 import { ColorPalette } from ".";
-import { getFontColorFromHex } from "../utils";
 
 const globalStyles = css`
   * {
@@ -127,33 +126,6 @@ export const DialogBtn = styled(Button)`
   border-radius: 16px;
   font-size: 16px;
   margin: 8px;
-`;
-
-export const CategoriesMenu = styled(MenuItem)<{ clr?: string }>`
-  padding: 12px 20px;
-  border-radius: 16px;
-  margin: 8px;
-  display: flex;
-  gap: 4px;
-  font-weight: 500;
-  transition: 0.2s all;
-  color: ${(props) => getFontColorFromHex(props.clr || ColorPalette.fontLight)};
-  background: ${(props) => props.clr || "#bcbcbc"};
-  &:hover {
-    background: ${(props) => props.clr || "#bcbcbc"};
-    opacity: 0.7;
-  }
-
-  &.Mui-selected {
-    background: ${(props) => props.clr || "#bcbcbc"};
-    color: ${(props) =>
-      getFontColorFromHex(props.clr || ColorPalette.fontLight)};
-    box-shadow: 0 0 14px 4px ${(props) => props.clr || "#bcbcbc"};
-    &:hover {
-      background: ${(props) => props.clr || "#bcbcbc"};
-      opacity: 0.7;
-    }
-  }
 `;
 
 export const StyledLink = styled.a`

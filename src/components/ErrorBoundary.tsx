@@ -72,9 +72,13 @@ export class ErrorBoundary extends React.Component<
             <span style={{ color: "#ff3131" }}>ERROR:</span> [
             {this.state.error?.name}] {this.state.error?.message}
           </h3>
-          <div style={{ opacity: 0.8, fontSize: "12px" }}>
-            {this.state.error?.stack?.replace(this.state.error?.message, "")}
-          </div>
+          <details>
+            <summary>Error stack</summary>
+
+            <div style={{ opacity: 0.8, fontSize: "12px" }}>
+              {this.state.error?.stack?.replace(this.state.error?.message, "")}
+            </div>
+          </details>
           <pre>
             <Button
               variant="outlined"

@@ -48,6 +48,12 @@ export const ImportExport = ({ user, setUser }: UserProps) => {
             e.target?.result as string
           ) as Task[];
 
+          if (
+            !Array.isArray(JSON.parse(e.target?.result as string) as Task[])
+          ) {
+            alert("Imported file has an invalid structure.");
+            return;
+          }
           // Check if any imported task property exceeds the maximum length
 
           const invalidTasks = importedTasks.filter((task) => {

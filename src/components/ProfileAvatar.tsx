@@ -177,7 +177,7 @@ export const ProfileAvatar = ({ user, setUser }: UserProps) => {
 const Container = styled.div`
   position: absolute;
   right: 16vw;
-  top: 16px;
+  top: 14px;
   @media (max-width: 1024px) {
     right: 16px;
   }

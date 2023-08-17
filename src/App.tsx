@@ -36,8 +36,8 @@ function App() {
     <>
       <ThemeProvider theme={MuiTheme}>
         <GlobalStyles />
-        <MainLayout user={user} setUser={setUser}>
-          <ErrorBoundary user={user}>
+        <ErrorBoundary user={user}>
+          <MainLayout user={user} setUser={setUser}>
             <Routes>
               <Route path="/" element={<Home {...userProps} />} />
               <Route path="/add" element={<AddTask {...userProps} />} />
@@ -52,8 +52,8 @@ function App() {
               />
               <Route path="*" element={<NotFound />} />
             </Routes>
-          </ErrorBoundary>
-        </MainLayout>
+          </MainLayout>
+        </ErrorBoundary>
       </ThemeProvider>
     </>
   );

@@ -6,25 +6,20 @@ import {
   DialogActions,
   TextField,
   Typography,
-  MenuItem,
-  Select,
-  SelectChangeEvent,
-  Button,
 } from "@mui/material";
-import { Task, UserProps } from "../types/user";
-import { Emoji } from "emoji-picker-react";
+import { Category, Task, User } from "../types/user";
+
 import styled from "@emotion/styled";
 import { DESCRIPTION_MAX_LENGTH, TASK_NAME_MAX_LENGTH } from "../constants";
 import { DialogBtn } from "../styles";
-import { CustomEmojiPicker } from ".";
-import { CategoriesMenu } from "../styles/globalStyles";
-import { Restore } from "@mui/icons-material";
+import { CategorySelect, CustomEmojiPicker } from ".";
 
-interface EditTaskProps extends UserProps {
+interface EditTaskProps {
   open: boolean;
   task?: Task;
   onClose: () => void;
   onSave: (editedTask: Task) => void;
+  user: User;
 }
 
 export const EditTask = ({
@@ -33,12 +28,12 @@ export const EditTask = ({
   onClose,
   onSave,
   user,
-  setUser,
 }: EditTaskProps) => {
   const [editedTask, setEditedTask] = useState<Task | undefined>(task);
   const [nameError, setNameError] = useState<boolean>(false);
   const [descriptionError, setDescriptionError] = useState<boolean>(false);
   const [emoji, setEmoji] = useState<string | undefined>();
+  const [selectedCategories, setSelectedCategories] = useState<Category[]>([]);
   // Effect hook to update the editedTask with the selected emoji.
   useEffect(() => {
     setEditedTask((prevTask) => ({
@@ -47,9 +42,18 @@ export const EditTask = ({
     }));
   }, [emoji]);
 
+  // useEffect(() => {
+  //   setSelectedCategories(
+  //     editedTask?.category !== undefined
+  //       ? (editedTask.category as Category[])
+  //       : []
+  //   );
+  // }, []);
+
   // Effect hook to update the editedTask when the task prop changes.
   useEffect(() => {
     setEditedTask(task);
+    setSelectedCategories(task?.category as Category[]);
   }, [task]);
 
   // Event handler for input changes in the form fields.
@@ -82,17 +86,24 @@ export const EditTask = ({
     }
   };
   // Event handler for category change in the Select dropdown.
-  const handleCategoryChange = (event: SelectChangeEvent<unknown>) => {
-    const categoryId = event.target.value as number;
-    const selectedCategory = user.categories.find(
-      (category) => category.id === categoryId
-    );
+  // const handleCategoryChange = (event: SelectChangeEvent<unknown>) => {
+  //   const categoryId = event.target.value as number;
+  //   const selectedCategory = user.categories.find(
+  //     (category) => category.id === categoryId
+  //   );
 
+  //   setEditedTask((prevTask) => ({
+  //     ...(prevTask as Task),
+  //     category: selectedCategory ? [selectedCategory] : undefined,
+  //   }));
+  // };
+
+  useEffect(() => {
     setEditedTask((prevTask) => ({
       ...(prevTask as Task),
-      category: selectedCategory ? [selectedCategory] : undefined,
+      category: (selectedCategories as Category[]) || undefined,
     }));
-  };
+  }, [selectedCategories]);
 
   return (
     <Dialog
@@ -102,6 +113,7 @@ export const EditTask = ({
         style: {
           borderRadius: "24px",
           padding: "12px",
+          maxWidth: "600px",
         },
       }}
     >
@@ -127,6 +139,7 @@ export const EditTask = ({
           emoji={editedTask?.emoji || undefined}
           setEmoji={setEmoji}
           color={editedTask?.color}
+          width="400px"
         />
         <StyledInput
           label="Name"
@@ -158,8 +171,8 @@ export const EditTask = ({
             `Description is too long (maximum ${DESCRIPTION_MAX_LENGTH} characters)`
           }
         />
-        <br />
-        <br />
+        {/* <br />
+        <br /> */}
         {/* FIXME: default date doesnt work (new amazing chrome update) */}
         <StyledInput
           label="Deadline date"
@@ -167,58 +180,22 @@ export const EditTask = ({
           type="datetime-local"
           value={editedTask?.deadline}
           onChange={handleInputChange}
-          focused
           fullWidth
         />
-        <br />
-        <br />
+        {/* <br />
+        <br /> */}
         {user.settings[0].enableCategories !== undefined &&
           user.settings[0].enableCategories && (
             <>
               <Typography>Category</Typography>
 
-              <StyledSelect
-                color="primary"
-                fullWidth
-                variant="outlined"
-                value={editedTask?.category?.[0]?.id ?? ""}
-                onChange={handleCategoryChange}
-                MenuProps={{
-                  PaperProps: {
-                    style: {
-                      maxHeight: 400,
-                    },
-                  },
-                }}
-              >
-                <MenuItem
-                  value=""
-                  disabled
-                  sx={{ opacity: "1 !important", fontWeight: 500 }}
-                >
-                  Select a category
-                </MenuItem>
-                <CategoriesMenu value={[]}>None</CategoriesMenu>
-                {user.categories &&
-                  user.categories.map((category) => (
-                    <CategoriesMenu
-                      key={category.id}
-                      value={category.id}
-                      clr={category.color}
-                    >
-                      {category.emoji && (
-                        <Emoji
-                          unified={category.emoji}
-                          emojiStyle={user.emojisStyle}
-                        />
-                      )}{" "}
-                      &nbsp;
-                      {category.name}
-                    </CategoriesMenu>
-                  ))}
-              </StyledSelect>
+              <CategorySelect
+                user={user}
+                selectedCategories={selectedCategories}
+                setSelectedCategories={setSelectedCategories}
+              />
 
-              {editedTask?.category &&
+              {/* {editedTask?.category &&
                 editedTask.category.length > 0 &&
                 !user.categories.some(
                   (category) =>
@@ -255,10 +232,10 @@ export const EditTask = ({
                       </Button>
                     </span>
                   </div>
-                )}
+                )} */}
             </>
           )}
-        <Typography>Color:</Typography>
+        <Typography>Color</Typography>
         <ColorPicker
           type="color"
           name="color"
@@ -276,6 +253,7 @@ export const EditTask = ({
           onClick={() => {
             onClose();
             setEditedTask(task);
+            setSelectedCategories(task?.category as Category[]);
           }}
         >
           Cancel
@@ -293,6 +271,7 @@ export const EditTask = ({
 };
 
 const StyledInput = styled(TextField)`
+  margin: 14px 0;
   & .MuiInputBase-root {
     border-radius: 16px;
   }
@@ -304,6 +283,7 @@ const ColorPicker = styled.input`
   border-radius: 8px;
   border: none;
   cursor: pointer;
+  margin: 12px 0;
 
   &::-webkit-color-swatch {
     border-radius: 100px;
@@ -311,12 +291,12 @@ const ColorPicker = styled.input`
   }
 `;
 
-const StyledSelect = styled(Select)`
-  border-radius: 16px;
-  transition: 0.3s all;
+// const StyledSelect = styled(Select)`
+//   border-radius: 16px;
+//   transition: 0.3s all;
 
-  margin: 8px 0;
-`;
+//   margin: 8px 0;
+// `;
 
 const LastEdit = styled.span`
   font-size: 14px;
