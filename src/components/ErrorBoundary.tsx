@@ -74,7 +74,6 @@ export class ErrorBoundary extends React.Component<
           </h3>
           <details>
             <summary>Error stack</summary>
-
             <div style={{ opacity: 0.8, fontSize: "12px" }}>
               {this.state.error?.stack?.replace(this.state.error?.message, "")}
             </div>
@@ -87,7 +86,6 @@ export class ErrorBoundary extends React.Component<
             >
               <FileDownload /> &nbsp; Export Tasks To JSON
             </Button>
-
             <br />
             <code>{JSON.stringify(this.props.user, null, 4)}</code>
           </pre>

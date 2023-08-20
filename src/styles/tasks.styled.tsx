@@ -103,7 +103,7 @@ export const NoTasks = styled.div`
     } */
 `;
 
-export const TasksContainer = styled.div`
+export const TasksContainer = styled.main`
   display: flex;
   justify-content: center;
   max-width: 700px;

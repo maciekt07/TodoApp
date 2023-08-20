@@ -21,7 +21,6 @@ interface EmojiPickerProps {
   width?: CSSProperties["width"];
 }
 
-// Create the custom EmojiPicker component
 export const CustomEmojiPicker = ({
   emoji,
   setEmoji,
@@ -49,12 +48,12 @@ export const CustomEmojiPicker = ({
 
   // Function to toggle the visibility of the EmojiPicker
   const toggleEmojiPicker = () => {
-    setShowEmojiPicker(!showEmojiPicker);
+    setShowEmojiPicker((prevState) => !prevState);
   };
 
   // Handler function for when an emoji is clicked in the EmojiPicker
   const handleEmojiClick = (e: { unified: string }) => {
-    setShowEmojiPicker(!showEmojiPicker);
+    toggleEmojiPicker();
     setCurrentEmoji(e.unified);
   };
 
@@ -134,6 +133,7 @@ export const CustomEmojiPicker = ({
         <EmojiPickerContainer>
           <EmojiPicker
             width={width || "350px"}
+            height="500px"
             emojiStyle={user.emojisStyle}
             autoFocusSearch={false}
             lazyLoadEmojis

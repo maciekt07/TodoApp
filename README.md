@@ -5,13 +5,19 @@
 
 ## 📷 Screenshots
 
-<img src="public/screenshots/3.png" width="350px" />
+<img src="public/screenshots/ss1.png" width="350px" />
 
-<img src="public/screenshots/6.png" width="350px" />
+<img src="public/screenshots/ss2.png" width="350px" />
 
-<img src="public/screenshots/4.png" width="350px" />
+<img src="public/screenshots/ss3.png" width="350px" />
 
-<img src="public/screenshots/5.png" width="350px" />
+<img src="public/screenshots/ss4.png" width="350px" />
+
+<img src="public/screenshots/ss5.png" width="350px" />
+
+<img src="public/screenshots/ss6.png" width="350px" />
+
+<img src="public/screenshots/sspc1.png" width="650px" />
 
 ## ⚡ Features
 

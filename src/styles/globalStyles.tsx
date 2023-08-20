@@ -34,6 +34,7 @@ const globalStyles = css`
   } */
   div[role="dialog"] {
     border-radius: 32px 32px 0 0;
+    z-index: 9999;
   }
 
   div[data-rsbs-header="true"] {

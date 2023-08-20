@@ -36,7 +36,7 @@ export const getRandomGreeting = (): string => {
     })}! A great month for productivity!`,
     hoursLeft > 4
       ? `${hoursLeft} hours left in the day. Use them wisely!`
-      : `Only ${hoursLeft} hours left in the day. Take a break`,
+      : `Only ${hoursLeft} hours left in the day`,
 
     // <TextWithEmoji emojiStyle={emojiStyle} unified="1f5d3-fe0f">
     //   Start your day with a plan!

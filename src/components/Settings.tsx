@@ -31,7 +31,7 @@ export const SettingsDialog = ({
   user,
   setUser,
 }: SettingsProps) => {
-  const [settings, setSettings] = useState(user.settings[0]);
+  const [settings, setSettings] = useState<AppSettings>(user.settings[0]);
   const [lastStyle] = useState<EmojiStyle>(user.emojisStyle);
 
   const isOnline = useOnlineStatus();
@@ -58,6 +58,7 @@ export const SettingsDialog = ({
         settings: [updatedSettings],
       }));
     };
+
   // Handler for updating the selected emoji style
   const handleEmojiStyleChange = (event: SelectChangeEvent<EmojiStyle>) => {
     const selectedEmojiStyle = event.target.value as EmojiStyle;

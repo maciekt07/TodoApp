@@ -18,7 +18,7 @@ export const NotFound = () => {
       <ErrorCode>404</ErrorCode>
       <Description>Page Not Found</Description>
       <BackButton variant="outlined" onClick={() => n("/")}>
-        <ArrowBackIosNew /> &nbsp; Go back to home
+        <ArrowBackIosNew /> &nbsp; Go back to tasks
       </BackButton>
     </Container>
   );

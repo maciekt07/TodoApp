@@ -37,7 +37,7 @@ export const BottomNav = ({ user }: { user: User }) => {
         setValue(0);
         break;
       default:
-        setValue(undefined); // Fallback for the "Tasks" route
+        setValue(undefined); // Fallback for the route
     }
   }, [location.pathname]);
 
@@ -113,6 +113,7 @@ const Container = styled(Box)`
   width: 100%;
   margin: 0;
   animation: ${slideInBottom} 0.5s ease;
+  z-index: 999;
 `;
 
 const StyledBottomNavigation = styled(BottomNavigation)`
