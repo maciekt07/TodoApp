@@ -1,5 +1,8 @@
 import { EmojiStyle } from "emoji-picker-react";
 
+/**
+ * Represents a user in the application.
+ */
 export interface User {
   name: string | null;
   createdAt: Date;
@@ -10,6 +13,9 @@ export interface User {
   settings: AppSettings[];
 }
 
+/**
+ * Represents a task in the application.
+ */
 export interface Task {
   id: number;
   done: boolean;
@@ -24,6 +30,9 @@ export interface Task {
   lastSave?: Date;
 }
 
+/**
+ * Represents a category in the application.
+ */
 export interface Category {
   name: string;
   id: number;
@@ -31,13 +40,19 @@ export interface Category {
   color: string;
 }
 
+/**
+ * Represents application settings for the user.
+ */
 export interface AppSettings {
   enableCategories: boolean;
   doneToBottom: boolean;
   enableGlow: boolean;
 }
 
+/**
+ * Represents the props for a component that requires user-related data.
+ */
 export interface UserProps {
-  user: User;
-  setUser: React.Dispatch<React.SetStateAction<User>>;
+  user: User; // User data
+  setUser: React.Dispatch<React.SetStateAction<User>>; // Function to update user data
 }

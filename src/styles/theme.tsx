@@ -4,6 +4,7 @@ export const ColorPalette = {
   fontDark: "#1A1A1A",
   fontLight: "#F5F5F5",
   purple: "#b624ff",
+  red: "#ff3131",
 };
 
 export const MuiTheme = createTheme({
@@ -16,7 +17,7 @@ export const MuiTheme = createTheme({
       main: ColorPalette.purple,
     },
     error: {
-      main: "#ff3131",
+      main: ColorPalette.red,
     },
   },
 });

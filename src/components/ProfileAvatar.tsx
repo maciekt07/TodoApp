@@ -14,13 +14,7 @@ import {
 } from "@mui/material";
 import { UserProps } from "../types/user";
 import styled from "@emotion/styled";
-import {
-  Category,
-  GetApp,
-  Logout,
-  Person,
-  Settings,
-} from "@mui/icons-material";
+import { Category, GetApp, Logout, Person, Settings } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
 import { defaultUser } from "../constants/defaultUser";
 import { SettingsDialog } from ".";
@@ -29,8 +23,7 @@ export const ProfileAvatar = ({ user, setUser }: UserProps) => {
   const n = useNavigate();
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
-  const [logoutConfirmationOpen, setLogoutConfirmationOpen] =
-    useState<boolean>(false);
+  const [logoutConfirmationOpen, setLogoutConfirmationOpen] = useState<boolean>(false);
 
   const [openSettings, setOpenSettings] = useState<boolean>(false);
 
@@ -104,17 +97,16 @@ export const ProfileAvatar = ({ user, setUser }: UserProps) => {
           <Person /> &nbsp; Profile
         </StyledMenuItem>
 
-        {user.settings[0].enableCategories !== undefined &&
-          user.settings[0].enableCategories && (
-            <StyledMenuItem
-              onClick={() => {
-                n("/categories");
-                handleClose();
-              }}
-            >
-              <Category /> &nbsp; Categories
-            </StyledMenuItem>
-          )}
+        {user.settings[0].enableCategories !== undefined && user.settings[0].enableCategories && (
+          <StyledMenuItem
+            onClick={() => {
+              n("/categories");
+              handleClose();
+            }}
+          >
+            <Category /> &nbsp; Categories
+          </StyledMenuItem>
+        )}
         <StyledMenuItem
           onClick={() => {
             n("/import-export");
@@ -135,10 +127,7 @@ export const ProfileAvatar = ({ user, setUser }: UserProps) => {
           <Settings /> &nbsp; Settings
         </StyledMenuItem>
 
-        <StyledMenuItem
-          onClick={handleLogoutConfirmationOpen}
-          sx={{ color: "#ff4040" }}
-        >
+        <StyledMenuItem onClick={handleLogoutConfirmationOpen} sx={{ color: "#ff4040" }}>
           <Logout /> &nbsp; Logout
         </StyledMenuItem>
       </Menu>

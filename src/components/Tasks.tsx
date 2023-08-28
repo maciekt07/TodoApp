@@ -1,10 +1,6 @@
 import { Category, Task, UserProps } from "../types/user";
 import { useEffect, useState } from "react";
-import {
-  calculateDateDifference,
-  formatDate,
-  getFontColorFromHex,
-} from "../utils";
+import { calculateDateDifference, formatDate, getFontColorFromHex } from "../utils";
 import { Alarm, Done, MoreVert, PushPin } from "@mui/icons-material";
 import {
   Avatar,
@@ -35,17 +31,19 @@ import {
 } from "../styles";
 
 import { TaskMenu } from ".";
-export const Tasks = ({ user, setUser }: UserProps) => {
+
+/**
+ * Component to display a list of tasks.
+ */
+
+export const Tasks = ({ user, setUser }: UserProps): JSX.Element => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [selectedTaskId, setSelectedTaskId] = useState<number | null>(null);
   const open = Boolean(anchorEl);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState<boolean>(false);
   const [editModalOpen, setEditModalOpen] = useState<boolean>(false);
   // Handler for clicking the more options button in a task
-  const handleClick = (
-    event: React.MouseEvent<HTMLButtonElement>,
-    taskId: number
-  ) => {
+  const handleClick = (event: React.MouseEvent<HTMLButtonElement>, taskId: number) => {
     setAnchorEl(event.currentTarget);
     setSelectedTaskId(taskId);
   };
@@ -64,17 +62,13 @@ export const Tasks = ({ user, setUser }: UserProps) => {
     if (selectedCatId !== undefined) {
       unpinnedTasks = unpinnedTasks.filter((task) => {
         if (task.category) {
-          return task.category.some(
-            (category) => category.id === selectedCatId
-          );
+          return task.category.some((category) => category.id === selectedCatId);
         }
         return false;
       });
       pinnedTasks = pinnedTasks.filter((task) => {
         if (task.category) {
-          return task.category.some(
-            (category) => category.id === selectedCatId
-          );
+          return task.category.some((category) => category.id === selectedCatId);
         }
         return false;
       });
@@ -126,9 +120,7 @@ export const Tasks = ({ user, setUser }: UserProps) => {
     // Deletes the selected task
 
     if (selectedTaskId) {
-      const updatedTasks = user.tasks.filter(
-        (task) => task.id !== selectedTaskId
-      );
+      const updatedTasks = user.tasks.filter((task) => task.id !== selectedTaskId);
       setUser({ ...user, tasks: updatedTasks });
       setDeleteDialogOpen(false);
     }
@@ -171,9 +163,7 @@ export const Tasks = ({ user, setUser }: UserProps) => {
       // Close the menu
       setAnchorEl(null);
       // Find the selected task
-      const selectedTask = user.tasks.find(
-        (task) => task.id === selectedTaskId
-      );
+      const selectedTask = user.tasks.find((task) => task.id === selectedTaskId);
       if (selectedTask) {
         // Create a duplicated task with a new ID and current date
         const duplicatedTask: Task = {
@@ -190,12 +180,8 @@ export const Tasks = ({ user, setUser }: UserProps) => {
     }
   };
 
-  const [categories, setCategories] = useState<Category[] | undefined>(
-    undefined
-  );
-  const [selectedCatId, setSelectedCatId] = useState<number | undefined>(
-    undefined
-  );
+  const [categories, setCategories] = useState<Category[] | undefined>(undefined);
+  const [selectedCatId, setSelectedCatId] = useState<number | undefined>(undefined);
 
   const [categoryCounts, setCategoryCounts] = useState<{
     [categoryId: number]: number;
@@ -279,9 +265,7 @@ export const Tasks = ({ user, setUser }: UserProps) => {
                   key={cat.id}
                   list
                   onDelete={
-                    selectedCatId === cat.id
-                      ? () => setSelectedCatId(undefined)
-                      : undefined
+                    selectedCatId === cat.id ? () => setSelectedCatId(undefined) : undefined
                   }
                   style={{
                     boxShadow: "none",
@@ -304,18 +288,10 @@ export const Tasks = ({ user, setUser }: UserProps) => {
                         {cat.emoji &&
                           (user.emojisStyle === EmojiStyle.NATIVE ? (
                             <div>
-                              <Emoji
-                                size={20}
-                                unified={cat.emoji}
-                                emojiStyle={EmojiStyle.NATIVE}
-                              />
+                              <Emoji size={20} unified={cat.emoji} emojiStyle={EmojiStyle.NATIVE} />
                             </div>
                           ) : (
-                            <Emoji
-                              size={24}
-                              unified={cat.emoji}
-                              emojiStyle={user.emojisStyle}
-                            />
+                            <Emoji size={24} unified={cat.emoji} emojiStyle={user.emojisStyle} />
                           ))}
                       </Avatar>
                     ) : (
@@ -342,22 +318,14 @@ export const Tasks = ({ user, setUser }: UserProps) => {
                     <Done fontSize="large" />
                   ) : user.emojisStyle === EmojiStyle.NATIVE ? (
                     <div>
-                      <Emoji
-                        size={36}
-                        unified={task.emoji || ""}
-                        emojiStyle={EmojiStyle.NATIVE}
-                      />
+                      <Emoji size={36} unified={task.emoji || ""} emojiStyle={EmojiStyle.NATIVE} />
                     </div>
                   ) : (
-                    <Emoji
-                      size={46}
-                      unified={task.emoji || ""}
-                      emojiStyle={user.emojisStyle}
-                    />
+                    <Emoji size={46} unified={task.emoji || ""} emojiStyle={user.emojisStyle} />
                   )}
                 </EmojiContainer>
               ) : null}
-              <TaskInfo done={task.done}>
+              <TaskInfo>
                 {task.pinned && (
                   <Pinned>
                     <PushPin fontSize="small" /> &nbsp; Pinned
@@ -367,24 +335,17 @@ export const Tasks = ({ user, setUser }: UserProps) => {
                   <TaskName done={task.done}> {task.name}</TaskName>
 
                   <Tooltip
-                    title={`Created at: ${new Date(
-                      task.date
-                    ).toLocaleDateString()} • ${new Date(
+                    title={`Created at: ${new Date(task.date).toLocaleDateString()} • ${new Date(
                       task.date
                     ).toLocaleTimeString()}`}
                   >
                     <TaskDate>{formatDate(new Date(task.date))}</TaskDate>
                   </Tooltip>
                 </TaskHeader>
-                <TaskDescription done={task.done}>
-                  {task.description}
-                </TaskDescription>
+                <TaskDescription done={task.done}>{task.description}</TaskDescription>
 
                 {task.deadline && (
-                  <TimeLeft
-                    done={task.done}
-                    timeUp={new Date() > new Date(task.deadline)}
-                  >
+                  <TimeLeft done={task.done} timeUp={new Date() > new Date(task.deadline)}>
                     <Alarm fontSize="small" /> &nbsp;
                     {new Date(task.deadline).toLocaleDateString()} {" • "}
                     {new Date(task.deadline).toLocaleTimeString()}
@@ -400,7 +361,7 @@ export const Tasks = ({ user, setUser }: UserProps) => {
                   style={{
                     display: "flex",
                     flexWrap: "wrap",
-                    gap: "4px",
+                    gap: "4px 6px",
                     justifyContent: "left",
                     alignItems: "center",
                   }}
@@ -505,8 +466,7 @@ export const Tasks = ({ user, setUser }: UserProps) => {
       >
         <DialogTitle>Are you sure you want to delete the task?</DialogTitle>
         <DialogContent>
-          {user.tasks.find((task) => task.id === selectedTaskId)?.emoji !==
-            undefined && (
+          {user.tasks.find((task) => task.id === selectedTaskId)?.emoji !== undefined && (
             <p
               style={{
                 display: "flex",
@@ -519,37 +479,26 @@ export const Tasks = ({ user, setUser }: UserProps) => {
               <Emoji
                 size={28}
                 emojiStyle={user.emojisStyle}
-                unified={
-                  user.tasks.find((task) => task.id === selectedTaskId)
-                    ?.emoji || ""
-                }
+                unified={user.tasks.find((task) => task.id === selectedTaskId)?.emoji || ""}
               />
             </p>
           )}
           <p>
-            <b>Task Name:</b>{" "}
-            {user.tasks.find((task) => task.id === selectedTaskId)?.name}
+            <b>Task Name:</b> {user.tasks.find((task) => task.id === selectedTaskId)?.name}
           </p>
-          {user.tasks.find((task) => task.id === selectedTaskId)
-            ?.description !== undefined && (
+          {user.tasks.find((task) => task.id === selectedTaskId)?.description !== undefined && (
             <p>
               <b>Task Description:</b>{" "}
-              {
-                user.tasks.find((task) => task.id === selectedTaskId)
-                  ?.description
-              }
+              {user.tasks.find((task) => task.id === selectedTaskId)?.description}
             </p>
           )}
 
           {selectedTaskId !== null &&
-            user.tasks.find((task) => task.id === selectedTaskId)?.category?.[0]
-              ?.name !== undefined && (
+            user.tasks.find((task) => task.id === selectedTaskId)?.category?.[0]?.name !==
+              undefined && (
               <p>
                 <b>Category:</b>{" "}
-                {
-                  user.tasks.find((task) => task.id === selectedTaskId)
-                    ?.category?.[0]?.name
-                }
+                {user.tasks.find((task) => task.id === selectedTaskId)?.category?.[0]?.name}
               </p>
             )}
         </DialogContent>

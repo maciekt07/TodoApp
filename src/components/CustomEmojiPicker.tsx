@@ -1,10 +1,4 @@
-import {
-  useState,
-  useEffect,
-  Dispatch,
-  SetStateAction,
-  CSSProperties,
-} from "react";
+import { useState, useEffect, Dispatch, SetStateAction, CSSProperties } from "react";
 import styled from "@emotion/styled";
 import { Avatar, Badge, Tooltip } from "@mui/material";
 import { AddReaction, Edit } from "@mui/icons-material";
@@ -21,18 +15,10 @@ interface EmojiPickerProps {
   width?: CSSProperties["width"];
 }
 
-export const CustomEmojiPicker = ({
-  emoji,
-  setEmoji,
-  user,
-  color,
-  width,
-}: EmojiPickerProps) => {
+export const CustomEmojiPicker = ({ emoji, setEmoji, user, color, width }: EmojiPickerProps) => {
   const [showEmojiPicker, setShowEmojiPicker] = useState<boolean>(false);
 
-  const [currentEmoji, setCurrentEmoji] = useState<string | undefined>(
-    emoji || undefined
-  );
+  const [currentEmoji, setCurrentEmoji] = useState<string | undefined>(emoji || undefined);
 
   // When the currentEmoji state changes, update the parent component's emoji state
   useEffect(() => {
@@ -64,18 +50,12 @@ export const CustomEmojiPicker = ({
       const emojiSize = user.emojisStyle === EmojiStyle.NATIVE ? 48 : 64;
       return (
         <div>
-          <Emoji
-            size={emojiSize}
-            emojiStyle={user.emojisStyle}
-            unified={currentEmoji}
-          />
+          <Emoji size={emojiSize} emojiStyle={user.emojisStyle} unified={currentEmoji} />
         </div>
       );
     } else {
       // If no emoji is selected, show the AddReaction icon with the specified color or default purple
-      const fontColor = color
-        ? getFontColorFromHex(color)
-        : ColorPalette.fontLight;
+      const fontColor = color ? getFontColorFromHex(color) : ColorPalette.fontLight;
       return (
         <AddReaction
           sx={{

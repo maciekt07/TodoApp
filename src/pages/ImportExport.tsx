@@ -28,9 +28,7 @@ export const ImportExport = ({ user, setUser }: UserProps) => {
   };
 
   const handleExport = () => {
-    const tasksToExport = user.tasks.filter((task: Task) =>
-      selectedTasks.includes(task.id)
-    );
+    const tasksToExport = user.tasks.filter((task: Task) => selectedTasks.includes(task.id));
     exportTasksToJson(tasksToExport);
   };
 
@@ -44,13 +42,9 @@ export const ImportExport = ({ user, setUser }: UserProps) => {
 
       reader.onload = (e) => {
         try {
-          const importedTasks = JSON.parse(
-            e.target?.result as string
-          ) as Task[];
+          const importedTasks = JSON.parse(e.target?.result as string) as Task[];
 
-          if (
-            !Array.isArray(JSON.parse(e.target?.result as string) as Task[])
-          ) {
+          if (!Array.isArray(JSON.parse(e.target?.result as string) as Task[])) {
             alert("Imported file has an invalid structure.");
             return;
           }
@@ -59,20 +53,15 @@ export const ImportExport = ({ user, setUser }: UserProps) => {
           const invalidTasks = importedTasks.filter((task) => {
             const isInvalid =
               (task.name && task.name.length > TASK_NAME_MAX_LENGTH) ||
-              (task.description &&
-                task.description.length > DESCRIPTION_MAX_LENGTH) ||
+              (task.description && task.description.length > DESCRIPTION_MAX_LENGTH) ||
               (task.category &&
-                task.category.some(
-                  (cat) => cat.name.length > CATEGORY_NAME_MAX_LENGTH
-                ));
+                task.category.some((cat) => cat.name.length > CATEGORY_NAME_MAX_LENGTH));
 
             return isInvalid;
           });
 
           if (invalidTasks.length > 0) {
-            const invalidTaskNames = invalidTasks
-              .map((task) => task.name)
-              .join(", ");
+            const invalidTaskNames = invalidTasks.map((task) => task.name).join(", ");
             alert(
               `Some tasks cannot be imported due to exceeding maximum character lengths: ${invalidTaskNames}`
             );
@@ -101,18 +90,14 @@ export const ImportExport = ({ user, setUser }: UserProps) => {
           const mergedTasks = [...user.tasks, ...importedTasks];
 
           // Remove duplicates based on task IDs (if any)
-          const uniqueTasks = Array.from(
-            new Set(mergedTasks.map((task) => task.id))
-          )
+          const uniqueTasks = Array.from(new Set(mergedTasks.map((task) => task.id)))
             .map((id) => mergedTasks.find((task) => task.id === id))
             .filter(Boolean) as Task[]; // Remove any 'undefined' values
 
           setUser((prevUser) => ({ ...prevUser, tasks: uniqueTasks }));
 
           // Prepare the list of imported task names
-          const importedTaskNames = importedTasks
-            .map((task) => task.name)
-            .join(", ");
+          const importedTaskNames = importedTasks.map((task) => task.name).join(", ");
 
           // Display the alert with the list of imported task names
           console.log(`Imported Tasks: ${importedTaskNames}`);
@@ -154,10 +139,7 @@ export const ImportExport = ({ user, setUser }: UserProps) => {
               onClick={() => handleTaskClick(task.id)}
               selected={selectedTasks.includes(task.id)}
             >
-              <Checkbox
-                size="medium"
-                checked={selectedTasks.includes(task.id)}
-              />
+              <Checkbox size="medium" checked={selectedTasks.includes(task.id)} />
               <Typography
                 variant="body1"
                 component="span"
@@ -168,9 +150,7 @@ export const ImportExport = ({ user, setUser }: UserProps) => {
             </TaskContainer>
           ))
         ) : (
-          <h3 style={{ opacity: 0.8, fontStyle: "italic" }}>
-            You don't have any tasks to export
-          </h3>
+          <h3 style={{ opacity: 0.8, fontStyle: "italic" }}>You don't have any tasks to export</h3>
         )}
       </Container>
 
@@ -236,8 +216,7 @@ const TaskContainer = styled(Box)<{ backgroundclr: string; selected: boolean }>`
   border-radius: 16px;
   background: #19172b94;
   border: 2px solid ${(props) => props.backgroundclr};
-  box-shadow: ${(props) =>
-    props.selected && `0 0 8px 1px ${props.backgroundclr}`};
+  box-shadow: ${(props) => props.selected && `0 0 8px 1px ${props.backgroundclr}`};
   transition: 0.3s all;
   width: 300px;
   cursor: "pointer";

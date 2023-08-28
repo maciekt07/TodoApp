@@ -32,17 +32,13 @@ export const AddTask = ({ user, setUser }: UserProps) => {
     const newName = event.target.value;
     setName(newName);
     if (newName.length > TASK_NAME_MAX_LENGTH) {
-      setNameError(
-        `Name should be less than or equal to ${TASK_NAME_MAX_LENGTH} characters`
-      );
+      setNameError(`Name should be less than or equal to ${TASK_NAME_MAX_LENGTH} characters`);
     } else {
       setNameError("");
     }
   };
 
-  const handleDescriptionChange = (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
+  const handleDescriptionChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const newDescription = event.target.value;
     setDescription(newDescription);
     if (newDescription.length > DESCRIPTION_MAX_LENGTH) {
@@ -64,10 +60,7 @@ export const AddTask = ({ user, setUser }: UserProps) => {
 
   const handleAddTask = () => {
     if (name !== "") {
-      if (
-        name.length > TASK_NAME_MAX_LENGTH ||
-        description.length > DESCRIPTION_MAX_LENGTH
-      ) {
+      if (name.length > TASK_NAME_MAX_LENGTH || description.length > DESCRIPTION_MAX_LENGTH) {
         return; // Do not add the task if the name or description exceeds the maximum length
       }
 
@@ -124,32 +117,31 @@ export const AddTask = ({ user, setUser }: UserProps) => {
           onChange={handleDeadlineChange}
           focused
         />
-        {user.settings[0].enableCategories !== undefined &&
-          user.settings[0].enableCategories && (
-            <>
-              <br />
-              <Typography>Category (optional)</Typography>
+        {user.settings[0].enableCategories !== undefined && user.settings[0].enableCategories && (
+          <>
+            <br />
+            <Typography>Category (optional)</Typography>
 
-              <CategorySelect
-                user={user}
-                selectedCategories={selectedCategories}
-                setSelectedCategories={setSelectedCategories}
-                width="400px"
-              />
-              <Link to="/categories">
-                <Button
-                  sx={{
-                    margin: "8px 0 24px 0 ",
-                    padding: "12px 24px",
-                    borderRadius: "12px",
-                  }}
-                  // onClick={() => n("/categories")}
-                >
-                  <Edit /> &nbsp; Modify Categories
-                </Button>
-              </Link>
-            </>
-          )}
+            <CategorySelect
+              user={user}
+              selectedCategories={selectedCategories}
+              setSelectedCategories={setSelectedCategories}
+              width="400px"
+            />
+            <Link to="/categories">
+              <Button
+                sx={{
+                  margin: "8px 0 24px 0 ",
+                  padding: "12px 24px",
+                  borderRadius: "12px",
+                }}
+                // onClick={() => n("/categories")}
+              >
+                <Edit /> &nbsp; Modify Categories
+              </Button>
+            </Link>
+          </>
+        )}
         <Typography>Color</Typography>
         <ColorPicker type="color" value={color} onChange={handleColorChange} />
         <AddTaskButton

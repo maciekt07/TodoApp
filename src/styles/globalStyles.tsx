@@ -34,10 +34,11 @@ const globalStyles = css`
   } */
   div[role="dialog"] {
     border-radius: 32px 32px 0 0;
-    z-index: 9999;
+    z-index: 999999;
   }
 
   div[data-rsbs-header="true"] {
+    z-index: 999999;
     &::before {
       width: 60px;
       height: 6px;
@@ -47,14 +48,12 @@ const globalStyles = css`
     }
   }
 
-  html {
-    background: linear-gradient(180deg, #232e58 0%, #171d34 100%);
-    background-attachment: fixed;
-    background-size: cover;
-  }
   body {
     margin: 8px 16vw;
     touch-action: manipulation;
+    background: linear-gradient(180deg, #232e58 0%, #171d34 100%);
+    background-attachment: fixed;
+    background-size: cover;
     @media (max-width: 1024px) {
       margin: 20px;
     }

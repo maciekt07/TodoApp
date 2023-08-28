@@ -53,9 +53,7 @@ export const TaskMenu = ({
         }}
       >
         <PushPin /> &nbsp;{" "}
-        {user.tasks.find((task) => task.id === selectedTaskId)?.pinned
-          ? "Unpin"
-          : "Pin"}
+        {user.tasks.find((task) => task.id === selectedTaskId)?.pinned ? "Unpin" : "Pin"}
       </StyledMenuItem>
 
       <Divider />
@@ -72,9 +70,7 @@ export const TaskMenu = ({
       </StyledMenuItem>
       <Divider />
       <StyledMenuItem
-        sx={{
-          color: "#ff4040",
-        }}
+        clr={ColorPalette.red}
         onClick={() => {
           handleCloseMoreMenu();
           handleDeleteTask();
@@ -98,10 +94,7 @@ export const TaskMenu = ({
               <Emoji
                 emojiStyle={user.emojisStyle}
                 size={32}
-                unified={
-                  user.tasks.find((task) => task.id === selectedTaskId)
-                    ?.emoji || ""
-                }
+                unified={user.tasks.find((task) => task.id === selectedTaskId)?.emoji || ""}
               />{" "}
               {user.emojisStyle === EmojiStyle.NATIVE && "\u00A0 "}
               {user.tasks.find((task) => task.id === selectedTaskId)?.name}
@@ -180,12 +173,12 @@ const SheetContent = styled.div`
     }
   }
 `;
-const StyledMenuItem = styled(MenuItem)`
+const StyledMenuItem = styled(MenuItem)<{ clr?: string }>`
   margin: 6px;
   padding: 12px;
   border-radius: 12px;
   box-shadow: none;
-
+  color: ${({ clr }) => clr};
   &:hover {
     background-color: #f0f0f0;
   }

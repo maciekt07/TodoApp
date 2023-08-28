@@ -9,9 +9,10 @@ interface TopBarProps {
 
 export const TopBar = ({ title }: TopBarProps) => {
   const n = useNavigate();
+  const handleBackClick = () => n("/");
   return (
     <Container>
-      <BackBtn onClick={() => n("/")}>
+      <BackBtn onClick={handleBackClick}>
         <ArrowBackIosNew /> &nbsp; Back
       </BackBtn>
       <Title>{title}</Title>

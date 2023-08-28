@@ -25,12 +25,7 @@ interface SettingsProps extends UserProps {
   onClose: () => void;
 }
 
-export const SettingsDialog = ({
-  open,
-  onClose,
-  user,
-  setUser,
-}: SettingsProps) => {
+export const SettingsDialog = ({ open, onClose, user, setUser }: SettingsProps) => {
   const [settings, setSettings] = useState<AppSettings>(user.settings[0]);
   const [lastStyle] = useState<EmojiStyle>(user.emojisStyle);
 
@@ -46,8 +41,7 @@ export const SettingsDialog = ({
   ];
   // Handler for updating individual setting options
   const handleSettingChange =
-    (name: keyof AppSettings) =>
-    (event: React.ChangeEvent<HTMLInputElement>) => {
+    (name: keyof AppSettings) => (event: React.ChangeEvent<HTMLInputElement>) => {
       const updatedSettings = {
         ...settings,
         [name]: event.target.checked,
@@ -106,8 +100,7 @@ export const SettingsDialog = ({
                     fontWeight: 500,
                   }}
                 >
-                  <WifiOff /> You can't change the emoji style <br /> when you
-                  are offline
+                  <WifiOff /> You can't change the emoji style <br /> when you are offline
                 </MenuItem>
               )}
 
@@ -161,10 +154,7 @@ export const SettingsDialog = ({
           <FormControlLabel
             sx={{ opacity: settings.enableGlow ? 1 : 0.8 }}
             control={
-              <Switch
-                checked={settings.enableGlow}
-                onChange={handleSettingChange("enableGlow")}
-              />
+              <Switch checked={settings.enableGlow} onChange={handleSettingChange("enableGlow")} />
             }
             label="Enable Glow Effect"
           />

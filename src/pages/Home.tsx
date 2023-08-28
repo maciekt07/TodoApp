@@ -13,11 +13,7 @@ import {
   TasksCountContainer,
 } from "../styles";
 import { UserProps } from "../types/user";
-import {
-  displayGreeting,
-  getRandomGreeting,
-  getTaskCompletionText,
-} from "../utils";
+import { displayGreeting, getRandomGreeting, getTaskCompletionText } from "../utils";
 import { Emoji } from "emoji-picker-react";
 import { Box, CircularProgress, Typography } from "@mui/material";
 import { useOnlineStatus } from "../hooks/useOnlineStatus";
@@ -27,11 +23,9 @@ export const Home = ({ user, setUser }: UserProps) => {
   const [randomGreeting, setRandomGreeting] = useState<string | ReactNode>("");
   const [greetingKey, setGreetingKey] = useState<number>(0);
   const [completedTasksCount, setCompletedTasksCount] = useState<number>(0);
-  const [tasksWithDeadlineTodayCount, setTasksWithDeadlineTodayCount] =
-    useState<number>(0);
+  const [tasksWithDeadlineTodayCount, setTasksWithDeadlineTodayCount] = useState<number>(0);
 
-  const completedTaskPercentage =
-    (completedTasksCount / user.tasks.length) * 100;
+  const completedTaskPercentage = (completedTasksCount / user.tasks.length) * 100;
 
   useEffect(() => {
     setRandomGreeting(getRandomGreeting());
@@ -65,8 +59,7 @@ export const Home = ({ user, setUser }: UserProps) => {
     <>
       <ProfileAvatar user={user} setUser={setUser} />
       <GreetingHeader>
-        <Emoji unified="1f44b" emojiStyle={user.emojisStyle} /> &nbsp;{" "}
-        {displayGreeting()}
+        <Emoji unified="1f44b" emojiStyle={user.emojisStyle} /> &nbsp; {displayGreeting()}
         {user.name && ", " + user.name}
       </GreetingHeader>
       <GreetingText key={greetingKey}>{randomGreeting}</GreetingText>
@@ -97,8 +90,7 @@ export const Home = ({ user, setUser }: UserProps) => {
             </Box>
             <TaskCountTextContainer>
               <TaskCountHeader>
-                You have {user.tasks.length - completedTasksCount} unfinished
-                tasks{" "}
+                You have {user.tasks.length - completedTasksCount} unfinished tasks{" "}
                 {completedTasksCount > 0 && `and ${completedTasksCount} done`}
               </TaskCountHeader>
               <TaskCompletionText>
@@ -117,6 +109,7 @@ export const Home = ({ user, setUser }: UserProps) => {
         </Offline>
       )}
       <Tasks user={user} setUser={setUser} />
+
       <AddTaskBtn animate={user.tasks.length === 0} user={user} />
     </>
   );

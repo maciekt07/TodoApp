@@ -7,24 +7,22 @@ import { Tooltip } from "@mui/material";
 import { User } from "../types/user";
 import { useResponsiveDisplay } from "../hooks/useResponsiveDisplay";
 
-interface Props {
+interface AddTaskBtnProps {
   animate: boolean;
   user: User;
 }
 
-export const AddTaskBtn = ({ animate, user }: Props) => {
+export const AddTaskBtn = ({ animate, user }: AddTaskBtnProps): JSX.Element | null => {
   const n = useNavigate();
   const isMobile = useResponsiveDisplay();
 
+  // If it's a mobile device, don't render the button.
   if (isMobile) {
     return null;
   }
 
   return (
-    <Tooltip
-      title={user.tasks.length > 0 ? "Add New Task" : "Add Task"}
-      placement="left"
-    >
+    <Tooltip title={user.tasks.length > 0 ? "Add New Task" : "Add Task"} placement="left">
       <Btn
         animate={animate}
         glow={user.settings[0].enableGlow}
@@ -51,8 +49,7 @@ const Btn = styled.button<{ animate: boolean; glow: boolean }>`
   background-color: ${ColorPalette.purple};
   color: white;
   right: 16vw;
-  box-shadow: ${(props) =>
-    props.glow ? `0px 0px 20px 0px ${ColorPalette.purple}` : "none"};
+  box-shadow: ${({ glow }) => (glow ? `0px 0px 20px 0px ${ColorPalette.purple}` : "none")};
   transition: background-color 0.3s, backdrop-filter 0.3s, box-shadow 0.3s;
 
   &:hover {

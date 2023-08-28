@@ -15,13 +15,11 @@ export const TaskContainer = styled.div<TaskContainerProps>`
   align-items: center;
   margin-top: 12px;
   transition: 0.3s all;
-  background-color: ${(props) => props.backgroundColor};
-  opacity: ${(props) => (props.done ? 0.7 : 1)};
-  color: ${(props) => props.clr};
-  border-left: ${(props) =>
-    props.done ? "6px solid #00ff0d" : "6px solid transparent"};
-  box-shadow: ${(props) =>
-    props.glow ? `0 0 100px -32px ${props.backgroundColor}` : "none"};
+  background-color: ${({ backgroundColor }) => backgroundColor};
+  opacity: ${({ done }) => (done ? 0.7 : 1)};
+  color: ${({ clr }) => clr};
+  border-left: ${({ done }) => (done ? "6px solid #00ff0d" : "6px solid transparent")};
+  box-shadow: ${(props) => (props.glow ? `0 0 100px -32px ${props.backgroundColor}` : "none")};
   padding: 16px;
   border-radius: 20px;
   animation: ${fadeIn} 0.5s ease-in;
@@ -33,8 +31,7 @@ export const EmojiContainer = styled.span<{ clr: string }>`
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: ${(props) =>
-    props.clr === "#1A1A1A" ? "#4b4b4b6e" : "#dddddd9d"};
+  background-color: ${(props) => (props.clr === "#1A1A1A" ? "#4b4b4b6e" : "#dddddd9d")};
   font-size: 32px;
   padding: 12px;
   width: 42px;
@@ -44,7 +41,7 @@ export const EmojiContainer = styled.span<{ clr: string }>`
   text-overflow: ellipsis;
 `;
 
-export const TaskInfo = styled.div<{ done: boolean }>`
+export const TaskInfo = styled.div`
   display: flex;
   flex-direction: column;
   flex: 1;
@@ -63,7 +60,7 @@ export const TaskHeader = styled.div`
 export const TaskName = styled.h3<{ done: boolean }>`
   font-size: 20px;
   margin: 0;
-  text-decoration: ${(props) => (props.done ? "line-through" : "none")};
+  text-decoration: ${({ done }) => (done ? "line-through" : "none")};
 `;
 
 export const TaskDate = styled.p`
@@ -73,7 +70,7 @@ export const TaskDate = styled.p`
   font-size: 14px;
   font-style: italic;
   font-weight: 300;
-  opacity: 0.9;
+
   /* @media (max-width: 600px) {
       margin-left: 0;
       margin-top: 4px;
@@ -84,7 +81,7 @@ export const TaskDate = styled.p`
 export const TaskDescription = styled.p<{ done: boolean }>`
   margin: 0;
   font-size: 18px;
-  text-decoration: ${(props) => (props.done ? "line-through" : "none")};
+  text-decoration: ${({ done }) => (done ? "line-through" : "none")};
   /* white-space: pre-line;
   line-height: 1em; */
 `;
@@ -114,18 +111,11 @@ export const TasksContainer = styled.main`
 
 export const TimeLeft = styled.span<{ timeUp: boolean; done: boolean }>`
   color: ${(props) => props.timeUp && !props.done && "#ff2a23d5"};
-  /* background: ${(props) =>
-    props.timeUp && !props.done ? "#ffffff9d" : "transparent"};
-
-  border-radius: 12px; */
-
-  text-shadow: ${(props) =>
-    props.timeUp && !props.done ? "0 0 8px #ff2a23d5" : "none"};
+  text-shadow: ${(props) => (props.timeUp && !props.done ? "0 0 8px #ff2a23d5" : "none")};
   text-decoration: ${(props) => (props.done ? "line-through" : "none")};
   transition: 0.3s all;
   font-size: 14px;
   margin: 4px 0;
-  /* padding: 4px; */
   font-weight: 500;
   font-style: italic;
   display: flex;
@@ -148,26 +138,24 @@ interface CategoryChipProps {
 }
 
 export const CategoryChip = styled(Chip)<CategoryChipProps>`
-  color: ${(props) => getFontColorFromHex(props.backgroundclr)};
-  background-color: ${(props) => props.backgroundclr};
-  box-shadow: ${(props) =>
-    props.glow ? `0 0 8px 0 ${props.backgroundclr}` : "none"};
-  border: ${(props) =>
-    props.borderclr ? `2px solid ${props.borderclr}` : "none"};
+  color: ${({ backgroundclr }) => getFontColorFromHex(backgroundclr)};
+  background-color: ${({ backgroundclr }) => backgroundclr};
+  box-shadow: ${(props) => (props.glow ? `0 0 8px 0 ${props.backgroundclr}` : "none")};
+  border: ${({ borderclr }) => (borderclr ? `2px solid ${borderclr}` : "none")};
   font-weight: bold;
   font-size: 14px;
   margin: 6px 0 0 0;
   padding: 8px;
   transition: 0.3s all;
-  opacity: ${(props) => (props.list ? 1 : 0.9)};
+  opacity: ${({ list }) => (list ? 1 : 0.9)};
   animation: ${fadeIn} 0.5s ease-in;
+
   &:hover,
   &:focus,
   &:focus-visible {
     background-color: ${(props) => props.backgroundclr};
-    box-shadow: ${(props) =>
-      props.list && `0 0 8px 0px ${props.backgroundclr}`};
-    opacity: ${(props) => props.list && 0.8};
+    box-shadow: ${(props) => props.list && `0 0 8px 0px ${props.backgroundclr}`};
+    opacity: ${({ list }) => list && 0.8};
   }
   & .MuiChip-deleteIcon {
     color: ${(props) => getFontColorFromHex(props.backgroundclr)};
@@ -180,8 +168,6 @@ export const CategoryChip = styled(Chip)<CategoryChipProps>`
       height: 26px;
     }
     &:hover {
-      /* color: #ff0000e5;
-      stroke: ${(props) => getFontColorFromHex(props.backgroundclr)}; */
       color: ${(props) => getFontColorFromHex(props.backgroundclr)};
       opacity: 0.8;
     }

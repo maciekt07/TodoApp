@@ -1,12 +1,6 @@
 import styled from "@emotion/styled";
 import { Category, User } from "../types/user";
-import {
-  Avatar,
-  Box,
-  MenuItem,
-  Select,
-  SelectChangeEvent,
-} from "@mui/material";
+import { Avatar, Box, MenuItem, Select, SelectChangeEvent } from "@mui/material";
 import { CategoryChip, ColorPalette } from "../styles";
 import { Emoji, EmojiStyle } from "emoji-picker-react";
 import { getFontColorFromHex } from "../utils";
@@ -20,13 +14,16 @@ interface CategorySelectProps {
   selectedCategories: Category[];
   setSelectedCategories: React.Dispatch<React.SetStateAction<Category[]>>;
 }
+/**
+ * Component for selecting categories with emojis.
+ */
 
 export const CategorySelect = ({
   user,
   width,
   selectedCategories,
   setSelectedCategories,
-}: CategorySelectProps) => {
+}: CategorySelectProps): JSX.Element => {
   const handleCategoryChange = (event: SelectChangeEvent<unknown>): void => {
     const selectedCategoryIds = event.target.value as number[];
 
@@ -47,6 +44,7 @@ export const CategorySelect = ({
         width={width}
         value={selectedCategories.map((cat) => cat.id)}
         onChange={handleCategoryChange}
+        sx={{ zIndex: 999 }}
         renderValue={() => (
           <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
             {selectedCategories.map((cat) => (
@@ -75,11 +73,7 @@ export const CategorySelect = ({
                             />
                           </div>
                         ) : (
-                          <Emoji
-                            size={24}
-                            unified={cat.emoji}
-                            emojiStyle={user.emojisStyle}
-                          />
+                          <Emoji size={24} unified={cat.emoji} emojiStyle={user.emojisStyle} />
                         ))}
                     </Avatar>
                   ) : (
@@ -94,6 +88,7 @@ export const CategorySelect = ({
           PaperProps: {
             style: {
               maxHeight: 400,
+              zIndex: 999999,
             },
           },
         }}
@@ -114,11 +109,7 @@ export const CategorySelect = ({
 
         {user.categories &&
           user.categories.map((category) => (
-            <CategoriesMenu
-              key={category.id}
-              value={category.id}
-              clr={category.color}
-            >
+            <CategoriesMenu key={category.id} value={category.id} clr={category.color}>
               {category.emoji && (
                 <Emoji unified={category.emoji} emojiStyle={user.emojisStyle} />
               )}
@@ -150,17 +141,16 @@ const CategoriesMenu = styled(MenuItem)<{ clr?: string }>`
   font-weight: 500;
   transition: 0.2s all;
   color: ${(props) => getFontColorFromHex(props.clr || ColorPalette.fontLight)};
-  background: ${(props) => props.clr || "#bcbcbc"};
+  background: ${({ clr }) => clr || "#bcbcbc"};
   border: 4px solid transparent;
   &:hover {
-    background: ${(props) => props.clr || "#bcbcbc"};
+    background: ${({ clr }) => clr || "#bcbcbc"};
     opacity: 0.7;
   }
 
   &.Mui-selected {
-    background: ${(props) => props.clr || "#bcbcbc"};
-    color: ${(props) =>
-      getFontColorFromHex(props.clr || ColorPalette.fontLight)};
+    background: ${({ clr }) => clr || "#bcbcbc"};
+    color: ${(props) => getFontColorFromHex(props.clr || ColorPalette.fontLight)};
     /* box-shadow: 0 0 14px 4px ${(props) => props.clr || "#bcbcbc"}; */
     border: 4px solid ${ColorPalette.purple};
     font-weight: bold;
@@ -168,7 +158,7 @@ const CategoriesMenu = styled(MenuItem)<{ clr?: string }>`
       content: "•";
     }
     &:hover {
-      background: ${(props) => props.clr || "#bcbcbc"};
+      background: ${({ clr }) => clr || "#bcbcbc"};
       opacity: 0.7;
     }
   }

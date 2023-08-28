@@ -24,14 +24,13 @@ export const UserSettings = ({ user, setUser }: UserProps) => {
   const [name, setName] = useState<string>("");
   const [profilePictureURL, setProfilePictureURL] = useState<string>("");
   const [openChangeImage, setOpenChangeImage] = useState<boolean>(false);
-  const [logoutConfirmationOpen, setLogoutConfirmationOpen] =
-    useState<boolean>(false);
+  const [logoutConfirmationOpen, setLogoutConfirmationOpen] = useState<boolean>(false);
 
   const [openSettings, setOpenSettings] = useState<boolean>(false);
 
   useEffect(() => {
     document.title = `Todo App - User ${user.name ? `(${user.name})` : ""}`;
-  }, []);
+  }, [user.name]);
 
   const handleSaveName = () => {
     setUser({ ...user, name: name });
@@ -67,13 +66,7 @@ export const UserSettings = ({ user, setUser }: UserProps) => {
         >
           <Settings fontSize="large" />
         </IconButton>
-        <Tooltip
-          title={
-            user.profilePicture
-              ? "Change profile picture"
-              : "Add profile picture"
-          }
-        >
+        <Tooltip title={user.profilePicture ? "Change profile picture" : "Add profile picture"}>
           <Badge
             overlap="circular"
             anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
@@ -107,9 +100,7 @@ export const UserSettings = ({ user, setUser }: UserProps) => {
         </Tooltip>
         <UserName>{user.name || "User"}</UserName>
         <Tooltip
-          title={`Created at: ${new Date(
-            user.createdAt
-          ).toLocaleDateString()} • ${new Date(
+          title={`Created at: ${new Date(user.createdAt).toLocaleDateString()} • ${new Date(
             user.createdAt
           ).toLocaleTimeString()}`}
         >

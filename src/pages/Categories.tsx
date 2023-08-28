@@ -27,14 +27,10 @@ export const Categories = ({ user, setUser }: UserProps) => {
 
   const handleDelete = (categoryId: number): void => {
     if (categoryId) {
-      const updatedCategories = user.categories.filter(
-        (category) => category.id !== categoryId
-      );
+      const updatedCategories = user.categories.filter((category) => category.id !== categoryId);
       // Remove the category from tasks that have it associated
       const updatedTasks = user.tasks.map((task) => {
-        const updatedCategoryList = task.category?.filter(
-          (category) => category.id !== categoryId
-        );
+        const updatedCategoryList = task.category?.filter((category) => category.id !== categoryId);
         return {
           ...task,
           category: updatedCategoryList,
@@ -57,9 +53,7 @@ export const Categories = ({ user, setUser }: UserProps) => {
     const newName = event.target.value;
     setName(newName);
     if (newName.length > CATEGORY_NAME_MAX_LENGTH) {
-      setNameError(
-        `Name is too long maximum ${CATEGORY_NAME_MAX_LENGTH} characters`
-      );
+      setNameError(`Name is too long maximum ${CATEGORY_NAME_MAX_LENGTH} characters`);
     } else {
       setNameError("");
     }
@@ -93,18 +87,13 @@ export const Categories = ({ user, setUser }: UserProps) => {
       <Container>
         {user.categories.length > 0 ? (
           <CategoriesContainer>
-            {/* {user.categories
-          .sort((a, b) => a.name.localeCompare(b.name)) */}
             {user.categories.map((category) => {
               return (
                 <CategoryDiv key={category.id} clr={category.color}>
                   <CategoryContent>
                     <span>
                       {category.emoji && (
-                        <Emoji
-                          unified={category.emoji}
-                          emojiStyle={user.emojisStyle}
-                        />
+                        <Emoji unified={category.emoji} emojiStyle={user.emojisStyle} />
                       )}
                     </span>{" "}
                     &nbsp;
@@ -129,12 +118,7 @@ export const Categories = ({ user, setUser }: UserProps) => {
         )}
         <AddContainer>
           <h2>Add New Category</h2>
-          <CustomEmojiPicker
-            user={user}
-            emoji={emoji}
-            setEmoji={setEmoji}
-            color={color}
-          />
+          <CustomEmojiPicker user={user} emoji={emoji} setEmoji={setEmoji} color={color} />
           <StyledInput
             focused
             label="Category name"
@@ -144,12 +128,8 @@ export const Categories = ({ user, setUser }: UserProps) => {
             error={nameError !== ""}
             helperText={nameError}
           />
-          <Typography>Color:</Typography>
-          <ColorPicker
-            type="color"
-            value={color}
-            onChange={handleColorChange}
-          />
+          <Typography>Color</Typography>
+          <ColorPicker type="color" value={color} onChange={handleColorChange} />
           <AddCategoryButton
             onClick={handleAddCategory}
             disabled={name.length > CATEGORY_NAME_MAX_LENGTH || name === ""}

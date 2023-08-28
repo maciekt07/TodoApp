@@ -22,13 +22,7 @@ interface EditTaskProps {
   user: User;
 }
 
-export const EditTask = ({
-  open,
-  task,
-  onClose,
-  onSave,
-  user,
-}: EditTaskProps) => {
+export const EditTask = ({ open, task, onClose, onSave, user }: EditTaskProps) => {
   const [editedTask, setEditedTask] = useState<Task | undefined>(task);
   const [nameError, setNameError] = useState<boolean>(false);
   const [descriptionError, setDescriptionError] = useState<boolean>(false);
@@ -180,6 +174,7 @@ export const EditTask = ({
           type="datetime-local"
           value={editedTask?.deadline}
           onChange={handleInputChange}
+          focused
           fullWidth
         />
         {/* <br />

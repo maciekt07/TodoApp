@@ -1,6 +1,9 @@
 import { EmojiStyle } from "emoji-picker-react";
 import { User } from "../types/user";
 
+/**
+ * Represents a default user object.
+ */
 export const defaultUser: User = {
   name: null,
   createdAt: new Date(),
