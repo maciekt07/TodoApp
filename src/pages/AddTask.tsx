@@ -1,13 +1,13 @@
 import { Category, Task, UserProps } from "../types/user";
 import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { AddTaskButton, Container } from "../styles";
+import { AddTaskButton, Container, StyledInput } from "../styles";
 import { Edit } from "@mui/icons-material";
 
-import { Button, TextField, Typography } from "@mui/material";
-import styled from "@emotion/styled";
+import { Button, Typography } from "@mui/material";
+
 import { DESCRIPTION_MAX_LENGTH, TASK_NAME_MAX_LENGTH } from "../constants";
-import { CategorySelect, TopBar } from "../components";
+import { CategorySelect, ColorPicker, TopBar } from "../components";
 import { CustomEmojiPicker } from "../components";
 
 export const AddTask = ({ user, setUser }: UserProps) => {
@@ -50,9 +50,9 @@ export const AddTask = ({ user, setUser }: UserProps) => {
     }
   };
 
-  const handleColorChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setColor(event.target.value);
-  };
+  // const handleColorChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  //   setColor(event.target.value);
+  // };
 
   const handleDeadlineChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setDeadline(event.target.value);
@@ -143,7 +143,10 @@ export const AddTask = ({ user, setUser }: UserProps) => {
           </>
         )}
         <Typography>Color</Typography>
-        <ColorPicker type="color" value={color} onChange={handleColorChange} />
+        <ColorPicker color={color} setColor={setColor} />
+
+        {/* <Typography>Color</Typography>
+        <ColorPicker type="color" value={color} onChange={handleColorChange} /> */}
         <AddTaskButton
           onClick={handleAddTask}
           disabled={
@@ -158,26 +161,3 @@ export const AddTask = ({ user, setUser }: UserProps) => {
     </>
   );
 };
-const StyledInput = styled(TextField)`
-  margin: 12px;
-  .MuiOutlinedInput-root {
-    border-radius: 16px;
-    transition: 0.3s all;
-    width: 400px;
-    color: white;
-  }
-`;
-
-const ColorPicker = styled.input`
-  width: 400px;
-  margin: 12px;
-  height: 40px;
-  border-radius: 8px;
-  border: none;
-  cursor: pointer;
-  background-color: #ffffff3e;
-  &::-webkit-color-swatch {
-    border-radius: 100px;
-    border: none;
-  }
-`;

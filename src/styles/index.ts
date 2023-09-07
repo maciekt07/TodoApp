@@ -21,16 +21,7 @@ export {
   ProgressPercentageContainer,
   Offline,
 } from "./home.styled";
-export {
-  Container,
-  Input,
-  CloseEmojiBtn,
-  EmojiPreview,
-  AddTaskButton,
-  OpenPickerBtn,
-  ColorPreview,
-} from "./addTask.styled";
-
+export { Container, Input, AddTaskButton, StyledInput } from "./addTask.styled";
 export {
   TaskContainer,
   EmojiContainer,

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { CustomEmojiPicker, TopBar } from "../components";
+import { ColorPicker, CustomEmojiPicker, TopBar } from "../components";
 import { Category, UserProps } from "../types/user";
 import { useNavigate } from "react-router-dom";
 import { Emoji } from "emoji-picker-react";
@@ -45,9 +45,9 @@ export const Categories = ({ user, setUser }: UserProps) => {
     }
   };
 
-  const handleColorChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setColor(event.target.value);
-  };
+  // const handleColorChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  //   setColor(event.target.value);
+  // };
 
   const handleNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const newName = event.target.value;
@@ -129,7 +129,7 @@ export const Categories = ({ user, setUser }: UserProps) => {
             helperText={nameError}
           />
           <Typography>Color</Typography>
-          <ColorPicker type="color" value={color} onChange={handleColorChange} />
+          <ColorPicker color={color} setColor={setColor} width={"350px"} />
           <AddCategoryButton
             onClick={handleAddCategory}
             disabled={name.length > CATEGORY_NAME_MAX_LENGTH || name === ""}
@@ -246,18 +246,5 @@ export const AddCategoryButton = styled(Button)`
     cursor: not-allowed;
     opacity: 0.7;
     color: white;
-  }
-`;
-const ColorPicker = styled.input`
-  width: 350px;
-  margin: 12px;
-  height: 40px;
-  border-radius: 8px;
-  border: none;
-  cursor: pointer;
-  background-color: #ffffff3e;
-  &::-webkit-color-swatch {
-    border-radius: 100px;
-    border: none;
   }
 `;

@@ -12,7 +12,7 @@ import { Category, Task, User } from "../types/user";
 import styled from "@emotion/styled";
 import { DESCRIPTION_MAX_LENGTH, TASK_NAME_MAX_LENGTH } from "../constants";
 import { DialogBtn } from "../styles";
-import { CategorySelect, CustomEmojiPicker } from ".";
+import { CategorySelect, ColorPicker, CustomEmojiPicker } from ".";
 
 interface EditTaskProps {
   open: boolean;
@@ -179,18 +179,17 @@ export const EditTask = ({ open, task, onClose, onSave, user }: EditTaskProps) =
         />
         {/* <br />
         <br /> */}
-        {user.settings[0].enableCategories !== undefined &&
-          user.settings[0].enableCategories && (
-            <>
-              <Typography>Category</Typography>
+        {user.settings[0].enableCategories !== undefined && user.settings[0].enableCategories && (
+          <>
+            <Typography>Category</Typography>
 
-              <CategorySelect
-                user={user}
-                selectedCategories={selectedCategories}
-                setSelectedCategories={setSelectedCategories}
-              />
+            <CategorySelect
+              user={user}
+              selectedCategories={selectedCategories}
+              setSelectedCategories={setSelectedCategories}
+            />
 
-              {/* {editedTask?.category &&
+            {/* {editedTask?.category &&
                 editedTask.category.length > 0 &&
                 !user.categories.some(
                   (category) =>
@@ -228,20 +227,21 @@ export const EditTask = ({ open, task, onClose, onSave, user }: EditTaskProps) =
                     </span>
                   </div>
                 )} */}
-            </>
-          )}
+          </>
+        )}
         <Typography>Color</Typography>
-        <ColorPicker
-          type="color"
-          name="color"
-          value={editedTask?.color || "#000000"}
-          onChange={(e) => {
-            setEditedTask((prevTask) => ({
-              ...(prevTask as Task),
-              color: e.target.value,
-            }));
-          }}
-        />
+        <div style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
+          <ColorPicker
+            width={"100%"}
+            color={editedTask?.color || "#000000"}
+            setColor={(newColor: string) => {
+              setEditedTask((prevTask) => ({
+                ...(prevTask as Task),
+                color: newColor,
+              }));
+            }}
+          />
+        </div>
       </DialogContent>
       <DialogActions>
         <DialogBtn
@@ -269,20 +269,6 @@ const StyledInput = styled(TextField)`
   margin: 14px 0;
   & .MuiInputBase-root {
     border-radius: 16px;
-  }
-`;
-
-const ColorPicker = styled.input`
-  width: 100%;
-  height: 40px;
-  border-radius: 8px;
-  border: none;
-  cursor: pointer;
-  margin: 12px 0;
-
-  &::-webkit-color-swatch {
-    border-radius: 100px;
-    border: none;
   }
 `;
 
