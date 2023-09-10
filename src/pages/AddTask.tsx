@@ -143,7 +143,12 @@ export const AddTask = ({ user, setUser }: UserProps) => {
           </>
         )}
         <Typography>Color</Typography>
-        <ColorPicker color={color} setColor={setColor} />
+        <ColorPicker
+          color={color}
+          onColorChange={(color) => {
+            setColor(color);
+          }}
+        />
 
         {/* <Typography>Color</Typography>
         <ColorPicker type="color" value={color} onChange={handleColorChange} /> */}
@@ -155,7 +160,7 @@ export const AddTask = ({ user, setUser }: UserProps) => {
             name === ""
           }
         >
-          Add Task
+          Create Task
         </AddTaskButton>
       </Container>
     </>

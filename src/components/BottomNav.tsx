@@ -113,7 +113,7 @@ const Container = styled(Box)`
 `;
 
 const StyledBottomNavigation = styled(BottomNavigation)`
-  border-radius: 30px 30px 0 0;
+  border-radius: 28px 28px 0 0;
   background: #232e58;
   margin: 0px 20px 0px -20px;
   padding: 14px 10px;

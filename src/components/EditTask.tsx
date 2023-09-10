@@ -102,7 +102,11 @@ export const EditTask = ({ open, task, onClose, onSave, user }: EditTaskProps) =
   return (
     <Dialog
       open={open}
-      onClose={onClose}
+      onClose={() => {
+        onClose();
+        setEditedTask(task);
+        setSelectedCategories(task?.category as Category[]);
+      }}
       PaperProps={{
         style: {
           borderRadius: "24px",
@@ -234,10 +238,10 @@ export const EditTask = ({ open, task, onClose, onSave, user }: EditTaskProps) =
           <ColorPicker
             width={"100%"}
             color={editedTask?.color || "#000000"}
-            setColor={(newColor: string) => {
+            onColorChange={(color) => {
               setEditedTask((prevTask) => ({
                 ...(prevTask as Task),
-                color: newColor,
+                color: color,
               }));
             }}
           />

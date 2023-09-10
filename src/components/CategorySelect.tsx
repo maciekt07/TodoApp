@@ -66,11 +66,7 @@ export const CategorySelect = ({
                       {cat.emoji &&
                         (user.emojisStyle === EmojiStyle.NATIVE ? (
                           <div>
-                            <Emoji
-                              size={20}
-                              unified={cat.emoji}
-                              emojiStyle={EmojiStyle.NATIVE}
-                            />
+                            <Emoji size={20} unified={cat.emoji} emojiStyle={EmojiStyle.NATIVE} />
                           </div>
                         ) : (
                           <Emoji size={24} unified={cat.emoji} emojiStyle={user.emojisStyle} />
@@ -110,9 +106,7 @@ export const CategorySelect = ({
         {user.categories &&
           user.categories.map((category) => (
             <CategoriesMenu key={category.id} value={category.id} clr={category.color}>
-              {category.emoji && (
-                <Emoji unified={category.emoji} emojiStyle={user.emojisStyle} />
-              )}
+              {category.emoji && <Emoji unified={category.emoji} emojiStyle={user.emojisStyle} />}
               &nbsp;
               {category.name}
             </CategoriesMenu>

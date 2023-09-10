@@ -5,90 +5,101 @@ import { Casino, Colorize, Done } from "@mui/icons-material";
 import { getFontColorFromHex } from "../utils";
 import { Grid, Tooltip } from "@mui/material";
 
-interface CustomColorPickerProps {
+interface ColorPickerProps {
   color: string;
-  setColor: (newColor: string) => void;
+  // setColor: (newColor: string) => void;
+  onColorChange: (newColor: string) => void;
   width?: CSSProperties["width"];
 }
 
 /**
  * Custom Color Picker component for selecting colors.
  */
-export const ColorPicker = ({ color, setColor, width }: CustomColorPickerProps) => {
+export const ColorPicker = ({ color, onColorChange, width }: ColorPickerProps) => {
   const [selectedColor, setSelectedColor] = useState<string>(color);
 
+  // Predefined color options
   const colors: string[] = [
     ColorPalette.purple,
-    "#ff6b6b",
-    "#ffb733",
-    "#6bff91",
-    "#33b7ff",
-    "#ff33cc",
-    "#ffd633",
-    "#c6a7ff",
-    "#ffc3a0",
     "#FF69B4",
+    "#FB34FF",
+    "#FF22B4",
+    "#c6a7ff",
+    "#7ACCFA",
+    "#4A9DFF",
+    "#5061FF",
+    "#50B5CB",
+    "#3DFF7F",
+    "#3AE836",
+    "#B7FF42",
+    "#FFEA28",
+    "#F9BE26",
+    "#FF9518",
+    "#ffc3a0",
+    "#FF5018",
+    "#FF2F2F",
   ];
 
   useEffect(() => {
-    setColor(selectedColor);
-  }, [selectedColor]);
-
-  useEffect(() => {
+    // Update the selected color when the color prop changes
     setSelectedColor(color);
   }, [color]);
 
+  // Handle selecting a random color
   const handleRandomColor = () => {
     let randomColor = Math.floor(Math.random() * 16777215).toString(16);
     randomColor = "#" + ("000000" + randomColor).slice(-6);
     setSelectedColor(randomColor);
+    onColorChange(randomColor);
   };
 
   return (
-    <>
-      <Grid container spacing={1} maxWidth={width || 400} m={1}>
-        {colors.map((color) => (
-          <Grid item key={color}>
-            <ColorElement
-              clr={color}
-              onClick={() => {
-                setSelectedColor(color);
-              }}
-            >
-              {color === selectedColor && <Done />}
+    <Grid container spacing={1} maxWidth={width || 400} m={1}>
+      {colors.map((color) => (
+        <Grid item key={color}>
+          <ColorElement
+            clr={color}
+            selected={color === selectedColor}
+            aria-label={`Select color - ${color}`}
+            onClick={() => {
+              setSelectedColor(color);
+              onColorChange(color);
+            }}
+          >
+            {color === selectedColor && <Done />}
+          </ColorElement>
+        </Grid>
+      ))}
+      <Tooltip title="Set custom color">
+        <Grid item>
+          <ColorPickerContainer>
+            <ColorElement clr={selectedColor}>
+              <StyledColorPicker
+                width={width || "52px"}
+                type="color"
+                value={selectedColor}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                  setSelectedColor(e.target.value as string);
+                  onColorChange(e.target.value as string);
+                }}
+              />
+              <ColorizeIcon clr={selectedColor} />
             </ColorElement>
-          </Grid>
-        ))}
-        <Tooltip title="Set custom color">
-          <Grid item>
-            <ColorPickerContainer>
-              <ColorElement clr={selectedColor}>
-                <StyledColorPicker
-                  width={width || "52px"}
-                  type="color"
-                  value={selectedColor}
-                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                    setSelectedColor(e.target.value as string);
-                  }}
-                />
-                <ColorizeIcon clr={selectedColor} />
-              </ColorElement>
-            </ColorPickerContainer>
-          </Grid>
-        </Tooltip>
-        <Tooltip title="Random color">
-          <Grid item>
-            <ColorElement clr="#1a81ff" onClick={handleRandomColor}>
-              <Casino />
-            </ColorElement>
-          </Grid>
-        </Tooltip>
-      </Grid>
-    </>
+          </ColorPickerContainer>
+        </Grid>
+      </Tooltip>
+      <Tooltip title="Random color">
+        <Grid item>
+          <ColorElement clr="#1a81ff" onClick={handleRandomColor}>
+            <Casino />
+          </ColorElement>
+        </Grid>
+      </Tooltip>
+    </Grid>
   );
 };
-
-const ColorElement = styled.button<{ clr: string }>`
+// Styled button for color selection
+const ColorElement = styled.button<{ clr: string; selected?: boolean }>`
   background-color: ${({ clr }) => clr};
   color: ${({ clr }) => getFontColorFromHex(clr)};
   border: none;
@@ -99,9 +110,13 @@ const ColorElement = styled.button<{ clr: string }>`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  border-radius: 18px;
+  border-radius: 18999999px;
   transition: 0.2s all;
   transform: scale(1);
+
+  &:focus-visible {
+    outline: 4px solid ${ColorPalette.purple};
+  }
   &:hover {
     transform: scale(1.05);
     box-shadow: 0 0 12px ${({ clr }) => clr};

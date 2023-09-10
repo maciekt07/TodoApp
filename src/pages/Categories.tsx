@@ -129,12 +129,18 @@ export const Categories = ({ user, setUser }: UserProps) => {
             helperText={nameError}
           />
           <Typography>Color</Typography>
-          <ColorPicker color={color} setColor={setColor} width={"350px"} />
+          <ColorPicker
+            color={color}
+            onColorChange={(color) => {
+              setColor(color);
+            }}
+            width={"350px"}
+          />
           <AddCategoryButton
             onClick={handleAddCategory}
             disabled={name.length > CATEGORY_NAME_MAX_LENGTH || name === ""}
           >
-            Add Category
+            Create Category
           </AddCategoryButton>
         </AddContainer>
       </Container>
