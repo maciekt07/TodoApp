@@ -9,6 +9,7 @@ import { Delete } from "@mui/icons-material";
 import { CATEGORY_NAME_MAX_LENGTH } from "../constants";
 import { getFontColorFromHex } from "../utils";
 import { ColorPalette, fadeIn } from "../styles";
+import toast from "react-hot-toast";
 
 export const Categories = ({ user, setUser }: UserProps) => {
   const [name, setName] = useState<string>("");
@@ -27,6 +28,8 @@ export const Categories = ({ user, setUser }: UserProps) => {
 
   const handleDelete = (categoryId: number): void => {
     if (categoryId) {
+      const categoryName =
+        user.categories.find((category) => category.id === categoryId)?.name || "";
       const updatedCategories = user.categories.filter((category) => category.id !== categoryId);
       // Remove the category from tasks that have it associated
       const updatedTasks = user.tasks.map((task) => {
@@ -42,6 +45,11 @@ export const Categories = ({ user, setUser }: UserProps) => {
         categories: updatedCategories,
         tasks: updatedTasks,
       });
+      toast.success(() => (
+        <div>
+          Deleted category - <b>{categoryName}</b>
+        </div>
+      ));
     }
   };
 
@@ -70,6 +78,11 @@ export const Categories = ({ user, setUser }: UserProps) => {
         emoji: emoji !== "" ? emoji : undefined,
         color,
       };
+      toast.success(() => (
+        <div>
+          Added category - <b>{newCategory.name}</b>
+        </div>
+      ));
       setUser({ ...user, categories: [...user.categories, newCategory] });
       setName("");
       setColor(ColorPalette.purple);

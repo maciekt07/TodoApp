@@ -15,6 +15,7 @@ import {
   DESCRIPTION_MAX_LENGTH,
   TASK_NAME_MAX_LENGTH,
 } from "../constants";
+import toast from "react-hot-toast";
 
 export const ImportExport = ({ user, setUser }: UserProps) => {
   const [selectedTasks, setSelectedTasks] = useState<number[]>([]); // Array of selected task IDs
@@ -101,9 +102,23 @@ export const ImportExport = ({ user, setUser }: UserProps) => {
 
           // Display the alert with the list of imported task names
           console.log(`Imported Tasks: ${importedTaskNames}`);
+          toast(() => (
+            <div>
+              The following tasks have been successfully imported:
+              <ul>
+                {importedTasks.map((task) => (
+                  <li key={task.id}>
+                    <Emoji unified={task.emoji || ""} size={18} emojiStyle={user.emojisStyle} />
+                    {task.name}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ));
         } catch (error) {
           console.error("Error parsing the imported file:", error);
-          alert("Error parsing the imported file");
+
+          toast.error(`Error parsing the imported file`);
         }
       };
 

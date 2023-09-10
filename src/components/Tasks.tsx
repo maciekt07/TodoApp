@@ -31,6 +31,7 @@ import {
 } from "../styles";
 
 import { TaskMenu } from ".";
+import toast from "react-hot-toast";
 
 /**
  * Component to display a list of tasks.
@@ -94,8 +95,25 @@ export const Tasks = ({ user, setUser }: UserProps): JSX.Element => {
         return task;
       });
       setUser({ ...user, tasks: updatedTasks });
+      const allTasksDone = updatedTasks.every((task) => task.done);
+
+      if (allTasksDone) {
+        toast.success(
+          () => (
+            <div>
+              <b>All tasks done</b>
+              <br />
+              <span>You've checked off all your todos. Well done!</span>
+            </div>
+          ),
+          {
+            icon: <Emoji unified="1f60e" emojiStyle={user.emojisStyle} />,
+          }
+        );
+      }
     }
   };
+
   const handlePin = () => {
     // Toggles the "pinned" property of the selected task
     if (selectedTaskId) {
@@ -123,6 +141,11 @@ export const Tasks = ({ user, setUser }: UserProps): JSX.Element => {
       const updatedTasks = user.tasks.filter((task) => task.id !== selectedTaskId);
       setUser({ ...user, tasks: updatedTasks });
       setDeleteDialogOpen(false);
+      toast.success(() => (
+        <div>
+          Deleted Task - <b>{user.tasks.find((task) => task.id === selectedTaskId)?.name}</b>
+        </div>
+      ));
     }
   };
   const cancelDeleteTask = () => {

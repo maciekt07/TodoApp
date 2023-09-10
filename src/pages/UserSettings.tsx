@@ -19,6 +19,7 @@ import { PROFILE_PICTURE_MAX_LENGTH, USER_NAME_MAX_LENGTH } from "../constants";
 import { SettingsDialog, TopBar } from "../components";
 import { ColorPalette, DialogBtn } from "../styles";
 import { defaultUser } from "../constants/defaultUser";
+import toast from "react-hot-toast";
 
 export const UserSettings = ({ user, setUser }: UserProps) => {
   const [name, setName] = useState<string>("");
@@ -34,6 +35,11 @@ export const UserSettings = ({ user, setUser }: UserProps) => {
 
   const handleSaveName = () => {
     setUser({ ...user, name: name });
+    toast.success(() => (
+      <div>
+        Changed user name to - <b>{name}</b>
+      </div>
+    ));
     setName("");
   };
 
@@ -50,6 +56,7 @@ export const UserSettings = ({ user, setUser }: UserProps) => {
   const handleLogout = () => {
     setUser(defaultUser);
     handleLogoutConfirmationClose();
+    toast.success("You have been successfully logged out");
   };
   return (
     <>
@@ -88,6 +95,7 @@ export const UserSettings = ({ user, setUser }: UserProps) => {
               src={(user.profilePicture as string) || undefined}
               onError={() => {
                 setUser({ ...user, profilePicture: null });
+
                 throw new Error("Error in profile picture URL");
               }}
               sx={{
@@ -167,6 +175,7 @@ export const UserSettings = ({ user, setUser }: UserProps) => {
           <Button
             onClick={() => {
               handleCloseImageDialog();
+              toast.success("Deleted profile image");
               setUser({ ...user, profilePicture: null });
             }}
             color="error"
@@ -190,6 +199,7 @@ export const UserSettings = ({ user, setUser }: UserProps) => {
               ) {
                 handleCloseImageDialog();
                 setUser({ ...user, profilePicture: profilePictureURL });
+                toast.success("Changed profile picture");
               }
             }}
           >

@@ -6,6 +6,7 @@ import { Emoji, EmojiStyle } from "emoji-picker-react";
 import { getFontColorFromHex } from "../utils";
 import { CSSProperties } from "react";
 import { MAX_CATEGORIES } from "../constants";
+import toast from "react-hot-toast";
 
 interface CategorySelectProps {
   user: User;
@@ -28,6 +29,9 @@ export const CategorySelect = ({
     const selectedCategoryIds = event.target.value as number[];
 
     if (selectedCategoryIds.length > MAX_CATEGORIES) {
+      toast.error(`You cannot add more than ${MAX_CATEGORIES} categories`, {
+        position: "top-center",
+      });
       return;
     }
 

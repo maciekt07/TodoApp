@@ -9,6 +9,7 @@ import { Button, Typography } from "@mui/material";
 import { DESCRIPTION_MAX_LENGTH, TASK_NAME_MAX_LENGTH } from "../constants";
 import { CategorySelect, ColorPicker, TopBar } from "../components";
 import { CustomEmojiPicker } from "../components";
+import toast from "react-hot-toast";
 
 export const AddTask = ({ user, setUser }: UserProps) => {
   const [name, setName] = useState<string>("");
@@ -76,8 +77,14 @@ export const AddTask = ({ user, setUser }: UserProps) => {
         deadline: deadline !== "" ? new Date(deadline) : undefined,
         category: selectedCategories ? selectedCategories : [],
       };
+
       setUser({ ...user, tasks: [...user.tasks, newTask] });
       n("/");
+      toast.success(() => (
+        <div>
+          Added task - <b>{newTask.name}</b>
+        </div>
+      ));
     }
   };
 

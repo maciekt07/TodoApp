@@ -18,6 +18,7 @@ import { Category, GetApp, Logout, Person, Settings } from "@mui/icons-material"
 import { useNavigate } from "react-router-dom";
 import { defaultUser } from "../constants/defaultUser";
 import { SettingsDialog } from ".";
+import toast from "react-hot-toast";
 
 export const ProfileAvatar = ({ user, setUser }: UserProps) => {
   const n = useNavigate();
@@ -45,6 +46,7 @@ export const ProfileAvatar = ({ user, setUser }: UserProps) => {
   const handleLogout = () => {
     setUser(defaultUser);
     handleLogoutConfirmationClose();
+    toast.success("You have been successfully logged out");
   };
   return (
     <Container>
@@ -60,6 +62,7 @@ export const ProfileAvatar = ({ user, setUser }: UserProps) => {
             src={(user.profilePicture as string) || undefined}
             onError={() => {
               setUser({ ...user, profilePicture: null });
+              toast.error("Error in profile picture URL");
               throw new Error("Error in profile picture URL");
             }}
             sx={{
