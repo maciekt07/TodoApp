@@ -1,25 +1,27 @@
 import { Task } from "../types/user";
+
 /**
  * Exports an array of tasks to a JSON file and initiates the download.
  * @param {Task[]} selectedTasks - The array of tasks to be exported.
  */
 export const exportTasksToJson = (selectedTasks: Task[]): void => {
-  const date = new Date();
-  const dateString = date.toLocaleDateString().replace(/\//g, "_");
-  const timeString = date
-    .toLocaleTimeString()
-    .replace(/:/g, "_")
-    .replace(/ /g, "_");
+  // Get the current date and time for the filename
+  const timestamp = new Date().toLocaleString().replace(/[/:, ]/g, "_");
+  const filename = `Tasks_${timestamp}.json`;
 
-  const dateResult = dateString + "_" + timeString;
-
+  // Create a JSON blob
   const dataStr = JSON.stringify(selectedTasks, null, 2);
-  const dataUri =
-    "data:application/json;charset=utf-8," + encodeURIComponent(dataStr);
-  const exportFileDefaultName = `exported_tasks_${dateResult}.json`;
+  const blob = new Blob([dataStr], { type: "application/json" });
 
+  // Create a URL for the blob
+  const url = window.URL.createObjectURL(blob);
+
+  // Create a link element and initiate the download
   const linkElement = document.createElement("a");
-  linkElement.setAttribute("href", dataUri);
-  linkElement.setAttribute("download", exportFileDefaultName);
+  linkElement.href = url;
+  linkElement.download = filename;
   linkElement.click();
+
+  // Clean up the URL object
+  window.URL.revokeObjectURL(url);
 };

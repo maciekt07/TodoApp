@@ -101,6 +101,7 @@ export const CustomEmojiPicker = ({ emoji, setEmoji, user, color, width }: Emoji
                 width: "96px",
                 height: "96px",
                 background: color || ColorPalette.purple,
+                transition: ".3s all",
                 cursor: "pointer",
               }}
             >

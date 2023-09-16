@@ -1,11 +1,11 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Button from "@mui/material/Button";
 import Checkbox from "@mui/material/Checkbox";
 import { TopBar } from "../components";
 import { Task, UserProps } from "../types/user";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
-import { styled } from "@mui/material/styles";
+import styled from "@emotion/styled";
 import { Emoji } from "emoji-picker-react";
 import { FileDownload, FileUpload, Info } from "@mui/icons-material";
 import { exportTasksToJson } from "../utils";
@@ -19,6 +19,7 @@ import toast from "react-hot-toast";
 
 export const ImportExport = ({ user, setUser }: UserProps) => {
   const [selectedTasks, setSelectedTasks] = useState<number[]>([]); // Array of selected task IDs
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
 
   const handleTaskClick = (taskId: number) => {
     setSelectedTasks((prevSelectedTasks) =>
@@ -31,9 +32,37 @@ export const ImportExport = ({ user, setUser }: UserProps) => {
   const handleExport = () => {
     const tasksToExport = user.tasks.filter((task: Task) => selectedTasks.includes(task.id));
     exportTasksToJson(tasksToExport);
+    toast(
+      (t) => (
+        <div>
+          Exported tasks:{" "}
+          <ul>
+            {tasksToExport.map((task) => (
+              <li key={task.id}>
+                <ListContent>
+                  <Emoji unified={task.emoji || ""} size={20} emojiStyle={user.emojisStyle} />
+                  <span>{task.name}</span>
+                </ListContent>
+              </li>
+            ))}
+          </ul>
+          <Button
+            variant="outlined"
+            sx={{ width: "100%", p: "12px 24px", borderRadius: "16px", fontSize: "16px" }}
+            onClick={() => toast.dismiss(t.id)}
+          >
+            Dimiss
+          </Button>
+        </div>
+      )
+      // { icon: <FileDownload /> }
+    );
   };
 
-  const handleExportAll = () => exportTasksToJson(user.tasks);
+  const handleExportAll = () => {
+    exportTasksToJson(user.tasks);
+    toast.success(`Exported all tasks (${user.tasks.length})`);
+  };
 
   const handleImport = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files && event.target.files[0];
@@ -45,8 +74,8 @@ export const ImportExport = ({ user, setUser }: UserProps) => {
         try {
           const importedTasks = JSON.parse(e.target?.result as string) as Task[];
 
-          if (!Array.isArray(JSON.parse(e.target?.result as string) as Task[])) {
-            alert("Imported file has an invalid structure.");
+          if (!Array.isArray(importedTasks)) {
+            toast.error("Imported file has an invalid structure.");
             return;
           }
           // Check if any imported task property exceeds the maximum length
@@ -63,7 +92,7 @@ export const ImportExport = ({ user, setUser }: UserProps) => {
 
           if (invalidTasks.length > 0) {
             const invalidTaskNames = invalidTasks.map((task) => task.name).join(", ");
-            alert(
+            toast.error(
               `Some tasks cannot be imported due to exceeding maximum character lengths: ${invalidTaskNames}`
             );
             return;
@@ -102,29 +131,47 @@ export const ImportExport = ({ user, setUser }: UserProps) => {
 
           // Display the alert with the list of imported task names
           console.log(`Imported Tasks: ${importedTaskNames}`);
-          toast(() => (
+          toast((t) => (
             <div>
-              The following tasks have been successfully imported:
+              Successfully imported tasks from <i>{file.name}</i>
               <ul>
                 {importedTasks.map((task) => (
                   <li key={task.id}>
-                    <Emoji unified={task.emoji || ""} size={18} emojiStyle={user.emojisStyle} />
-                    {task.name}
+                    <ListContent>
+                      <Emoji unified={task.emoji || ""} size={20} emojiStyle={user.emojisStyle} />
+                      <span>{task.name}</span>
+                    </ListContent>
                   </li>
                 ))}
               </ul>
+              <Button
+                variant="outlined"
+                sx={{ width: "100%", p: "12px 24px", borderRadius: "16px", fontSize: "16px" }}
+                onClick={() => toast.dismiss(t.id)}
+              >
+                Dimiss
+              </Button>
             </div>
           ));
+          if (fileInputRef.current) {
+            fileInputRef.current.value = "";
+          }
         } catch (error) {
-          console.error("Error parsing the imported file:", error);
-
-          toast.error(`Error parsing the imported file`);
+          console.error(`Error parsing the imported file ${file.name}:`, error);
+          toast.error(`Error parsing the imported file -  ${file.name}`);
         }
       };
 
       reader.readAsText(file);
     }
   };
+
+  // clear file input after logout
+  useEffect(() => {
+    if (fileInputRef.current) {
+      fileInputRef.current.value = "";
+    }
+  }, [user.createdAt]);
 
   return (
     <>
@@ -160,7 +207,8 @@ export const ImportExport = ({ user, setUser }: UserProps) => {
                 component="span"
                 sx={{ display: "flex", alignItems: "center", gap: "6px" }}
               >
-                <Emoji size={24} unified={task.emoji || ""} /> {task.name}
+                <Emoji size={24} unified={task.emoji || ""} emojiStyle={user.emojisStyle} />{" "}
+                {task.name}
               </Typography>
             </TaskContainer>
           ))
@@ -201,6 +249,7 @@ export const ImportExport = ({ user, setUser }: UserProps) => {
           accept=".json"
           id="import-file"
           type="file"
+          ref={fileInputRef}
           style={{ display: "none" }}
           onChange={handleImport}
         />
@@ -235,6 +284,13 @@ const TaskContainer = styled(Box)<{ backgroundclr: string; selected: boolean }>`
   transition: 0.3s all;
   width: 300px;
   cursor: "pointer";
+`;
+
+const ListContent = styled.div`
+  display: flex;
+  justify-content: left;
+  align-items: center;
+  gap: 6px;
 `;
 
 const Container = styled(Box)`

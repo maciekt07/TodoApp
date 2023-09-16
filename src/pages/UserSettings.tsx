@@ -247,7 +247,7 @@ const Container = styled.div`
   background: #f5f5f5;
   color: ${ColorPalette.fontDark};
   border: 4px solid ${ColorPalette.purple};
-  box-shadow: 0 0 18px 0 #b624ffbf;
+  box-shadow: 0 0 72px -1px #b624ffbf;
   display: flex;
   gap: 14px;
   flex-direction: column;

@@ -1,5 +1,5 @@
 import { useState, useEffect, ReactNode } from "react";
-import { AddTaskBtn, ProfileAvatar, Tasks } from "../components";
+import { AddTaskBtn, Tasks } from "../components";
 import {
   ColorPalette,
   GreetingHeader,
@@ -57,7 +57,7 @@ export const Home = ({ user, setUser }: UserProps) => {
 
   return (
     <>
-      <ProfileAvatar user={user} setUser={setUser} />
+      {/* <ProfileAvatar user={user} setUser={setUser} /> */}
       <GreetingHeader>
         <Emoji unified="1f44b" emojiStyle={user.emojisStyle} /> &nbsp; {displayGreeting()}
         {user.name && ", " + user.name}

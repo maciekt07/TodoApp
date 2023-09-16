@@ -38,16 +38,17 @@ function App() {
             <Toaster
               position="top-center"
               reverseOrder={false}
+              gutter={12}
               containerStyle={{
                 marginBottom: isMobile ? "78px" : "12px",
               }}
               toastOptions={{
                 position: "bottom-center",
-                duration: 3500,
+                duration: 4000,
                 style: {
                   padding: "14px 22px",
                   borderRadius: "20px",
-                  fontSize: "16px",
+                  fontSize: "17px",
                   border: `2px solid ${ColorPalette.purple}`,
                   background: "#141431e0",
                   backdropFilter: "blur(6px)",

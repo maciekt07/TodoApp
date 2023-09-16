@@ -49,7 +49,7 @@ const Btn = styled.button<{ animate: boolean; glow: boolean }>`
   background-color: ${ColorPalette.purple};
   color: white;
   right: 16vw;
-  box-shadow: ${({ glow }) => (glow ? `0px 0px 20px 0px ${ColorPalette.purple}` : "none")};
+  box-shadow: ${({ glow }) => (glow ? `0px 0px 48px -4px ${ColorPalette.purple}` : "none")};
   transition: background-color 0.3s, backdrop-filter 0.3s, box-shadow 0.3s;
 
   &:hover {

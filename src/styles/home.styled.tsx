@@ -32,7 +32,7 @@ export const TasksCountContainer = styled.div`
 
 export const TasksCount = styled.div<{ glow: boolean }>`
   border: 3px solid ${ColorPalette.purple};
-  box-shadow: ${(props) => (props.glow ? "0 0 28px -2px #b624ff9d" : "none")};
+  box-shadow: ${(props) => (props.glow ? "0 0 32px -2px #b624ff9d" : "none")};
   transition: 0.3s all;
   display: inline-flex;
   position: relative;

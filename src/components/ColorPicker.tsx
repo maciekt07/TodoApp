@@ -59,7 +59,6 @@ export const ColorPicker = ({ color, onColorChange, width }: ColorPickerProps) =
         <Grid item key={color}>
           <ColorElement
             clr={color}
-            selected={color === selectedColor}
             aria-label={`Select color - ${color}`}
             onClick={() => {
               setSelectedColor(color);
@@ -75,7 +74,6 @@ export const ColorPicker = ({ color, onColorChange, width }: ColorPickerProps) =
           <ColorPickerContainer>
             <ColorElement clr={selectedColor}>
               <StyledColorPicker
-                width={width || "52px"}
                 type="color"
                 value={selectedColor}
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
@@ -99,7 +97,7 @@ export const ColorPicker = ({ color, onColorChange, width }: ColorPickerProps) =
   );
 };
 // Styled button for color selection
-const ColorElement = styled.button<{ clr: string; selected?: boolean }>`
+const ColorElement = styled.button<{ clr: string }>`
   background-color: ${({ clr }) => clr};
   color: ${({ clr }) => getFontColorFromHex(clr)};
   border: none;
@@ -110,7 +108,7 @@ const ColorElement = styled.button<{ clr: string; selected?: boolean }>`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  border-radius: 18999999px;
+  border-radius: 999px;
   transition: 0.2s all;
   transform: scale(1);
 
@@ -129,11 +127,10 @@ const ColorPickerContainer = styled.div`
   align-items: center;
 `;
 
-const StyledColorPicker = styled.input<{ width: CSSProperties["width"] }>`
+const StyledColorPicker = styled.input`
   -webkit-appearance: none;
   -moz-appearance: none;
   appearance: none;
-  /* width: ${({ width }) => width}; */
   height: 54px;
   width: 54px;
   display: flex;
