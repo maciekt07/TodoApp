@@ -1,4 +1,4 @@
-import { ContentCopy, Delete, Done, Edit, PushPin } from "@mui/icons-material";
+import { ContentCopy, Delete, Done, Edit, Launch, PushPin } from "@mui/icons-material";
 import { User } from "../types/user";
 import { Divider, Menu, MenuItem } from "@mui/material";
 import { BottomSheet } from "react-spring-bottom-sheet";
@@ -7,6 +7,7 @@ import styled from "@emotion/styled";
 import "react-spring-bottom-sheet/dist/style.css";
 import { useResponsiveDisplay } from "../hooks/useResponsiveDisplay";
 import { ColorPalette } from "../styles";
+import { useNavigate } from "react-router-dom";
 
 //TODO: Move all functions to TasksMenu component
 
@@ -33,6 +34,7 @@ export const TaskMenu = ({
   handleDuplicateTask,
   handleCloseMoreMenu,
 }: TaskMenuProps) => {
+  const n = useNavigate();
   const menuItems: JSX.Element = (
     <div>
       <StyledMenuItem
@@ -55,7 +57,18 @@ export const TaskMenu = ({
         <PushPin /> &nbsp;{" "}
         {user.tasks.find((task) => task.id === selectedTaskId)?.pinned ? "Unpin" : "Pin"}
       </StyledMenuItem>
-
+      <StyledMenuItem
+        onClick={() => {
+          n(
+            `/task/${user.tasks
+              .find((task) => task.id === selectedTaskId)
+              ?.id.toString()
+              .replace(".", "")}`
+          );
+        }}
+      >
+        <Launch /> &nbsp; Task details
+      </StyledMenuItem>
       <Divider />
       <StyledMenuItem
         onClick={() => {

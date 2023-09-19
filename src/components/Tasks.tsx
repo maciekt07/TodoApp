@@ -43,6 +43,7 @@ export const Tasks = ({ user, setUser }: UserProps): JSX.Element => {
   const open = Boolean(anchorEl);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState<boolean>(false);
   const [editModalOpen, setEditModalOpen] = useState<boolean>(false);
+
   // Handler for clicking the more options button in a task
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>, taskId: number) => {
     setAnchorEl(event.currentTarget);
@@ -191,7 +192,7 @@ export const Tasks = ({ user, setUser }: UserProps): JSX.Element => {
         // Create a duplicated task with a new ID and current date
         const duplicatedTask: Task = {
           ...selectedTask,
-          id: new Date().getTime() + Math.random(),
+          id: new Date().getTime() + Math.floor(Math.random() * 1000),
           date: new Date(),
           lastSave: undefined,
         };
@@ -365,7 +366,7 @@ export const Tasks = ({ user, setUser }: UserProps): JSX.Element => {
                     <TaskDate>{formatDate(new Date(task.date))}</TaskDate>
                   </Tooltip>
                 </TaskHeader>
-                <TaskDescription done={task.done}>{task.description}</TaskDescription>
+                <TaskDescription done={task.done}>{task.description} </TaskDescription>
 
                 {task.deadline && (
                   <TimeLeft done={task.done} timeUp={new Date() > new Date(task.deadline)}>

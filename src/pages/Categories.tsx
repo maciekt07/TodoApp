@@ -4,7 +4,7 @@ import { Category, UserProps } from "../types/user";
 import { useNavigate } from "react-router-dom";
 import { Emoji } from "emoji-picker-react";
 import styled from "@emotion/styled";
-import { Button, IconButton, TextField, Typography } from "@mui/material";
+import { Button, IconButton, TextField, Tooltip, Typography } from "@mui/material";
 import { Delete } from "@mui/icons-material";
 import { CATEGORY_NAME_MAX_LENGTH } from "../constants";
 import { getFontColorFromHex } from "../utils";
@@ -73,7 +73,7 @@ export const Categories = ({ user, setUser }: UserProps) => {
         return;
       }
       const newCategory: Category = {
-        id: new Date().getTime() + Math.random(),
+        id: new Date().getTime() + Math.floor(Math.random() * 1000),
         name,
         emoji: emoji !== "" ? emoji : undefined,
         color,
@@ -101,6 +101,20 @@ export const Categories = ({ user, setUser }: UserProps) => {
         {user.categories.length > 0 ? (
           <CategoriesContainer>
             {user.categories.map((category) => {
+              const categoryTasks = user.tasks.filter((task) =>
+                task.category?.some((cat) => cat.id === category.id)
+              );
+
+              const completedTasksCount = categoryTasks.reduce(
+                (count, task) => (task.done ? count + 1 : count),
+                0
+              );
+              const totalTasksCount = categoryTasks.length;
+              const completionPercentage =
+                totalTasksCount > 0 ? Math.floor((completedTasksCount / totalTasksCount) * 100) : 0;
+
+              const displayPercentage = totalTasksCount > 0 ? `(${completionPercentage}%)` : "";
+
               return (
                 <CategoryDiv key={category.id} clr={category.color}>
                   <CategoryContent>
@@ -110,7 +124,10 @@ export const Categories = ({ user, setUser }: UserProps) => {
                       )}
                     </span>{" "}
                     &nbsp;
-                    {category.name}
+                    <span style={{ wordBreak: "break-all" }}>{category.name}</span>
+                    <Tooltip title="The percentage of completion of tasks assigned to this category">
+                      <span style={{ opacity: 0.8, fontStyle: "italic" }}>{displayPercentage}</span>
+                    </Tooltip>
                   </CategoryContent>
                   <DeleteButton>
                     <IconButton

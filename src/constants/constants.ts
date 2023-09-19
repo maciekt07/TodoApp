@@ -9,6 +9,11 @@ export const TASK_NAME_MAX_LENGTH: number = 30;
 export const DESCRIPTION_MAX_LENGTH: number = 200;
 
 /**
+ * Shorter length for displaying descriptions with a "Show More" button.
+ */
+// export const DESCRIPTION_SHORT_LENGTH: number = 100;
+
+/**
  * Maximum length allowed for user names.
  */
 export const USER_NAME_MAX_LENGTH: number = 14;

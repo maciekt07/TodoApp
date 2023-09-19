@@ -66,7 +66,7 @@ export const AddTask = ({ user, setUser }: UserProps) => {
       }
 
       const newTask: Task = {
-        id: new Date().getTime() + Math.random(),
+        id: new Date().getTime() + Math.floor(Math.random() * 1000),
         done: false,
         pinned: false,
         name,

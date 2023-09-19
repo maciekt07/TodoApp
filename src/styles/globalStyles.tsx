@@ -111,7 +111,7 @@ const globalStyles = css`
   }
   .MuiTooltip-tooltip {
     color: white !important;
-    background-color: #626262c5 !important;
+    background-color: #141431dd !important;
     backdrop-filter: blur(6px) !important;
     padding: 8px 16px !important;
     border-radius: 8px !important;

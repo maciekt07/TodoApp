@@ -21,24 +21,30 @@ export const BottomNav = ({ user }: BottomNavProps): JSX.Element | null => {
 
   // useEffect hook to set the active button based on the current route
   useEffect(() => {
-    switch (location.pathname) {
-      case "/categories":
-        setValue(1);
-        break;
-      case "/add":
-        setValue(2);
-        break;
-      case "/import-export":
-        setValue(3);
-        break;
-      case "/user":
-        setValue(4);
-        break;
-      case "/":
-        setValue(0);
-        break;
-      default:
-        setValue(undefined); // Fallback for the undefined route
+    const pathParts = location.pathname.split("/"); // Split the pathname by '/'
+    if (pathParts[1] === "task") {
+      setValue(0); // If the user is on a task page, set the value to 0
+    } else {
+      // Handle other routes as before
+      switch (location.pathname) {
+        case "/categories":
+          setValue(1);
+          break;
+        case "/add":
+          setValue(2);
+          break;
+        case "/import-export":
+          setValue(3);
+          break;
+        case "/user":
+          setValue(4);
+          break;
+        case "/":
+          setValue(0);
+          break;
+        default:
+          setValue(undefined); // Fallback for the undefined route
+      }
     }
   }, [location.pathname]);
 
