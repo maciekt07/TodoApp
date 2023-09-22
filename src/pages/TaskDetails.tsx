@@ -6,11 +6,12 @@ import styled from "@emotion/styled";
 import { CategoryChip, ColorPalette } from "../styles";
 import { Avatar } from "@mui/material";
 import { NotFound } from "./NotFound";
+import { Clear, Done } from "@mui/icons-material";
 
 export const TaskDetails = ({ user }: UserProps) => {
   let { id } = useParams(); // Access the ID parameter from the URL
-  id = id?.replace(".", "");
-  const task = user.tasks.find((task) => task.id.toString().replace(".", "") === id);
+  const formattedId = id?.replace(".", "");
+  const task = user.tasks.find((task) => task.id.toString().replace(".", "") === formattedId);
 
   if (!task) {
     return <NotFound />;
@@ -37,8 +38,18 @@ export const TaskDetails = ({ user }: UserProps) => {
             <b>Description:</b> {task?.description}
           </TaskDetail>
           <TaskDetail>
-            <b>Color:</b> {task?.color}
+            <b>Color:</b>{" "}
+            <div
+              style={{
+                width: "20px",
+                height: "20px",
+                background: task?.color,
+                borderRadius: "4px",
+              }}
+            ></div>{" "}
+            {task?.color}
           </TaskDetail>
+
           <TaskDetail>
             <b>Created:</b> {new Date(task?.date || "").toLocaleDateString()} {" • "}
             {new Date(task?.date || "").toLocaleTimeString()}
@@ -56,10 +67,11 @@ export const TaskDetails = ({ user }: UserProps) => {
             </TaskDetail>
           )}
           <TaskDetail>
-            <b>Done:</b> {task?.done.toString()}
+            <b>Done:</b> {task?.done ? <Done /> : <Clear />} {task?.done.toString()}
           </TaskDetail>
           <TaskDetail>
-            <b>Pinned:</b> {task?.pinned.toString()}
+            <b>Pinned:</b>
+            {task?.done ? <Done /> : <Clear />} {task?.pinned.toString()}
           </TaskDetail>
 
           <CategoryContainer>
@@ -109,7 +121,7 @@ const Container = styled.div<{ clr: string }>`
   background-color: #3a3d5a;
   padding: 16px 24px;
   border-radius: 24px;
-  border: 4px solid ${({ clr }) => clr};
+  /* border: 4px solid ${({ clr }) => clr}; */
   @media (min-width: 1024px) {
     align-items: center;
     max-width: 60%;
@@ -136,5 +148,9 @@ const TaskName = styled.h2`
 `;
 
 const TaskDetail = styled.p`
+  display: flex;
+  align-items: center;
+  gap: 4px;
   margin: 8px;
 `;
+// {{ display: "flex", justifyContent: "left", alignItems: "center", gap: "6px" }}

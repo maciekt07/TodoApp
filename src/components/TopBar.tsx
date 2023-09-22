@@ -23,18 +23,25 @@ export const TopBar = ({ title }: TopBarProps) => {
 const Container = styled.div`
   margin: 0;
   width: 100%;
+  position: sticky;
+  top: 0;
+  z-index: 99;
+  backdrop-filter: blur(8px);
+  margin-bottom: 48px;
 `;
 
 const Title = styled.h2`
   font-size: 28px;
-  margin-top: 28px;
-  margin-bottom: 64px;
+  margin: 0 auto;
   text-align: center;
+  padding: 4px 0 8px 0;
+  text-shadow: 0 0 14px #0000003c;
 `;
 const BackBtn = styled.button`
   position: absolute;
-  top: 24px;
-  left: 16px;
+
+  /* top: 24px;
+  left: 16px; */
   display: flex;
   justify-content: center;
   align-items: center;
@@ -46,6 +53,8 @@ const BackBtn = styled.button`
   border-radius: 12px;
   cursor: pointer;
   transition: 0.2s all;
+
+  text-shadow: 0 0 14px #0000003c;
   &:hover {
     opacity: 0.8;
   }

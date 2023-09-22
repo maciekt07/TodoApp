@@ -34,7 +34,7 @@ export const UserSettings = ({ user, setUser }: UserProps) => {
   }, [user.name]);
 
   const handleSaveName = () => {
-    setUser({ ...user, name: name });
+    setUser({ ...user, name });
     toast.success(() => (
       <div>
         Changed user name to - <b>{name}</b>
@@ -94,8 +94,10 @@ export const UserSettings = ({ user, setUser }: UserProps) => {
               onClick={handleOpenImageDialog}
               src={(user.profilePicture as string) || undefined}
               onError={() => {
-                setUser({ ...user, profilePicture: null });
-
+                setUser((prevUser) => ({
+                  ...prevUser,
+                  profilePicture: null,
+                }));
                 throw new Error("Error in profile picture URL");
               }}
               sx={{
@@ -198,7 +200,11 @@ export const UserSettings = ({ user, setUser }: UserProps) => {
                 profilePictureURL.startsWith("https://")
               ) {
                 handleCloseImageDialog();
-                setUser({ ...user, profilePicture: profilePictureURL });
+                setUser((prevUser) => ({
+                  ...prevUser,
+                  profilePicture: profilePictureURL,
+                }));
+
                 toast.success("Changed profile picture");
               }
             }}

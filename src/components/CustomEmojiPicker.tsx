@@ -2,7 +2,7 @@ import { useState, useEffect, Dispatch, SetStateAction, CSSProperties } from "re
 import styled from "@emotion/styled";
 import { Avatar, Badge, Tooltip } from "@mui/material";
 import { AddReaction, Edit } from "@mui/icons-material";
-import EmojiPicker, { Emoji, EmojiStyle } from "emoji-picker-react";
+import EmojiPicker, { Emoji, EmojiClickData, EmojiStyle } from "emoji-picker-react";
 import { getFontColorFromHex } from "../utils";
 import { ColorPalette } from "../styles";
 import { User } from "../types/user";
@@ -38,9 +38,10 @@ export const CustomEmojiPicker = ({ emoji, setEmoji, user, color, width }: Emoji
   };
 
   // Handler function for when an emoji is clicked in the EmojiPicker
-  const handleEmojiClick = (e: { unified: string }) => {
+  const handleEmojiClick = (e: EmojiClickData) => {
     toggleEmojiPicker();
     setCurrentEmoji(e.unified);
+    console.log(e);
   };
 
   // Function to render the content of the Avatar based on whether an emoji is selected or not

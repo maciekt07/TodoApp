@@ -83,7 +83,11 @@ export const Categories = ({ user, setUser }: UserProps) => {
           Added category - <b>{newCategory.name}</b>
         </div>
       ));
-      setUser({ ...user, categories: [...user.categories, newCategory] });
+      setUser((prevUser) => ({
+        ...prevUser,
+        categories: [...prevUser.categories, newCategory],
+      }));
+
       setName("");
       setColor(ColorPalette.purple);
       setEmoji("");

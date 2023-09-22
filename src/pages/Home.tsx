@@ -57,7 +57,6 @@ export const Home = ({ user, setUser }: UserProps) => {
 
   return (
     <>
-      {/* <ProfileAvatar user={user} setUser={setUser} /> */}
       <GreetingHeader>
         <Emoji unified="1f44b" emojiStyle={user.emojisStyle} /> &nbsp; {displayGreeting()}
         {user.name && ", " + user.name}

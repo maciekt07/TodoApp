@@ -78,7 +78,11 @@ export const AddTask = ({ user, setUser }: UserProps) => {
         category: selectedCategories ? selectedCategories : [],
       };
 
-      setUser({ ...user, tasks: [...user.tasks, newTask] });
+      setUser((prevUser) => ({
+        ...prevUser,
+        tasks: [...prevUser.tasks, newTask],
+      }));
+
       n("/");
       toast.success(() => (
         <div>

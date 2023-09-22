@@ -95,7 +95,11 @@ export const Tasks = ({ user, setUser }: UserProps): JSX.Element => {
         }
         return task;
       });
-      setUser({ ...user, tasks: updatedTasks });
+      setUser((prevUser) => ({
+        ...prevUser,
+        tasks: updatedTasks,
+      }));
+
       const allTasksDone = updatedTasks.every((task) => task.done);
 
       if (allTasksDone) {

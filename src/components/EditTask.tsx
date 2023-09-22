@@ -151,7 +151,7 @@ export const EditTask = ({ open, task, onClose, onSave, user }: EditTaskProps) =
               ? "Name is required"
               : nameError
               ? `Name should be less than or equal to ${TASK_NAME_MAX_LENGTH} characters`
-              : null
+              : undefined
           }
         />
         <StyledInput
@@ -169,8 +169,7 @@ export const EditTask = ({ open, task, onClose, onSave, user }: EditTaskProps) =
             `Description is too long (maximum ${DESCRIPTION_MAX_LENGTH} characters)`
           }
         />
-        {/* <br />
-        <br /> */}
+
         {/* FIXME: default date doesnt work (new amazing chrome update) */}
         <StyledInput
           label="Deadline date"
@@ -181,8 +180,7 @@ export const EditTask = ({ open, task, onClose, onSave, user }: EditTaskProps) =
           focused
           fullWidth
         />
-        {/* <br />
-        <br /> */}
+
         {user.settings[0].enableCategories !== undefined && user.settings[0].enableCategories && (
           <>
             <Typography>Category</Typography>

@@ -7,7 +7,6 @@ import { Grid, Tooltip } from "@mui/material";
 
 interface ColorPickerProps {
   color: string;
-  // setColor: (newColor: string) => void;
   onColorChange: (newColor: string) => void;
   width?: CSSProperties["width"];
 }
@@ -45,12 +44,16 @@ export const ColorPicker = ({ color, onColorChange, width }: ColorPickerProps) =
     setSelectedColor(color);
   }, [color]);
 
+  const handleColorChange = (color: string) => {
+    setSelectedColor(color);
+    onColorChange(color);
+  };
+
   // Handle selecting a random color
   const handleRandomColor = () => {
     let randomColor = Math.floor(Math.random() * 16777215).toString(16);
     randomColor = "#" + ("000000" + randomColor).slice(-6);
-    setSelectedColor(randomColor);
-    onColorChange(randomColor);
+    handleColorChange(randomColor);
   };
 
   return (
@@ -61,8 +64,7 @@ export const ColorPicker = ({ color, onColorChange, width }: ColorPickerProps) =
             clr={color}
             aria-label={`Select color - ${color}`}
             onClick={() => {
-              setSelectedColor(color);
-              onColorChange(color);
+              handleColorChange(color);
             }}
           >
             {color === selectedColor && <Done />}
@@ -77,8 +79,7 @@ export const ColorPicker = ({ color, onColorChange, width }: ColorPickerProps) =
                 type="color"
                 value={selectedColor}
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                  setSelectedColor(e.target.value as string);
-                  onColorChange(e.target.value as string);
+                  handleColorChange(e.target.value as string);
                 }}
               />
               <ColorizeIcon clr={selectedColor} />

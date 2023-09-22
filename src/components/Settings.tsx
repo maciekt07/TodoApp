@@ -56,7 +56,10 @@ export const SettingsDialog = ({ open, onClose, user, setUser }: SettingsProps) 
   // Handler for updating the selected emoji style
   const handleEmojiStyleChange = (event: SelectChangeEvent<EmojiStyle>) => {
     const selectedEmojiStyle = event.target.value as EmojiStyle;
-    setUser({ ...user, emojisStyle: selectedEmojiStyle });
+    setUser((prevUser) => ({
+      ...prevUser,
+      emojisStyle: selectedEmojiStyle,
+    }));
   };
 
   return (

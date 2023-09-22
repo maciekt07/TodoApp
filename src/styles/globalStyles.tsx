@@ -37,6 +37,10 @@ const globalStyles = css`
     z-index: 9999999;
   }
 
+  div[data-rsbs-backdrop="true"] {
+    z-index: 999;
+  }
+
   div[data-rsbs-header="true"] {
     z-index: 999999;
     &::before {

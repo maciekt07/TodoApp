@@ -61,7 +61,11 @@ export const ProfileAvatar = ({ user, setUser }: UserProps) => {
           <Avatar
             src={(user.profilePicture as string) || undefined}
             onError={() => {
-              setUser({ ...user, profilePicture: null });
+              setUser((prevUser) => ({
+                ...prevUser,
+                profilePicture: null,
+              }));
+
               toast.error("Error in profile picture URL");
               throw new Error("Error in profile picture URL");
             }}
@@ -170,6 +174,7 @@ const Container = styled.div`
   position: absolute;
   right: 16vw;
   top: 14px;
+  z-index: 900;
   @media (max-width: 1024px) {
     right: 16px;
   }
