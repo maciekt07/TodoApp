@@ -107,14 +107,19 @@ export const CategorySelect = ({
           Select Categories (max {MAX_CATEGORIES})
         </MenuItem>
 
-        {user.categories &&
+        {user.categories && user.categories.length > 0 ? (
           user.categories.map((category) => (
             <CategoriesMenu key={category.id} value={category.id} clr={category.color}>
               {category.emoji && <Emoji unified={category.emoji} emojiStyle={user.emojisStyle} />}
               &nbsp;
               {category.name}
             </CategoriesMenu>
-          ))}
+          ))
+        ) : (
+          <MenuItem disabled sx={{ opacity: "1 !important" }}>
+            You don't have any categories
+          </MenuItem>
+        )}
       </StyledSelect>
     </>
   );

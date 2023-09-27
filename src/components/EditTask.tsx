@@ -13,6 +13,7 @@ import styled from "@emotion/styled";
 import { DESCRIPTION_MAX_LENGTH, TASK_NAME_MAX_LENGTH } from "../constants";
 import { DialogBtn } from "../styles";
 import { CategorySelect, ColorPicker, CustomEmojiPicker } from ".";
+import toast from "react-hot-toast";
 
 interface EditTaskProps {
   open: boolean;
@@ -77,8 +78,21 @@ export const EditTask = ({ open, task, onClose, onSave, user }: EditTaskProps) =
     document.body.style.overflow = "auto";
     if (editedTask && !nameError && !descriptionError) {
       onSave(editedTask);
+      toast.success(
+        <div>
+          Task <b>{editedTask.name}</b> updated.
+        </div>
+      );
     }
   };
+
+  const handleCancel = () => {
+    onClose();
+    setEditedTask(task);
+    setSelectedCategories(task?.category as Category[]);
+    // toast("Canceled editing task.");
+  };
+
   // Event handler for category change in the Select dropdown.
   // const handleCategoryChange = (event: SelectChangeEvent<unknown>) => {
   //   const categoryId = event.target.value as number;
@@ -246,15 +260,7 @@ export const EditTask = ({ open, task, onClose, onSave, user }: EditTaskProps) =
         </div>
       </DialogContent>
       <DialogActions>
-        <DialogBtn
-          onClick={() => {
-            onClose();
-            setEditedTask(task);
-            setSelectedCategories(task?.category as Category[]);
-          }}
-        >
-          Cancel
-        </DialogBtn>
+        <DialogBtn onClick={handleCancel}>Cancel</DialogBtn>
         <DialogBtn
           onClick={handleSave}
           color="primary"

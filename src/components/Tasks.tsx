@@ -128,7 +128,10 @@ export const Tasks = ({ user, setUser }: UserProps): JSX.Element => {
         }
         return task;
       });
-      setUser({ ...user, tasks: updatedTasks });
+      setUser((prevUser) => ({
+        ...prevUser,
+        tasks: updatedTasks,
+      }));
     }
   };
 
@@ -144,7 +147,11 @@ export const Tasks = ({ user, setUser }: UserProps): JSX.Element => {
 
     if (selectedTaskId) {
       const updatedTasks = user.tasks.filter((task) => task.id !== selectedTaskId);
-      setUser({ ...user, tasks: updatedTasks });
+      setUser((prevUser) => ({
+        ...prevUser,
+        tasks: updatedTasks,
+      }));
+
       setDeleteDialogOpen(false);
       toast.success(() => (
         <div>
@@ -184,7 +191,10 @@ export const Tasks = ({ user, setUser }: UserProps): JSX.Element => {
       return task;
     });
     // Update the user object with the updated tasks
-    setUser({ ...user, tasks: updatedTasks });
+    setUser((prevUser) => ({
+      ...prevUser,
+      tasks: updatedTasks,
+    }));
   };
   const handleDuplicateTask = () => {
     if (selectedTaskId) {
@@ -203,7 +213,10 @@ export const Tasks = ({ user, setUser }: UserProps): JSX.Element => {
         // Add the duplicated task to the existing tasks
         const updatedTasks = [...user.tasks, duplicatedTask];
         // Update the user object with the updated tasks
-        setUser({ ...user, tasks: updatedTasks });
+        setUser((prevUser) => ({
+          ...prevUser,
+          tasks: updatedTasks,
+        }));
       }
     }
   };

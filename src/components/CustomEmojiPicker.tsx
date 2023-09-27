@@ -62,6 +62,7 @@ export const CustomEmojiPicker = ({ emoji, setEmoji, user, color, width }: Emoji
           sx={{
             fontSize: "52px",
             color: fontColor,
+            transition: ".3s all",
           }}
         />
       );

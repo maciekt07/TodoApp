@@ -37,7 +37,7 @@ export const UserSettings = ({ user, setUser }: UserProps) => {
     setUser({ ...user, name });
     toast.success(() => (
       <div>
-        Changed user name to - <b>{name}</b>
+        Changed user name to - <b>{name}</b>.
       </div>
     ));
     setName("");
