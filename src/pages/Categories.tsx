@@ -4,7 +4,17 @@ import { Category, UserProps } from "../types/user";
 import { useNavigate } from "react-router-dom";
 import { Emoji } from "emoji-picker-react";
 import styled from "@emotion/styled";
-import { Button, IconButton, TextField, Tooltip, Typography } from "@mui/material";
+import {
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  IconButton,
+  TextField,
+  Tooltip,
+  Typography,
+} from "@mui/material";
 import { Delete } from "@mui/icons-material";
 import { CATEGORY_NAME_MAX_LENGTH } from "../constants";
 import { getFontColorFromHex } from "../utils";
@@ -17,6 +27,9 @@ export const Categories = ({ user, setUser }: UserProps) => {
   const [emoji, setEmoji] = useState<string | undefined>();
   const [color, setColor] = useState<string>(ColorPalette.purple);
 
+  const [openDeleteDialog, setOpenDeleteDialog] = useState<boolean>(false);
+  const [selectedCategoryId, setSelectedCategoryId] = useState<number>(0);
+
   const n = useNavigate();
 
   useEffect(() => {
@@ -26,7 +39,7 @@ export const Categories = ({ user, setUser }: UserProps) => {
     }
   }, []);
 
-  const handleDelete = (categoryId: number): void => {
+  const handleDelete = (categoryId: number) => {
     if (categoryId) {
       const categoryName =
         user.categories.find((category) => category.id === categoryId)?.name || "";
@@ -47,7 +60,7 @@ export const Categories = ({ user, setUser }: UserProps) => {
       });
       toast.success(() => (
         <div>
-          Deleted category - <b>{categoryName}</b>
+          Deleted category - <b>{categoryName}.</b>
         </div>
       ));
     }
@@ -133,16 +146,35 @@ export const Categories = ({ user, setUser }: UserProps) => {
                       <span style={{ opacity: 0.8, fontStyle: "italic" }}>{displayPercentage}</span>
                     </Tooltip>
                   </CategoryContent>
-                  <DeleteButton>
-                    <IconButton
-                      color="error"
-                      onClick={() => {
-                        handleDelete(category.id);
-                      }}
-                    >
-                      <Delete />
-                    </IconButton>
-                  </DeleteButton>
+                  <div style={{ display: "flex", gap: "4px" }}>
+                    {/* <DeleteButton>
+                      <IconButton
+                        color="primary"
+                        onClick={() => {
+                          console.log(`edit: ${category.name}`);
+                        }}
+                      >
+                        <Edit />
+                      </IconButton>
+                    </DeleteButton> */}
+                    <DeleteButton>
+                      <IconButton
+                        color="error"
+                        onClick={() => {
+                          setSelectedCategoryId(category.id);
+                          if (totalTasksCount > 0) {
+                            // Open delete dialog if there are tasks associated to catagory
+                            setOpenDeleteDialog(true);
+                          } else {
+                            // If no associated tasks, directly handle deletion
+                            handleDelete(category.id);
+                          }
+                        }}
+                      >
+                        <Delete />
+                      </IconButton>
+                    </DeleteButton>
+                  </div>
                 </CategoryDiv>
               );
             })}
@@ -177,6 +209,38 @@ export const Categories = ({ user, setUser }: UserProps) => {
             Create Category
           </AddCategoryButton>
         </AddContainer>
+        <Dialog
+          open={openDeleteDialog}
+          onClose={() => setOpenDeleteDialog(false)}
+          PaperProps={{
+            style: {
+              borderRadius: "24px",
+              padding: "10px",
+            },
+          }}
+        >
+          <DialogTitle>
+            Confirm deletion of{" "}
+            <b>{user.categories.find((cat) => cat.id === selectedCategoryId)?.name}</b>
+          </DialogTitle>
+
+          <DialogContent>
+            This will remove the category from your list and associated tasks.
+          </DialogContent>
+
+          <DialogActions>
+            <DialogBtn onClick={() => setOpenDeleteDialog(false)}>Cancel</DialogBtn>
+            <DialogBtn
+              onClick={() => {
+                handleDelete(selectedCategoryId);
+                setOpenDeleteDialog(false);
+              }}
+              color="error"
+            >
+              Delete
+            </DialogBtn>
+          </DialogActions>
+        </Dialog>
       </Container>
     </>
   );
@@ -194,7 +258,7 @@ const CategoriesContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  max-height: 275px;
+  max-height: 300px;
   background: #ffffff15;
   overflow-y: auto;
   padding: 24px 18px;
@@ -233,7 +297,7 @@ const CategoryDiv = styled.div<{ clr: string }>`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  width: 300px;
+  width: 320px;
   margin: 6px 0;
   padding: 12px;
   border-radius: 18px;
@@ -251,7 +315,7 @@ const CategoryContent = styled.div`
 `;
 
 const DeleteButton = styled.div`
-  background: #ffffffbc;
+  background: #ffffffbd;
   border-radius: 100%;
   margin: 0 4px;
 `;
@@ -287,4 +351,10 @@ export const AddCategoryButton = styled(Button)`
     opacity: 0.7;
     color: white;
   }
+`;
+const DialogBtn = styled(Button)`
+  padding: 8px 12px;
+  border-radius: 12px;
+  font-size: 16px;
+  margin: 8px;
 `;

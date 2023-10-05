@@ -35,7 +35,7 @@ const Title = styled.h2`
   margin: 0 auto;
   text-align: center;
   padding: 4px 0 8px 0;
-  text-shadow: 0 0 14px #0000003c;
+  text-shadow: 0 0 24px #00000068;
 `;
 const BackBtn = styled.button`
   position: absolute;
@@ -54,7 +54,7 @@ const BackBtn = styled.button`
   cursor: pointer;
   transition: 0.2s all;
 
-  text-shadow: 0 0 14px #0000003c;
+  text-shadow: 0 0 24px #00000068;
   &:hover {
     opacity: 0.8;
   }

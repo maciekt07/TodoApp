@@ -5,6 +5,7 @@ import { Emoji } from "emoji-picker-react";
 import { Button } from "@mui/material";
 import { exportTasksToJson } from "../utils";
 import { FileDownload } from "@mui/icons-material";
+import toast from "react-hot-toast";
 
 interface ErrorBoundaryProps {
   user: User;
@@ -77,7 +78,10 @@ export class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoun
             <Button
               variant="outlined"
               sx={{ m: "14px 6px", p: "12px 20px", borderRadius: "14px" }}
-              onClick={() => exportTasksToJson(this.props.user.tasks)}
+              onClick={() => {
+                exportTasksToJson(this.props.user.tasks);
+                toast.success(`Exported all tasks (${this.props.user.tasks.length})`);
+              }}
             >
               <FileDownload /> &nbsp; Export Tasks To JSON
             </Button>

@@ -21,7 +21,7 @@ export const TaskContainer = styled.div<TaskContainerProps>`
   border-left: ${({ done }) => (done ? "6px solid #00ff0d" : "6px solid transparent")};
   box-shadow: ${(props) => (props.glow ? `0 0 128px -28px ${props.backgroundColor}` : "none")};
   padding: 16px;
-  border-radius: 20px;
+  border-radius: 24px;
   animation: ${fadeIn} 0.5s ease-in;
 `;
 

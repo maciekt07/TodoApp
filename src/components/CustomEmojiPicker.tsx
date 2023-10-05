@@ -10,6 +10,7 @@ import { User } from "../types/user";
 interface EmojiPickerProps {
   emoji?: string;
   setEmoji: Dispatch<SetStateAction<string | undefined>>;
+  // onEmojiChange: (emojiData: EmojiClickData) => void;
   user: User;
   color?: string;
   width?: CSSProperties["width"];
@@ -19,6 +20,8 @@ export const CustomEmojiPicker = ({ emoji, setEmoji, user, color, width }: Emoji
   const [showEmojiPicker, setShowEmojiPicker] = useState<boolean>(false);
 
   const [currentEmoji, setCurrentEmoji] = useState<string | undefined>(emoji || undefined);
+
+  // const [emojiData, setEmojiData] = useState<EmojiClickData>();
 
   // When the currentEmoji state changes, update the parent component's emoji state
   useEffect(() => {
@@ -41,6 +44,8 @@ export const CustomEmojiPicker = ({ emoji, setEmoji, user, color, width }: Emoji
   const handleEmojiClick = (e: EmojiClickData) => {
     toggleEmojiPicker();
     setCurrentEmoji(e.unified);
+    // setEmojiData(e);
+
     console.log(e);
   };
 
@@ -112,6 +117,7 @@ export const CustomEmojiPicker = ({ emoji, setEmoji, user, color, width }: Emoji
           </Badge>
         </Tooltip>
       </EmojiContainer>
+      {/* {emojiData && <EmojiName>{emojiData.names[0]}</EmojiName>} */}
       {showEmojiPicker && (
         <EmojiPickerContainer>
           <EmojiPicker
@@ -139,6 +145,13 @@ const EmojiContainer = styled.div`
   align-items: center;
   margin: 14px;
 `;
+
+// const EmojiName = styled.h5`
+//   text-align: center;
+//   margin: 0;
+//   opacity: 0.8;
+//   text-transform: capitalize;
+// `;
 
 const EmojiPickerContainer = styled.div`
   display: flex;
