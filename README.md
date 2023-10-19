@@ -1,6 +1,8 @@
 <!-- prettier-ignore -->
 # 📝React.js Todo App
 
+<img src="public/logo256.png" width="128px" />
+
 ## [https://react-cool-todo-app.netlify.app/](https://react-cool-todo-app.netlify.app/)
 
 ## 📷 Screenshots
