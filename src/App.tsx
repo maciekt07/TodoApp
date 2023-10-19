@@ -33,45 +33,45 @@ function App() {
     <>
       <ThemeProvider theme={MuiTheme}>
         <GlobalStyles />
+        <Toaster
+          position="top-center"
+          reverseOrder={false}
+          gutter={12}
+          containerStyle={{
+            marginBottom: isMobile ? "84px" : "12px",
+          }}
+          toastOptions={{
+            position: "bottom-center",
+            duration: 4000,
+            style: {
+              padding: "14px 22px",
+              borderRadius: "20px",
+              fontSize: "17px",
+              border: `2px solid ${ColorPalette.purple}`,
+              background: "#141431e0",
+              backdropFilter: "blur(6px)",
+              color: ColorPalette.fontLight,
+            },
+            success: {
+              iconTheme: {
+                primary: ColorPalette.purple,
+                secondary: "white",
+              },
+              style: {},
+            },
+            error: {
+              iconTheme: {
+                primary: "#ff3030",
+                secondary: "white",
+              },
+              style: {
+                borderColor: "#ff3030",
+              },
+            },
+          }}
+        />
         <ErrorBoundary user={user}>
           <MainLayout {...userProps}>
-            <Toaster
-              position="top-center"
-              reverseOrder={false}
-              gutter={12}
-              containerStyle={{
-                marginBottom: isMobile ? "78px" : "12px",
-              }}
-              toastOptions={{
-                position: "bottom-center",
-                duration: 4000,
-                style: {
-                  padding: "14px 22px",
-                  borderRadius: "20px",
-                  fontSize: "17px",
-                  border: `2px solid ${ColorPalette.purple}`,
-                  background: "#141431e0",
-                  backdropFilter: "blur(6px)",
-                  color: ColorPalette.fontLight,
-                },
-                success: {
-                  iconTheme: {
-                    primary: ColorPalette.purple,
-                    secondary: "white",
-                  },
-                  style: {},
-                },
-                error: {
-                  iconTheme: {
-                    primary: "#ff3030",
-                    secondary: "white",
-                  },
-                  style: {
-                    borderColor: "#ff3030",
-                  },
-                },
-              }}
-            />
             <AppRouter {...userProps} />
           </MainLayout>
         </ErrorBoundary>

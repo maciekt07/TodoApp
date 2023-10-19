@@ -33,7 +33,7 @@ const globalStyles = css`
     backdrop-filter: blur(2px);
   } */
   div[role="dialog"] {
-    border-radius: 32px 32px 0 0;
+    border-radius: 42px 42px 0 0;
     z-index: 9999999;
   }
 
@@ -90,6 +90,27 @@ const globalStyles = css`
     padding: 16px;
     border-radius: 16px;
     overflow-x: auto;
+    border: 2px solid #40404062;
+    ::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+
+      background-color: #232e58;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background-color: #6d2aff;
+      border-radius: 64px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background-color: #8750ff;
+    }
+
+    ::-webkit-scrollbar-track {
+      border-radius: 64px;
+      background-color: #232e58;
+    }
   }
 
   .EmojiPickerReact {

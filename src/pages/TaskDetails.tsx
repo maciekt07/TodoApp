@@ -124,7 +124,7 @@ const Container = styled.div<{ clr: string }>`
   /* border: 4px solid ${({ clr }) => clr}; */
   @media (min-width: 1024px) {
     align-items: center;
-    max-width: 60%;
+    max-width: 70%;
     margin: 0 auto;
   }
 `;

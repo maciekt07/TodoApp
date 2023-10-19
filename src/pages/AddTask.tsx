@@ -7,8 +7,8 @@ import { Edit } from "@mui/icons-material";
 import { Button, Typography } from "@mui/material";
 
 import { DESCRIPTION_MAX_LENGTH, TASK_NAME_MAX_LENGTH } from "../constants";
-import { CategorySelect, ColorPicker, TopBar } from "../components";
-import { CustomEmojiPicker } from "../components";
+import { CategorySelect, ColorPicker, TopBar, CustomEmojiPicker } from "../components";
+
 import toast from "react-hot-toast";
 
 export const AddTask = ({ user, setUser }: UserProps) => {

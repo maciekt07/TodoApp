@@ -8,7 +8,6 @@ import {
   Typography,
 } from "@mui/material";
 import { Category, Task, User } from "../types/user";
-
 import styled from "@emotion/styled";
 import { DESCRIPTION_MAX_LENGTH, TASK_NAME_MAX_LENGTH } from "../constants";
 import { DialogBtn } from "../styles";

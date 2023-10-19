@@ -16,6 +16,7 @@ interface ColorPickerProps {
  */
 export const ColorPicker = ({ color, onColorChange, width }: ColorPickerProps) => {
   const [selectedColor, setSelectedColor] = useState<string>(color);
+  const isHexColor = (value: string): boolean => /^#[0-9A-Fa-f]{6}$/.test(value);
 
   // Predefined color options
   const colors: string[] = [
@@ -49,12 +50,23 @@ export const ColorPicker = ({ color, onColorChange, width }: ColorPickerProps) =
     onColorChange(color);
   };
 
+  const handlePickerChange = (e: React.ChangeEvent<HTMLInputElement>) =>
+    handleColorChange(e.target.value as string);
+
   // Handle selecting a random color
   const handleRandomColor = () => {
     let randomColor = Math.floor(Math.random() * 16777215).toString(16);
     randomColor = "#" + ("000000" + randomColor).slice(-6);
     handleColorChange(randomColor);
   };
+
+  // Check if the current color is a valid hex color and update it if not
+  useEffect(() => {
+    if (!isHexColor(color)) {
+      console.log(`Invalid hex color: ${color}`);
+      handleColorChange(ColorPalette.purple);
+    }
+  }, [color]);
 
   return (
     <Grid container spacing={1} maxWidth={width || 400} m={1}>
@@ -75,13 +87,7 @@ export const ColorPicker = ({ color, onColorChange, width }: ColorPickerProps) =
         <Grid item>
           <ColorPickerContainer>
             <ColorElement clr={selectedColor}>
-              <StyledColorPicker
-                type="color"
-                value={selectedColor}
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                  handleColorChange(e.target.value as string);
-                }}
-              />
+              <StyledColorPicker type="color" value={selectedColor} onChange={handlePickerChange} />
               <ColorizeIcon clr={selectedColor} />
             </ColorElement>
           </ColorPickerContainer>

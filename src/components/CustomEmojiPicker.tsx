@@ -1,8 +1,8 @@
 import { useState, useEffect, Dispatch, SetStateAction, CSSProperties } from "react";
 import styled from "@emotion/styled";
-import { Avatar, Badge, Tooltip } from "@mui/material";
-import { AddReaction, Edit } from "@mui/icons-material";
-import EmojiPicker, { Emoji, EmojiClickData, EmojiStyle } from "emoji-picker-react";
+import { Avatar, Badge, Button, Tooltip } from "@mui/material";
+import { AddReaction, Edit, RemoveCircleOutline } from "@mui/icons-material";
+import EmojiPicker, { Emoji, EmojiClickData, EmojiStyle, SuggestionMode } from "emoji-picker-react";
 import { getFontColorFromHex } from "../utils";
 import { ColorPalette } from "../styles";
 import { User } from "../types/user";
@@ -45,8 +45,13 @@ export const CustomEmojiPicker = ({ emoji, setEmoji, user, color, width }: Emoji
     toggleEmojiPicker();
     setCurrentEmoji(e.unified);
     // setEmojiData(e);
-
     console.log(e);
+    // console.log(e.getImageUrl(user.emojisStyle));
+  };
+
+  const handleRemoveEmoji = () => {
+    toggleEmojiPicker();
+    setCurrentEmoji(undefined);
   };
 
   // Function to render the content of the Avatar based on whether an emoji is selected or not
@@ -119,21 +124,43 @@ export const CustomEmojiPicker = ({ emoji, setEmoji, user, color, width }: Emoji
       </EmojiContainer>
       {/* {emojiData && <EmojiName>{emojiData.names[0]}</EmojiName>} */}
       {showEmojiPicker && (
-        <EmojiPickerContainer>
-          <EmojiPicker
-            width={width || "350px"}
-            height="500px"
-            emojiStyle={user.emojisStyle}
-            autoFocusSearch={false}
-            lazyLoadEmojis
-            onEmojiClick={handleEmojiClick}
-            searchPlaceHolder="Search emoji"
-            previewConfig={{
-              defaultEmoji: "1f4dd",
-              defaultCaption: "Choose the perfect emoji for your task",
-            }}
-          />
-        </EmojiPickerContainer>
+        <>
+          <EmojiPickerContainer>
+            <EmojiPicker
+              width={width || "350px"}
+              height="500px"
+              emojiStyle={user.emojisStyle}
+              suggestedEmojisMode={SuggestionMode.RECENT}
+              autoFocusSearch={false}
+              lazyLoadEmojis
+              onEmojiClick={handleEmojiClick}
+              searchPlaceHolder="Search emoji"
+              previewConfig={{
+                defaultEmoji: "1f4dd",
+                defaultCaption: "Choose the perfect emoji for your task",
+              }}
+            />
+          </EmojiPickerContainer>
+          {currentEmoji && (
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                marginBottom: "14px",
+              }}
+            >
+              <Button
+                variant="outlined"
+                color="error"
+                onClick={handleRemoveEmoji}
+                sx={{ p: "8px 20px", borderRadius: "14px" }}
+              >
+                <RemoveCircleOutline /> &nbsp; Remove Emoji
+              </Button>
+            </div>
+          )}
+        </>
       )}
     </>
   );

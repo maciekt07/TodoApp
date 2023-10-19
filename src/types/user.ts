@@ -30,12 +30,21 @@ export interface Task {
   lastSave?: Date;
 }
 
+// export type Emoji = Omit<
+//   EmojiClickData,
+//   "activeSkinTone" | "names" | "unifiedWithoutSkinTone" | "getImageUrl"
+// > & {
+//   name: string;
+// };
+
+// export type Emoji = Pick<EmojiClickData, "unified" | "emoji" | "names">;
+
 /**
  * Represents a category in the application.
  */
 export interface Category {
-  name: string;
   id: number;
+  name: string;
   emoji?: string;
   color: string;
 }

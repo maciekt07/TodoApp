@@ -20,20 +20,20 @@ export const TaskContainer = styled.div<TaskContainerProps>`
   color: ${({ clr }) => clr};
   border-left: ${({ done }) => (done ? "6px solid #00ff0d" : "6px solid transparent")};
   box-shadow: ${(props) => (props.glow ? `0 0 128px -28px ${props.backgroundColor}` : "none")};
-  padding: 16px;
+  padding: 16px 16px 16px 16px;
   border-radius: 24px;
   animation: ${fadeIn} 0.5s ease-in;
 `;
 
 export const EmojiContainer = styled.span<{ clr: string }>`
   text-decoration: none;
-  margin-right: 12px;
+  margin-right: 14px;
   display: flex;
   align-items: center;
   justify-content: center;
   background-color: ${(props) => (props.clr === "#1A1A1A" ? "#4b4b4b6e" : "#dddddd9d")};
   font-size: 32px;
-  padding: 12px;
+  padding: 14px;
   width: 42px;
   height: 42px;
   border-radius: 18px;
@@ -52,9 +52,9 @@ export const TaskHeader = styled.div`
   align-items: center;
 
   /* @media (max-width: 600px) {
-      flex-direction: column;
-      align-items: flex-start;
-    } */
+    flex-direction: column;
+    align-items: flex-start;
+  } */
 `;
 
 export const TaskName = styled.h3<{ done: boolean }>`
@@ -147,7 +147,7 @@ export const CategoryChip = styled(Chip)<CategoryChipProps>`
   margin: 6px 0 0 0;
   padding: 8px;
   transition: 0.3s all;
-  opacity: ${({ list }) => (list ? 1 : 0.9)};
+  /* opacity: ${({ list }) => (list ? 1 : 0.9)}; */
   animation: ${fadeIn} 0.5s ease-in;
 
   &:hover,

@@ -40,9 +40,37 @@ export class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoun
     console.error("Error:", error);
     console.error("Error Info:", errorInfo);
   }
+  // formatJSON = (data: any, indent: number = 2): string => {
+  //   return JSON.stringify(data, null, indent);
+  // };
 
+  // syntaxHighlightJSON = (json: string): React.ReactNode => {
+  //   const parts = json.split(/"([^"]+)":/g);
+  //   const formattedJSON: React.ReactNode[] = [];
+
+  //   for (let i = 0; i < parts.length; i++) {
+  //     const part = parts[i];
+  //     if (i % 2 === 0) {
+  //       formattedJSON.push(
+  //         <span key={i} style={{ color: "#ff42ac" }}>
+  //           {part}
+  //         </span>
+  //       );
+  //     } else {
+  //       formattedJSON.push(
+  //         <span key={i} style={{ color: "#59f7ffe5" }}>
+  //           {`"${part}"`}
+  //         </span>
+  //       );
+  //     }
+  //   }
+
+  //   return formattedJSON;
+  // };
   render() {
     if (this.state.hasError) {
+      // const jsonString = this.formatJSON(this.props.user, 2);
+      // const formattedJSON = this.syntaxHighlightJSON(jsonString);
       return (
         <div>
           <h1
@@ -68,7 +96,14 @@ export class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoun
             <span style={{ color: "#ff3131" }}>ERROR:</span> [{this.state.error?.name}]{" "}
             {this.state.error?.message}
           </h3>
-          <details>
+          <details
+            style={{
+              border: "2px solid #ffffff2e",
+              padding: "8px",
+              borderRadius: "8px",
+              background: "#ffffff15",
+            }}
+          >
             <summary>Error stack</summary>
             <div style={{ opacity: 0.8, fontSize: "12px" }}>
               {this.state.error?.stack?.replace(this.state.error?.message, "")}
@@ -87,6 +122,16 @@ export class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoun
             </Button>
             <br />
             <code>{JSON.stringify(this.props.user, null, 4)}</code>
+            {/* <code>
+              {Object.entries(this.props.user).map(([key, value], index) => (
+                <div key={index}>
+                  <span style={{ color: "#ff42ac" }}>{key}:</span>
+                  <span style={{ color: "#59f7ffe5" }}>{JSON.stringify(value, null, 4)}</span>
+                </div>
+              ))}
+            </code> */}
+
+            {/* <code>{formattedJSON}</code> */}
           </pre>
         </div>
       );

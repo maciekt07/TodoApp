@@ -32,6 +32,7 @@ import {
 
 import { TaskMenu } from ".";
 import toast from "react-hot-toast";
+import { useResponsiveDisplay } from "../hooks/useResponsiveDisplay";
 
 /**
  * Component to display a list of tasks.
@@ -43,6 +44,8 @@ export const Tasks = ({ user, setUser }: UserProps): JSX.Element => {
   const open = Boolean(anchorEl);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState<boolean>(false);
   const [editModalOpen, setEditModalOpen] = useState<boolean>(false);
+
+  const isMobile = useResponsiveDisplay();
 
   // Handler for clicking the more options button in a task
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>, taskId: number) => {
@@ -262,6 +265,31 @@ export const Tasks = ({ user, setUser }: UserProps): JSX.Element => {
     setCategoryCounts(counts);
   }, [user.tasks]);
 
+  // const scrollContainerRef = useRef<HTMLDivElement>(null);
+  // const [isDragging, setIsDragging] = useState(false);
+  // const [startX, setStartX] = useState(0);
+  // const [scrollLeft, setScrollLeft] = useState(0);
+
+  // const handleMouseDown = (event: React.MouseEvent) => {
+  //   if (scrollContainerRef.current) {
+  //     setIsDragging(true);
+  //     setStartX(event.pageX - scrollContainerRef.current.offsetLeft);
+  //     setScrollLeft(scrollContainerRef.current.scrollLeft);
+  //   }
+  // };
+
+  // const handleMouseMove = (event: React.MouseEvent) => {
+  //   if (!isDragging || !scrollContainerRef.current) return;
+  //   event.preventDefault();
+  //   const x = event.pageX - scrollContainerRef.current.offsetLeft;
+  //   const walk = (x - startX) * 2; // Adjust the scrolling speed as needed
+  //   scrollContainerRef.current.scrollLeft = scrollLeft - walk;
+  // };
+
+  // const handleMouseUp = () => {
+  //   setIsDragging(false);
+  // };
+
   return (
     <>
       <TaskMenu
@@ -279,7 +307,12 @@ export const Tasks = ({ user, setUser }: UserProps): JSX.Element => {
         {categories !== undefined &&
           categories?.length > 1 &&
           user.settings[0].enableCategories && (
-            <CategoriesListContainer>
+            <CategoriesListContainer
+            // ref={scrollContainerRef}
+            // onMouseDown={handleMouseDown}
+            // onMouseMove={handleMouseMove}
+            // onMouseUp={handleMouseUp}
+            >
               {categories?.map((cat) => (
                 <CategoryChip
                   label={
@@ -352,6 +385,13 @@ export const Tasks = ({ user, setUser }: UserProps): JSX.Element => {
               clr={getFontColorFromHex(task.color)}
               glow={user.settings[0].enableGlow}
               done={task.done}
+              style={{
+                filter:
+                  selectedTaskId !== task.id && open && !isMobile
+                    ? "blur(2px) opacity(75%)"
+                    : "none",
+                // transform: selectedTaskId === task.id && open ? "scale(1.02)" : "none",
+              }}
             >
               {task.emoji || task.done ? (
                 <EmojiContainer clr={getFontColorFromHex(task.color)}>
@@ -362,7 +402,7 @@ export const Tasks = ({ user, setUser }: UserProps): JSX.Element => {
                       <Emoji size={36} unified={task.emoji || ""} emojiStyle={EmojiStyle.NATIVE} />
                     </div>
                   ) : (
-                    <Emoji size={46} unified={task.emoji || ""} emojiStyle={user.emojisStyle} />
+                    <Emoji size={48} unified={task.emoji || ""} emojiStyle={user.emojisStyle} />
                   )}
                 </EmojiContainer>
               ) : null}
@@ -539,7 +579,10 @@ export const Tasks = ({ user, setUser }: UserProps): JSX.Element => {
               undefined && (
               <p>
                 <b>Category:</b>{" "}
-                {user.tasks.find((task) => task.id === selectedTaskId)?.category?.[0]?.name}
+                {user.tasks
+                  .find((task) => task.id === selectedTaskId)
+                  ?.category?.map((cat) => cat.name)
+                  .join(", ")}
               </p>
             )}
         </DialogContent>

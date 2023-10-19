@@ -92,9 +92,10 @@ export const ImportExport = ({ user, setUser }: UserProps) => {
 
           if (invalidTasks.length > 0) {
             const invalidTaskNames = invalidTasks.map((task) => task.name).join(", ");
-            toast.error(
-              `Some tasks cannot be imported due to exceeding maximum character lengths: ${invalidTaskNames}`
+            console.error(
+              `These tasks cannot be imported due to exceeding maximum character lengths: ${invalidTaskNames}`
             );
+            toast.error(`Some tasks cannot be imported due to exceeding maximum character lengths`);
             return;
           }
           // Update user.categories if imported categories don't exist
@@ -118,6 +119,8 @@ export const ImportExport = ({ user, setUser }: UserProps) => {
           }));
           // Proceed with merging the imported tasks as before
           const mergedTasks = [...user.tasks, ...importedTasks];
+
+          //FIXME: modified tasks with same IDs doesn't update 🙄
 
           // Remove duplicates based on task IDs (if any)
           const uniqueTasks = Array.from(new Set(mergedTasks.map((task) => task.id)))

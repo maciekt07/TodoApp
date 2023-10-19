@@ -8,6 +8,13 @@ export const ColorPalette = {
 };
 
 export const MuiTheme = createTheme({
+  components: {
+    MuiTooltip: {
+      defaultProps: {
+        disableInteractive: true,
+      },
+    },
+  },
   typography: {
     fontFamily: '"Poppins", sans-serif',
   },

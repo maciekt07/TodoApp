@@ -77,7 +77,6 @@ export const BottomNav = ({ user }: BottomNavProps): JSX.Element | null => {
         <NavigationButton
           onClick={() => n("add")}
           showLabel={false}
-          label="Add New"
           icon={
             <AddIcon
               fontSize="large"
@@ -122,7 +121,7 @@ const StyledBottomNavigation = styled(BottomNavigation)`
   border-radius: 28px 28px 0 0;
   background: #232e58;
   margin: 0px 20px 0px -20px;
-  padding: 14px 10px;
+  padding: 16px 10px 24px 10px;
 `;
 
 const NavigationButton = styled(BottomNavigationAction)`
