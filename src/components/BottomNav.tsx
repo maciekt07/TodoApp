@@ -19,6 +19,8 @@ export const BottomNav = ({ user }: BottomNavProps): JSX.Element | null => {
   const [value, setValue] = useState<number | undefined>();
   const n = useNavigate();
 
+  const smallIconSize = "28px";
+
   // useEffect hook to set the active button based on the current route
   useEffect(() => {
     const pathParts = location.pathname.split("/"); // Split the pathname by '/'
@@ -67,11 +69,15 @@ export const BottomNav = ({ user }: BottomNavProps): JSX.Element | null => {
           event.preventDefault();
         }}
       >
-        <NavigationButton onClick={() => n("/")} label="Tasks" icon={<TaskAlt />} />
+        <NavigationButton
+          onClick={() => n("/")}
+          label="Tasks"
+          icon={<TaskAlt sx={{ fontSize: smallIconSize }} />}
+        />
         <NavigationButton
           onClick={() => n("/categories")}
           label="Categories"
-          icon={<Category />}
+          icon={<Category sx={{ fontSize: smallIconSize }} />}
           disabled={!user.settings[0].enableCategories}
         />
         <NavigationButton
@@ -87,9 +93,13 @@ export const BottomNav = ({ user }: BottomNavProps): JSX.Element | null => {
         <NavigationButton
           onClick={() => n("import-export")}
           label="Import/Export"
-          icon={<GetApp />}
+          icon={<GetApp sx={{ fontSize: smallIconSize }} />}
         />
-        <NavigationButton onClick={() => n("user")} label="Profile" icon={<Person />} />
+        <NavigationButton
+          onClick={() => n("user")}
+          label="Profile"
+          icon={<Person sx={{ fontSize: smallIconSize }} />}
+        />
       </StyledBottomNavigation>
     </Container>
   );
@@ -98,7 +108,7 @@ export const BottomNav = ({ user }: BottomNavProps): JSX.Element | null => {
 const AddIcon = styled(Add)<{ animate?: boolean }>`
   border: 2px solid ${ColorPalette.purple};
   background-color: #232e58;
-
+  font-size: 38px;
   border-radius: 100px;
   padding: 6px;
   ${({ animate }) =>
@@ -118,17 +128,26 @@ const Container = styled(Box)`
 `;
 
 const StyledBottomNavigation = styled(BottomNavigation)`
-  border-radius: 28px 28px 0 0;
-  background: #232e58;
+  border-radius: 18px 18px 0 0;
+  background: #232e58e1;
+  backdrop-filter: blur(18px);
   margin: 0px 20px 0px -20px;
-  padding: 16px 10px 24px 10px;
+  padding: 16px 10px 30px 10px;
 `;
 
 const NavigationButton = styled(BottomNavigationAction)`
   border-radius: 18px;
   margin: 4px;
   color: white;
+
   &:disabled {
     opacity: 0.6;
+  }
+  & .MuiBottomNavigationAction-label {
+    font-size: 13px;
+    text-shadow: 0 0 12px #000000ce;
+  }
+  & .Mui-selected {
+    /* text-shadow: 0 0 5px ${ColorPalette.purple}; */
   }
 `;

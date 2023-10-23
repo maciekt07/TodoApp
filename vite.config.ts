@@ -46,6 +46,56 @@ export default defineConfig({
             type: "image/png",
           },
         ],
+        shortcuts: [
+          {
+            name: "Add Task",
+            description: "Add Task",
+            url: "/add",
+            icons: [
+              {
+                src: "add.png",
+                sizes: "192x192",
+                type: "image/png",
+              },
+            ],
+          },
+          {
+            name: "Categories",
+            description: "Task Categories",
+            url: "/categories",
+            icons: [
+              {
+                src: "categories.png",
+                sizes: "192x192",
+                type: "image/png",
+              },
+            ],
+          },
+          {
+            name: "Import Export",
+            description: "Import or Export Task",
+            url: "/import-export",
+            icons: [
+              {
+                src: "import-export.png",
+                sizes: "192x192",
+                type: "image/png",
+              },
+            ],
+          },
+          {
+            name: "Profile",
+            description: "User Profile",
+            url: "/user",
+            icons: [
+              {
+                src: "profile.png",
+                sizes: "192x192",
+                type: "image/png",
+              },
+            ],
+          },
+        ],
       },
     }),
   ],
