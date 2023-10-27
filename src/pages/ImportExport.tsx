@@ -16,10 +16,13 @@ import {
   TASK_NAME_MAX_LENGTH,
 } from "../constants";
 import toast from "react-hot-toast";
+import { ColorPalette } from "../styles";
+import { useResponsiveDisplay } from "../hooks/useResponsiveDisplay";
 
 export const ImportExport = ({ user, setUser }: UserProps) => {
   const [selectedTasks, setSelectedTasks] = useState<number[]>([]); // Array of selected task IDs
   const fileInputRef = useRef<HTMLInputElement | null>(null);
+  const isMobile = useResponsiveDisplay();
 
   const handleTaskClick = (taskId: number) => {
     setSelectedTasks((prevSelectedTasks) =>
@@ -29,6 +32,17 @@ export const ImportExport = ({ user, setUser }: UserProps) => {
     );
   };
 
+  const handleDragOver = (event: React.DragEvent) => {
+    event.preventDefault();
+    event.dataTransfer.dropEffect = "copy";
+  };
+
+  const handleDrop = (event: React.DragEvent) => {
+    event.preventDefault();
+    const file = event.dataTransfer.files[0];
+    handleImport(file);
+    console.log(file);
+  };
   const handleExport = () => {
     const tasksToExport = user.tasks.filter((task: Task) => selectedTasks.includes(task.id));
     exportTasksToJson(tasksToExport);
@@ -64,8 +78,8 @@ export const ImportExport = ({ user, setUser }: UserProps) => {
     toast.success(`Exported all tasks (${user.tasks.length})`);
   };
 
-  const handleImport = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files && event.target.files[0];
+  const handleImport = (taskFile: File) => {
+    const file = taskFile;
 
     if (file) {
       const reader = new FileReader();
@@ -120,13 +134,11 @@ export const ImportExport = ({ user, setUser }: UserProps) => {
           // Proceed with merging the imported tasks as before
           const mergedTasks = [...user.tasks, ...importedTasks];
 
-          //FIXME: modified tasks with same IDs doesn't update 🙄
-
           // Remove duplicates based on task IDs (if any)
           // const uniqueTasks = Array.from(new Set(mergedTasks.map((task) => task.id)))
           //   .map((id) => mergedTasks.find((task) => task.id === id))
           //   .filter(Boolean) as Task[]; // Remove any 'undefined' values
-
+          //FIXME: modified tasks with same IDs doesn't update 🙄
           const uniqueTasks = mergedTasks.reduce((acc, task) => {
             const existingTask = acc.find((t) => t.id === task.id);
             if (existingTask) {
@@ -145,7 +157,8 @@ export const ImportExport = ({ user, setUser }: UserProps) => {
           console.log(`Imported Tasks: ${importedTaskNames}`);
           toast((t) => (
             <div>
-              Successfully imported tasks from <i>{file.name}</i>
+              Tasks Successfully Imported from <br />
+              <i style={{ wordBreak: "break-all" }}>{file.name}</i>
               <ul>
                 {importedTasks.map((task) => (
                   <li key={task.id}>
@@ -170,7 +183,12 @@ export const ImportExport = ({ user, setUser }: UserProps) => {
           }
         } catch (error) {
           console.error(`Error parsing the imported file ${file.name}:`, error);
-          toast.error(`Error parsing the imported file -  ${file.name}`);
+          // toast.error(`Error parsing the imported file -  ${file.name}`);
+          toast.error(
+            <div style={{ wordBreak: "break-all" }}>
+              Error parsing the imported file: <br /> <i>{file.name}</i>
+            </div>
+          );
         }
       };
 
@@ -257,13 +275,44 @@ export const ImportExport = ({ user, setUser }: UserProps) => {
         </StyledButton>
 
         <h2 style={{ textAlign: "center" }}>Import Tasks From JSON</h2>
+
+        {!isMobile && (
+          <div style={{ width: "300px" }}>
+            <div
+              onDragOver={handleDragOver}
+              onDrop={handleDrop}
+              style={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                flexDirection: "column",
+                gap: "6px",
+                border: `2px dashed ${ColorPalette.purple}`,
+                borderRadius: "16px",
+                padding: "32px 64px",
+                textAlign: "center",
+                marginBottom: "20px",
+                maxWidth: "300px",
+              }}
+            >
+              <FileUpload fontSize="large" color="primary" />
+              <p style={{ fontWeight: 500, fontSize: "16px", margin: 0 }}>
+                Drop JSON file here to import tasks{" "}
+              </p>
+            </div>
+          </div>
+        )}
+
         <input
           accept=".json"
           id="import-file"
           type="file"
           ref={fileInputRef}
           style={{ display: "none" }}
-          onChange={handleImport}
+          onChange={(e) => {
+            const file = e.target.files && e.target.files[0];
+            file && handleImport(file);
+          }}
         />
         <label htmlFor="import-file">
           <Button
@@ -275,7 +324,7 @@ export const ImportExport = ({ user, setUser }: UserProps) => {
               width: "300px",
             }}
           >
-            <FileUpload /> &nbsp; Import JSON
+            <FileUpload /> &nbsp; Select JSON File
           </Button>
         </label>
       </Box>
