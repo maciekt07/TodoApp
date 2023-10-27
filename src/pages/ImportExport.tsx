@@ -278,28 +278,12 @@ export const ImportExport = ({ user, setUser }: UserProps) => {
 
         {!isMobile && (
           <div style={{ width: "300px" }}>
-            <div
-              onDragOver={handleDragOver}
-              onDrop={handleDrop}
-              style={{
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-                flexDirection: "column",
-                gap: "6px",
-                border: `2px dashed ${ColorPalette.purple}`,
-                borderRadius: "16px",
-                padding: "32px 64px",
-                textAlign: "center",
-                marginBottom: "20px",
-                maxWidth: "300px",
-              }}
-            >
+            <DropZone onDragOver={handleDragOver} onDrop={handleDrop}>
               <FileUpload fontSize="large" color="primary" />
               <p style={{ fontWeight: 500, fontSize: "16px", margin: 0 }}>
                 Drop JSON file here to import tasks{" "}
               </p>
-            </div>
+            </DropZone>
           </div>
         )}
 
@@ -352,6 +336,19 @@ const ListContent = styled.div`
   justify-content: left;
   align-items: center;
   gap: 6px;
+`;
+
+const DropZone = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  gap: 6px;
+  border: 2px dashed ${ColorPalette.purple};
+  border-radius: 16px;
+  padding: 32px 64px;
+  text-align: center;
+  max-width: 300px;
 `;
 
 const Container = styled(Box)`

@@ -26,7 +26,7 @@ const Container = styled.div`
   position: sticky;
   top: 0;
   z-index: 99;
-  backdrop-filter: blur(14px);
+  backdrop-filter: blur(12px);
   margin-bottom: 48px;
 `;
 
