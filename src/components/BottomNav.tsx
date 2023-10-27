@@ -142,6 +142,9 @@ const NavigationButton = styled(BottomNavigationAction)`
 
   &:disabled {
     opacity: 0.6;
+    & .MuiBottomNavigationAction-label {
+      text-shadow: none;
+    }
   }
   & .MuiBottomNavigationAction-label {
     font-size: 13px;

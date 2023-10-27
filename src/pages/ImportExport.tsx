@@ -123,9 +123,18 @@ export const ImportExport = ({ user, setUser }: UserProps) => {
           //FIXME: modified tasks with same IDs doesn't update 🙄
 
           // Remove duplicates based on task IDs (if any)
-          const uniqueTasks = Array.from(new Set(mergedTasks.map((task) => task.id)))
-            .map((id) => mergedTasks.find((task) => task.id === id))
-            .filter(Boolean) as Task[]; // Remove any 'undefined' values
+          // const uniqueTasks = Array.from(new Set(mergedTasks.map((task) => task.id)))
+          //   .map((id) => mergedTasks.find((task) => task.id === id))
+          //   .filter(Boolean) as Task[]; // Remove any 'undefined' values
+
+          const uniqueTasks = mergedTasks.reduce((acc, task) => {
+            const existingTask = acc.find((t) => t.id === task.id);
+            if (existingTask) {
+              return acc.map((t) => (t.id === task.id ? task : t));
+            } else {
+              return [...acc, task];
+            }
+          }, [] as Task[]);
 
           setUser((prevUser) => ({ ...prevUser, tasks: uniqueTasks }));
 

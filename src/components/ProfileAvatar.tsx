@@ -74,6 +74,7 @@ export const ProfileAvatar = ({ user, setUser }: UserProps) => {
               height: "52px",
               background: "#747474",
               transition: ".2s all",
+              // WebkitTransform: "translate3d(0,0,0)",
             }}
           />
         </IconButton>

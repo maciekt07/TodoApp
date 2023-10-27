@@ -38,7 +38,7 @@ function App() {
           reverseOrder={false}
           gutter={12}
           containerStyle={{
-            marginBottom: isMobile ? "84px" : "12px",
+            marginBottom: isMobile ? "96px" : "12px",
           }}
           toastOptions={{
             position: "bottom-center",

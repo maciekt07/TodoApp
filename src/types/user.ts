@@ -10,6 +10,7 @@ export interface User {
   emojisStyle: EmojiStyle;
   tasks: Task[];
   categories: Category[];
+  // colors: string[];
   settings: AppSettings[];
 }
 
