@@ -15,11 +15,12 @@ import {
   Tooltip,
   Typography,
 } from "@mui/material";
-import { Delete } from "@mui/icons-material";
+import { Delete, Edit } from "@mui/icons-material";
 import { CATEGORY_NAME_MAX_LENGTH } from "../constants";
 import { getFontColorFromHex } from "../utils";
 import { ColorPalette, fadeIn } from "../styles";
 import toast from "react-hot-toast";
+import { NotFound } from "./NotFound";
 
 export const Categories = ({ user, setUser }: UserProps) => {
   const [name, setName] = useState<string>("");
@@ -30,6 +31,12 @@ export const Categories = ({ user, setUser }: UserProps) => {
   const [openDeleteDialog, setOpenDeleteDialog] = useState<boolean>(false);
   const [selectedCategoryId, setSelectedCategoryId] = useState<number>(0);
 
+  const [openEditDialog, setOpenEditDialog] = useState<boolean>(false);
+  const [editName, setEditName] = useState<string>("");
+  const [editNameError, setEditNameError] = useState<string>("");
+  const [editEmoji, setEditEmoji] = useState<string | undefined>();
+  const [editColor, setEditColor] = useState<string>(ColorPalette.purple);
+
   const n = useNavigate();
 
   useEffect(() => {
@@ -38,6 +45,14 @@ export const Categories = ({ user, setUser }: UserProps) => {
       n("/");
     }
   }, []);
+
+  useEffect(() => {
+    setEditColor(
+      user.categories.find((cat) => cat.id === selectedCategoryId)?.color || ColorPalette.purple
+    );
+    setEditName(user.categories.find((cat) => cat.id === selectedCategoryId)?.name || "");
+    setEditNameError("");
+  }, [selectedCategoryId]);
 
   const handleDelete = (categoryId: number) => {
     if (categoryId) {
@@ -66,10 +81,6 @@ export const Categories = ({ user, setUser }: UserProps) => {
     }
   };
 
-  // const handleColorChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-  //   setColor(event.target.value);
-  // };
-
   const handleNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const newName = event.target.value;
     setName(newName);
@@ -77,6 +88,16 @@ export const Categories = ({ user, setUser }: UserProps) => {
       setNameError(`Name is too long maximum ${CATEGORY_NAME_MAX_LENGTH} characters`);
     } else {
       setNameError("");
+    }
+  };
+
+  const handleEditNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const newName = event.target.value;
+    setEditName(newName);
+    if (newName.length > CATEGORY_NAME_MAX_LENGTH) {
+      setEditNameError(`Name is too long maximum ${CATEGORY_NAME_MAX_LENGTH} characters`);
+    } else {
+      setEditNameError("");
     }
   };
 
@@ -107,8 +128,64 @@ export const Categories = ({ user, setUser }: UserProps) => {
     }
   };
 
+  const handleEditDimiss = () => {
+    setSelectedCategoryId(0);
+    setOpenEditDialog(false);
+    setEditColor(ColorPalette.purple);
+    setEditName("");
+    setEditEmoji(undefined);
+  };
+
+  const handleEditCategory = () => {
+    if (selectedCategoryId) {
+      const updatedCategories = user.categories.map((category) => {
+        if (category.id === selectedCategoryId) {
+          return {
+            ...category,
+            name: editName,
+            emoji: editEmoji || undefined,
+            color: editColor,
+          };
+        }
+        return category;
+      });
+
+      const updatedTasks = user.tasks.map((task) => {
+        const updatedCategoryList = task.category?.map((category) => {
+          if (category.id === selectedCategoryId) {
+            return {
+              id: selectedCategoryId,
+              name: editName,
+              emoji: editEmoji || undefined,
+              color: editColor,
+            };
+          }
+          return category;
+        });
+
+        return {
+          ...task,
+          category: updatedCategoryList,
+        };
+      });
+
+      setUser({
+        ...user,
+        categories: updatedCategories,
+        tasks: updatedTasks,
+      });
+
+      toast.success(() => (
+        <div>
+          Updated category - <b>{editName}</b>
+        </div>
+      ));
+      setOpenEditDialog(false);
+    }
+  };
+
   if (!user.settings[0].enableCategories) {
-    return null;
+    return <NotFound />;
   }
 
   return (
@@ -139,25 +216,26 @@ export const Categories = ({ user, setUser }: UserProps) => {
                       {category.emoji && (
                         <Emoji unified={category.emoji} emojiStyle={user.emojisStyle} />
                       )}
-                    </span>{" "}
+                    </span>
                     &nbsp;
-                    <span style={{ wordBreak: "break-all" }}>{category.name}</span>
+                    <span style={{ wordBreak: "break-all", fontWeight: 600 }}>{category.name}</span>
                     <Tooltip title="The percentage of completion of tasks assigned to this category">
                       <span style={{ opacity: 0.8, fontStyle: "italic" }}>{displayPercentage}</span>
                     </Tooltip>
                   </CategoryContent>
                   <div style={{ display: "flex", gap: "4px" }}>
-                    {/* <DeleteButton>
+                    <ActionButton>
                       <IconButton
                         color="primary"
                         onClick={() => {
-                          console.log(`edit: ${category.name}`);
+                          setSelectedCategoryId(category.id);
+                          setOpenEditDialog(true);
                         }}
                       >
                         <Edit />
                       </IconButton>
-                    </DeleteButton> */}
-                    <DeleteButton>
+                    </ActionButton>
+                    <ActionButton>
                       <IconButton
                         color="error"
                         onClick={() => {
@@ -173,7 +251,7 @@ export const Categories = ({ user, setUser }: UserProps) => {
                       >
                         <Delete />
                       </IconButton>
-                    </DeleteButton>
+                    </ActionButton>
                   </div>
                 </CategoryDiv>
               );
@@ -215,7 +293,8 @@ export const Categories = ({ user, setUser }: UserProps) => {
           PaperProps={{
             style: {
               borderRadius: "24px",
-              padding: "10px",
+              padding: "12px",
+              maxWidth: "600px",
             },
           }}
         >
@@ -241,6 +320,75 @@ export const Categories = ({ user, setUser }: UserProps) => {
             </DialogBtn>
           </DialogActions>
         </Dialog>
+        {/* Edit Dialog */}
+        <Dialog
+          open={openEditDialog}
+          onClose={handleEditDimiss}
+          PaperProps={{
+            style: {
+              borderRadius: "24px",
+              padding: "12px",
+              maxWidth: "600px",
+            },
+          }}
+        >
+          <DialogTitle>
+            Edit Category{" "}
+            {/* <b>{user.categories.find((cat) => cat.id === selectedCategoryId)?.name}</b> */}
+          </DialogTitle>
+
+          <DialogContent
+          // sx={{
+          //   display: "flex",
+          //   justifyContent: "center",
+          //   alignItems: "center",
+          //   flexDirection: "column",
+          // }}
+          >
+            <CustomEmojiPicker
+              user={user}
+              emoji={
+                user.categories.find((cat) => cat.id === selectedCategoryId)?.emoji || undefined
+              }
+              setEmoji={setEditEmoji}
+              width={300}
+              color={editColor}
+            />
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                flexDirection: "column",
+              }}
+            >
+              <EditNameInput
+                label="Enter category name"
+                placeholder="Enter category name"
+                value={editName}
+                error={editNameError !== ""}
+                helperText={editNameError}
+                onChange={handleEditNameChange}
+              />
+
+              <div style={{ width: "300px" }}>
+                <ColorPicker
+                  color={editColor}
+                  onColorChange={(clr) => {
+                    setEditColor(clr);
+                  }}
+                />
+              </div>
+            </div>
+          </DialogContent>
+
+          <DialogActions>
+            <DialogBtn onClick={handleEditDimiss}>Cancel</DialogBtn>
+            <DialogBtn onClick={handleEditCategory} disabled={editNameError !== ""}>
+              Save
+            </DialogBtn>
+          </DialogActions>
+        </Dialog>
       </Container>
     </>
   );
@@ -258,7 +406,7 @@ const CategoriesContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  max-height: 300px;
+  max-height: 350px;
   background: #ffffff15;
   overflow-y: auto;
   padding: 24px 18px;
@@ -297,7 +445,7 @@ const CategoryDiv = styled.div<{ clr: string }>`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  width: 320px;
+  width: 350px;
   margin: 6px 0;
   padding: 12px;
   border-radius: 18px;
@@ -314,8 +462,8 @@ const CategoryContent = styled.div`
   gap: 4px;
 `;
 
-const DeleteButton = styled.div`
-  background: #ffffffbd;
+const ActionButton = styled.div`
+  background: #ffffffcd;
   border-radius: 100%;
   margin: 0 4px;
 `;
@@ -328,6 +476,16 @@ const StyledInput = styled(TextField)`
     color: white;
   }
 `;
+
+const EditNameInput = styled(TextField)`
+  margin-top: 8px;
+  .MuiOutlinedInput-root {
+    border-radius: 16px;
+    transition: 0.3s all;
+    width: 300px;
+  }
+`;
+
 export const AddCategoryButton = styled(Button)`
   border: none;
   padding: 18px 48px;
