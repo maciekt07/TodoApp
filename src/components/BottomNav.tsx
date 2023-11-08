@@ -19,7 +19,7 @@ export const BottomNav = ({ user }: BottomNavProps): JSX.Element | null => {
   const [value, setValue] = useState<number | undefined>();
   const n = useNavigate();
 
-  const smallIconSize = "28px";
+  const smallIconSize = "29px";
 
   // useEffect hook to set the active button based on the current route
   useEffect(() => {
@@ -132,7 +132,7 @@ const StyledBottomNavigation = styled(BottomNavigation)`
   background: #232e58e1;
   backdrop-filter: blur(18px);
   margin: 0px 20px 0px -20px;
-  padding: 16px 10px 30px 10px;
+  padding: 16px 10px 32px 10px;
 `;
 
 const NavigationButton = styled(BottomNavigationAction)`

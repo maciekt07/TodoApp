@@ -112,17 +112,20 @@ export const ImportExport = ({ user, setUser }: UserProps) => {
             toast.error(`Some tasks cannot be imported due to exceeding maximum character lengths`);
             return;
           }
+
           // Update user.categories if imported categories don't exist
-          const updatedCategories = [...user.categories];
+          const updatedCategories = user.categories.slice(); // Create a copy of the existing categories
+
           importedTasks.forEach((task) => {
             task.category !== undefined &&
               task.category.forEach((importedCat) => {
-                const existingCategory = updatedCategories.find(
-                  (cat) => cat.name === importedCat.name
-                );
+                const existingCategory = updatedCategories.find((cat) => cat.id === importedCat.id);
 
                 if (!existingCategory) {
                   updatedCategories.push(importedCat);
+                } else {
+                  // Replace the existing category with the imported one if the ID matches
+                  Object.assign(existingCategory, importedCat);
                 }
               });
           });
@@ -138,7 +141,7 @@ export const ImportExport = ({ user, setUser }: UserProps) => {
           // const uniqueTasks = Array.from(new Set(mergedTasks.map((task) => task.id)))
           //   .map((id) => mergedTasks.find((task) => task.id === id))
           //   .filter(Boolean) as Task[]; // Remove any 'undefined' values
-          //FIXME: modified tasks with same IDs doesn't update 🙄
+
           const uniqueTasks = mergedTasks.reduce((acc, task) => {
             const existingTask = acc.find((t) => t.id === task.id);
             if (existingTask) {

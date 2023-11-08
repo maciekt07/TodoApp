@@ -304,6 +304,39 @@ export const Tasks = ({ user, setUser }: UserProps): JSX.Element => {
         handleCloseMoreMenu={handleCloseMoreMenu}
       />
       <TasksContainer>
+        {/* TODO: add search input for tasks */}
+        {/* <TextField
+          focused
+          // label="Search for task"
+          color="primary"
+          placeholder="Search for task..."
+          InputProps={{
+            startAdornment: (
+              <InputAdornment position="start">
+                <Search sx={{ color: "white" }} />
+              </InputAdornment>
+            ),
+            endAdornment: true ? (
+              <InputAdornment position="end">
+                <IconButton sx={{ color: "white" }}>
+                  <Close />
+                </IconButton>
+              </InputAdornment>
+            ) : undefined,
+          }}
+          sx={{
+            margin: "8px 0 0 0",
+            borderRadius: "14px",
+
+            "& .MuiOutlinedInput-root": {
+              padding: "2px 16px",
+              borderRadius: "16px",
+              transition: "0.3s all",
+              background: "#090b2297",
+              color: "white",
+            },
+          }}
+        /> */}
         {categories !== undefined &&
           categories?.length > 1 &&
           user.settings[0].enableCategories && (

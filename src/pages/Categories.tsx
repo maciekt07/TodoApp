@@ -333,18 +333,11 @@ export const Categories = ({ user, setUser }: UserProps) => {
           }}
         >
           <DialogTitle>
-            Edit Category{" "}
+            Edit Category
             {/* <b>{user.categories.find((cat) => cat.id === selectedCategoryId)?.name}</b> */}
           </DialogTitle>
 
-          <DialogContent
-          // sx={{
-          //   display: "flex",
-          //   justifyContent: "center",
-          //   alignItems: "center",
-          //   flexDirection: "column",
-          // }}
-          >
+          <DialogContent>
             <CustomEmojiPicker
               user={user}
               emoji={

@@ -23,6 +23,9 @@ export const MuiTheme = createTheme({
     primary: {
       main: ColorPalette.purple,
     },
+    secondary: {
+      main: "#bababa",
+    },
     error: {
       main: ColorPalette.red,
     },

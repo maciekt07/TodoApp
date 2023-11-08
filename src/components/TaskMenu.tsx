@@ -149,7 +149,7 @@ export const TaskMenu = ({
               borderRadius: "18px",
               minWidth: "200px",
               boxShadow: "none",
-              padding: "2px 4px",
+              padding: "6px 4px",
             },
           }}
           MenuListProps={{
@@ -187,7 +187,7 @@ const SheetContent = styled.div`
   }
 `;
 const StyledMenuItem = styled(MenuItem)<{ clr?: string }>`
-  margin: 6px;
+  margin: 0 6px;
   padding: 12px;
   border-radius: 12px;
   box-shadow: none;

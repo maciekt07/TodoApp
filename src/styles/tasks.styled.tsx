@@ -150,13 +150,20 @@ export const CategoryChip = styled(Chip)<CategoryChipProps>`
   /* opacity: ${({ list }) => (list ? 1 : 0.9)}; */
   animation: ${fadeIn} 0.5s ease-in;
 
-  &:hover,
-  &:focus,
-  &:focus-visible {
+  &:hover {
     background-color: ${(props) => props.backgroundclr};
     box-shadow: ${(props) => props.list && `0 0 8px 0px ${props.backgroundclr}`};
     opacity: ${({ list }) => list && 0.8};
   }
+
+  &:focus-visible {
+    opacity: 0.8;
+    background-color: ${(props) => props.backgroundclr};
+  }
+  &:focus {
+    opacity: none;
+  }
+
   & .MuiChip-deleteIcon {
     color: ${(props) => getFontColorFromHex(props.backgroundclr)};
     transition: 0.3s all;
