@@ -89,6 +89,8 @@ export const CategorySelect = ({
             style: {
               maxHeight: 400,
               zIndex: 999999,
+              padding: "2px 6px",
+              background: "white",
             },
           },
         }}
@@ -131,9 +133,9 @@ const StyledSelect = styled(Select)<{ width?: CSSProperties["width"] }>`
   width: ${({ width }) => width || "100%"};
   color: white;
   /* border: 3px solid ${ColorPalette.purple}; */
-  & * {
+  /* & * {
     border-color: ${ColorPalette.purple};
-  }
+  } */
 `;
 const CategoriesMenu = styled(MenuItem)<{ clr?: string }>`
   padding: 12px 20px;
@@ -151,11 +153,20 @@ const CategoriesMenu = styled(MenuItem)<{ clr?: string }>`
     opacity: 0.7;
   }
 
+  &:focus {
+    opacity: none;
+  }
+  &:focus-visible {
+    border-color: ${ColorPalette.purple} !important;
+    color: ${ColorPalette.fontDark} !important;
+    transform: scale(1.05);
+  }
+
   &.Mui-selected {
     background: ${({ clr }) => clr || "#bcbcbc"};
     color: ${(props) => getFontColorFromHex(props.clr || ColorPalette.fontLight)};
     /* box-shadow: 0 0 14px 4px ${(props) => props.clr || "#bcbcbc"}; */
-    border: 4px solid ${ColorPalette.purple};
+    border: 4px solid #38b71f;
     font-weight: bold;
     &::before {
       content: "•";

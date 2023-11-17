@@ -36,4 +36,6 @@ export {
   CategoryChip,
   TimeLeft,
   TaskName,
+  HighlightedText,
+  SearchInput,
 } from "./tasks.styled";

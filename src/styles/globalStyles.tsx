@@ -142,6 +142,11 @@ const globalStyles = css`
     border-radius: 8px !important;
     font-size: 12px !important;
   }
+  .MuiBottomNavigationAction-root {
+    padding: 12px !important;
+    margin: 0 !important;
+    max-height: none;
+  }
 `;
 
 export const GlobalStyles = () => <Global styles={globalStyles} />;

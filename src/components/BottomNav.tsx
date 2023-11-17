@@ -111,6 +111,7 @@ const AddIcon = styled(Add)<{ animate?: boolean }>`
   font-size: 38px;
   border-radius: 100px;
   padding: 6px;
+  margin: 14px;
   ${({ animate }) =>
     animate &&
     css`
@@ -128,11 +129,11 @@ const Container = styled(Box)`
 `;
 
 const StyledBottomNavigation = styled(BottomNavigation)`
-  border-radius: 18px 18px 0 0;
+  border-radius: 24px 24px 0 0;
   background: #232e58e1;
   backdrop-filter: blur(18px);
   margin: 0px 20px 0px -20px;
-  padding: 16px 10px 32px 10px;
+  padding: 18px 10px 32px 10px;
 `;
 
 const NavigationButton = styled(BottomNavigationAction)`

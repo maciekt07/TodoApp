@@ -1,7 +1,7 @@
 import { Category, Task, UserProps } from "../types/user";
-import { useEffect, useState } from "react";
+import { ReactNode, useEffect, useState } from "react";
 import { calculateDateDifference, formatDate, getFontColorFromHex } from "../utils";
-import { Alarm, Done, MoreVert, PushPin } from "@mui/icons-material";
+import { Alarm, Close, Done, MoreVert, PushPin, Search } from "@mui/icons-material";
 import {
   Avatar,
   Dialog,
@@ -9,6 +9,7 @@ import {
   DialogContent,
   DialogTitle,
   IconButton,
+  InputAdornment,
   Tooltip,
 } from "@mui/material";
 import { Emoji, EmojiStyle } from "emoji-picker-react";
@@ -18,8 +19,10 @@ import {
   CategoryChip,
   DialogBtn,
   EmojiContainer,
+  HighlightedText,
   NoTasks,
   Pinned,
+  SearchInput,
   TaskContainer,
   TaskDate,
   TaskDescription,
@@ -78,6 +81,19 @@ export const Tasks = ({ user, setUser }: UserProps): JSX.Element => {
         return false;
       });
     }
+
+    // Filter tasks based on the search input
+    const searchLower = search.toLowerCase();
+    unpinnedTasks = unpinnedTasks.filter(
+      (task) =>
+        task.name.toLowerCase().includes(searchLower) ||
+        (task.description && task.description.toLowerCase().includes(searchLower))
+    );
+    pinnedTasks = pinnedTasks.filter(
+      (task) =>
+        task.name.toLowerCase().includes(searchLower) ||
+        (task.description && task.description.toLowerCase().includes(searchLower))
+    );
 
     // move done tasks to bottom
     if (user.settings[0]?.doneToBottom) {
@@ -290,6 +306,22 @@ export const Tasks = ({ user, setUser }: UserProps): JSX.Element => {
   //   setIsDragging(false);
   // };
 
+  const [search, setSearch] = useState<string>("");
+  const highlightMatchingText = (text: string, search: string): ReactNode => {
+    if (!search) {
+      return text;
+    }
+
+    const parts = text.split(new RegExp(`(${search})`, "gi"));
+    return parts.map((part, index) =>
+      part.toLowerCase() === search.toLowerCase() ? (
+        <HighlightedText key={index}>{part}</HighlightedText>
+      ) : (
+        part
+      )
+    );
+  };
+
   return (
     <>
       <TaskMenu
@@ -304,39 +336,32 @@ export const Tasks = ({ user, setUser }: UserProps): JSX.Element => {
         handleCloseMoreMenu={handleCloseMoreMenu}
       />
       <TasksContainer>
-        {/* TODO: add search input for tasks */}
-        {/* <TextField
-          focused
-          // label="Search for task"
-          color="primary"
-          placeholder="Search for task..."
-          InputProps={{
-            startAdornment: (
-              <InputAdornment position="start">
-                <Search sx={{ color: "white" }} />
-              </InputAdornment>
-            ),
-            endAdornment: true ? (
-              <InputAdornment position="end">
-                <IconButton sx={{ color: "white" }}>
-                  <Close />
-                </IconButton>
-              </InputAdornment>
-            ) : undefined,
-          }}
-          sx={{
-            margin: "8px 0 0 0",
-            borderRadius: "14px",
-
-            "& .MuiOutlinedInput-root": {
-              padding: "2px 16px",
-              borderRadius: "16px",
-              transition: "0.3s all",
-              background: "#090b2297",
-              color: "white",
-            },
-          }}
-        /> */}
+        {user.tasks.length > 0 && (
+          <SearchInput
+            focused
+            color="primary"
+            placeholder="Search for task..."
+            value={search}
+            onChange={(e) => {
+              setSearch(e.target.value);
+            }}
+            // type="search"
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">
+                  <Search sx={{ color: "white" }} />
+                </InputAdornment>
+              ),
+              endAdornment: search ? (
+                <InputAdornment position="end">
+                  <IconButton sx={{ color: "white" }} onClick={() => setSearch("")}>
+                    <Close />
+                  </IconButton>
+                </InputAdornment>
+              ) : undefined,
+            }}
+          />
+        )}
         {categories !== undefined &&
           categories?.length > 1 &&
           user.settings[0].enableCategories && (
@@ -446,7 +471,7 @@ export const Tasks = ({ user, setUser }: UserProps): JSX.Element => {
                   </Pinned>
                 )}
                 <TaskHeader>
-                  <TaskName done={task.done}> {task.name}</TaskName>
+                  <TaskName done={task.done}>{highlightMatchingText(task.name, search)}</TaskName>
 
                   <Tooltip
                     title={`Created at: ${new Date(task.date).toLocaleDateString()} • ${new Date(
@@ -456,7 +481,9 @@ export const Tasks = ({ user, setUser }: UserProps): JSX.Element => {
                     <TaskDate>{formatDate(new Date(task.date))}</TaskDate>
                   </Tooltip>
                 </TaskHeader>
-                <TaskDescription done={task.done}>{task.description} </TaskDescription>
+                <TaskDescription done={task.done}>
+                  {highlightMatchingText(task.description || "", search)}
+                </TaskDescription>
 
                 {task.deadline && (
                   <TimeLeft done={task.done} timeUp={new Date() > new Date(task.deadline)}>

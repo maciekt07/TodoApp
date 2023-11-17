@@ -1,6 +1,6 @@
 import styled from "@emotion/styled";
 import { fadeIn } from ".";
-import { Chip } from "@mui/material";
+import { Chip, TextField } from "@mui/material";
 import { getFontColorFromHex } from "../utils";
 
 interface TaskContainerProps {
@@ -215,5 +215,31 @@ export const CategoriesListContainer = styled.div`
   ::-webkit-scrollbar-track {
     border-radius: 4px;
     background-color: #ffffff15;
+  }
+`;
+
+export const HighlightedText = styled.span`
+  background-color: #6829ef;
+  color: #fff;
+  padding: 2px 0;
+  border-radius: 4px;
+  box-shadow: 0 0 2px rgba(0, 0, 0, 0.2);
+  margin: 0;
+  font-weight: bold;
+  border: 1px solid #ffffff7f;
+`;
+
+export const SearchInput = styled(TextField)`
+  margin: 8px 0 0 0;
+  border-radius: 14px;
+
+  &:focus {
+  }
+  & .MuiOutlinedInput-root {
+    padding: 2px 16px;
+    border-radius: 16px;
+    transition: 0.3s all;
+    background: #090b2258;
+    color: white;
   }
 `;

@@ -35,6 +35,11 @@ export const TaskMenu = ({
   handleCloseMoreMenu,
 }: TaskMenuProps) => {
   const n = useNavigate();
+  const redirectToTaskDetails = () => {
+    const selectedTask = user.tasks.find((task) => task.id === selectedTaskId);
+    const taskId = selectedTask?.id.toString().replace(".", "");
+    n(`/task/${taskId}`);
+  };
   const menuItems: JSX.Element = (
     <div>
       <StyledMenuItem
@@ -57,16 +62,7 @@ export const TaskMenu = ({
         <PushPin /> &nbsp;{" "}
         {user.tasks.find((task) => task.id === selectedTaskId)?.pinned ? "Unpin" : "Pin"}
       </StyledMenuItem>
-      <StyledMenuItem
-        onClick={() => {
-          n(
-            `/task/${user.tasks
-              .find((task) => task.id === selectedTaskId)
-              ?.id.toString()
-              .replace(".", "")}`
-          );
-        }}
-      >
+      <StyledMenuItem onClick={redirectToTaskDetails}>
         <Launch /> &nbsp; Task details
       </StyledMenuItem>
       <Divider />

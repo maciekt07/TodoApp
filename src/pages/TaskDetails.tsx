@@ -47,7 +47,7 @@ export const TaskDetails = ({ user }: UserProps) => {
             <TableRow>
               <TableHeader>Color:</TableHeader>
               <TableData>
-                <ColorSquare style={{ background: task?.color }} /> {task?.color}
+                <ColorSquare clr={task.color} /> {task.color.toUpperCase()}
               </TableData>
             </TableRow>
             <TableRow>
@@ -167,10 +167,11 @@ const TableData = styled.td`
   gap: 6px;
 `;
 
-const ColorSquare = styled.div`
+const ColorSquare = styled.div<{ clr: string }>`
   width: 20px;
   height: 20px;
   border-radius: 4px;
+  background-color: ${({ clr }) => clr};
 `;
 
 const CategoryContainer = styled.div`
