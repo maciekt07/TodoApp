@@ -69,38 +69,70 @@ export const ColorPicker = ({ color, onColorChange, width }: ColorPickerProps) =
   }, [color]);
 
   return (
-    <Grid container spacing={1} maxWidth={width || 400} m={1}>
-      {colors.map((color) => (
-        <Grid item key={color}>
-          <ColorElement
-            clr={color}
-            aria-label={`Select color - ${color}`}
-            onClick={() => {
-              handleColorChange(color);
-            }}
-          >
-            {color === selectedColor && <Done />}
-          </ColorElement>
+    <div>
+      <Grid
+        maxWidth={width || 400}
+        sx={{
+          marginTop: "16px",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          background: selectedColor,
+          color: getFontColorFromHex(selectedColor),
+          padding: "8px",
+          borderRadius: "100px",
+          transition: ".3s all",
+          border: "2px solid #ffffffab",
+        }}
+      >
+        {selectedColor.toUpperCase()}
+      </Grid>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          maxWidth: width || 400,
+        }}
+      >
+        <Grid container spacing={1} maxWidth={width || 400} m={1}>
+          {colors.map((color) => (
+            <Grid item key={color}>
+              <ColorElement
+                clr={color}
+                aria-label={`Select color - ${color}`}
+                onClick={() => {
+                  handleColorChange(color);
+                }}
+              >
+                {color === selectedColor && <Done />}
+              </ColorElement>
+            </Grid>
+          ))}
+          <Tooltip title="Set custom color">
+            <Grid item>
+              <ColorPickerContainer>
+                <ColorElement clr={selectedColor}>
+                  <StyledColorPicker
+                    type="color"
+                    value={selectedColor}
+                    onChange={handlePickerChange}
+                  />
+                  <ColorizeIcon clr={selectedColor} />
+                </ColorElement>
+              </ColorPickerContainer>
+            </Grid>
+          </Tooltip>
+          <Tooltip title="Random color">
+            <Grid item>
+              <ColorElement clr="#1a81ff" onClick={handleRandomColor}>
+                <Casino />
+              </ColorElement>
+            </Grid>
+          </Tooltip>
         </Grid>
-      ))}
-      <Tooltip title="Set custom color">
-        <Grid item>
-          <ColorPickerContainer>
-            <ColorElement clr={selectedColor}>
-              <StyledColorPicker type="color" value={selectedColor} onChange={handlePickerChange} />
-              <ColorizeIcon clr={selectedColor} />
-            </ColorElement>
-          </ColorPickerContainer>
-        </Grid>
-      </Tooltip>
-      <Tooltip title="Random color">
-        <Grid item>
-          <ColorElement clr="#1a81ff" onClick={handleRandomColor}>
-            <Casino />
-          </ColorElement>
-        </Grid>
-      </Tooltip>
-    </Grid>
+      </div>
+    </div>
   );
 };
 // Styled button for color selection

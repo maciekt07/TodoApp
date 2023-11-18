@@ -278,7 +278,7 @@ export const Categories = ({ user, setUser }: UserProps) => {
             onColorChange={(color) => {
               setColor(color);
             }}
-            width={"350px"}
+            width={360}
           />
           <AddCategoryButton
             onClick={handleAddCategory}
@@ -363,15 +363,13 @@ export const Categories = ({ user, setUser }: UserProps) => {
                 helperText={editNameError}
                 onChange={handleEditNameChange}
               />
-
-              <div style={{ width: "300px" }}>
-                <ColorPicker
-                  color={editColor}
-                  onColorChange={(clr) => {
-                    setEditColor(clr);
-                  }}
-                />
-              </div>
+              <ColorPicker
+                color={editColor}
+                width={300}
+                onColorChange={(clr) => {
+                  setEditColor(clr);
+                }}
+              />
             </div>
           </DialogContent>
 

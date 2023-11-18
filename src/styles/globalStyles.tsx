@@ -32,6 +32,7 @@ const globalStyles = css`
   /* div[data-rsbs-backdrop="true"] {
     backdrop-filter: blur(2px);
   } */
+
   div[role="dialog"] {
     border-radius: 42px 42px 0 0;
     z-index: 9999999;
@@ -55,7 +56,9 @@ const globalStyles = css`
   body {
     margin: 8px 16vw;
     touch-action: manipulation;
-    background: linear-gradient(180deg, #232e58 0%, #171d34 100%);
+    //FIXME:
+    /* background: linear-gradient(180deg, #232e58 0%, #171d34 100%); */
+    background: #232e58;
     background-attachment: fixed;
     background-size: cover;
     @media (max-width: 1024px) {

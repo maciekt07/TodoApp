@@ -227,11 +227,12 @@ export const HighlightedText = styled.span`
   margin: 0;
   font-weight: bold;
   border: 1px solid #ffffff7f;
+  transition: 0.3s all;
 `;
 
 export const SearchInput = styled(TextField)`
   margin: 8px 0 0 0;
-  border-radius: 14px;
+  border-radius: 16px;
 
   &:focus {
   }

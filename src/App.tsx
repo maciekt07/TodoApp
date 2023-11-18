@@ -49,6 +49,7 @@ function App() {
               fontSize: "17px",
               border: `2px solid ${ColorPalette.purple}`,
               background: "#141431e0",
+              WebkitBackdropFilter: "blur(6px)",
               backdropFilter: "blur(6px)",
               color: ColorPalette.fontLight,
             },

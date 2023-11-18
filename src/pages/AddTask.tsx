@@ -146,7 +146,6 @@ export const AddTask = ({ user, setUser }: UserProps) => {
                   padding: "12px 24px",
                   borderRadius: "12px",
                 }}
-                // onClick={() => n("/categories")}
               >
                 <Edit /> &nbsp; Modify Categories
               </Button>

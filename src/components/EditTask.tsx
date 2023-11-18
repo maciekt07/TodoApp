@@ -196,8 +196,7 @@ export const EditTask = ({ open, task, onClose, onSave, user }: EditTaskProps) =
 
         {user.settings[0].enableCategories !== undefined && user.settings[0].enableCategories && (
           <>
-            <Typography>Category</Typography>
-
+            <Label>Category</Label>
             <CategorySelect
               user={user}
               selectedCategories={selectedCategories}
@@ -244,7 +243,7 @@ export const EditTask = ({ open, task, onClose, onSave, user }: EditTaskProps) =
                 )} */}
           </>
         )}
-        <Typography>Color</Typography>
+        <Label>Color</Label>
         <div style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
           <ColorPicker
             width={"100%"}
@@ -277,6 +276,12 @@ const StyledInput = styled(TextField)`
   & .MuiInputBase-root {
     border-radius: 16px;
   }
+`;
+
+const Label = styled(Typography)`
+  margin-left: 8px;
+  font-weight: 500;
+  font-size: 16px;
 `;
 
 // const StyledSelect = styled(Select)`
