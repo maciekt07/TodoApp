@@ -12,7 +12,6 @@ export {
 export {
   GreetingHeader,
   GreetingText,
-  DeleteDoneBtn,
   TasksCount,
   TaskCompletionText,
   TaskCountHeader,

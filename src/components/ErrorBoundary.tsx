@@ -4,7 +4,7 @@ import { StyledLink } from "../styles";
 import { Emoji } from "emoji-picker-react";
 import { Button } from "@mui/material";
 import { exportTasksToJson } from "../utils";
-import { FileDownload } from "@mui/icons-material";
+import { Delete, FileDownload } from "@mui/icons-material";
 import toast from "react-hot-toast";
 
 interface ErrorBoundaryProps {
@@ -67,6 +67,7 @@ export class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoun
 
   //   return formattedJSON;
   // };
+
   render() {
     if (this.state.hasError) {
       // const jsonString = this.formatJSON(this.props.user, 2);
@@ -92,6 +93,23 @@ export class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoun
             </StyledLink>
             .
           </h2>
+          <div
+            style={{
+              margin: "16px 0",
+            }}
+          >
+            <Button
+              size="large"
+              variant="outlined"
+              sx={{ p: "12px 20px", borderRadius: "14px" }}
+              onClick={() => {
+                localStorage.clear();
+                location.reload();
+              }}
+            >
+              <Delete /> &nbsp; Auto Clear
+            </Button>
+          </div>
           <h3>
             <span style={{ color: "#ff3131" }}>ERROR:</span> [{this.state.error?.name}]{" "}
             {this.state.error?.message}

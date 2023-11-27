@@ -62,6 +62,11 @@ export const Home = ({ user, setUser }: UserProps) => {
         {user.name && ", " + user.name}
       </GreetingHeader>
       <GreetingText key={greetingKey}>{randomGreeting}</GreetingText>
+      {!isOnline && (
+        <Offline>
+          <WifiOff /> You're offline but you can use the app!
+        </Offline>
+      )}
       {user.tasks.length > 0 && (
         <TasksCountContainer>
           <TasksCount glow={user.settings[0].enableGlow}>
@@ -75,6 +80,8 @@ export const Home = ({ user, setUser }: UserProps) => {
                   filter: user.settings[0].enableGlow
                     ? `drop-shadow(0 0 6px ${ColorPalette.purple})`
                     : "none",
+                  zIndex: 1,
+                  margin: "1px",
                 }}
               />
 
@@ -83,7 +90,7 @@ export const Home = ({ user, setUser }: UserProps) => {
                   variant="caption"
                   component="div"
                   color="white"
-                  sx={{ fontSize: "16px" }}
+                  sx={{ fontSize: "16px", fontWeight: 500 }}
                 >{`${Math.round(completedTaskPercentage)}%`}</Typography>
               </ProgressPercentageContainer>
             </Box>
@@ -101,11 +108,6 @@ export const Home = ({ user, setUser }: UserProps) => {
             </TaskCountTextContainer>
           </TasksCount>
         </TasksCountContainer>
-      )}
-      {!isOnline && (
-        <Offline>
-          <WifiOff /> You're offline but you can use the app!
-        </Offline>
       )}
       <Tasks user={user} setUser={setUser} />
 

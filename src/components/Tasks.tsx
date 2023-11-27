@@ -17,6 +17,7 @@ import { EditTask } from ".";
 import {
   CategoriesListContainer,
   CategoryChip,
+  ColorPalette,
   DialogBtn,
   EmojiContainer,
   HighlightedText,
@@ -345,6 +346,7 @@ export const Tasks = ({ user, setUser }: UserProps): JSX.Element => {
             onChange={(e) => {
               setSearch(e.target.value);
             }}
+            // error={reorderTasks(user.tasks).length === 0 && user.tasks.length > 0}
             // type="search"
             InputProps={{
               startAdornment: (
@@ -354,7 +356,16 @@ export const Tasks = ({ user, setUser }: UserProps): JSX.Element => {
               ),
               endAdornment: search ? (
                 <InputAdornment position="end">
-                  <IconButton sx={{ color: "white" }} onClick={() => setSearch("")}>
+                  <IconButton
+                    sx={{
+                      transition: ".3s all",
+                      color:
+                        reorderTasks(user.tasks).length === 0 && user.tasks.length > 0
+                          ? ColorPalette.red
+                          : "white",
+                    }}
+                    onClick={() => setSearch("")}
+                  >
                     <Close />
                   </IconButton>
                 </InputAdornment>
@@ -486,8 +497,21 @@ export const Tasks = ({ user, setUser }: UserProps): JSX.Element => {
                 </TaskDescription>
 
                 {task.deadline && (
-                  <TimeLeft done={task.done} timeUp={new Date() > new Date(task.deadline)}>
-                    <Alarm fontSize="small" /> &nbsp;
+                  <TimeLeft done={task.done}>
+                    <Alarm
+                      fontSize="small"
+                      sx={{
+                        color:
+                          new Date() > new Date(task.deadline) && !task.done
+                            ? ColorPalette.red
+                            : getFontColorFromHex(task.color),
+                        filter:
+                          new Date() > new Date(task.deadline) && !task.done
+                            ? `drop-shadow(0 0 6px ${ColorPalette.red})`
+                            : "none",
+                      }}
+                    />{" "}
+                    &nbsp;
                     {new Date(task.deadline).toLocaleDateString()} {" • "}
                     {new Date(task.deadline).toLocaleTimeString()}
                     {!task.done && (
@@ -498,6 +522,7 @@ export const Tasks = ({ user, setUser }: UserProps): JSX.Element => {
                     )}
                   </TimeLeft>
                 )}
+
                 <div
                   style={{
                     display: "flex",
@@ -574,6 +599,20 @@ export const Tasks = ({ user, setUser }: UserProps): JSX.Element => {
             <br />
             Click on the <b>+</b> button to add one
           </NoTasks>
+        )}
+        {search && reorderTasks(user.tasks).length === 0 && user.tasks.length > 0 && (
+          <div
+            style={{
+              textAlign: "center",
+              fontSize: "18px",
+              opacity: 0.9,
+              marginTop: "18px",
+            }}
+          >
+            <b>No tasks found</b>
+            <br />
+            Try searching with different keywords.
+          </div>
         )}
 
         <EditTask

@@ -109,7 +109,7 @@ export const TasksContainer = styled.main`
   gap: 6px;
 `;
 
-export const TimeLeft = styled.span<{ timeUp: boolean; done: boolean }>`
+export const TimeLeft = styled.span<{ timeUp?: boolean; done: boolean }>`
   color: ${(props) => props.timeUp && !props.done && "#ff2a23d5"};
   text-shadow: ${(props) => (props.timeUp && !props.done ? "0 0 8px #ff2a23d5" : "none")};
   text-decoration: ${(props) => (props.done ? "line-through" : "none")};
@@ -233,6 +233,7 @@ export const HighlightedText = styled.span`
 export const SearchInput = styled(TextField)`
   margin: 8px 0 0 0;
   border-radius: 16px;
+  transition: 0.3s all;
 
   &:focus {
   }

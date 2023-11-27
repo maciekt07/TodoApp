@@ -133,30 +133,55 @@ export const TaskDetails = ({ user }: UserProps) => {
 const Container = styled.div`
   display: flex;
   flex-direction: column;
-  background-color: #3a3d5a;
-  padding: 16px 24px;
-  border-radius: 24px;
+  background-color: ${(props) => props.color};
+  padding: 16px;
+  border-radius: 32px;
   margin: 0 auto;
   margin-top: 100px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+
+  @media (min-width: 768px) {
+    padding: 24px;
+    width: 70%;
+  }
+
+  @media (min-width: 1200px) {
+    width: 50%;
+  }
 `;
 
 const TaskName = styled.h2`
   margin: 8px;
   text-align: center;
+  font-size: 1.5em;
+
+  @media (min-width: 768px) {
+    font-size: 1.8em;
+  }
 `;
 
 const TaskTable = styled.table`
   width: 100%;
   border-collapse: collapse;
+  margin-top: 16px;
 `;
 
 const TableRow = styled.tr`
   border-bottom: 2px solid #d9d9d9bc;
+
+  &:last-child {
+    border-bottom: none;
+  }
 `;
 
 const TableHeader = styled.th`
   text-align: left;
   padding: 8px;
+  font-size: 1em;
+
+  @media (min-width: 768px) {
+    font-size: 1.2em;
+  }
 `;
 
 const TableData = styled.td`
@@ -165,6 +190,11 @@ const TableData = styled.td`
   display: flex;
   align-items: center;
   gap: 6px;
+  font-size: 1em;
+
+  @media (min-width: 768px) {
+    font-size: 1.1em;
+  }
 `;
 
 const ColorSquare = styled.div<{ clr: string }>`

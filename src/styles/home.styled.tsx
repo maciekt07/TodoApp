@@ -31,48 +31,57 @@ export const TasksCountContainer = styled.div`
 `;
 
 export const TasksCount = styled.div<{ glow: boolean }>`
-  border: 3px solid ${ColorPalette.purple};
-  box-shadow: ${(props) => (props.glow ? "0 0 48px -8px #b624ff9d" : "none")};
-  /* background: #090b2297; */
+  /* border: 3px solid ${ColorPalette.purple}; */
+  /* box-shadow: ${(props) => (props.glow ? "0 0 48px -8px #b624ff9d" : "none")}; */
+  background: #090b2258;
   transition: 0.3s all;
-  display: inline-flex;
-  position: relative;
+  display: flex;
   align-items: center;
   justify-content: left;
   gap: 8px 16px;
-  padding: 16px 24px;
+  padding: 20px 24px;
   margin: 24px 0 12px 0;
   border-radius: 24px;
+  width: 650px;
+  @media (min-width: 1024px) {
+    padding: 24px;
+  }
 `;
 
 export const TaskCountTextContainer = styled.div`
-  line-height: 1.75em;
+  line-height: 1.75;
+  margin-left: 6px;
 `;
 
 export const TaskCountHeader = styled.h4`
   margin: 0;
+  font-size: 16px;
+  @media (min-width: 1024px) {
+    font-size: 17px;
+  }
 `;
 
 export const TaskCompletionText = styled.p`
   margin: 0;
+  font-size: 16px;
 `;
 
-export const DeleteDoneBtn = styled.button`
-  position: fixed;
-  display: flex;
-  cursor: pointer;
-  border: none;
-  font-weight: bold;
-  bottom: 24px;
-  width: auto;
+// export const DeleteDoneBtn = styled.button`
+//   position: fixed;
+//   display: flex;
+//   cursor: pointer;
+//   border: none;
+//   font-weight: bold;
+//   bottom: 24px;
+//   width: auto;
 
-  font-size: 17px;
-  padding: 18px;
-  background-color: #ff453f;
-  color: white;
-  border-radius: 18px;
-  box-shadow: 0 0 6px 0 #ff453fd6;
-`;
+//   font-size: 17px;
+//   padding: 18px;
+//   background-color: #ff453f;
+//   color: white;
+//   border-radius: 18px;
+//   box-shadow: 0 0 6px 0 #ff453fd6;
+// `;
 
 export const ProgressPercentageContainer = styled(Box)`
   top: 0;
@@ -83,6 +92,10 @@ export const ProgressPercentageContainer = styled(Box)`
   display: flex;
   align-items: center;
   justify-content: center;
+  background-color: #090b2287;
+  border-radius: 100px;
+  margin: -5px;
+  border: 1px solid #44479cb7;
 `;
 
 export const Offline = styled.div`
@@ -90,6 +103,6 @@ export const Offline = styled.div`
   justify-content: center;
   align-items: center;
   gap: 6px;
-  margin: 10px;
+  margin-top: 24px;
   animation: ${fadeIn} 0.5s ease;
 `;

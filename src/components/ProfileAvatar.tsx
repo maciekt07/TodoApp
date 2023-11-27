@@ -181,7 +181,7 @@ const Container = styled.div`
   }
 `;
 const StyledMenuItem = styled(MenuItem)`
-  margin: 6px;
+  margin: 4px 6px;
   padding: 10px 12px;
   border-radius: 14px;
   box-shadow: none;

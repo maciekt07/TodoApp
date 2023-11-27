@@ -23,7 +23,7 @@ export const getRandomGreeting = (): string => {
     "Get ready to make things happen!",
     "It's time to check off those tasks!",
 
-    " Start your day with a plan!",
+    "Start your day with a plan!",
     "Stay focused, stay productive.",
     "Unlock your productivity potential.",
     "Turn your to-do list into a to-done list!",

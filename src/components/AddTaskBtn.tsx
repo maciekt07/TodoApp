@@ -3,7 +3,7 @@ import styled from "@emotion/styled";
 import { Add } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
 import { ColorPalette, pulseAnimation } from "../styles";
-import { Tooltip } from "@mui/material";
+import { Button, Tooltip } from "@mui/material";
 import { User } from "../types/user";
 import { useResponsiveDisplay } from "../hooks/useResponsiveDisplay";
 
@@ -35,7 +35,7 @@ export const AddTaskBtn = ({ animate, user }: AddTaskBtnProps): JSX.Element | nu
   );
 };
 
-const Btn = styled.button<{ animate: boolean; glow: boolean }>`
+const Btn = styled(Button)<{ animate: boolean; glow: boolean }>`
   cursor: pointer;
   border: none;
   display: flex;
@@ -49,7 +49,7 @@ const Btn = styled.button<{ animate: boolean; glow: boolean }>`
   background-color: ${ColorPalette.purple};
   color: white;
   right: 16vw;
-  box-shadow: ${({ glow }) => (glow ? `0px 0px 48px -4px ${ColorPalette.purple}` : "none")};
+  box-shadow: ${({ glow }) => (glow ? `0px 0px 32px -8px ${ColorPalette.purple}` : "none")};
   transition: background-color 0.3s, backdrop-filter 0.3s, box-shadow 0.3s;
 
   &:hover {
