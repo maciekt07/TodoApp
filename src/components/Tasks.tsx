@@ -24,7 +24,7 @@ import {
   NoTasks,
   Pinned,
   SearchInput,
-  TaskContainer,
+  TaskComponent,
   TaskDate,
   TaskDescription,
   TaskHeader,
@@ -448,19 +448,13 @@ export const Tasks = ({ user, setUser }: UserProps): JSX.Element => {
 
         {user.tasks.length !== 0 ? (
           reorderTasks(user.tasks).map((task) => (
-            <TaskContainer
+            <TaskComponent
               key={task.id}
               backgroundColor={task.color}
               clr={getFontColorFromHex(task.color)}
               glow={user.settings[0].enableGlow}
               done={task.done}
-              style={{
-                filter:
-                  selectedTaskId !== task.id && open && !isMobile
-                    ? "blur(2px) opacity(75%)"
-                    : "none",
-                // transform: selectedTaskId === task.id && open ? "scale(1.02)" : "none",
-              }}
+              blur={selectedTaskId !== task.id && open && !isMobile}
             >
               {task.emoji || task.done ? (
                 <EmojiContainer clr={getFontColorFromHex(task.color)}>
@@ -591,7 +585,7 @@ export const Tasks = ({ user, setUser }: UserProps): JSX.Element => {
               >
                 <MoreVert />
               </IconButton>
-            </TaskContainer>
+            </TaskComponent>
           ))
         ) : (
           <NoTasks>

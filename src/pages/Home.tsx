@@ -27,9 +27,12 @@ export const Home = ({ user, setUser }: UserProps) => {
 
   const completedTaskPercentage = (completedTasksCount / user.tasks.length) * 100;
 
+  const isOnline = useOnlineStatus();
+
   useEffect(() => {
     setRandomGreeting(getRandomGreeting());
     document.title = "Todo App";
+
     const interval = setInterval(() => {
       setRandomGreeting(getRandomGreeting());
       setGreetingKey((prevKey) => prevKey + 1); // Update the key on each interval
@@ -43,6 +46,7 @@ export const Home = ({ user, setUser }: UserProps) => {
     setCompletedTasksCount(completedCount);
 
     const today = new Date().setHours(0, 0, 0, 0);
+
     const count = user.tasks.filter((task) => {
       if (task.deadline) {
         const taskDeadline = new Date(task.deadline).setHours(0, 0, 0, 0);
@@ -50,10 +54,34 @@ export const Home = ({ user, setUser }: UserProps) => {
       }
       return false;
     }).length;
+
     setTasksWithDeadlineTodayCount(count);
   }, [user.tasks]);
 
-  const isOnline = useOnlineStatus();
+  const replaceEmojiCodes = (text: string): ReactNode[] => {
+    const emojiRegex = /\*\*(.*?)\*\*/g;
+    const parts = text.split(emojiRegex);
+
+    return parts.map((part, index) => {
+      if (index % 2 === 1) {
+        // It's an emoji code, render Emoji component
+        const emojiCode = part.trim();
+        return <Emoji key={index} size={20} unified={emojiCode} emojiStyle={user.emojisStyle} />;
+      } else {
+        // It's regular text
+        return part;
+      }
+    });
+  };
+
+  const renderGreetingWithEmojis = (text: string | ReactNode) => {
+    if (typeof text === "string") {
+      return replaceEmojiCodes(text);
+    } else {
+      // It's already a ReactNode, no need to process
+      return text;
+    }
+  };
 
   return (
     <>
@@ -61,7 +89,7 @@ export const Home = ({ user, setUser }: UserProps) => {
         <Emoji unified="1f44b" emojiStyle={user.emojisStyle} /> &nbsp; {displayGreeting()}
         {user.name && ", " + user.name}
       </GreetingHeader>
-      <GreetingText key={greetingKey}>{randomGreeting}</GreetingText>
+      <GreetingText key={greetingKey}>{renderGreetingWithEmojis(randomGreeting)}</GreetingText>
       {!isOnline && (
         <Offline>
           <WifiOff /> You're offline but you can use the app!
@@ -82,6 +110,8 @@ export const Home = ({ user, setUser }: UserProps) => {
                     : "none",
                   zIndex: 1,
                   margin: "1px",
+                  // boxShadow: "inset 0 0 0px 11px #333",
+                  // borderRadius: "100%",
                 }}
               />
 
@@ -109,6 +139,7 @@ export const Home = ({ user, setUser }: UserProps) => {
           </TasksCount>
         </TasksCountContainer>
       )}
+
       <Tasks user={user} setUser={setUser} />
 
       <AddTaskBtn animate={user.tasks.length === 0} user={user} />

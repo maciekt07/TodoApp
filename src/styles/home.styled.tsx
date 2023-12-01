@@ -17,8 +17,11 @@ export const GreetingHeader = styled.div`
 `;
 
 export const GreetingText = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 6px;
   font-size: 16px;
-  margin-top: 2px;
+  margin-top: 4px;
   margin-left: 8px;
   font-style: italic;
   animation: ${fadeInLeft} 0.5s ease-in-out;
@@ -43,6 +46,7 @@ export const TasksCount = styled.div<{ glow: boolean }>`
   margin: 24px 0 12px 0;
   border-radius: 24px;
   width: 650px;
+  border: 1px solid #44479cb7;
   @media (min-width: 1024px) {
     padding: 24px;
   }

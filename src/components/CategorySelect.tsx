@@ -88,6 +88,7 @@ export const CategorySelect = ({
           PaperProps: {
             style: {
               maxHeight: 400,
+
               zIndex: 999999,
               padding: "2px 6px",
               background: "white",
@@ -167,9 +168,14 @@ const CategoriesMenu = styled(MenuItem)<{ clr?: string }>`
     color: ${(props) => getFontColorFromHex(props.clr || ColorPalette.fontLight)};
     /* box-shadow: 0 0 14px 4px ${(props) => props.clr || "#bcbcbc"}; */
     border: 4px solid #38b71f;
+    display: flex;
+    justify-content: left;
+    align-items: center;
     font-weight: bold;
-    &::before {
-      content: "•";
+    &::after {
+      content: "• selected";
+      font-size: 14px;
+      font-weight: 400;
     }
     &:hover {
       background: ${({ clr }) => clr || "#bcbcbc"};

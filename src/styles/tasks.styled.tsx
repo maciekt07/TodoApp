@@ -8,9 +8,10 @@ interface TaskContainerProps {
   clr: string;
   done: boolean;
   glow: boolean;
+  blur: boolean;
 }
 
-export const TaskContainer = styled.div<TaskContainerProps>`
+export const TaskComponent = styled.div<TaskContainerProps>`
   display: flex;
   align-items: center;
   margin-top: 12px;
@@ -19,10 +20,12 @@ export const TaskContainer = styled.div<TaskContainerProps>`
   opacity: ${({ done }) => (done ? 0.7 : 1)};
   color: ${({ clr }) => clr};
   border-left: ${({ done }) => (done ? "6px solid #00ff0d" : "6px solid transparent")};
-  box-shadow: ${(props) => (props.glow ? `0 0 128px -28px ${props.backgroundColor}` : "none")};
+  box-shadow: ${(props) =>
+    props.glow && !props.blur ? `0 0 128px -28px ${props.backgroundColor}` : "none"};
   padding: 16px 16px 16px 16px;
   border-radius: 24px;
   animation: ${fadeIn} 0.5s ease-in;
+  filter: ${({ blur }) => (blur ? "blur(2px) opacity(75%)" : "none")};
 `;
 
 export const EmojiContainer = styled.span<{ clr: string }>`
