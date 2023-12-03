@@ -15,17 +15,44 @@ function App() {
   const isMobile = useResponsiveDisplay();
   // Initialize user properties if they are undefined
   useEffect(() => {
-    if (user.categories === undefined) {
-      setUser({ ...user, categories: defaultUser.categories });
+    // if (user.categories === undefined) {
+    //   setUser({ ...user, categories: defaultUser.categories });
+    // }
+    // if (
+    //   user.settings === undefined ||
+    //   user.settings[0].enableCategories === undefined ||
+    //   user.settings[0].enableGlow === undefined ||
+    //   user.settings[0] === undefined ||
+    //   user.settings[0] === undefined
+    // ) {
+    //   setUser({ ...user, settings: defaultUser.settings });
+    // }
+    if (user.settings[0].enableReadAloud === undefined) {
+      setUser({
+        ...user,
+        settings: [
+          {
+            ...user.settings[0],
+            enableReadAloud: defaultUser.settings[0].enableReadAloud,
+          },
+        ],
+      });
     }
-    if (
-      user.settings === undefined ||
-      user.settings[0].enableCategories === undefined ||
-      user.settings[0].enableGlow === undefined ||
-      user.settings[0] === undefined
-    ) {
-      setUser({ ...user, settings: defaultUser.settings });
+    if (user.settings[0].voice === undefined) {
+      setUser({
+        ...user,
+        settings: [
+          {
+            ...user.settings[0],
+            voice: defaultUser.settings[0].voice,
+          },
+        ],
+      });
     }
+
+    // if (user.settings[0].enableReadAloud == undefined) {
+    //   setUser({ ...user, settings: defaultUser.settings });
+    // }
   }, []);
   const userProps = { user, setUser };
 

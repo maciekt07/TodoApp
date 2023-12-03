@@ -1,4 +1,12 @@
-import { ContentCopy, Delete, Done, Edit, Launch, PushPin } from "@mui/icons-material";
+import {
+  ContentCopy,
+  Delete,
+  Done,
+  Edit,
+  Launch,
+  PushPin,
+  RecordVoiceOver,
+} from "@mui/icons-material";
 import { User } from "../types/user";
 import { Divider, Menu, MenuItem } from "@mui/material";
 import { BottomSheet } from "react-spring-bottom-sheet";
@@ -21,6 +29,7 @@ interface TaskMenuProps {
   handleDeleteTask: () => void;
   handleDuplicateTask: () => void;
   handleCloseMoreMenu: () => void;
+  handleReadAloud: () => void;
 }
 
 export const TaskMenu = ({
@@ -33,6 +42,7 @@ export const TaskMenu = ({
   handleDeleteTask,
   handleDuplicateTask,
   handleCloseMoreMenu,
+  handleReadAloud,
 }: TaskMenuProps) => {
   const n = useNavigate();
   const redirectToTaskDetails = () => {
@@ -65,6 +75,14 @@ export const TaskMenu = ({
       <StyledMenuItem onClick={redirectToTaskDetails}>
         <Launch /> &nbsp; Task details
       </StyledMenuItem>
+      {user.settings[0].enableReadAloud && (
+        <StyledMenuItem
+          onClick={handleReadAloud}
+          disabled={window.speechSynthesis.speaking || window.speechSynthesis.pending}
+        >
+          <RecordVoiceOver /> &nbsp; Read Aloud
+        </StyledMenuItem>
+      )}
       <Divider />
       <StyledMenuItem
         onClick={() => {

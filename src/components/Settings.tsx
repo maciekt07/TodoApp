@@ -28,6 +28,7 @@ interface SettingsProps extends UserProps {
 export const SettingsDialog = ({ open, onClose, user, setUser }: SettingsProps) => {
   const [settings, setSettings] = useState<AppSettings>(user.settings[0]);
   const [lastStyle] = useState<EmojiStyle>(user.emojisStyle);
+  const [availableVoices, setAvailableVoices] = useState<SpeechSynthesisVoice[]>([]);
 
   const isOnline = useOnlineStatus();
 
@@ -39,9 +40,33 @@ export const SettingsDialog = ({ open, onClose, user, setUser }: SettingsProps) 
     { label: "Google", style: EmojiStyle.GOOGLE },
     { label: "Native", style: EmojiStyle.NATIVE },
   ];
+
+  const getAvailableVoices = () => {
+    const voices = window.speechSynthesis.getVoices();
+    const voiceInfoArray = [];
+
+    for (const voice of voices) {
+      if (voice.default) {
+        console.log(voice);
+      }
+      voiceInfoArray.push(voice);
+    }
+
+    return voiceInfoArray;
+  };
+
+  // Ensure the voices are loaded before calling getAvailableVoices
+  window.speechSynthesis.onvoiceschanged = () => {
+    const availableVoices = getAvailableVoices();
+    setAvailableVoices(availableVoices);
+    console.log(availableVoices);
+  };
+
   // Handler for updating individual setting options
   const handleSettingChange =
     (name: keyof AppSettings) => (event: React.ChangeEvent<HTMLInputElement>) => {
+      // cancel read aloud
+      name === "enableReadAloud" && window.speechSynthesis.cancel();
       const updatedSettings = {
         ...settings,
         [name]: event.target.checked,
@@ -54,12 +79,32 @@ export const SettingsDialog = ({ open, onClose, user, setUser }: SettingsProps) 
     };
 
   // Handler for updating the selected emoji style
-  const handleEmojiStyleChange = (event: SelectChangeEvent<EmojiStyle>) => {
+  const handleEmojiStyleChange = (event: SelectChangeEvent<unknown>) => {
     const selectedEmojiStyle = event.target.value as EmojiStyle;
     setUser((prevUser) => ({
       ...prevUser,
       emojisStyle: selectedEmojiStyle,
     }));
+  };
+  const handleVoiceChange = (event: SelectChangeEvent<unknown>) => {
+    // Handle the selected voice
+    const selectedVoice = availableVoices.find((voice) => voice.name === event.target.value);
+
+    // Handle your logic with the selected voice (e.g., updating user settings)
+    if (selectedVoice) {
+      console.log("Selected Voice:", selectedVoice);
+
+      // Update the user settings with the selected voice
+      setUser((prevUser) => ({
+        ...prevUser,
+        settings: [
+          {
+            ...prevUser.settings[0],
+            voice: selectedVoice.name,
+          },
+        ],
+      }));
+    }
   };
 
   return (
@@ -82,7 +127,7 @@ export const SettingsDialog = ({ open, onClose, user, setUser }: SettingsProps) 
         <FormGroup>
           <FormControl>
             <FormLabel>Emoji Settings</FormLabel>
-            <Select
+            <StyledSelect
               value={user.emojisStyle}
               onChange={handleEmojiStyleChange}
               sx={{
@@ -135,7 +180,7 @@ export const SettingsDialog = ({ open, onClose, user, setUser }: SettingsProps) 
                   {style.label}
                 </MenuItem>
               ))}
-            </Select>
+            </StyledSelect>
           </FormControl>
         </FormGroup>
 
@@ -164,6 +209,18 @@ export const SettingsDialog = ({ open, onClose, user, setUser }: SettingsProps) 
         </FormGroup>
         <FormGroup>
           <FormControlLabel
+            sx={{ opacity: settings.enableReadAloud ? 1 : 0.8 }}
+            control={
+              <Switch
+                checked={settings.enableReadAloud}
+                onChange={handleSettingChange("enableReadAloud")}
+              />
+            }
+            label="Enable Read Aloud"
+          />
+        </FormGroup>
+        <FormGroup>
+          <FormControlLabel
             sx={{ opacity: settings.doneToBottom ? 1 : 0.8 }}
             control={
               <Switch
@@ -174,6 +231,42 @@ export const SettingsDialog = ({ open, onClose, user, setUser }: SettingsProps) 
             label="Move Done Tasks To Bottom"
           />
         </FormGroup>
+
+        {user.settings[0].enableReadAloud && (
+          <FormGroup>
+            <FormControl>
+              <FormLabel>Voice Settings</FormLabel>
+
+              {availableVoices.length !== 0 ? (
+                <StyledSelect
+                  // Set the value to the first voice in the availableVoices array
+                  value={user.settings[0].voice}
+                  // Handle the voice selection change
+                  onChange={handleVoiceChange}
+                  sx={{
+                    width: "300px",
+                    borderRadius: "18px",
+                    color: "black",
+                    m: "8px 0",
+                  }}
+                >
+                  {/* Map over available voices to create MenuItem components */}
+                  {availableVoices.map((voice) => (
+                    <MenuItem key={voice.name} value={voice.name}>
+                      {voice.name} &nbsp;
+                      {voice.default && <span style={{ fontWeight: 600 }}>Default</span>}
+                    </MenuItem>
+                  ))}
+                </StyledSelect>
+              ) : (
+                <NoVoiceStyles>
+                  There are no voice styles available{" "}
+                  {/* <Emoji emojiStyle={user.emojisStyle} unified="2639-fe0f" size={24} /> */}
+                </NoVoiceStyles>
+              )}
+            </FormControl>
+          </FormGroup>
+        )}
       </Container>
       <DialogActions>
         <DialogBtn onClick={onClose}>Close</DialogBtn>
@@ -190,4 +283,19 @@ const Container = styled.div`
   user-select: none;
   margin: 0 18px;
   gap: 6px;
+`;
+
+const StyledSelect = styled(Select)`
+  width: 300px;
+  border-radius: 18px;
+  color: black;
+  margin: 8px 0;
+`;
+
+const NoVoiceStyles = styled.p`
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  opacity: 0.8;
+  font-weight: 500;
 `;

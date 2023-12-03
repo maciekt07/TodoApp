@@ -15,6 +15,8 @@ export const defaultUser: User = {
       enableCategories: true,
       doneToBottom: false,
       enableGlow: true,
+      enableReadAloud: true,
+      voice: "Google UK English Male",
     },
   ],
   categories: [

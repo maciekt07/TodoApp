@@ -241,6 +241,28 @@ export const Tasks = ({ user, setUser }: UserProps): JSX.Element => {
     }
   };
 
+  const handleReadAloud = () => {
+    const selectedTask = user.tasks.find((task) => task.id === selectedTaskId);
+    const voices = window.speechSynthesis.getVoices();
+    const voiceName = voices.find((voice) => voice.name === user.settings[0].voice);
+
+    const utterThis: SpeechSynthesisUtterance = new SpeechSynthesisUtterance(
+      ` ${selectedTask?.name}. ${
+        selectedTask?.description ? selectedTask.description : ""
+      }. Date: ${formatDate(new Date(selectedTask?.date || ""))}`
+    );
+
+    if (voiceName) {
+      utterThis.voice = voiceName;
+    }
+
+    utterThis.volume = 0.8;
+
+    window.speechSynthesis.speak(utterThis);
+    // Close the menu
+    setAnchorEl(null);
+  };
+
   const [categories, setCategories] = useState<Category[] | undefined>(undefined);
   const [selectedCatId, setSelectedCatId] = useState<number | undefined>(undefined);
 
@@ -282,31 +304,6 @@ export const Tasks = ({ user, setUser }: UserProps): JSX.Element => {
     setCategoryCounts(counts);
   }, [user.tasks]);
 
-  // const scrollContainerRef = useRef<HTMLDivElement>(null);
-  // const [isDragging, setIsDragging] = useState(false);
-  // const [startX, setStartX] = useState(0);
-  // const [scrollLeft, setScrollLeft] = useState(0);
-
-  // const handleMouseDown = (event: React.MouseEvent) => {
-  //   if (scrollContainerRef.current) {
-  //     setIsDragging(true);
-  //     setStartX(event.pageX - scrollContainerRef.current.offsetLeft);
-  //     setScrollLeft(scrollContainerRef.current.scrollLeft);
-  //   }
-  // };
-
-  // const handleMouseMove = (event: React.MouseEvent) => {
-  //   if (!isDragging || !scrollContainerRef.current) return;
-  //   event.preventDefault();
-  //   const x = event.pageX - scrollContainerRef.current.offsetLeft;
-  //   const walk = (x - startX) * 2; // Adjust the scrolling speed as needed
-  //   scrollContainerRef.current.scrollLeft = scrollLeft - walk;
-  // };
-
-  // const handleMouseUp = () => {
-  //   setIsDragging(false);
-  // };
-
   const [search, setSearch] = useState<string>("");
   const highlightMatchingText = (text: string, search: string): ReactNode => {
     if (!search) {
@@ -335,6 +332,7 @@ export const Tasks = ({ user, setUser }: UserProps): JSX.Element => {
         handleDeleteTask={handleDeleteTask}
         handleDuplicateTask={handleDuplicateTask}
         handleCloseMoreMenu={handleCloseMoreMenu}
+        handleReadAloud={handleReadAloud}
       />
       <TasksContainer>
         {user.tasks.length > 0 && (
@@ -346,8 +344,6 @@ export const Tasks = ({ user, setUser }: UserProps): JSX.Element => {
             onChange={(e) => {
               setSearch(e.target.value);
             }}
-            // error={reorderTasks(user.tasks).length === 0 && user.tasks.length > 0}
-            // type="search"
             InputProps={{
               startAdornment: (
                 <InputAdornment position="start">

@@ -57,6 +57,8 @@ export interface AppSettings {
   enableCategories: boolean;
   doneToBottom: boolean;
   enableGlow: boolean;
+  enableReadAloud: boolean;
+  voice: string;
 }
 
 /**
