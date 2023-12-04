@@ -1,7 +1,18 @@
 import { Category, Task, UserProps } from "../types/user";
 import { ReactNode, useEffect, useState } from "react";
 import { calculateDateDifference, formatDate, getFontColorFromHex } from "../utils";
-import { Alarm, Close, Done, MoreVert, PushPin, Search } from "@mui/icons-material";
+import {
+  Alarm,
+  Cancel,
+  Close,
+  Done,
+  MoreVert,
+  Pause,
+  PlayArrow,
+  PushPin,
+  RecordVoiceOver,
+  Search,
+} from "@mui/icons-material";
 import {
   Avatar,
   Dialog,
@@ -37,6 +48,7 @@ import {
 import { TaskMenu } from ".";
 import toast from "react-hot-toast";
 import { useResponsiveDisplay } from "../hooks/useResponsiveDisplay";
+import Marquee from "react-fast-marquee";
 
 /**
  * Component to display a list of tasks.
@@ -247,7 +259,7 @@ export const Tasks = ({ user, setUser }: UserProps): JSX.Element => {
     const voiceName = voices.find((voice) => voice.name === user.settings[0].voice);
 
     const utterThis: SpeechSynthesisUtterance = new SpeechSynthesisUtterance(
-      ` ${selectedTask?.name}. ${
+      `${selectedTask?.name}. ${
         selectedTask?.description ? selectedTask.description : ""
       }. Date: ${formatDate(new Date(selectedTask?.date || ""))}`
     );
@@ -257,10 +269,108 @@ export const Tasks = ({ user, setUser }: UserProps): JSX.Element => {
     }
 
     utterThis.volume = 0.8;
+    setAnchorEl(null);
+    const pauseSpeech = () => {
+      window.speechSynthesis.pause();
+    };
+
+    const resumeSpeech = () => {
+      window.speechSynthesis.resume();
+    };
+
+    const cancelSpeech = () => {
+      window.speechSynthesis.cancel();
+      toast.dismiss(SpeechToastId);
+      setAnchorEl(null);
+    };
+
+    const SpeechToastId = toast(
+      () => {
+        const [isPlaying, setIsPlaying] = useState<boolean>(true);
+        return (
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              flexDirection: "column",
+            }}
+          >
+            <span
+              style={{
+                display: "inline-flex",
+                alignItems: "center",
+                fontWeight: 600,
+              }}
+            >
+              <RecordVoiceOver /> &nbsp; Speaking: {selectedTask?.name}
+            </span>
+
+            <span style={{ marginTop: "10px", fontSize: "16px" }}>
+              Voice: {utterThis.voice?.name || "Default"}
+            </span>
+            <div>
+              <Marquee speed={40} delay={0.6}>
+                <p style={{ margin: "6px 0" }}>{utterThis.text} &nbsp;</p>
+              </Marquee>
+            </div>
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                marginTop: "16px",
+              }}
+            >
+              {isPlaying ? (
+                <IconButton
+                  sx={{ color: "white" }}
+                  onClick={() => {
+                    pauseSpeech();
+                    setIsPlaying(!isPlaying);
+                  }}
+                >
+                  <Pause fontSize="large" />
+                </IconButton>
+              ) : (
+                <IconButton
+                  sx={{ color: "white" }}
+                  onClick={() => {
+                    resumeSpeech();
+                    setIsPlaying(!isPlaying);
+                  }}
+                >
+                  <PlayArrow fontSize="large" />
+                </IconButton>
+              )}
+
+              <IconButton sx={{ color: "white" }} onClick={cancelSpeech}>
+                <Cancel fontSize="large" />
+              </IconButton>
+            </div>
+          </div>
+        );
+      },
+      {
+        duration: 999999999,
+        style: {
+          border: "1px solid #1b1d4eb7",
+          WebkitBackdropFilter: "blur(10px)",
+          backdropFilter: "blur(10px)",
+        },
+      }
+    );
+
+    // Set up event listener for the end of speech
+    utterThis.onend = () => {
+      // Close the menu
+      setAnchorEl(null);
+      // Hide the toast when speech ends
+      toast.dismiss(SpeechToastId);
+    };
+    console.log(utterThis);
 
     window.speechSynthesis.speak(utterThis);
-    // Close the menu
-    setAnchorEl(null);
   };
 
   const [categories, setCategories] = useState<Category[] | undefined>(undefined);

@@ -19,6 +19,7 @@
     "emoji-picker-react": "^4.4.9",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-fast-marquee": "^1.6.2",
     "react-hot-toast": "^2.4.1",
     "react-router-dom": "^6.11.1",
     "react-spring-bottom-sheet": "^3.4.1"

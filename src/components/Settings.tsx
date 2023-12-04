@@ -127,16 +127,7 @@ export const SettingsDialog = ({ open, onClose, user, setUser }: SettingsProps) 
         <FormGroup>
           <FormControl>
             <FormLabel>Emoji Settings</FormLabel>
-            <StyledSelect
-              value={user.emojisStyle}
-              onChange={handleEmojiStyleChange}
-              sx={{
-                width: "300px",
-                borderRadius: "18px",
-                color: "black",
-                m: "8px 0",
-              }}
-            >
+            <StyledSelect value={user.emojisStyle} onChange={handleEmojiStyleChange}>
               {/* Show a disabled menu item when offline, indicating that the style can't be changed */}
               {!isOnline && (
                 <MenuItem
@@ -243,16 +234,25 @@ export const SettingsDialog = ({ open, onClose, user, setUser }: SettingsProps) 
                   value={user.settings[0].voice}
                   // Handle the voice selection change
                   onChange={handleVoiceChange}
-                  sx={{
-                    width: "300px",
-                    borderRadius: "18px",
-                    color: "black",
-                    m: "8px 0",
+                  MenuProps={{
+                    PaperProps: {
+                      style: {
+                        maxHeight: 500,
+                        padding: "2px 6px",
+                      },
+                    },
                   }}
                 >
                   {/* Map over available voices to create MenuItem components */}
                   {availableVoices.map((voice) => (
-                    <MenuItem key={voice.name} value={voice.name}>
+                    <MenuItem
+                      key={voice.name}
+                      value={voice.name}
+                      sx={{
+                        padding: "10px",
+                        borderRadius: "6px",
+                      }}
+                    >
                       {voice.name} &nbsp;
                       {voice.default && <span style={{ fontWeight: 600 }}>Default</span>}
                     </MenuItem>

@@ -14,46 +14,42 @@ function App() {
   const [user, setUser] = useStorageState<User>(defaultUser, "user");
   const isMobile = useResponsiveDisplay();
   // Initialize user properties if they are undefined
-  useEffect(() => {
-    // if (user.categories === undefined) {
-    //   setUser({ ...user, categories: defaultUser.categories });
-    // }
-    // if (
-    //   user.settings === undefined ||
-    //   user.settings[0].enableCategories === undefined ||
-    //   user.settings[0].enableGlow === undefined ||
-    //   user.settings[0] === undefined ||
-    //   user.settings[0] === undefined
-    // ) {
-    //   setUser({ ...user, settings: defaultUser.settings });
-    // }
-    if (user.settings[0].enableReadAloud === undefined) {
-      setUser({
-        ...user,
-        settings: [
-          {
-            ...user.settings[0],
-            enableReadAloud: defaultUser.settings[0].enableReadAloud,
-          },
-        ],
-      });
-    }
-    if (user.settings[0].voice === undefined) {
-      setUser({
-        ...user,
-        settings: [
-          {
-            ...user.settings[0],
-            voice: defaultUser.settings[0].voice,
-          },
-        ],
-      });
-    }
 
-    // if (user.settings[0].enableReadAloud == undefined) {
-    //   setUser({ ...user, settings: defaultUser.settings });
-    // }
+  useEffect(() => {
+    const updateNestedProperties = (userObject: any, defaultObject: any) => {
+      if (!userObject) {
+        return defaultObject;
+      }
+
+      Object.keys(defaultObject).forEach((key) => {
+        const userValue = userObject[key];
+        const defaultValue = defaultObject[key];
+
+        if (typeof defaultValue === "object" && defaultValue !== null) {
+          // If the property is an object, recursively update nested properties
+          userObject[key] = updateNestedProperties(userValue, defaultValue);
+        } else if (userValue === undefined) {
+          // Update only if the property is missing in user
+          userObject[key] = defaultValue;
+        }
+      });
+
+      return userObject;
+    };
+
+    // Update user with default values for all properties, including nested ones
+    setUser((prevUser) => {
+      // Make sure not to update if user hasn't changed
+      if (
+        JSON.stringify(prevUser) !==
+        JSON.stringify(updateNestedProperties({ ...prevUser }, defaultUser))
+      ) {
+        return updateNestedProperties({ ...prevUser }, defaultUser);
+      }
+      return prevUser;
+    });
   }, []);
+
   const userProps = { user, setUser };
 
   return (
