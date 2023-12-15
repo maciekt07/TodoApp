@@ -150,6 +150,21 @@ const globalStyles = css`
     margin: 0 !important;
     max-height: none;
   }
+  .MuiSlider-valueLabel {
+    border-radius: 10px !important;
+    box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.25) !important;
+    text-shadow: 0px 2px 6px rgba(0, 0, 0, 0.25) !important;
+    padding: 6px 14px !important;
+    color: #ffffff !important;
+    background-color: #141431dd !important;
+    /* backdrop-filter: blur(6px) !important; */
+
+    /* margin-top: 90px; */
+    &::before,
+    &::after {
+      display: none;
+    }
+  }
 `;
 
 export const GlobalStyles = () => <Global styles={globalStyles} />;

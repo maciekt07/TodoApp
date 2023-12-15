@@ -1,6 +1,6 @@
 /**
  * Returns a random greeting message to inspire productivity.
- * @returns {string} A random greeting message with emoji.
+ * @returns {string} A random greeting message with optional emoji code.
  */
 export const getRandomGreeting = (): string => {
   const hoursLeft = 24 - new Date().getHours();

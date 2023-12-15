@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import {
+  Box,
   Dialog,
   DialogActions,
   DialogTitle,
@@ -7,17 +8,21 @@ import {
   FormControlLabel,
   FormGroup,
   FormLabel,
+  IconButton,
   MenuItem,
   Select,
   SelectChangeEvent,
+  Slider,
+  Stack,
   Switch,
+  Tooltip,
 } from "@mui/material";
 import { AppSettings, UserProps } from "../types/user";
 import { DialogBtn } from "../styles";
 import styled from "@emotion/styled";
 import { Emoji, EmojiStyle } from "emoji-picker-react";
 import { useOnlineStatus } from "../hooks/useOnlineStatus";
-import { Settings, WifiOff } from "@mui/icons-material";
+import { Settings, VolumeDown, VolumeOff, VolumeUp, WifiOff } from "@mui/icons-material";
 import { defaultUser } from "../constants/defaultUser";
 
 interface SettingsProps extends UserProps {
@@ -29,6 +34,7 @@ export const SettingsDialog = ({ open, onClose, user, setUser }: SettingsProps) 
   const [settings, setSettings] = useState<AppSettings>(user.settings[0]);
   const [lastStyle] = useState<EmojiStyle>(user.emojisStyle);
   const [availableVoices, setAvailableVoices] = useState<SpeechSynthesisVoice[]>([]);
+  const [prevVoiceVol, setPrevVoiceVol] = useState<number>(user.settings[0].voiceVolume);
 
   const isOnline = useOnlineStatus();
 
@@ -106,7 +112,41 @@ export const SettingsDialog = ({ open, onClose, user, setUser }: SettingsProps) 
       }));
     }
   };
+  // Function to handle changes in voice volume
+  const handleVoiceVolChange = (e: Event, value: number | number[]) => {
+    e.preventDefault();
+    // Update user settings with the new voice volume
+    setUser((prevUser) => ({
+      ...prevUser,
+      settings: [
+        {
+          ...prevUser.settings[0],
+          voiceVolume: value as number,
+        },
+      ],
+    }));
+  };
 
+  // Function to handle mute/unmute button click
+  const handleMuteClick = () => {
+    // Retrieve the current voice volume from user settings
+    const vol = user.settings[0].voiceVolume;
+
+    // Save the previous voice volume before muting
+    setPrevVoiceVol(vol);
+
+    const newVoiceVolume = vol === 0 ? (prevVoiceVol !== 0 ? prevVoiceVol : 1) : 0;
+
+    setUser((prevUser) => ({
+      ...prevUser,
+      settings: [
+        {
+          ...prevUser.settings[0],
+          voiceVolume: newVoiceVolume,
+        },
+      ],
+    }));
+  };
   return (
     <Dialog
       open={open}
@@ -260,11 +300,72 @@ export const SettingsDialog = ({ open, onClose, user, setUser }: SettingsProps) 
                 </StyledSelect>
               ) : (
                 <NoVoiceStyles>
-                  There are no voice styles available{" "}
+                  There are no voice styles available. Try to refresh the page.
                   {/* <Emoji emojiStyle={user.emojisStyle} unified="2639-fe0f" size={24} /> */}
                 </NoVoiceStyles>
               )}
             </FormControl>
+
+            <Box>
+              {/* <Typography sx={{ marginBottom: "2px", marginLeft: "18px", fontSize: "16px" }}>
+                Voice Volume
+              </Typography> */}
+
+              <div style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
+                <Stack
+                  spacing={2}
+                  direction="row"
+                  sx={{
+                    mb: 1,
+                    mt: 1,
+
+                    background: "#afafaf39",
+                    padding: "12px 24px 12px 18px",
+                    borderRadius: "18px",
+                    transition: ".3s all",
+                    ":hover": {
+                      background: "#89898939",
+                    },
+                    // "@media (max-width: 600px)": {
+                    //   width: "180px",
+                    //   padding: "8px 18px 8px 9px",
+                    // },
+                  }}
+                  alignItems="center"
+                >
+                  <Tooltip
+                    title={user.settings[0].voiceVolume ? "Mute" : "Unmute"}
+                    onClick={handleMuteClick}
+                  >
+                    <IconButton sx={{ color: "black" }}>
+                      {user.settings[0].voiceVolume === 0 ? (
+                        <VolumeOff />
+                      ) : user.settings[0].voiceVolume <= 0.4 ? (
+                        <VolumeDown />
+                      ) : (
+                        <VolumeUp />
+                      )}
+                    </IconButton>
+                  </Tooltip>
+                  <Slider
+                    sx={{
+                      width: "200px",
+                    }}
+                    value={user.settings[0].voiceVolume}
+                    onChange={handleVoiceVolChange}
+                    min={0}
+                    max={1}
+                    step={0.01}
+                    aria-label="Volume Slider"
+                    valueLabelFormat={() => {
+                      const vol = Math.floor(user.settings[0].voiceVolume * 100);
+                      return vol === 0 ? "Muted" : vol + "%";
+                    }}
+                    valueLabelDisplay="auto"
+                  />
+                </Stack>
+              </div>
+            </Box>
           </FormGroup>
         )}
       </Container>
@@ -298,4 +399,5 @@ const NoVoiceStyles = styled.p`
   gap: 6px;
   opacity: 0.8;
   font-weight: 500;
+  max-width: 300px;
 `;

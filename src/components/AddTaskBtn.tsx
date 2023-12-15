@@ -54,7 +54,7 @@ const Btn = styled(Button)<{ animate: boolean; glow: boolean }>`
 
   &:hover {
     box-shadow: none;
-    background-color: #b624ffd0;
+    background-color: ${ColorPalette.purple};
     backdrop-filter: blur(6px);
   }
 

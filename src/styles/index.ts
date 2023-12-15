@@ -19,6 +19,7 @@ export {
   TasksCountContainer,
   ProgressPercentageContainer,
   Offline,
+  StyledProgress,
 } from "./home.styled";
 export { Container, Input, AddTaskButton, StyledInput } from "./addTask.styled";
 export {

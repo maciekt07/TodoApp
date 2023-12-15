@@ -89,6 +89,8 @@ export const AddTask = ({ user, setUser }: UserProps) => {
           Added task - <b>{newTask.name}</b>
         </div>
       ));
+    } else {
+      toast.error("Please enter a task name");
     }
   };
 
@@ -165,9 +167,7 @@ export const AddTask = ({ user, setUser }: UserProps) => {
         <AddTaskButton
           onClick={handleAddTask}
           disabled={
-            name.length > TASK_NAME_MAX_LENGTH ||
-            description.length > DESCRIPTION_MAX_LENGTH ||
-            name === ""
+            name.length > TASK_NAME_MAX_LENGTH || description.length > DESCRIPTION_MAX_LENGTH
           }
         >
           Create Task

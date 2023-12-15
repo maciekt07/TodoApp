@@ -13,8 +13,8 @@ import { useResponsiveDisplay } from "./hooks/useResponsiveDisplay";
 function App() {
   const [user, setUser] = useStorageState<User>(defaultUser, "user");
   const isMobile = useResponsiveDisplay();
-  // Initialize user properties if they are undefined
 
+  // Initialize user properties if they are undefined
   useEffect(() => {
     const updateNestedProperties = (userObject: any, defaultObject: any) => {
       if (!userObject) {

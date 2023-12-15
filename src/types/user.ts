@@ -59,6 +59,7 @@ export interface AppSettings {
   enableGlow: boolean;
   enableReadAloud: boolean;
   voice: string;
+  voiceVolume: number;
 }
 
 /**

@@ -6,6 +6,7 @@ import {
   GreetingText,
   Offline,
   ProgressPercentageContainer,
+  StyledProgress,
   TaskCompletionText,
   TaskCountHeader,
   TaskCountTextContainer,
@@ -15,7 +16,7 @@ import {
 import { UserProps } from "../types/user";
 import { displayGreeting, getRandomGreeting, getTaskCompletionText } from "../utils";
 import { Emoji } from "emoji-picker-react";
-import { Box, CircularProgress, Typography } from "@mui/material";
+import { Box, Typography } from "@mui/material";
 import { useOnlineStatus } from "../hooks/useOnlineStatus";
 import { WifiOff } from "@mui/icons-material";
 
@@ -99,7 +100,7 @@ export const Home = ({ user, setUser }: UserProps) => {
         <TasksCountContainer>
           <TasksCount glow={user.settings[0].enableGlow}>
             <Box sx={{ position: "relative", display: "inline-flex" }}>
-              <CircularProgress
+              <StyledProgress
                 variant="determinate"
                 value={completedTaskPercentage}
                 size={64}
@@ -108,10 +109,6 @@ export const Home = ({ user, setUser }: UserProps) => {
                   filter: user.settings[0].enableGlow
                     ? `drop-shadow(0 0 6px ${ColorPalette.purple})`
                     : "none",
-                  zIndex: 1,
-                  margin: "1px",
-                  // boxShadow: "inset 0 0 0px 11px #333",
-                  // borderRadius: "100%",
                 }}
               />
 

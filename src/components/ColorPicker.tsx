@@ -11,11 +11,14 @@ interface ColorPickerProps {
   width?: CSSProperties["width"];
 }
 
+// TODO: redesign color picker component
+
 /**
  * Custom Color Picker component for selecting colors.
  */
-export const ColorPicker = ({ color, onColorChange, width }: ColorPickerProps) => {
+export const ColorPicker: React.FC<ColorPickerProps> = ({ color, onColorChange, width }) => {
   const [selectedColor, setSelectedColor] = useState<string>(color);
+
   const isHexColor = (value: string): boolean => /^#[0-9A-Fa-f]{6}$/.test(value);
 
   // Predefined color options

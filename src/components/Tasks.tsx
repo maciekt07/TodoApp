@@ -257,18 +257,26 @@ export const Tasks = ({ user, setUser }: UserProps): JSX.Element => {
     const selectedTask = user.tasks.find((task) => task.id === selectedTaskId);
     const voices = window.speechSynthesis.getVoices();
     const voiceName = voices.find((voice) => voice.name === user.settings[0].voice);
+    const voiceVolume = user.settings[0].voiceVolume;
+    const taskName = selectedTask?.name || "";
+    const taskDescription = selectedTask?.description || "";
+    const taskDate = formatDate(new Date(selectedTask?.date || ""));
+    const taskDeadline = selectedTask?.deadline
+      ? ". Task Deadline: " + calculateDateDifference(new Date(selectedTask.deadline) || "")
+      : "";
 
-    const utterThis: SpeechSynthesisUtterance = new SpeechSynthesisUtterance(
-      `${selectedTask?.name}. ${
-        selectedTask?.description ? selectedTask.description : ""
-      }. Date: ${formatDate(new Date(selectedTask?.date || ""))}`
-    );
+    const textToRead = `${taskName}. ${taskDescription}. Date: ${taskDate}${taskDeadline}`;
+
+    const utterThis: SpeechSynthesisUtterance = new SpeechSynthesisUtterance(textToRead);
 
     if (voiceName) {
       utterThis.voice = voiceName;
     }
 
-    utterThis.volume = 0.8;
+    if (voiceVolume) {
+      utterThis.volume = voiceVolume;
+    }
+
     setAnchorEl(null);
     const pauseSpeech = () => {
       window.speechSynthesis.pause();
@@ -287,6 +295,7 @@ export const Tasks = ({ user, setUser }: UserProps): JSX.Element => {
     const SpeechToastId = toast(
       () => {
         const [isPlaying, setIsPlaying] = useState<boolean>(true);
+
         return (
           <div
             style={{
@@ -294,8 +303,10 @@ export const Tasks = ({ user, setUser }: UserProps): JSX.Element => {
               alignItems: "center",
               justifyContent: "center",
               flexDirection: "column",
+              touchAction: "none",
             }}
           >
+            {/* FIXME: */}
             <span
               style={{
                 display: "inline-flex",
@@ -309,8 +320,18 @@ export const Tasks = ({ user, setUser }: UserProps): JSX.Element => {
             <span style={{ marginTop: "10px", fontSize: "16px" }}>
               Voice: {utterThis.voice?.name || "Default"}
             </span>
+
             <div>
-              <Marquee speed={40} delay={0.6}>
+              {/* FIXME: */}
+              <Marquee
+                delay={0.6}
+                play={isPlaying}
+                // gradient
+                // gradientColor="#14143166"
+                // style={{
+                //   borderRadius: "8px",
+                // }}
+              >
                 <p style={{ margin: "6px 0" }}>{utterThis.text} &nbsp;</p>
               </Marquee>
             </div>
@@ -320,6 +341,7 @@ export const Tasks = ({ user, setUser }: UserProps): JSX.Element => {
                 justifyContent: "center",
                 alignItems: "center",
                 marginTop: "16px",
+                gap: "8px",
               }}
             >
               {isPlaying ? (
@@ -369,8 +391,9 @@ export const Tasks = ({ user, setUser }: UserProps): JSX.Element => {
       toast.dismiss(SpeechToastId);
     };
     console.log(utterThis);
-
-    window.speechSynthesis.speak(utterThis);
+    if (voiceVolume > 0) {
+      window.speechSynthesis.speak(utterThis);
+    }
   };
 
   const [categories, setCategories] = useState<Category[] | undefined>(undefined);
