@@ -22,7 +22,7 @@ import { DialogBtn } from "../styles";
 import styled from "@emotion/styled";
 import { Emoji, EmojiStyle } from "emoji-picker-react";
 import { useOnlineStatus } from "../hooks/useOnlineStatus";
-import { Settings, VolumeDown, VolumeOff, VolumeUp, WifiOff } from "@mui/icons-material";
+import { VolumeDown, VolumeOff, VolumeUp, WifiOff } from "@mui/icons-material";
 import { defaultUser } from "../constants/defaultUser";
 
 interface SettingsProps extends UserProps {
@@ -158,10 +158,7 @@ export const SettingsDialog = ({ open, onClose, user, setUser }: SettingsProps) 
         },
       }}
     >
-      <DialogTitle sx={{ display: "flex", alignItems: "center" }}>
-        <Settings />
-        &nbsp;Settings
-      </DialogTitle>
+      <DialogTitle sx={{ fontWeight: 600 }}>Settings</DialogTitle>
       <Container>
         {/* Select component to choose the emoji style */}
         <FormGroup>
@@ -312,25 +309,17 @@ export const SettingsDialog = ({ open, onClose, user, setUser }: SettingsProps) 
               </Typography> */}
 
               <div style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
-                <Stack
+                <VolumeSlider
                   spacing={2}
                   direction="row"
-                  sx={{
-                    mb: 1,
-                    mt: 1,
-
-                    background: "#afafaf39",
-                    padding: "12px 24px 12px 18px",
-                    borderRadius: "18px",
-                    transition: ".3s all",
-                    ":hover": {
-                      background: "#89898939",
-                    },
-                    // "@media (max-width: 600px)": {
-                    //   width: "180px",
-                    //   padding: "8px 18px 8px 9px",
-                    // },
-                  }}
+                  sx={
+                    {
+                      // "@media (max-width: 600px)": {
+                      //   width: "180px",
+                      //   padding: "8px 18px 8px 9px",
+                      // },
+                    }
+                  }
                   alignItems="center"
                 >
                   <Tooltip
@@ -363,13 +352,34 @@ export const SettingsDialog = ({ open, onClose, user, setUser }: SettingsProps) 
                     }}
                     valueLabelDisplay="auto"
                   />
-                </Stack>
+                </VolumeSlider>
               </div>
             </Box>
           </FormGroup>
         )}
       </Container>
-      <DialogActions>
+
+      <DialogActions
+      // style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}
+      >
+        {/* <span
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            wordBreak: "break-all",
+            fontSize: "14px",
+            margin: "0 18px",
+            gap: "4px",
+            opacity: 0.8,
+          }}
+        >
+          Made with <Emoji unified="2764-fe0f" size={14} emojiStyle={user.emojisStyle} />{" "}
+          {user.emojisStyle === EmojiStyle.NATIVE && "\u00A0"} by{" "}
+          <StyledLink href="https://github.com/maciekt07" target="_blank">
+            maciekt07
+          </StyledLink>
+        </span> */}
         <DialogBtn onClick={onClose}>Close</DialogBtn>
       </DialogActions>
     </Dialog>
@@ -400,4 +410,15 @@ const NoVoiceStyles = styled.p`
   opacity: 0.8;
   font-weight: 500;
   max-width: 300px;
+`;
+
+const VolumeSlider = styled(Stack)`
+  margin: 8px 0;
+  background: #afafaf39;
+  padding: 12px 24px 12px 18px;
+  border-radius: 18px;
+  transition: 0.3s all;
+  &:hover {
+    background: #89898939;
+  }
 `;

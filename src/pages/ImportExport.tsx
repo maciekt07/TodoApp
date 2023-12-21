@@ -17,12 +17,10 @@ import {
 } from "../constants";
 import toast from "react-hot-toast";
 import { ColorPalette } from "../styles";
-import { useResponsiveDisplay } from "../hooks/useResponsiveDisplay";
 
 export const ImportExport = ({ user, setUser }: UserProps) => {
   const [selectedTasks, setSelectedTasks] = useState<number[]>([]); // Array of selected task IDs
   const fileInputRef = useRef<HTMLInputElement | null>(null);
-  const isMobile = useResponsiveDisplay();
 
   const handleTaskClick = (taskId: number) => {
     setSelectedTasks((prevSelectedTasks) =>
@@ -279,7 +277,7 @@ export const ImportExport = ({ user, setUser }: UserProps) => {
 
         <h2 style={{ textAlign: "center" }}>Import Tasks From JSON</h2>
 
-        {!isMobile && (
+        {/Windows|Linux|Macintosh/i.test(navigator.userAgent) && (
           <div style={{ width: "300px" }}>
             <DropZone onDragOver={handleDragOver} onDrop={handleDrop}>
               <FileUpload fontSize="large" color="primary" />

@@ -8,17 +8,28 @@ import {
   DialogTitle,
   Divider,
   IconButton,
-  Menu,
   MenuItem,
+  SwipeableDrawer,
   Tooltip,
 } from "@mui/material";
 import { UserProps } from "../types/user";
 import styled from "@emotion/styled";
-import { Category, GetApp, Logout, Person, Settings } from "@mui/icons-material";
+import {
+  Add,
+  Category,
+  GetApp,
+  GitHub,
+  Logout,
+  Person,
+  Settings,
+  TaskAlt,
+} from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
 import { defaultUser } from "../constants/defaultUser";
 import { SettingsDialog } from ".";
 import toast from "react-hot-toast";
+import logo from "../assets/logo256.png";
+import { ColorPalette } from "../styles";
 
 export const ProfileAvatar = ({ user, setUser }: UserProps) => {
   const n = useNavigate();
@@ -27,6 +38,8 @@ export const ProfileAvatar = ({ user, setUser }: UserProps) => {
   const [logoutConfirmationOpen, setLogoutConfirmationOpen] = useState<boolean>(false);
 
   const [openSettings, setOpenSettings] = useState<boolean>(false);
+
+  const iOS = typeof navigator !== "undefined" && /iPad|iPhone|iPod/.test(navigator.userAgent);
 
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
@@ -48,6 +61,7 @@ export const ProfileAvatar = ({ user, setUser }: UserProps) => {
     handleLogoutConfirmationClose();
     toast.success("You have been successfully logged out");
   };
+
   return (
     <Container>
       <Tooltip title={user.name || "User"}>
@@ -79,23 +93,71 @@ export const ProfileAvatar = ({ user, setUser }: UserProps) => {
           />
         </IconButton>
       </Tooltip>
-      <Menu
+      <SwipeableDrawer
+        disableBackdropTransition={!iOS}
+        disableDiscovery={iOS}
         id="basic-menu"
-        anchorEl={anchorEl}
+        // anchorEl={anchorEl}
+        anchor="right"
         open={open}
+        onOpen={() => console.log("")}
         onClose={handleClose}
-        MenuListProps={{
-          "aria-labelledby": "basic-button",
-        }}
+        // MenuListProps={{
+        //   "aria-labelledby": "basic-button",
+        // }}
         sx={{
           "& .MuiPaper-root": {
-            borderRadius: "18px",
-            minWidth: "172px",
+            borderRadius: "24px 0 0 0",
+            minWidth: "260px",
             boxShadow: "none",
-            padding: "2px 4px",
+            padding: "4px",
+            background: "#F9FAFC",
           },
         }}
       >
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            flexDirection: "row",
+            marginTop: "8px",
+            gap: "16px",
+            cursor: "pointer",
+          }}
+          onClick={() => {
+            n("/");
+            handleClose();
+          }}
+        >
+          <img src={logo} alt="logo" style={{ width: "48px", marginLeft: "18px" }} />
+          <h2>
+            <span style={{ color: "#7764E8" }}>Todo</span> App
+            <span style={{ color: "#7764E8" }}>.</span>
+          </h2>
+        </div>
+
+        <StyledMenuItem
+          onClick={() => {
+            n("/");
+            handleClose();
+          }}
+          sx={{ mt: "16px !important" }}
+        >
+          <TaskAlt /> &nbsp; Tasks
+          {user.tasks.filter((task) => !task.done).length > 0 && (
+            <MenuLabel clr={ColorPalette.purple}>
+              {user.tasks.filter((task) => !task.done).length}
+            </MenuLabel>
+          )}
+        </StyledMenuItem>
+        <StyledMenuItem
+          onClick={() => {
+            n("/add");
+            handleClose();
+          }}
+        >
+          <Add /> &nbsp; Add Task
+        </StyledMenuItem>
         <StyledMenuItem
           onClick={() => {
             n("/user");
@@ -124,21 +186,78 @@ export const ProfileAvatar = ({ user, setUser }: UserProps) => {
           <GetApp /> &nbsp; Import/Export
         </StyledMenuItem>
 
-        <Divider />
-
+        <Divider sx={{ margin: "0 8px" }} />
         <StyledMenuItem
           onClick={() => {
-            setOpenSettings(true);
-            handleClose();
+            window.open("https://github.com/maciekt07/TodoApp");
           }}
         >
-          <Settings /> &nbsp; Settings
+          <GitHub /> &nbsp; Github
         </StyledMenuItem>
 
-        <StyledMenuItem onClick={handleLogoutConfirmationOpen} sx={{ color: "#ff4040" }}>
+        <StyledMenuItem onClick={handleLogoutConfirmationOpen} sx={{ color: "#ff4040 !important" }}>
           <Logout /> &nbsp; Logout
         </StyledMenuItem>
-      </Menu>
+        <div
+          style={{
+            marginTop: "auto",
+            // marginLeft: "18px",
+            marginBottom: iOS ? "38px" : "18px",
+            display: "flex",
+            flexDirection: "column",
+            gap: "8px",
+          }}
+        >
+          <StyledMenuItem
+            sx={{
+              background: "#101727",
+              color: "white !important",
+              "&:hover": {
+                background: "#101727db !important",
+              },
+            }}
+            onClick={() => {
+              setOpenSettings(true);
+              handleClose();
+            }}
+          >
+            <Settings /> &nbsp; Settings
+          </StyledMenuItem>
+          <Divider sx={{ margin: "0 8px" }} />
+          <StyledMenuItem
+            onClick={() => {
+              n("/user");
+              handleClose();
+            }}
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: "8px",
+              background: "#d7d7d7",
+            }}
+          >
+            <Avatar src={(user.profilePicture as string) || undefined} />
+            <h4 style={{ margin: 0, fontWeight: 600 }}> {user.name || "User"}</h4>
+          </StyledMenuItem>
+          <span
+            style={{
+              fontSize: "12px",
+              margin: "2px 8px",
+              color: "#101727",
+              opacity: 0.8,
+              textAlign: "center",
+            }}
+          >
+            Made with ❤ by{" "}
+            <a
+              style={{ textDecoration: "none", color: "inherit" }}
+              href="https://github.com/maciekt07"
+            >
+              maciekt07
+            </a>
+          </span>
+        </div>
+      </SwipeableDrawer>
 
       <Dialog
         open={logoutConfirmationOpen}
@@ -181,10 +300,16 @@ const Container = styled.div`
   }
 `;
 const StyledMenuItem = styled(MenuItem)`
-  margin: 4px 6px;
-  padding: 10px 12px;
+  margin: 0px 8px;
+  padding: 16px 12px;
   border-radius: 14px;
   box-shadow: none;
+  display: flex;
+  font-weight: 500;
+  color: #101727;
+
+  align-items: center;
+  gap: 6px;
 
   &:hover {
     background-color: #f0f0f0;
@@ -195,4 +320,14 @@ const DialogBtn = styled(Button)`
   border-radius: 12px;
   font-size: 16px;
   margin: 8px;
+`;
+
+const MenuLabel = styled.span<{ clr: string }>`
+  margin-left: auto;
+  font-weight: 500;
+  background: ${({ clr }) => clr + "45"};
+  color: ${({ clr }) => clr};
+  padding: 1px 12px;
+  border-radius: 32px;
+  font-size: 14px;
 `;

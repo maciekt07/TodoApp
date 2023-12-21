@@ -205,7 +205,8 @@ const StyledMenuItem = styled(MenuItem)<{ clr?: string }>`
   padding: 12px;
   border-radius: 12px;
   box-shadow: none;
-  color: ${({ clr }) => clr};
+  color: ${({ clr }) => clr || ColorPalette.fontDark};
+
   &:hover {
     background-color: #f0f0f0;
   }

@@ -483,7 +483,7 @@ export const AddCategoryButton = styled(Button)`
   font-size: 24px;
   background: ${ColorPalette.purple};
   color: #ffffff;
-  border-radius: 26px;
+  border-radius: 999px;
   font-weight: bold;
   cursor: pointer;
   transition: 0.3s all;
