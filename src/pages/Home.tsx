@@ -105,6 +105,7 @@ export const Home = ({ user, setUser }: UserProps) => {
                 value={completedTaskPercentage}
                 size={64}
                 thickness={5}
+                aria-label="Progress"
                 style={{
                   filter: user.settings[0].enableGlow
                     ? `drop-shadow(0 0 6px ${ColorPalette.purple})`

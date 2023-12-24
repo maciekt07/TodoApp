@@ -1,9 +1,11 @@
 import styled from "@emotion/styled";
-import { fadeIn } from ".";
-import { Chip, TextField } from "@mui/material";
+import { ColorPalette, fadeIn } from ".";
+import { Chip, TextField, css } from "@mui/material";
 import { getFontColorFromHex } from "../utils";
+import { Alarm } from "@mui/icons-material";
+import { keyframes } from "@emotion/css";
 
-interface TaskContainerProps {
+interface TaskComponentProps {
   backgroundColor: string;
   clr: string;
   done: boolean;
@@ -11,7 +13,7 @@ interface TaskContainerProps {
   blur: boolean;
 }
 
-export const TaskComponent = styled.div<TaskContainerProps>`
+export const TaskComponent = styled.div<TaskComponentProps>`
   display: flex;
   align-items: center;
   margin-top: 12px;
@@ -34,7 +36,7 @@ export const EmojiContainer = styled.span<{ clr: string }>`
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: ${(props) => (props.clr === "#1A1A1A" ? "#4b4b4b6e" : "#dddddd9d")};
+  background-color: ${(props) => (props.clr === ColorPalette.fontDark ? "#4b4b4b6e" : "#dddddd9d")};
   font-size: 32px;
   padding: 14px;
   width: 42px;
@@ -247,4 +249,42 @@ export const SearchInput = styled(TextField)`
     background: #090b2258;
     color: white;
   }
+`;
+const ring = keyframes`
+  0% { -webkit-transform: rotateZ(0); }
+  1% { -webkit-transform: rotateZ(30deg); }
+  3% { -webkit-transform: rotateZ(-28deg); }
+  5% { -webkit-transform: rotateZ(34deg); }
+  7% { -webkit-transform: rotateZ(-32deg); }
+  9% { -webkit-transform: rotateZ(30deg); }
+  11% { -webkit-transform: rotateZ(-28deg); }
+  13% { -webkit-transform: rotateZ(26deg); }
+  15% { -webkit-transform: rotateZ(-24deg); }
+  17% { -webkit-transform: rotateZ(22deg); }
+  19% { -webkit-transform: rotateZ(-20deg); }
+  21% { -webkit-transform: rotateZ(18deg); }
+  23% { -webkit-transform: rotateZ(-16deg); }
+  25% { -webkit-transform: rotateZ(14deg); }
+  27% { -webkit-transform: rotateZ(-12deg); }
+  29% { -webkit-transform: rotateZ(10deg); }
+  31% { -webkit-transform: rotateZ(-8deg); }
+  33% { -webkit-transform: rotateZ(6deg); }
+  35% { -webkit-transform: rotateZ(-4deg); }
+  37% { -webkit-transform: rotateZ(2deg); }
+  39% { -webkit-transform: rotateZ(-1deg); }
+  41% { -webkit-transform: rotateZ(1deg); }
+  43% { -webkit-transform: rotateZ(0); }
+  100% { -webkit-transform: rotateZ(0); }
+`;
+//TODO: improve timings
+export const RingAlarm = styled(Alarm)<{ animate?: boolean }>`
+  color: red;
+
+  ${({ animate }) =>
+    animate &&
+    css`
+      -webkit-animation: ${ring} 2s 0.5s ease-in-out infinite;
+      -moz-animation: ${ring} 2s 0.5s ease-in-out infinite;
+      animation: ${ring} 2s 0.5s ease-in-out infinite;
+    `}
 `;

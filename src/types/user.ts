@@ -29,6 +29,7 @@ export interface Task {
   deadline?: Date;
   category?: Category[];
   lastSave?: Date;
+  sharedBy?: string;
 }
 
 // export type Emoji = Omit<

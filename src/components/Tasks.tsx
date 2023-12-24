@@ -2,10 +2,10 @@ import { Category, Task, UserProps } from "../types/user";
 import { ReactNode, useEffect, useState } from "react";
 import { calculateDateDifference, formatDate, getFontColorFromHex } from "../utils";
 import {
-  Alarm,
   Cancel,
   Close,
   Done,
+  Link,
   MoreVert,
   Pause,
   PlayArrow,
@@ -34,6 +34,7 @@ import {
   HighlightedText,
   NoTasks,
   Pinned,
+  RingAlarm,
   SearchInput,
   TaskComponent,
   TaskDate,
@@ -452,7 +453,30 @@ export const Tasks = ({ user, setUser }: UserProps): JSX.Element => {
       )
     );
   };
+  const checkOverdueTasks = (tasks: Task[]) => {
+    const overdueTasks = tasks.filter((task) => {
+      return task.deadline && new Date() > new Date(task.deadline) && !task.done;
+    });
 
+    if (overdueTasks.length > 0) {
+      const taskNames = overdueTasks.map((task) => task.name).join(", ");
+      toast.error(
+        (t) => (
+          <div onClick={() => toast.dismiss(t.id)}>
+            <b>Overdue task{overdueTasks.length > 1 && "s"}:</b> {taskNames}
+          </div>
+        ),
+        {
+          duration: 6000,
+          icon: <RingAlarm animate sx={{ color: ColorPalette.red }} />,
+        }
+      );
+    }
+  };
+
+  useEffect(() => {
+    checkOverdueTasks(reorderTasks(user.tasks));
+  }, []);
   return (
     <>
       <TaskMenu
@@ -621,17 +645,19 @@ export const Tasks = ({ user, setUser }: UserProps): JSX.Element => {
 
                 {task.deadline && (
                   <TimeLeft done={task.done}>
-                    <Alarm
+                    <RingAlarm
                       fontSize="small"
+                      animate={new Date() > new Date(task.deadline) && !task.done}
                       sx={{
                         color:
-                          new Date() > new Date(task.deadline) && !task.done
+                          // new Date() > new Date(task.deadline) && !task.done
+                          false
                             ? ColorPalette.red
-                            : getFontColorFromHex(task.color),
-                        filter:
-                          new Date() > new Date(task.deadline) && !task.done
-                            ? `drop-shadow(0 0 6px ${ColorPalette.red})`
-                            : "none",
+                            : `${getFontColorFromHex(task.color)} !important`,
+                        // filter:
+                        //   new Date() > new Date(task.deadline) && !task.done
+                        //     ? `drop-shadow(0 0 6px ${ColorPalette.red})`
+                        //     : "none",
                       }}
                     />{" "}
                     &nbsp;
@@ -645,7 +671,11 @@ export const Tasks = ({ user, setUser }: UserProps): JSX.Element => {
                     )}
                   </TimeLeft>
                 )}
-
+                {task.sharedBy && (
+                  <div style={{ opacity: 0.8, display: "flex", alignItems: "center", gap: "4px" }}>
+                    <Link /> Shared by {task.sharedBy}
+                  </div>
+                )}
                 <div
                   style={{
                     display: "flex",

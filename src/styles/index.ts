@@ -38,4 +38,5 @@ export {
   TaskName,
   HighlightedText,
   SearchInput,
+  RingAlarm,
 } from "./tasks.styled";

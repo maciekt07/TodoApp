@@ -83,6 +83,7 @@ export const BottomNav = ({ user }: BottomNavProps): JSX.Element | null => {
         <NavigationButton
           onClick={() => n("add")}
           showLabel={false}
+          aria-label="Add"
           icon={
             <AddIcon
               fontSize="large"

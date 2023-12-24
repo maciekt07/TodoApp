@@ -17,6 +17,7 @@ import styled from "@emotion/styled";
 import {
   Add,
   Category,
+  Favorite,
   GetApp,
   GitHub,
   Logout,
@@ -43,9 +44,12 @@ export const ProfileAvatar = ({ user, setUser }: UserProps) => {
 
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
+    document.getElementById("root")?.setAttribute("aria-sidebar", "true");
   };
   const handleClose = () => {
     setAnchorEl(null);
+
+    document.getElementById("root")?.removeAttribute("aria-sidebar");
   };
   const handleLogoutConfirmationOpen = () => {
     setLogoutConfirmationOpen(true);
@@ -88,9 +92,12 @@ export const ProfileAvatar = ({ user, setUser }: UserProps) => {
               height: "52px",
               background: "#747474",
               transition: ".2s all",
+              fontSize: "26px",
               // WebkitTransform: "translate3d(0,0,0)",
             }}
-          />
+          >
+            {user.name ? user.name[0].toUpperCase() : undefined}
+          </Avatar>
         </IconButton>
       </Tooltip>
       <SwipeableDrawer
@@ -236,7 +243,9 @@ export const ProfileAvatar = ({ user, setUser }: UserProps) => {
               background: "#d7d7d7",
             }}
           >
-            <Avatar src={(user.profilePicture as string) || undefined} />
+            <Avatar src={(user.profilePicture as string) || undefined}>
+              {user.name ? user.name[0].toUpperCase() : undefined}
+            </Avatar>
             <h4 style={{ margin: 0, fontWeight: 600 }}> {user.name || "User"}</h4>
           </StyledMenuItem>
           <span
@@ -246,9 +255,15 @@ export const ProfileAvatar = ({ user, setUser }: UserProps) => {
               color: "#101727",
               opacity: 0.8,
               textAlign: "center",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
             }}
           >
-            Made with ❤ by{" "}
+            <span style={{ display: "flex", alignItems: "center" }}>
+              Made with &nbsp; <Favorite sx={{ fontSize: "16px" }} />
+            </span>
+            <span style={{ marginLeft: "6px", marginRight: "4px" }}>by</span>{" "}
             <a
               style={{ textDecoration: "none", color: "inherit" }}
               href="https://github.com/maciekt07"

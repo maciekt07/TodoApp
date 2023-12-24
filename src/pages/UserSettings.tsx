@@ -104,8 +104,15 @@ export const UserSettings = ({ user, setUser }: UserProps) => {
                 width: "96px",
                 height: "96px",
                 cursor: "pointer",
+                fontSize: "45px",
               }}
-            />
+            >
+              {!user.profilePicture && name
+                ? name[0].toUpperCase()
+                : !user.profilePicture && !name && user.name
+                ? user.name[0].toUpperCase()
+                : undefined}
+            </Avatar>
           </Badge>
         </Tooltip>
         <UserName>{user.name || "User"}</UserName>
