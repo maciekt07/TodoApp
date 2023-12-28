@@ -34,6 +34,8 @@ export const SettingsDialog = ({ open, onClose, user, setUser }: SettingsProps) 
   const [settings, setSettings] = useState<AppSettings>(user.settings[0]);
   const [lastStyle] = useState<EmojiStyle>(user.emojisStyle);
   const [availableVoices, setAvailableVoices] = useState<SpeechSynthesisVoice[]>([]);
+  const [voiceVolume, setVoiceVolume] = useState<number>(user.settings[0].voiceVolume);
+
   const [prevVoiceVol, setPrevVoiceVol] = useState<number>(user.settings[0].voiceVolume);
 
   const isOnline = useOnlineStatus();
@@ -115,6 +117,7 @@ export const SettingsDialog = ({ open, onClose, user, setUser }: SettingsProps) 
   // Function to handle changes in voice volume
   const handleVoiceVolChange = (e: Event, value: number | number[]) => {
     e.preventDefault();
+    setVoiceVolume(value as number);
     // Update user settings with the new voice volume
     setUser((prevUser) => ({
       ...prevUser,
@@ -130,12 +133,13 @@ export const SettingsDialog = ({ open, onClose, user, setUser }: SettingsProps) 
   // Function to handle mute/unmute button click
   const handleMuteClick = () => {
     // Retrieve the current voice volume from user settings
-    const vol = user.settings[0].voiceVolume;
+    const vol = voiceVolume;
 
     // Save the previous voice volume before muting
     setPrevVoiceVol(vol);
 
-    const newVoiceVolume = vol === 0 ? (prevVoiceVol !== 0 ? prevVoiceVol : 1) : 0;
+    const newVoiceVolume =
+      vol === 0 ? (prevVoiceVol !== 0 ? prevVoiceVol : defaultUser.settings[0].voiceVolume) : 0;
 
     setUser((prevUser) => ({
       ...prevUser,
@@ -146,6 +150,7 @@ export const SettingsDialog = ({ open, onClose, user, setUser }: SettingsProps) 
         },
       ],
     }));
+    setVoiceVolume(newVoiceVolume);
   };
   return (
     <Dialog
@@ -340,7 +345,7 @@ export const SettingsDialog = ({ open, onClose, user, setUser }: SettingsProps) 
                     sx={{
                       width: "200px",
                     }}
-                    value={user.settings[0].voiceVolume}
+                    value={voiceVolume}
                     onChange={handleVoiceVolChange}
                     min={0}
                     max={1}
