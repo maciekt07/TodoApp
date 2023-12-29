@@ -1,6 +1,6 @@
 import { css } from "@emotion/react";
 import styled from "@emotion/styled";
-import { Add } from "@mui/icons-material";
+import { AddRounded } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
 import { ColorPalette, pulseAnimation } from "../styles";
 import { Button, Tooltip } from "@mui/material";
@@ -29,7 +29,7 @@ export const AddTaskBtn = ({ animate, user }: AddTaskBtnProps): JSX.Element | nu
         onClick={() => n("add")}
         aria-label="Add Task"
       >
-        <Add style={{ fontSize: "38px" }} />
+        <AddRounded style={{ fontSize: "42px" }} />
       </Btn>
     </Tooltip>
   );

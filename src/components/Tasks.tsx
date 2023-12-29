@@ -537,6 +537,7 @@ export const Tasks = ({ user, setUser }: UserProps): JSX.Element => {
             >
               {categories?.map((cat) => (
                 <CategoryChip
+                  translate="no"
                   label={
                     <div>
                       <span style={{ fontWeight: "bold" }}>{cat.name}</span>
@@ -637,9 +638,9 @@ export const Tasks = ({ user, setUser }: UserProps): JSX.Element => {
                   )}
                 </EmojiContainer>
               ) : null}
-              <TaskInfo>
+              <TaskInfo translate="no">
                 {task.pinned && (
-                  <Pinned>
+                  <Pinned translate="yes">
                     <PushPinRounded fontSize="small" /> &nbsp; Pinned
                   </Pinned>
                 )}
@@ -659,7 +660,7 @@ export const Tasks = ({ user, setUser }: UserProps): JSX.Element => {
                 </TaskDescription>
 
                 {task.deadline && (
-                  <TimeLeft done={task.done}>
+                  <TimeLeft done={task.done} translate="yes">
                     <RingAlarm
                       fontSize="small"
                       animate={new Date() > new Date(task.deadline) && !task.done}

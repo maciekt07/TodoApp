@@ -40,10 +40,18 @@ export const SharePage = ({ user, setUser }: UserProps) => {
     if (taskData) {
       // Add missing categories to user.categories
       const updatedCategories = [...user.categories];
+
       if (taskData.category) {
         taskData.category.forEach((taskCategory) => {
-          const existingCategory = updatedCategories.find((cat) => cat.id === taskCategory.id);
-          if (!existingCategory) {
+          const existingCategoryIndex = updatedCategories.findIndex(
+            (cat) => cat.id === taskCategory.id
+          );
+
+          if (existingCategoryIndex !== -1) {
+            // If category with the same ID exists, replace it with the new category
+            updatedCategories[existingCategoryIndex] = taskCategory;
+          } else {
+            // Otherwise, add the new category to the array
             updatedCategories.push(taskCategory);
           }
         });
@@ -57,7 +65,6 @@ export const SharePage = ({ user, setUser }: UserProps) => {
           {
             ...taskData,
             id: new Date().getTime() + Math.floor(Math.random() * 1000),
-            // date: new Date(),
             sharedBy: userName,
           },
         ],

@@ -231,6 +231,7 @@ export const ImportExport = ({ user, setUser }: UserProps) => {
               backgroundclr={task.color}
               onClick={() => handleTaskClick(task.id)}
               selected={selectedTasks.includes(task.id)}
+              translate="no"
             >
               <Checkbox size="medium" checked={selectedTasks.includes(task.id)} />
               <Typography

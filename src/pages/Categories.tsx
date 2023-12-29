@@ -211,7 +211,7 @@ export const Categories = ({ user, setUser }: UserProps) => {
 
               return (
                 <CategoryDiv key={category.id} clr={category.color}>
-                  <CategoryContent>
+                  <CategoryContent translate="no">
                     <span>
                       {category.emoji && (
                         <Emoji unified={category.emoji} emojiStyle={user.emojisStyle} />

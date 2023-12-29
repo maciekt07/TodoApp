@@ -164,6 +164,7 @@ export const ProfileAvatar = ({ user, setUser }: UserProps) => {
         }}
       >
         <LogoContainer
+          translate="no"
           onClick={() => {
             n("/");
             handleClose();

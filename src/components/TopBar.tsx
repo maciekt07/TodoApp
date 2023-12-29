@@ -13,7 +13,7 @@ export const TopBar = ({ title }: TopBarProps) => {
   return (
     <Container>
       <BackBtn onClick={handleBackClick}>
-        <ArrowBackIosNew /> &nbsp; Back
+        <ArrowBackIosNew />
       </BackBtn>
       <Title>{title}</Title>
     </Container>

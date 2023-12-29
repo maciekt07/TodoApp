@@ -168,7 +168,7 @@ export const SettingsDialog = ({ open, onClose, user, setUser }: SettingsProps) 
         <FormGroup>
           <FormControl>
             <FormLabel>Emoji Settings</FormLabel>
-            <StyledSelect value={user.emojisStyle} onChange={handleEmojiStyleChange}>
+            <StyledSelect value={user.emojisStyle} onChange={handleEmojiStyleChange} translate="no">
               {/* Show a disabled menu item when offline, indicating that the style can't be changed */}
               {!isOnline && (
                 <MenuItem
@@ -188,6 +188,7 @@ export const SettingsDialog = ({ open, onClose, user, setUser }: SettingsProps) 
                 <MenuItem
                   key={style.style}
                   value={style.style}
+                  translate="no"
                   // Disable non-native styles when offline or if they are not the default style or last selected style
                   // This prevents users from selecting styles that require fetching external resources (emojis) when offline,
                   // as those emojis may not load without an internet connection.
@@ -275,6 +276,7 @@ export const SettingsDialog = ({ open, onClose, user, setUser }: SettingsProps) 
                   value={user.settings[0].voice}
                   // Handle the voice selection change
                   onChange={handleVoiceChange}
+                  translate="no"
                   MenuProps={{
                     PaperProps: {
                       style: {
@@ -289,6 +291,7 @@ export const SettingsDialog = ({ open, onClose, user, setUser }: SettingsProps) 
                     <MenuItem
                       key={voice.name}
                       value={voice.name}
+                      translate="no"
                       sx={{
                         padding: "10px",
                         borderRadius: "6px",
