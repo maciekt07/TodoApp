@@ -165,6 +165,9 @@ const globalStyles = css`
       display: none;
     }
   }
+  .MuiCheckbox-colorPrimary {
+    color: #ffffffc8 !important;
+  }
 `;
 
 export const GlobalStyles = () => <Global styles={globalStyles} />;

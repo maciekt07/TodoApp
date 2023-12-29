@@ -18,7 +18,7 @@ import {
 import { Delete, Edit } from "@mui/icons-material";
 import { CATEGORY_NAME_MAX_LENGTH } from "../constants";
 import { getFontColorFromHex } from "../utils";
-import { ColorPalette, fadeIn } from "../styles";
+import { ColorPalette, DialogBtn, fadeIn } from "../styles";
 import toast from "react-hot-toast";
 import { NotFound } from "./NotFound";
 
@@ -501,9 +501,9 @@ export const AddCategoryButton = styled(Button)`
     color: white;
   }
 `;
-const DialogBtn = styled(Button)`
-  padding: 8px 12px;
-  border-radius: 12px;
-  font-size: 16px;
-  margin: 8px;
-`;
+// const DialogBtn = styled(Button)`
+//   padding: 8px 12px;
+//   border-radius: 12px;
+//   font-size: 16px;
+//   margin: 8px;
+// `;

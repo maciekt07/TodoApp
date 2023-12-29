@@ -7,7 +7,7 @@ import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 import styled from "@emotion/styled";
 import { Emoji } from "emoji-picker-react";
-import { FileDownload, FileUpload, Info } from "@mui/icons-material";
+import { FileDownload, FileUpload, Info, Link } from "@mui/icons-material";
 import { exportTasksToJson } from "../utils";
 import { IconButton, Tooltip } from "@mui/material";
 import {
@@ -236,7 +236,7 @@ export const ImportExport = ({ user, setUser }: UserProps) => {
               <Typography
                 variant="body1"
                 component="span"
-                sx={{ display: "flex", alignItems: "center", gap: "6px" }}
+                sx={{ display: "flex", alignItems: "center", gap: "6px", wordBreak: "break-word" }}
               >
                 <Emoji size={24} unified={task.emoji || ""} emojiStyle={user.emojisStyle} />{" "}
                 {task.name}
@@ -312,6 +312,30 @@ export const ImportExport = ({ user, setUser }: UserProps) => {
             <FileUpload /> &nbsp; Select JSON File
           </Button>
         </label>
+        <StyledButton
+          variant="outlined"
+          onClick={() => {
+            navigator.clipboard
+              .readText()
+              .then((text) => {
+                if (text.startsWith(`${location.protocol}//${location.hostname}`)) {
+                  window.open(text, "_self");
+                } else {
+                  toast.error((t) => (
+                    <div onClick={() => toast.dismiss(t.id)}>
+                      Failed to import task from the provided link. Please ensure that the link is
+                      copied correctly.
+                    </div>
+                  ));
+                }
+              })
+              .catch((err) => {
+                console.error("Failed to read clipboard contents: ", err);
+              });
+          }}
+        >
+          <Link /> &nbsp; Import From Link
+        </StyledButton>
       </Box>
     </>
   );

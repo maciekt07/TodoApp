@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Avatar,
   Button,
@@ -15,15 +15,16 @@ import {
 import { UserProps } from "../types/user";
 import styled from "@emotion/styled";
 import {
-  Add,
-  Category,
+  AddRounded,
+  CategoryRounded,
   Favorite,
-  GetApp,
+  GetAppRounded,
   GitHub,
   Logout,
-  Person,
-  Settings,
-  TaskAlt,
+  PersonRounded,
+  SettingsRounded,
+  StarRounded,
+  TaskAltRounded,
 } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
 import { defaultUser } from "../constants/defaultUser";
@@ -41,6 +42,45 @@ export const ProfileAvatar = ({ user, setUser }: UserProps) => {
   const [openSettings, setOpenSettings] = useState<boolean>(false);
 
   const iOS = typeof navigator !== "undefined" && /iPad|iPhone|iPod/.test(navigator.userAgent);
+
+  const [stars, setStars] = useState<number | null>(null);
+  const [lastUpdate, setLastUpdate] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchRepoInfo = async () => {
+      const username = "maciekt07";
+      const repo = "TodoApp";
+      const branch = "gh-pages";
+      try {
+        // Make a request to the GitHub API for repository and branch information
+        const [repoResponse, branchResponse] = await Promise.all([
+          fetch(`https://api.github.com/repos/${username}/${repo}`),
+          fetch(`https://api.github.com/repos/${username}/${repo}/branches/${branch}`),
+        ]);
+
+        // Check if both requests were successful
+        if (repoResponse.ok && branchResponse.ok) {
+          const [repoData, branchData] = await Promise.all([
+            repoResponse.json(),
+            branchResponse.json(),
+          ]);
+
+          // Get the number of stars
+          setStars(repoData.stargazers_count);
+
+          // Get the 'committer' information
+          setLastUpdate(branchData.commit.commit.committer.date);
+        } else {
+          throw new Error("Failed to fetch repository information");
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    // Call the fetch function
+    fetchRepoInfo();
+  }, []);
 
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
@@ -78,6 +118,7 @@ export const ProfileAvatar = ({ user, setUser }: UserProps) => {
         >
           <Avatar
             src={(user.profilePicture as string) || undefined}
+            alt={user.name || "User"}
             onError={() => {
               setUser((prevUser) => ({
                 ...prevUser,
@@ -122,15 +163,7 @@ export const ProfileAvatar = ({ user, setUser }: UserProps) => {
           },
         }}
       >
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            flexDirection: "row",
-            marginTop: "8px",
-            gap: "16px",
-            cursor: "pointer",
-          }}
+        <LogoContainer
           onClick={() => {
             n("/");
             handleClose();
@@ -141,7 +174,7 @@ export const ProfileAvatar = ({ user, setUser }: UserProps) => {
             <span style={{ color: "#7764E8" }}>Todo</span> App
             <span style={{ color: "#7764E8" }}>.</span>
           </h2>
-        </div>
+        </LogoContainer>
 
         <StyledMenuItem
           onClick={() => {
@@ -150,7 +183,7 @@ export const ProfileAvatar = ({ user, setUser }: UserProps) => {
           }}
           sx={{ mt: "16px !important" }}
         >
-          <TaskAlt /> &nbsp; Tasks
+          <TaskAltRounded /> &nbsp; Tasks
           {user.tasks.filter((task) => !task.done).length > 0 && (
             <MenuLabel clr={ColorPalette.purple}>
               {user.tasks.filter((task) => !task.done).length}
@@ -163,7 +196,7 @@ export const ProfileAvatar = ({ user, setUser }: UserProps) => {
             handleClose();
           }}
         >
-          <Add /> &nbsp; Add Task
+          <AddRounded /> &nbsp; Add Task
         </StyledMenuItem>
         <StyledMenuItem
           onClick={() => {
@@ -171,7 +204,7 @@ export const ProfileAvatar = ({ user, setUser }: UserProps) => {
             handleClose();
           }}
         >
-          <Person /> &nbsp; Profile
+          <PersonRounded /> &nbsp; Profile
         </StyledMenuItem>
 
         {user.settings[0].enableCategories !== undefined && user.settings[0].enableCategories && (
@@ -181,7 +214,7 @@ export const ProfileAvatar = ({ user, setUser }: UserProps) => {
               handleClose();
             }}
           >
-            <Category /> &nbsp; Categories
+            <CategoryRounded /> &nbsp; Categories
           </StyledMenuItem>
         )}
         <StyledMenuItem
@@ -190,7 +223,7 @@ export const ProfileAvatar = ({ user, setUser }: UserProps) => {
             handleClose();
           }}
         >
-          <GetApp /> &nbsp; Import/Export
+          <GetAppRounded /> &nbsp; Import/Export
         </StyledMenuItem>
 
         <Divider sx={{ margin: "0 8px" }} />
@@ -199,7 +232,15 @@ export const ProfileAvatar = ({ user, setUser }: UserProps) => {
             window.open("https://github.com/maciekt07/TodoApp");
           }}
         >
-          <GitHub /> &nbsp; Github
+          <GitHub /> &nbsp; Github{" "}
+          {stars && (
+            <MenuLabel clr="#ff9d00">
+              <span style={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
+                <StarRounded style={{ fontSize: "18px" }} />
+                &nbsp;{stars}
+              </span>
+            </MenuLabel>
+          )}
         </StyledMenuItem>
 
         <StyledMenuItem onClick={handleLogoutConfirmationOpen} sx={{ color: "#ff4040 !important" }}>
@@ -228,7 +269,7 @@ export const ProfileAvatar = ({ user, setUser }: UserProps) => {
               handleClose();
             }}
           >
-            <Settings /> &nbsp; Settings
+            <SettingsRounded /> &nbsp; Settings
           </StyledMenuItem>
           <Divider sx={{ margin: "0 8px" }} />
           <StyledMenuItem
@@ -241,6 +282,7 @@ export const ProfileAvatar = ({ user, setUser }: UserProps) => {
               alignItems: "center",
               gap: "8px",
               background: "#d7d7d7",
+              // marginBottom: "12px",
             }}
           >
             <Avatar src={(user.profilePicture as string) || undefined}>
@@ -248,18 +290,8 @@ export const ProfileAvatar = ({ user, setUser }: UserProps) => {
             </Avatar>
             <h4 style={{ margin: 0, fontWeight: 600 }}> {user.name || "User"}</h4>
           </StyledMenuItem>
-          <span
-            style={{
-              fontSize: "12px",
-              margin: "2px 8px",
-              color: "#101727",
-              opacity: 0.8,
-              textAlign: "center",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-            }}
-          >
+          <Divider sx={{ margin: "0 8px" }} />
+          <CreditsContainer>
             <span style={{ display: "flex", alignItems: "center" }}>
               Made with &nbsp; <Favorite sx={{ fontSize: "16px" }} />
             </span>
@@ -270,7 +302,17 @@ export const ProfileAvatar = ({ user, setUser }: UserProps) => {
             >
               maciekt07
             </a>
-          </span>
+            <br />
+          </CreditsContainer>
+          <CreditsContainer>
+            {lastUpdate && (
+              <span style={{ margin: 0 }}>
+                Last Update: {new Date(lastUpdate).toLocaleDateString()}
+                {" • "}
+                {new Date(lastUpdate).toLocaleTimeString()}
+              </span>
+            )}
+          </CreditsContainer>
         </div>
       </SwipeableDrawer>
 
@@ -339,10 +381,30 @@ const DialogBtn = styled(Button)`
 
 const MenuLabel = styled.span<{ clr: string }>`
   margin-left: auto;
-  font-weight: 500;
-  background: ${({ clr }) => clr + "45"};
+  font-weight: 600;
+  background: ${({ clr }) => clr + "35"};
   color: ${({ clr }) => clr};
-  padding: 1px 12px;
+  padding: 2px 12px;
   border-radius: 32px;
   font-size: 14px;
+`;
+
+const LogoContainer = styled.div`
+  display: flex;
+  align-items: center;
+  flex-direction: row;
+  margin-top: 8px;
+  gap: 16px;
+  cursor: pointer;
+`;
+
+const CreditsContainer = styled.div`
+  font-size: 12px;
+  margin: 0;
+  color: #101727;
+  opacity: 0.8;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 `;

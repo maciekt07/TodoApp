@@ -1,4 +1,10 @@
-import { Add, Category, GetApp, Person, TaskAlt } from "@mui/icons-material";
+import {
+  AddRounded,
+  CategoryRounded,
+  GetAppRounded,
+  PersonRounded,
+  TaskAlt,
+} from "@mui/icons-material";
 import { BottomNavigation, BottomNavigationAction, Box, css, styled } from "@mui/material";
 import { ColorPalette, pulseAnimation, slideInBottom } from "../styles";
 import { useEffect, useState } from "react";
@@ -77,7 +83,7 @@ export const BottomNav = ({ user }: BottomNavProps): JSX.Element | null => {
         <NavigationButton
           onClick={() => n("/categories")}
           label="Categories"
-          icon={<Category sx={{ fontSize: smallIconSize }} />}
+          icon={<CategoryRounded sx={{ fontSize: smallIconSize }} />}
           disabled={!user.settings[0].enableCategories}
         />
         <NavigationButton
@@ -94,19 +100,19 @@ export const BottomNav = ({ user }: BottomNavProps): JSX.Element | null => {
         <NavigationButton
           onClick={() => n("import-export")}
           label="Import/Export"
-          icon={<GetApp sx={{ fontSize: smallIconSize }} />}
+          icon={<GetAppRounded sx={{ fontSize: smallIconSize }} />}
         />
         <NavigationButton
           onClick={() => n("user")}
           label="Profile"
-          icon={<Person sx={{ fontSize: smallIconSize }} />}
+          icon={<PersonRounded sx={{ fontSize: smallIconSize }} />}
         />
       </StyledBottomNavigation>
     </Container>
   );
 };
 
-const AddIcon = styled(Add)<{ animate?: boolean }>`
+const AddIcon = styled(AddRounded)<{ animate?: boolean }>`
   border: 2px solid ${ColorPalette.purple};
   background-color: #232e58;
   font-size: 38px;

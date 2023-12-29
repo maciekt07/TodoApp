@@ -9,7 +9,7 @@ import {
   MoreVert,
   Pause,
   PlayArrow,
-  PushPin,
+  PushPinRounded,
   RecordVoiceOver,
   Search,
 } from "@mui/icons-material";
@@ -462,7 +462,7 @@ export const Tasks = ({ user, setUser }: UserProps): JSX.Element => {
       const taskNames = overdueTasks.map((task) => task.name).join(", ");
       toast.error(
         (t) => (
-          <div onClick={() => toast.dismiss(t.id)}>
+          <div onClick={() => toast.dismiss(t.id)} style={{ wordBreak: "break-word" }}>
             <b>Overdue task{overdueTasks.length > 1 && "s"}:</b> {taskNames}
           </div>
         ),
@@ -598,7 +598,22 @@ export const Tasks = ({ user, setUser }: UserProps): JSX.Element => {
               ))}
             </CategoriesListContainer>
           )}
-
+        {search && reorderTasks(user.tasks).length > 0 && user.tasks.length > 0 && (
+          <div
+            style={{
+              textAlign: "center",
+              fontSize: "18px",
+              opacity: 0.9,
+              marginTop: "12px",
+              // marginBottom: "6px",
+            }}
+          >
+            <b>
+              Found {reorderTasks(user.tasks).length} task
+              {reorderTasks(user.tasks).length > 1 ? "s" : ""}
+            </b>
+          </div>
+        )}
         {user.tasks.length !== 0 ? (
           reorderTasks(user.tasks).map((task) => (
             <TaskComponent
@@ -625,7 +640,7 @@ export const Tasks = ({ user, setUser }: UserProps): JSX.Element => {
               <TaskInfo>
                 {task.pinned && (
                   <Pinned>
-                    <PushPin fontSize="small" /> &nbsp; Pinned
+                    <PushPinRounded fontSize="small" /> &nbsp; Pinned
                   </Pinned>
                 )}
                 <TaskHeader>

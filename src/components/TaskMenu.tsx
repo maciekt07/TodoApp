@@ -1,13 +1,13 @@
 import {
   ContentCopy,
-  Delete,
+  DeleteRounded,
   Done,
-  Edit,
+  EditRounded,
   IosShare,
-  Launch,
-  Link,
-  PushPin,
-  RecordVoiceOver,
+  LaunchRounded,
+  LinkRounded,
+  PushPinRounded,
+  RecordVoiceOverRounded,
 } from "@mui/icons-material";
 import { User } from "../types/user";
 import {
@@ -132,18 +132,18 @@ export const TaskMenu = ({
           handlePin();
         }}
       >
-        <PushPin /> &nbsp;{" "}
+        <PushPinRounded /> &nbsp;{" "}
         {user.tasks.find((task) => task.id === selectedTaskId)?.pinned ? "Unpin" : "Pin"}
       </StyledMenuItem>
       <StyledMenuItem onClick={redirectToTaskDetails}>
-        <Launch /> &nbsp; Task details
+        <LaunchRounded /> &nbsp; Task details
       </StyledMenuItem>
       {user.settings[0].enableReadAloud && (
         <StyledMenuItem
           onClick={handleReadAloud}
           disabled={window.speechSynthesis.speaking || window.speechSynthesis.pending}
         >
-          <RecordVoiceOver /> &nbsp; Read Aloud
+          <RecordVoiceOverRounded /> &nbsp; Read Aloud
         </StyledMenuItem>
       )}
 
@@ -154,7 +154,7 @@ export const TaskMenu = ({
           setShowShareDialog(true);
         }}
       >
-        <Link /> &nbsp; Share
+        <LinkRounded /> &nbsp; Share
       </StyledMenuItem>
       <Divider />
       <StyledMenuItem
@@ -163,7 +163,7 @@ export const TaskMenu = ({
           setEditModalOpen(true);
         }}
       >
-        <Edit /> &nbsp; Edit
+        <EditRounded /> &nbsp; Edit
       </StyledMenuItem>
       <StyledMenuItem onClick={handleDuplicateTask}>
         <ContentCopy /> &nbsp; Duplicate
@@ -176,7 +176,7 @@ export const TaskMenu = ({
           handleDeleteTask();
         }}
       >
-        <Delete /> &nbsp; Delete
+        <DeleteRounded /> &nbsp; Delete
       </StyledMenuItem>
     </div>
   );

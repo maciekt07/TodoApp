@@ -66,6 +66,8 @@ export const TaskName = styled.h3<{ done: boolean }>`
   font-size: 20px;
   margin: 0;
   text-decoration: ${({ done }) => (done ? "line-through" : "none")};
+  word-break: break-word;
+  white-space: pre-line;
 `;
 
 export const TaskDate = styled.p`
@@ -87,6 +89,7 @@ export const TaskDescription = styled.p<{ done: boolean }>`
   margin: 0;
   font-size: 18px;
   text-decoration: ${({ done }) => (done ? "line-through" : "none")};
+  word-break: break-word;
   /* white-space: pre-line;
   line-height: 1em; */
 `;

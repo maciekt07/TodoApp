@@ -33,9 +33,9 @@ interface SettingsProps extends UserProps {
 export const SettingsDialog = ({ open, onClose, user, setUser }: SettingsProps) => {
   const [settings, setSettings] = useState<AppSettings>(user.settings[0]);
   const [lastStyle] = useState<EmojiStyle>(user.emojisStyle);
+
   const [availableVoices, setAvailableVoices] = useState<SpeechSynthesisVoice[]>([]);
   const [voiceVolume, setVoiceVolume] = useState<number>(user.settings[0].voiceVolume);
-
   const [prevVoiceVol, setPrevVoiceVol] = useState<number>(user.settings[0].voiceVolume);
 
   const isOnline = useOnlineStatus();
@@ -98,7 +98,6 @@ export const SettingsDialog = ({ open, onClose, user, setUser }: SettingsProps) 
     // Handle the selected voice
     const selectedVoice = availableVoices.find((voice) => voice.name === event.target.value);
 
-    // Handle your logic with the selected voice (e.g., updating user settings)
     if (selectedVoice) {
       console.log("Selected Voice:", selectedVoice);
 
