@@ -7,19 +7,16 @@ import {
 } from "@mui/icons-material";
 import { BottomNavigation, BottomNavigationAction, Box, css, styled } from "@mui/material";
 import { ColorPalette, pulseAnimation, slideInBottom } from "../styles";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useResponsiveDisplay } from "../hooks/useResponsiveDisplay";
-import { User } from "../types/user";
-
-interface BottomNavProps {
-  user: User;
-}
+import { UserContext } from "../contexts/UserContext";
 
 /**
  * Component for rendering the bottom navigation bar.
  */
-export const BottomNav = ({ user }: BottomNavProps): JSX.Element | null => {
+export const BottomNav = (): JSX.Element | null => {
+  const { user } = useContext(UserContext);
   const isMobile = useResponsiveDisplay();
   const location = useLocation();
   const [value, setValue] = useState<number | undefined>();

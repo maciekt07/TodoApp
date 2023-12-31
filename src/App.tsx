@@ -9,6 +9,7 @@ import { MainLayout } from "./layouts/MainLayout";
 import { AppRouter } from "./router";
 import { Toaster } from "react-hot-toast";
 import { useResponsiveDisplay } from "./hooks/useResponsiveDisplay";
+import { UserContext } from "./contexts/UserContext";
 
 function App() {
   const [user, setUser] = useStorageState<User>(defaultUser, "user");
@@ -94,11 +95,13 @@ function App() {
             },
           }}
         />
-        <ErrorBoundary user={user}>
-          <MainLayout {...userProps}>
-            <AppRouter {...userProps} />
-          </MainLayout>
-        </ErrorBoundary>
+        <UserContext.Provider value={{ user, setUser }}>
+          <ErrorBoundary user={user}>
+            <MainLayout {...userProps}>
+              <AppRouter />
+            </MainLayout>
+          </ErrorBoundary>
+        </UserContext.Provider>
       </ThemeProvider>
     </>
   );

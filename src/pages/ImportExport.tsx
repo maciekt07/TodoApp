@@ -1,8 +1,8 @@
-import { useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import Button from "@mui/material/Button";
 import Checkbox from "@mui/material/Checkbox";
 import { TopBar } from "../components";
-import { Task, UserProps } from "../types/user";
+import { Task } from "../types/user";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 import styled from "@emotion/styled";
@@ -17,8 +17,10 @@ import {
 } from "../constants";
 import toast from "react-hot-toast";
 import { ColorPalette } from "../styles";
+import { UserContext } from "../contexts/UserContext";
 
-export const ImportExport = ({ user, setUser }: UserProps) => {
+export const ImportExport = () => {
+  const { user, setUser } = useContext(UserContext);
   const [selectedTasks, setSelectedTasks] = useState<number[]>([]); // Array of selected task IDs
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 

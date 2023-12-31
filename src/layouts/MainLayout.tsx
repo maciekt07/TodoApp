@@ -1,18 +1,17 @@
 import { ReactNode } from "react";
 import { BottomNav, ProfileAvatar } from "../components";
-import { UserProps } from "../types/user";
 
-interface MainLayoutProps extends UserProps {
+interface MainLayoutProps {
   children: ReactNode;
 }
 
-export const MainLayout = ({ children, user, setUser }: MainLayoutProps) => {
+export const MainLayout = ({ children }: MainLayoutProps) => {
   return (
     <>
-      <ProfileAvatar user={user} setUser={setUser} />
+      <ProfileAvatar />
       {children}
       <div style={{ marginTop: "128px" }} />
-      <BottomNav user={user} />
+      <BottomNav />
     </>
   );
 };

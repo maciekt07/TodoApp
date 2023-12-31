@@ -1,14 +1,16 @@
 import { Avatar, Dialog, DialogActions, DialogContent, DialogTitle } from "@mui/material";
 import { CategoryChip, DialogBtn } from "../styles";
 import { useLocation, useNavigate } from "react-router-dom";
-import { useEffect, useState } from "react";
-import { Task, UserProps } from "../types/user";
+import { useContext, useEffect, useState } from "react";
+import { Task } from "../types/user";
 import toast from "react-hot-toast";
 import { getFontColorFromHex } from "../utils";
 import { Emoji, EmojiStyle } from "emoji-picker-react";
+import { UserContext } from "../contexts/UserContext";
 
 //FIXME: make everything type-safe
-export const SharePage = ({ user, setUser }: UserProps) => {
+export const SharePage = () => {
+  const { user, setUser } = useContext(UserContext);
   const n = useNavigate();
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);

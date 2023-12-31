@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import {
   Dialog,
   DialogTitle,
@@ -7,22 +7,23 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import { Category, Task, User } from "../types/user";
+import { Category, Task } from "../types/user";
 import styled from "@emotion/styled";
 import { DESCRIPTION_MAX_LENGTH, TASK_NAME_MAX_LENGTH } from "../constants";
 import { DialogBtn } from "../styles";
 import { CategorySelect, ColorPicker, CustomEmojiPicker } from ".";
 import toast from "react-hot-toast";
+import { UserContext } from "../contexts/UserContext";
 
 interface EditTaskProps {
   open: boolean;
   task?: Task;
   onClose: () => void;
   onSave: (editedTask: Task) => void;
-  user: User;
 }
 
-export const EditTask = ({ open, task, onClose, onSave, user }: EditTaskProps) => {
+export const EditTask = ({ open, task, onClose, onSave }: EditTaskProps) => {
+  const { user } = useContext(UserContext);
   const [editedTask, setEditedTask] = useState<Task | undefined>(task);
   const [nameError, setNameError] = useState<boolean>(false);
   const [descriptionError, setDescriptionError] = useState<boolean>(false);
@@ -146,7 +147,6 @@ export const EditTask = ({ open, task, onClose, onSave, user }: EditTaskProps) =
       </DialogTitle>
       <DialogContent>
         <CustomEmojiPicker
-          user={user}
           emoji={editedTask?.emoji || undefined}
           setEmoji={setEmoji}
           color={editedTask?.color}
@@ -198,7 +198,6 @@ export const EditTask = ({ open, task, onClose, onSave, user }: EditTaskProps) =
           <>
             <Label>Category</Label>
             <CategorySelect
-              user={user}
               selectedCategories={selectedCategories}
               setSelectedCategories={setSelectedCategories}
             />

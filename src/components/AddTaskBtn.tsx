@@ -4,15 +4,16 @@ import { AddRounded } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
 import { ColorPalette, pulseAnimation } from "../styles";
 import { Button, Tooltip } from "@mui/material";
-import { User } from "../types/user";
 import { useResponsiveDisplay } from "../hooks/useResponsiveDisplay";
+import { useContext } from "react";
+import { UserContext } from "../contexts/UserContext";
 
 interface AddTaskBtnProps {
   animate: boolean;
-  user: User;
 }
 
-export const AddTaskBtn = ({ animate, user }: AddTaskBtnProps): JSX.Element | null => {
+export const AddTaskBtn = ({ animate }: AddTaskBtnProps): JSX.Element | null => {
+  const { user } = useContext(UserContext);
   const n = useNavigate();
   const isMobile = useResponsiveDisplay();
 

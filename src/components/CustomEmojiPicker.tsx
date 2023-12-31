@@ -1,22 +1,22 @@
-import { useState, useEffect, Dispatch, SetStateAction, CSSProperties } from "react";
+import { useState, useEffect, Dispatch, SetStateAction, CSSProperties, useContext } from "react";
 import styled from "@emotion/styled";
 import { Avatar, Badge, Button, Tooltip } from "@mui/material";
 import { AddReaction, Edit, RemoveCircleOutline } from "@mui/icons-material";
 import EmojiPicker, { Emoji, EmojiClickData, EmojiStyle, SuggestionMode } from "emoji-picker-react";
 import { getFontColorFromHex } from "../utils";
 import { ColorPalette } from "../styles";
-import { User } from "../types/user";
+import { UserContext } from "../contexts/UserContext";
 
 interface EmojiPickerProps {
   emoji?: string;
   setEmoji: Dispatch<SetStateAction<string | undefined>>;
   // onEmojiChange: (emojiData: EmojiClickData) => void;
-  user: User;
   color?: string;
   width?: CSSProperties["width"];
 }
 
-export const CustomEmojiPicker = ({ emoji, setEmoji, user, color, width }: EmojiPickerProps) => {
+export const CustomEmojiPicker = ({ emoji, setEmoji, color, width }: EmojiPickerProps) => {
+  const { user } = useContext(UserContext);
   const [showEmojiPicker, setShowEmojiPicker] = useState<boolean>(false);
 
   const [currentEmoji, setCurrentEmoji] = useState<string | undefined>(emoji || undefined);

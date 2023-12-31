@@ -1,15 +1,15 @@
 import styled from "@emotion/styled";
-import { Category, User } from "../types/user";
+import { Category } from "../types/user";
 import { Avatar, Box, MenuItem, Select, SelectChangeEvent } from "@mui/material";
 import { CategoryChip, ColorPalette } from "../styles";
 import { Emoji, EmojiStyle } from "emoji-picker-react";
 import { getFontColorFromHex } from "../utils";
-import { CSSProperties } from "react";
+import { CSSProperties, useContext } from "react";
 import { MAX_CATEGORIES } from "../constants";
 import toast from "react-hot-toast";
+import { UserContext } from "../contexts/UserContext";
 
 interface CategorySelectProps {
-  user: User;
   // variant?: "standard" | "outlined" | "filled";
   width?: CSSProperties["width"];
   selectedCategories: Category[];
@@ -20,11 +20,11 @@ interface CategorySelectProps {
  */
 
 export const CategorySelect = ({
-  user,
   width,
   selectedCategories,
   setSelectedCategories,
 }: CategorySelectProps): JSX.Element => {
+  const { user } = useContext(UserContext);
   const handleCategoryChange = (event: SelectChangeEvent<unknown>): void => {
     const selectedCategoryIds = event.target.value as number[];
 

@@ -1,4 +1,4 @@
-import { useState, useEffect, ReactNode } from "react";
+import { useState, useEffect, ReactNode, useContext } from "react";
 import { AddTaskBtn, Tasks } from "../components";
 import {
   ColorPalette,
@@ -13,14 +13,16 @@ import {
   TasksCount,
   TasksCountContainer,
 } from "../styles";
-import { UserProps } from "../types/user";
+
 import { displayGreeting, getRandomGreeting, getTaskCompletionText } from "../utils";
 import { Emoji } from "emoji-picker-react";
 import { Box, Typography } from "@mui/material";
 import { useOnlineStatus } from "../hooks/useOnlineStatus";
 import { WifiOff } from "@mui/icons-material";
+import { UserContext } from "../contexts/UserContext";
 
-export const Home = ({ user, setUser }: UserProps) => {
+export const Home = () => {
+  const { user } = useContext(UserContext);
   const [randomGreeting, setRandomGreeting] = useState<string | ReactNode>("");
   const [greetingKey, setGreetingKey] = useState<number>(0);
   const [completedTasksCount, setCompletedTasksCount] = useState<number>(0);
@@ -138,9 +140,9 @@ export const Home = ({ user, setUser }: UserProps) => {
         </TasksCountContainer>
       )}
 
-      <Tasks user={user} setUser={setUser} />
+      <Tasks />
 
-      <AddTaskBtn animate={user.tasks.length === 0} user={user} />
+      <AddTaskBtn animate={user.tasks.length === 0} />
     </>
   );
 };

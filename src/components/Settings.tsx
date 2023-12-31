@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import {
   Box,
   Dialog,
@@ -17,20 +17,22 @@ import {
   Switch,
   Tooltip,
 } from "@mui/material";
-import { AppSettings, UserProps } from "../types/user";
+import { AppSettings } from "../types/user";
 import { DialogBtn } from "../styles";
 import styled from "@emotion/styled";
 import { Emoji, EmojiStyle } from "emoji-picker-react";
 import { useOnlineStatus } from "../hooks/useOnlineStatus";
 import { VolumeDown, VolumeOff, VolumeUp, WifiOff } from "@mui/icons-material";
 import { defaultUser } from "../constants/defaultUser";
+import { UserContext } from "../contexts/UserContext";
 
-interface SettingsProps extends UserProps {
+interface SettingsProps {
   open: boolean;
   onClose: () => void;
 }
 
-export const SettingsDialog = ({ open, onClose, user, setUser }: SettingsProps) => {
+export const SettingsDialog = ({ open, onClose }: SettingsProps) => {
+  const { user, setUser } = useContext(UserContext);
   const [settings, setSettings] = useState<AppSettings>(user.settings[0]);
   const [lastStyle] = useState<EmojiStyle>(user.emojisStyle);
 

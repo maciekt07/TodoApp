@@ -1,6 +1,6 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { ColorPicker, CustomEmojiPicker, TopBar } from "../components";
-import { Category, UserProps } from "../types/user";
+import { Category } from "../types/user";
 import { useNavigate } from "react-router-dom";
 import { Emoji } from "emoji-picker-react";
 import styled from "@emotion/styled";
@@ -21,8 +21,10 @@ import { getFontColorFromHex } from "../utils";
 import { ColorPalette, DialogBtn, fadeIn } from "../styles";
 import toast from "react-hot-toast";
 import { NotFound } from "./NotFound";
+import { UserContext } from "../contexts/UserContext";
 
-export const Categories = ({ user, setUser }: UserProps) => {
+export const Categories = () => {
+  const { user, setUser } = useContext(UserContext);
   const [name, setName] = useState<string>("");
   const [nameError, setNameError] = useState<string>("");
   const [emoji, setEmoji] = useState<string | undefined>();
@@ -262,7 +264,7 @@ export const Categories = ({ user, setUser }: UserProps) => {
         )}
         <AddContainer>
           <h2>Add New Category</h2>
-          <CustomEmojiPicker user={user} emoji={emoji} setEmoji={setEmoji} color={color} />
+          <CustomEmojiPicker emoji={emoji} setEmoji={setEmoji} color={color} />
           <StyledInput
             focused
             label="Category name"
@@ -339,7 +341,6 @@ export const Categories = ({ user, setUser }: UserProps) => {
 
           <DialogContent>
             <CustomEmojiPicker
-              user={user}
               emoji={
                 user.categories.find((cat) => cat.id === selectedCategoryId)?.emoji || undefined
               }

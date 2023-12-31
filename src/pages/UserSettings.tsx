@@ -10,9 +10,8 @@ import {
   TextField,
   Tooltip,
 } from "@mui/material";
-import { UserProps } from "../types/user";
 
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import styled from "@emotion/styled";
 import { AddAPhoto, Delete, Logout, Settings } from "@mui/icons-material";
 import { PROFILE_PICTURE_MAX_LENGTH, USER_NAME_MAX_LENGTH } from "../constants";
@@ -20,8 +19,10 @@ import { SettingsDialog, TopBar } from "../components";
 import { ColorPalette, DialogBtn } from "../styles";
 import { defaultUser } from "../constants/defaultUser";
 import toast from "react-hot-toast";
+import { UserContext } from "../contexts/UserContext";
 
-export const UserSettings = ({ user, setUser }: UserProps) => {
+export const UserSettings = () => {
+  const { user, setUser } = useContext(UserContext);
   const [name, setName] = useState<string>("");
   const [profilePictureURL, setProfilePictureURL] = useState<string>("");
   const [openChangeImage, setOpenChangeImage] = useState<boolean>(false);
@@ -241,12 +242,7 @@ export const UserSettings = ({ user, setUser }: UserProps) => {
           </DialogBtn>
         </DialogActions>
       </Dialog>
-      <SettingsDialog
-        open={openSettings}
-        onClose={() => setOpenSettings(false)}
-        user={user}
-        setUser={setUser}
-      />
+      <SettingsDialog open={openSettings} onClose={() => setOpenSettings(false)} />
     </>
   );
 };

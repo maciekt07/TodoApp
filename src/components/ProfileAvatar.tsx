@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import {
   Avatar,
   Button,
@@ -12,7 +12,6 @@ import {
   SwipeableDrawer,
   Tooltip,
 } from "@mui/material";
-import { UserProps } from "../types/user";
 import styled from "@emotion/styled";
 import {
   AddRounded,
@@ -32,8 +31,10 @@ import { SettingsDialog } from ".";
 import toast from "react-hot-toast";
 import logo from "../assets/logo256.png";
 import { ColorPalette } from "../styles";
+import { UserContext } from "../contexts/UserContext";
 
-export const ProfileAvatar = ({ user, setUser }: UserProps) => {
+export const ProfileAvatar = () => {
+  const { user, setUser } = useContext(UserContext);
   const n = useNavigate();
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
@@ -64,6 +65,7 @@ export const ProfileAvatar = ({ user, setUser }: UserProps) => {
             repoResponse.json(),
             branchResponse.json(),
           ]);
+          console.log(repoData);
 
           // Get the number of stars
           setStars(repoData.stargazers_count);
@@ -141,7 +143,7 @@ export const ProfileAvatar = ({ user, setUser }: UserProps) => {
           </Avatar>
         </IconButton>
       </Tooltip>
-      <SwipeableDrawer
+      <StyledSwipeableDrawer
         disableBackdropTransition={!iOS}
         disableDiscovery={iOS}
         id="basic-menu"
@@ -153,15 +155,6 @@ export const ProfileAvatar = ({ user, setUser }: UserProps) => {
         // MenuListProps={{
         //   "aria-labelledby": "basic-button",
         // }}
-        sx={{
-          "& .MuiPaper-root": {
-            borderRadius: "24px 0 0 0",
-            minWidth: "260px",
-            boxShadow: "none",
-            padding: "4px",
-            background: "#F9FAFC",
-          },
-        }}
       >
         <LogoContainer
           translate="no"
@@ -315,7 +308,7 @@ export const ProfileAvatar = ({ user, setUser }: UserProps) => {
             )}
           </CreditsContainer>
         </div>
-      </SwipeableDrawer>
+      </StyledSwipeableDrawer>
 
       <Dialog
         open={logoutConfirmationOpen}
@@ -338,12 +331,7 @@ export const ProfileAvatar = ({ user, setUser }: UserProps) => {
           </DialogBtn>
         </DialogActions>
       </Dialog>
-      <SettingsDialog
-        open={openSettings}
-        onClose={() => setOpenSettings(!openSettings)}
-        user={user}
-        setUser={setUser}
-      />
+      <SettingsDialog open={openSettings} onClose={() => setOpenSettings(!openSettings)} />
     </Container>
   );
 };
@@ -357,6 +345,20 @@ const Container = styled.div`
     right: 16px;
   }
 `;
+
+const StyledSwipeableDrawer = styled(SwipeableDrawer)`
+  & .MuiPaper-root {
+    border-radius: 24px 0 0 0;
+    min-width: 300px;
+    box-shadow: none;
+    padding: 4px;
+    background: #f9fafc;
+    @media (max-width: 1024px) {
+      min-width: 270px;
+    }
+  }
+`;
+
 const StyledMenuItem = styled(MenuItem)`
   margin: 0px 8px;
   padding: 16px 12px;

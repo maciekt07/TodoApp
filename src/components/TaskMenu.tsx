@@ -9,7 +9,6 @@ import {
   PushPinRounded,
   RecordVoiceOverRounded,
 } from "@mui/icons-material";
-import { User } from "../types/user";
 import {
   Button,
   Dialog,
@@ -29,13 +28,13 @@ import "react-spring-bottom-sheet/dist/style.css";
 import { useResponsiveDisplay } from "../hooks/useResponsiveDisplay";
 import { ColorPalette, DialogBtn } from "../styles";
 import { useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import toast from "react-hot-toast";
+import { UserContext } from "../contexts/UserContext";
 
 //TODO: Move all functions to TasksMenu component
 
 interface TaskMenuProps {
-  user: User;
   selectedTaskId: number | null;
   setEditModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
   anchorEl: null | HTMLElement;
@@ -48,7 +47,6 @@ interface TaskMenuProps {
 }
 
 export const TaskMenu = ({
-  user,
   selectedTaskId,
   setEditModalOpen,
   anchorEl,
@@ -59,6 +57,7 @@ export const TaskMenu = ({
   handleCloseMoreMenu,
   handleReadAloud,
 }: TaskMenuProps) => {
+  const { user } = useContext(UserContext);
   const [showShareDialog, setShowShareDialog] = useState<boolean>(false);
   const n = useNavigate();
 

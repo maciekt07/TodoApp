@@ -1,5 +1,5 @@
-import { Category, Task, UserProps } from "../types/user";
-import { useState, useEffect } from "react";
+import { Category, Task } from "../types/user";
+import { useState, useEffect, useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { AddTaskButton, Container, StyledInput } from "../styles";
 import { Edit } from "@mui/icons-material";
@@ -10,8 +10,10 @@ import { DESCRIPTION_MAX_LENGTH, TASK_NAME_MAX_LENGTH } from "../constants";
 import { CategorySelect, ColorPicker, TopBar, CustomEmojiPicker } from "../components";
 
 import toast from "react-hot-toast";
+import { UserContext } from "../contexts/UserContext";
 
-export const AddTask = ({ user, setUser }: UserProps) => {
+export const AddTask = () => {
+  const { user, setUser } = useContext(UserContext);
   const [name, setName] = useState<string>("");
   const [emoji, setEmoji] = useState<string | undefined>();
   const [color, setColor] = useState<string>("#b624ff");
@@ -98,7 +100,7 @@ export const AddTask = ({ user, setUser }: UserProps) => {
     <>
       <TopBar title="Add New Task" />
       <Container>
-        <CustomEmojiPicker user={user} setEmoji={setEmoji} color={color} />
+        <CustomEmojiPicker setEmoji={setEmoji} color={color} />
         <StyledInput
           label="Task Name"
           name="name"
@@ -136,7 +138,6 @@ export const AddTask = ({ user, setUser }: UserProps) => {
             <Typography>Category (optional)</Typography>
 
             <CategorySelect
-              user={user}
               selectedCategories={selectedCategories}
               setSelectedCategories={setSelectedCategories}
               width="400px"

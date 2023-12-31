@@ -1,5 +1,5 @@
-import { Category, Task, UserProps } from "../types/user";
-import { ReactNode, useEffect, useState } from "react";
+import { Category, Task } from "../types/user";
+import { ReactNode, useContext, useEffect, useState } from "react";
 import { calculateDateDifference, formatDate, getFontColorFromHex } from "../utils";
 import {
   Cancel,
@@ -50,12 +50,14 @@ import { TaskMenu } from ".";
 import toast from "react-hot-toast";
 import { useResponsiveDisplay } from "../hooks/useResponsiveDisplay";
 import Marquee from "react-fast-marquee";
+import { UserContext } from "../contexts/UserContext";
 
 /**
  * Component to display a list of tasks.
  */
 
-export const Tasks = ({ user, setUser }: UserProps): JSX.Element => {
+export const Tasks = (): JSX.Element => {
+  const { user, setUser } = useContext(UserContext);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [selectedTaskId, setSelectedTaskId] = useState<number | null>(null);
   const open = Boolean(anchorEl);
@@ -480,7 +482,6 @@ export const Tasks = ({ user, setUser }: UserProps): JSX.Element => {
   return (
     <>
       <TaskMenu
-        user={user}
         selectedTaskId={selectedTaskId}
         setEditModalOpen={setEditModalOpen}
         anchorEl={anchorEl}
@@ -788,7 +789,6 @@ export const Tasks = ({ user, setUser }: UserProps): JSX.Element => {
           open={editModalOpen}
           task={user.tasks.find((task) => task.id === selectedTaskId)}
           onClose={() => setEditModalOpen(false)}
-          user={user}
           onSave={(editedTask) => {
             handleEditTask(
               editedTask.id,
