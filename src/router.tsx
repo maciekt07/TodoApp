@@ -1,14 +1,15 @@
 import { Route, Routes } from "react-router-dom";
-import { UserSettings } from "./pages/UserSettings";
-import { Categories } from "./pages/Categories";
-import { NotFound } from "./pages/NotFound";
-import { AddTask } from "./pages/AddTask";
-import { ImportExport } from "./pages/ImportExport";
-import { Home } from "./pages/Home";
-import { TaskDetails } from "./pages/TaskDetails";
-import { SharePage } from "./pages/Share";
+import { ReactElement } from "react";
+import UserSettings from "./pages/UserSettings";
+import Categories from "./pages/Categories";
+import NotFound from "./pages/NotFound";
+import AddTask from "./pages/AddTask";
+import ImportExport from "./pages/ImportExport";
+import Home from "./pages/Home";
+import TaskDetails from "./pages/TaskDetails";
+import SharePage from "./pages/Share";
 
-export const AppRouter = (): JSX.Element => {
+const AppRouter = (): ReactElement => {
   return (
     <Routes>
       <Route path="/" element={<Home />} />
@@ -22,3 +23,5 @@ export const AppRouter = (): JSX.Element => {
     </Routes>
   );
 };
+
+export default AppRouter;

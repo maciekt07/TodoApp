@@ -21,7 +21,7 @@ import { defaultUser } from "../constants/defaultUser";
 import toast from "react-hot-toast";
 import { UserContext } from "../contexts/UserContext";
 
-export const UserSettings = () => {
+const UserSettings = () => {
   const { user, setUser } = useContext(UserContext);
   const [name, setName] = useState<string>("");
   const [profilePictureURL, setProfilePictureURL] = useState<string>("");
@@ -116,7 +116,7 @@ export const UserSettings = () => {
             </Avatar>
           </Badge>
         </Tooltip>
-        <UserName>{user.name || "User"}</UserName>
+        <UserName translate="no">{user.name || "User"}</UserName>
         <Tooltip
           title={`Created at: ${new Date(user.createdAt).toLocaleDateString()} • ${new Date(
             user.createdAt
@@ -246,6 +246,8 @@ export const UserSettings = () => {
     </>
   );
 };
+
+export default UserSettings;
 
 const Container = styled.div`
   margin: 0 auto;

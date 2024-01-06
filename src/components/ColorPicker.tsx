@@ -16,6 +16,7 @@ interface ColorPickerProps {
 /**
  * Custom Color Picker component for selecting colors.
  */
+
 export const ColorPicker: React.FC<ColorPickerProps> = ({ color, onColorChange, width }) => {
   const [selectedColor, setSelectedColor] = useState<string>(color);
 

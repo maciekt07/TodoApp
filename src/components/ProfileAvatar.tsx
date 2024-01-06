@@ -32,17 +32,16 @@ import toast from "react-hot-toast";
 import logo from "../assets/logo256.png";
 import { ColorPalette } from "../styles";
 import { UserContext } from "../contexts/UserContext";
+import { iOS } from "../utils/iOS";
 
 export const ProfileAvatar = () => {
   const { user, setUser } = useContext(UserContext);
   const n = useNavigate();
+
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
   const [logoutConfirmationOpen, setLogoutConfirmationOpen] = useState<boolean>(false);
-
   const [openSettings, setOpenSettings] = useState<boolean>(false);
-
-  const iOS = typeof navigator !== "undefined" && /iPad|iPhone|iPod/.test(navigator.userAgent);
 
   const [stars, setStars] = useState<number | null>(null);
   const [lastUpdate, setLastUpdate] = useState<string | null>(null);
@@ -65,7 +64,6 @@ export const ProfileAvatar = () => {
             repoResponse.json(),
             branchResponse.json(),
           ]);
-          console.log(repoData);
 
           // Get the number of stars
           setStars(repoData.stargazers_count);
@@ -110,7 +108,7 @@ export const ProfileAvatar = () => {
 
   return (
     <Container>
-      <Tooltip title={user.name || "User"}>
+      <Tooltip title={user.name || "User"} translate="no">
         <IconButton
           id="basic-button"
           aria-controls={open ? "basic-menu" : undefined}
@@ -180,7 +178,9 @@ export const ProfileAvatar = () => {
           <TaskAltRounded /> &nbsp; Tasks
           {user.tasks.filter((task) => !task.done).length > 0 && (
             <MenuLabel clr={ColorPalette.purple}>
-              {user.tasks.filter((task) => !task.done).length}
+              {user.tasks.filter((task) => !task.done).length > 99
+                ? "99+"
+                : user.tasks.filter((task) => !task.done).length}
             </MenuLabel>
           )}
         </StyledMenuItem>
@@ -267,6 +267,7 @@ export const ProfileAvatar = () => {
           </StyledMenuItem>
           <Divider sx={{ margin: "0 8px" }} />
           <StyledMenuItem
+            translate="no"
             onClick={() => {
               n("/user");
               handleClose();

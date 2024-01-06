@@ -96,7 +96,7 @@ export const BottomNav = (): JSX.Element | null => {
         />
         <NavigationButton
           onClick={() => n("import-export")}
-          label="Import/Export"
+          label="Transfer"
           icon={<GetAppRounded sx={{ fontSize: smallIconSize }} />}
         />
         <NavigationButton

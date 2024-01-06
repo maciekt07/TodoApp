@@ -168,6 +168,13 @@ const globalStyles = css`
   .MuiCheckbox-colorPrimary {
     color: #ffffffc8 !important;
   }
+  /* .MuiModal-backdrop {
+    backdrop-filter: blur(2px);
+  } */
+
+  .MuiCircularProgress-circle {
+    stroke-linecap: round !important;
+  }
 `;
 
 export const GlobalStyles = () => <Global styles={globalStyles} />;

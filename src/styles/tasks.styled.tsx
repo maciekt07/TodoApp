@@ -21,7 +21,7 @@ export const TaskComponent = styled.div<TaskComponentProps>`
   background-color: ${({ backgroundColor }) => backgroundColor};
   opacity: ${({ done }) => (done ? 0.7 : 1)};
   color: ${({ clr }) => clr};
-  border-left: ${({ done }) => (done ? "6px solid #00ff0d" : "6px solid transparent")};
+  border-left: ${({ done }) => (done ? "8px solid #00ff1e" : "1px solid transparent")};
   box-shadow: ${(props) =>
     props.glow && !props.blur ? `0 0 128px -28px ${props.backgroundColor}` : "none"};
   padding: 16px 16px 16px 16px;
@@ -244,6 +244,9 @@ export const SearchInput = styled(TextField)`
   transition: 0.3s all;
 
   &:focus {
+  }
+  & .MuiOutlinedInput-notchedOutline {
+    border: 2px solid ${ColorPalette.purple} !important;
   }
   & .MuiOutlinedInput-root {
     padding: 2px 16px;

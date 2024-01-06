@@ -3,13 +3,13 @@ import { TopBar } from "../components";
 import styled from "@emotion/styled";
 import { CategoryChip } from "../styles";
 import { Avatar } from "@mui/material";
-import { NotFound } from "./NotFound";
+import NotFound from "./NotFound";
 import { Clear, Done } from "@mui/icons-material";
 import { Emoji, EmojiStyle } from "emoji-picker-react";
 import { useContext } from "react";
 import { UserContext } from "../contexts/UserContext";
 
-export const TaskDetails = () => {
+const TaskDetails = () => {
   const { user } = useContext(UserContext);
   const { id } = useParams();
   const formattedId = id?.replace(".", "");
@@ -131,6 +131,8 @@ export const TaskDetails = () => {
     </>
   );
 };
+
+export default TaskDetails;
 
 const Container = styled.div`
   display: flex;

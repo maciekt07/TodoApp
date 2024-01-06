@@ -6,7 +6,7 @@ import { ThemeProvider } from "@mui/material";
 import { useEffect } from "react";
 import { ErrorBoundary } from "./components";
 import { MainLayout } from "./layouts/MainLayout";
-import { AppRouter } from "./router";
+import AppRouter from "./router";
 import { Toaster } from "react-hot-toast";
 import { useResponsiveDisplay } from "./hooks/useResponsiveDisplay";
 import { UserContext } from "./contexts/UserContext";
@@ -51,8 +51,6 @@ function App() {
     });
   }, []);
 
-  const userProps = { user, setUser };
-
   return (
     <>
       <ThemeProvider theme={MuiTheme}>
@@ -69,7 +67,7 @@ function App() {
             duration: 4000,
             style: {
               padding: "14px 22px",
-              borderRadius: "20px",
+              borderRadius: "18px",
               fontSize: "17px",
               border: `2px solid ${ColorPalette.purple}`,
               background: "#141431e0",
@@ -86,18 +84,18 @@ function App() {
             },
             error: {
               iconTheme: {
-                primary: "#ff3030",
+                primary: ColorPalette.red,
                 secondary: "white",
               },
               style: {
-                borderColor: "#ff3030",
+                borderColor: ColorPalette.red,
               },
             },
           }}
         />
         <UserContext.Provider value={{ user, setUser }}>
-          <ErrorBoundary user={user}>
-            <MainLayout {...userProps}>
+          <ErrorBoundary>
+            <MainLayout>
               <AppRouter />
             </MainLayout>
           </ErrorBoundary>

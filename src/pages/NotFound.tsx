@@ -6,7 +6,7 @@ import { ColorPalette } from "../styles";
 import { useEffect } from "react";
 import TaskNotFound from "../assets/TaskNotFound.png";
 
-export const NotFound = () => {
+const NotFound = () => {
   const n = useNavigate();
 
   useEffect(() => {
@@ -33,6 +33,8 @@ export const NotFound = () => {
     </Container>
   );
 };
+
+export default NotFound;
 
 const Container = styled.div`
   text-align: center;

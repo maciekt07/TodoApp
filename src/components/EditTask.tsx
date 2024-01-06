@@ -6,6 +6,8 @@ import {
   DialogActions,
   TextField,
   Typography,
+  InputAdornment,
+  IconButton,
 } from "@mui/material";
 import { Category, Task } from "../types/user";
 import styled from "@emotion/styled";
@@ -14,6 +16,7 @@ import { DialogBtn } from "../styles";
 import { CategorySelect, ColorPicker, CustomEmojiPicker } from ".";
 import toast from "react-hot-toast";
 import { UserContext } from "../contexts/UserContext";
+import { CancelRounded } from "@mui/icons-material";
 
 interface EditTaskProps {
   open: boolean;
@@ -36,14 +39,6 @@ export const EditTask = ({ open, task, onClose, onSave }: EditTaskProps) => {
       emoji: emoji,
     }));
   }, [emoji]);
-
-  // useEffect(() => {
-  //   setSelectedCategories(
-  //     editedTask?.category !== undefined
-  //       ? (editedTask.category as Category[])
-  //       : []
-  //   );
-  // }, []);
 
   // Effect hook to update the editedTask when the task prop changes.
   useEffect(() => {
@@ -182,18 +177,38 @@ export const EditTask = ({ open, task, onClose, onSave }: EditTaskProps) => {
             `Description is too long (maximum ${DESCRIPTION_MAX_LENGTH} characters)`
           }
         />
-
-        {/* FIXME: default date doesnt work (new amazing chrome update) */}
         <StyledInput
           label="Deadline date"
           name="deadline"
           type="datetime-local"
-          value={editedTask?.deadline}
+          value={editedTask?.deadline || ""}
           onChange={handleInputChange}
-          focused
           fullWidth
+          defaultValue=""
+          InputLabelProps={{ shrink: true }}
+          sx={{
+            " & .MuiInputBase-root": {
+              transition: ".3s all",
+            },
+          }}
+          InputProps={{
+            startAdornment: editedTask?.deadline ? (
+              <InputAdornment position="start">
+                <IconButton
+                  color="error"
+                  onClick={() => {
+                    setEditedTask((prevTask) => ({
+                      ...(prevTask as Task),
+                      deadline: undefined,
+                    }));
+                  }}
+                >
+                  <CancelRounded />
+                </IconButton>
+              </InputAdornment>
+            ) : undefined,
+          }}
         />
-
         {user.settings[0].enableCategories !== undefined && user.settings[0].enableCategories && (
           <>
             <Label>Category</Label>
@@ -272,6 +287,7 @@ export const EditTask = ({ open, task, onClose, onSave }: EditTaskProps) => {
 
 const StyledInput = styled(TextField)`
   margin: 14px 0;
+
   & .MuiInputBase-root {
     border-radius: 16px;
   }

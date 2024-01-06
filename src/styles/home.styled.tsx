@@ -100,6 +100,7 @@ export const ProgressPercentageContainer = styled(Box)`
   border-radius: 100px;
   margin: -5px;
   border: 1px solid #44479cb7;
+  box-shadow: 0 0 18px -2px #090b2287;
 `;
 // const pulse = keyframes`
 //   0% {
@@ -114,8 +115,8 @@ export const ProgressPercentageContainer = styled(Box)`
 // `;
 export const StyledProgress = styled(CircularProgress)`
   z-index: 1;
-  margin: 1px;
-  filter: drop-shadow(0 0 6px ${ColorPalette.purple});
+  margin: 2px;
+  /* filter: drop-shadow(0 0 8px ${ColorPalette.purple + "35"}); */
 `;
 
 export const Offline = styled.div`

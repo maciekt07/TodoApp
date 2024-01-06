@@ -20,10 +20,10 @@ import { CATEGORY_NAME_MAX_LENGTH } from "../constants";
 import { getFontColorFromHex } from "../utils";
 import { ColorPalette, DialogBtn, fadeIn } from "../styles";
 import toast from "react-hot-toast";
-import { NotFound } from "./NotFound";
+import NotFound from "./NotFound";
 import { UserContext } from "../contexts/UserContext";
 
-export const Categories = () => {
+const Categories = () => {
   const { user, setUser } = useContext(UserContext);
   const [name, setName] = useState<string>("");
   const [nameError, setNameError] = useState<string>("");
@@ -385,6 +385,8 @@ export const Categories = () => {
     </>
   );
 };
+
+export default Categories;
 
 const Container = styled.div`
   display: flex;

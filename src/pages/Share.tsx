@@ -7,9 +7,10 @@ import toast from "react-hot-toast";
 import { getFontColorFromHex } from "../utils";
 import { Emoji, EmojiStyle } from "emoji-picker-react";
 import { UserContext } from "../contexts/UserContext";
+import { PushPinRounded } from "@mui/icons-material";
 
 //FIXME: make everything type-safe
-export const SharePage = () => {
+const SharePage = () => {
   const { user, setUser } = useContext(UserContext);
   const n = useNavigate();
   const location = useLocation();
@@ -99,7 +100,7 @@ export const SharePage = () => {
             <DialogTitle>Recieved Task</DialogTitle>
             <DialogContent>
               <p>
-                <b>{userName}</b> shared you a task
+                <b>{userName}</b> shared you a task.
               </p>
               <div
                 style={{
@@ -108,9 +109,11 @@ export const SharePage = () => {
                   padding: "10px 20px",
                   borderRadius: "16px",
                   width: "300px",
+                  borderLeft: taskData.done ? "6px solid #00ff11" : "none",
                 }}
               >
                 <h3 style={{ display: "flex", alignItems: "center", gap: "6px", margin: "12px 0" }}>
+                  {taskData.pinned && <PushPinRounded />}
                   {taskData?.emoji && (
                     <Emoji unified={taskData.emoji} emojiStyle={user.emojisStyle} />
                   )}
@@ -210,3 +213,5 @@ export const SharePage = () => {
     </div>
   );
 };
+
+export default SharePage;

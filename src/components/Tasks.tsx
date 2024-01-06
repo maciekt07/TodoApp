@@ -469,7 +469,7 @@ export const Tasks = (): JSX.Element => {
           </div>
         ),
         {
-          duration: 6000,
+          duration: 3400,
           icon: <RingAlarm animate sx={{ color: ColorPalette.red }} />,
         }
       );

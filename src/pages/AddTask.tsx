@@ -2,17 +2,14 @@ import { Category, Task } from "../types/user";
 import { useState, useEffect, useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { AddTaskButton, Container, StyledInput } from "../styles";
-import { Edit } from "@mui/icons-material";
-
-import { Button, Typography } from "@mui/material";
-
+import { CancelRounded, Edit } from "@mui/icons-material";
+import { Button, IconButton, InputAdornment, Typography } from "@mui/material";
 import { DESCRIPTION_MAX_LENGTH, TASK_NAME_MAX_LENGTH } from "../constants";
 import { CategorySelect, ColorPicker, TopBar, CustomEmojiPicker } from "../components";
-
 import toast from "react-hot-toast";
 import { UserContext } from "../contexts/UserContext";
 
-export const AddTask = () => {
+const AddTask = () => {
   const { user, setUser } = useContext(UserContext);
   const [name, setName] = useState<string>("");
   const [emoji, setEmoji] = useState<string | undefined>();
@@ -130,7 +127,18 @@ export const AddTask = () => {
           type="datetime-local"
           value={deadline}
           onChange={handleDeadlineChange}
+          defaultValue=""
           focused
+          InputProps={{
+            startAdornment:
+              deadline && deadline !== "" ? (
+                <InputAdornment position="start">
+                  <IconButton color="error" onClick={() => setDeadline("")}>
+                    <CancelRounded />
+                  </IconButton>
+                </InputAdornment>
+              ) : undefined,
+          }}
         />
         {user.settings[0].enableCategories !== undefined && user.settings[0].enableCategories && (
           <>
@@ -177,3 +185,5 @@ export const AddTask = () => {
     </>
   );
 };
+
+export default AddTask;

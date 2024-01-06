@@ -21,7 +21,7 @@ import { useOnlineStatus } from "../hooks/useOnlineStatus";
 import { WifiOff } from "@mui/icons-material";
 import { UserContext } from "../contexts/UserContext";
 
-export const Home = () => {
+const Home = () => {
   const { user } = useContext(UserContext);
   const [randomGreeting, setRandomGreeting] = useState<string | ReactNode>("");
   const [greetingKey, setGreetingKey] = useState<number>(0);
@@ -90,7 +90,7 @@ export const Home = () => {
     <>
       <GreetingHeader>
         <Emoji unified="1f44b" emojiStyle={user.emojisStyle} /> &nbsp; {displayGreeting()}
-        {user.name && ", " + user.name}
+        {user.name && <span translate="no">, {user.name}</span>}
       </GreetingHeader>
       <GreetingText key={greetingKey}>{renderGreetingWithEmojis(randomGreeting)}</GreetingText>
       {!isOnline && (
@@ -110,7 +110,7 @@ export const Home = () => {
                 aria-label="Progress"
                 style={{
                   filter: user.settings[0].enableGlow
-                    ? `drop-shadow(0 0 6px ${ColorPalette.purple})`
+                    ? `drop-shadow(0 0 6px ${ColorPalette.purple + "C8"})`
                     : "none",
                 }}
               />
@@ -126,8 +126,13 @@ export const Home = () => {
             </Box>
             <TaskCountTextContainer>
               <TaskCountHeader>
-                You have {user.tasks.length - completedTasksCount} unfinished tasks{" "}
-                {completedTasksCount > 0 && `and ${completedTasksCount} done`}
+                {/* You have {user.tasks.length - completedTasksCount} unfinished tasks{" "}
+                {completedTasksCount > 0 && `and ${completedTasksCount} done`} */}
+                {completedTasksCount === 0
+                  ? `You have ${user.tasks.length} task${
+                      user.tasks.length > 1 ? "s" : ""
+                    } to complete.`
+                  : `You've completed ${completedTasksCount} out of ${user.tasks.length} tasks.`}
               </TaskCountHeader>
               <TaskCompletionText>
                 {getTaskCompletionText(completedTaskPercentage)}
@@ -146,3 +151,5 @@ export const Home = () => {
     </>
   );
 };
+
+export default Home;
