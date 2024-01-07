@@ -51,6 +51,7 @@ import toast from "react-hot-toast";
 import { useResponsiveDisplay } from "../hooks/useResponsiveDisplay";
 import Marquee from "react-fast-marquee";
 import { UserContext } from "../contexts/UserContext";
+import { useStorageState } from "../hooks/useStorageState";
 
 /**
  * Component to display a list of tasks.
@@ -400,7 +401,12 @@ export const Tasks = (): JSX.Element => {
   };
 
   const [categories, setCategories] = useState<Category[] | undefined>(undefined);
-  const [selectedCatId, setSelectedCatId] = useState<number | undefined>(undefined);
+
+  const [selectedCatId, setSelectedCatId] = useStorageState<number | undefined>(
+    undefined,
+    "selectedCategory",
+    "sessionStorage"
+  );
 
   const [categoryCounts, setCategoryCounts] = useState<{
     [categoryId: number]: number;
@@ -440,7 +446,7 @@ export const Tasks = (): JSX.Element => {
     setCategoryCounts(counts);
   }, [user.tasks]);
 
-  const [search, setSearch] = useState<string>("");
+  const [search, setSearch] = useStorageState<string>("", "search", "sessionStorage");
   const highlightMatchingText = (text: string, search: string): ReactNode => {
     if (!search) {
       return text;

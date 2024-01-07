@@ -16,15 +16,17 @@ export function useStorageState<T>(
   storageType: StorageType = "localStorage"
 ): [T, React.Dispatch<React.SetStateAction<T>>] {
   const storage = window[storageType];
-
+  // Initialize state with the stored value or the default value
   const [value, setValue] = useState<T>(() => {
     const storedValue = storage.getItem(key);
-    return storedValue !== null ? JSON.parse(storedValue) : defaultValue;
+    return storedValue !== null && storedValue !== undefined && storedValue !== "undefined"
+      ? JSON.parse(storedValue)
+      : defaultValue;
   });
-
+  // Update storage whenever the key or value changes
   useEffect(() => {
     storage.setItem(key, JSON.stringify(value));
   }, [key, value, storage]);
-
+  // Return the state value and update function
   return [value, setValue];
 }

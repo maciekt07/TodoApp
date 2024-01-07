@@ -443,8 +443,8 @@ const CategoryDiv = styled.div<{ clr: string }>`
   margin: 6px 0;
   padding: 12px;
   border-radius: 18px;
-  background: ${(props) => props.clr};
-  color: ${(props) => getFontColorFromHex(props.clr)};
+  background: ${({ clr }) => clr};
+  color: ${({ clr }) => getFontColorFromHex(clr)};
   animation: ${fadeIn} 0.5s ease-in-out;
 `;
 

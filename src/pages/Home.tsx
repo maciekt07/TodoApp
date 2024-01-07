@@ -120,7 +120,7 @@ const Home = () => {
                   variant="caption"
                   component="div"
                   color="white"
-                  sx={{ fontSize: "16px", fontWeight: 500 }}
+                  sx={{ fontSize: "16px", fontWeight: 600 }}
                 >{`${Math.round(completedTaskPercentage)}%`}</Typography>
               </ProgressPercentageContainer>
             </Box>

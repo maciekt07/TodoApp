@@ -1,4 +1,4 @@
-import { useContext, useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useRef } from "react";
 import Button from "@mui/material/Button";
 import Checkbox from "@mui/material/Checkbox";
 import { TopBar } from "../components";
@@ -18,10 +18,15 @@ import {
 import toast from "react-hot-toast";
 import { ColorPalette } from "../styles";
 import { UserContext } from "../contexts/UserContext";
+import { useStorageState } from "../hooks/useStorageState";
 
 const ImportExport = () => {
   const { user, setUser } = useContext(UserContext);
-  const [selectedTasks, setSelectedTasks] = useState<number[]>([]); // Array of selected task IDs
+  const [selectedTasks, setSelectedTasks] = useStorageState<number[]>(
+    [],
+    "tasksToExport",
+    "sessionStorage"
+  ); // Array of selected task IDs
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
   useEffect(() => {

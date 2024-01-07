@@ -139,10 +139,7 @@ const StyledSelect = styled(Select)<{ width?: CSSProperties["width"] }>`
   transition: 0.3s all;
   width: ${({ width }) => width || "100%"};
   color: white;
-  /* border: 3px solid ${ColorPalette.purple}; */
-  /* & * {
-    border-color: ${ColorPalette.purple};
-  } */
+  background: #ffffff1c;
 `;
 const CategoriesMenu = styled(MenuItem)<{ clr?: string }>`
   padding: 12px 20px;

@@ -3,29 +3,48 @@ import { useState, useEffect, useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { AddTaskButton, Container, StyledInput } from "../styles";
 import { CancelRounded, Edit } from "@mui/icons-material";
-import { Button, IconButton, InputAdornment, Typography } from "@mui/material";
+import { Button, IconButton, InputAdornment, Tooltip, Typography } from "@mui/material";
 import { DESCRIPTION_MAX_LENGTH, TASK_NAME_MAX_LENGTH } from "../constants";
 import { CategorySelect, ColorPicker, TopBar, CustomEmojiPicker } from "../components";
 import toast from "react-hot-toast";
 import { UserContext } from "../contexts/UserContext";
+import { useStorageState } from "../hooks/useStorageState";
 
 const AddTask = () => {
   const { user, setUser } = useContext(UserContext);
-  const [name, setName] = useState<string>("");
-  const [emoji, setEmoji] = useState<string | undefined>();
-  const [color, setColor] = useState<string>("#b624ff");
-  const [description, setDescription] = useState<string>("");
-  const [deadline, setDeadline] = useState<string>("");
-
+  const [name, setName] = useStorageState<string>("", "name", "sessionStorage");
+  const [emoji, setEmoji] = useStorageState<string | null>(null, "emoji", "sessionStorage");
+  const [color, setColor] = useStorageState<string>("#b624ff", "color", "sessionStorage");
+  const [description, setDescription] = useStorageState<string>(
+    "",
+    "description",
+    "sessionStorage"
+  );
+  const [deadline, setDeadline] = useStorageState<string>("", "deadline", "sessionStorage");
   const [nameError, setNameError] = useState<string>("");
   const [descriptionError, setDescriptionError] = useState<string>("");
-
-  const [selectedCategories, setSelectedCategories] = useState<Category[]>([]);
+  const [selectedCategories, setSelectedCategories] = useStorageState<Category[]>(
+    [],
+    "categories",
+    "sessionStorage"
+  );
 
   const n = useNavigate();
 
   useEffect(() => {
     document.title = "Todo App - Add Task";
+    if (name.length > TASK_NAME_MAX_LENGTH) {
+      setNameError(`Name should be less than or equal to ${TASK_NAME_MAX_LENGTH} characters`);
+    } else {
+      setNameError("");
+    }
+    if (description.length > DESCRIPTION_MAX_LENGTH) {
+      setDescriptionError(
+        `Description should be less than or equal to ${DESCRIPTION_MAX_LENGTH} characters`
+      );
+    } else {
+      setDescriptionError("");
+    }
   }, []);
 
   const handleNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -97,7 +116,11 @@ const AddTask = () => {
     <>
       <TopBar title="Add New Task" />
       <Container>
-        <CustomEmojiPicker setEmoji={setEmoji} color={color} />
+        <CustomEmojiPicker
+          emoji={typeof emoji === "string" ? emoji : undefined}
+          setEmoji={setEmoji}
+          color={color}
+        />
         <StyledInput
           label="Task Name"
           name="name"
@@ -133,9 +156,11 @@ const AddTask = () => {
             startAdornment:
               deadline && deadline !== "" ? (
                 <InputAdornment position="start">
-                  <IconButton color="error" onClick={() => setDeadline("")}>
-                    <CancelRounded />
-                  </IconButton>
+                  <Tooltip title="Clear">
+                    <IconButton color="error" onClick={() => setDeadline("")}>
+                      <CancelRounded />
+                    </IconButton>
+                  </Tooltip>
                 </InputAdornment>
               ) : undefined,
           }}
@@ -143,7 +168,7 @@ const AddTask = () => {
         {user.settings[0].enableCategories !== undefined && user.settings[0].enableCategories && (
           <>
             <br />
-            <Typography>Category (optional)</Typography>
+            <Typography sx={{ fontWeight: 500 }}>Category (optional)</Typography>
 
             <CategorySelect
               selectedCategories={selectedCategories}
@@ -163,7 +188,7 @@ const AddTask = () => {
             </Link>
           </>
         )}
-        <Typography>Color</Typography>
+        <Typography sx={{ fontWeight: 500 }}>Color</Typography>
         <ColorPicker
           color={color}
           onColorChange={(color) => {

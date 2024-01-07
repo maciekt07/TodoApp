@@ -8,6 +8,7 @@ import {
   Typography,
   InputAdornment,
   IconButton,
+  Tooltip,
 } from "@mui/material";
 import { Category, Task } from "../types/user";
 import styled from "@emotion/styled";
@@ -194,17 +195,19 @@ export const EditTask = ({ open, task, onClose, onSave }: EditTaskProps) => {
           InputProps={{
             startAdornment: editedTask?.deadline ? (
               <InputAdornment position="start">
-                <IconButton
-                  color="error"
-                  onClick={() => {
-                    setEditedTask((prevTask) => ({
-                      ...(prevTask as Task),
-                      deadline: undefined,
-                    }));
-                  }}
-                >
-                  <CancelRounded />
-                </IconButton>
+                <Tooltip title="Clear">
+                  <IconButton
+                    color="error"
+                    onClick={() => {
+                      setEditedTask((prevTask) => ({
+                        ...(prevTask as Task),
+                        deadline: undefined,
+                      }));
+                    }}
+                  >
+                    <CancelRounded />
+                  </IconButton>
+                </Tooltip>
               </InputAdornment>
             ) : undefined,
           }}

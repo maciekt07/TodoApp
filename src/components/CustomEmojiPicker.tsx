@@ -9,7 +9,7 @@ import { UserContext } from "../contexts/UserContext";
 
 interface EmojiPickerProps {
   emoji?: string;
-  setEmoji: Dispatch<SetStateAction<string | undefined>>;
+  setEmoji: Dispatch<SetStateAction<any>>;
   // onEmojiChange: (emojiData: EmojiClickData) => void;
   color?: string;
   width?: CSSProperties["width"];
@@ -19,7 +19,7 @@ export const CustomEmojiPicker = ({ emoji, setEmoji, color, width }: EmojiPicker
   const { user } = useContext(UserContext);
   const [showEmojiPicker, setShowEmojiPicker] = useState<boolean>(false);
 
-  const [currentEmoji, setCurrentEmoji] = useState<string | undefined>(emoji || undefined);
+  const [currentEmoji, setCurrentEmoji] = useState<string | null>(emoji || null);
 
   // const [emojiData, setEmojiData] = useState<EmojiClickData>();
 
@@ -31,7 +31,7 @@ export const CustomEmojiPicker = ({ emoji, setEmoji, color, width }: EmojiPicker
   // When the emoji prop changes to an empty string, set the currentEmoji state to undefined
   useEffect(() => {
     if (emoji === "") {
-      setCurrentEmoji(undefined);
+      setCurrentEmoji(null);
     }
   }, [emoji]);
 
@@ -51,7 +51,7 @@ export const CustomEmojiPicker = ({ emoji, setEmoji, color, width }: EmojiPicker
 
   const handleRemoveEmoji = () => {
     toggleEmojiPicker();
-    setCurrentEmoji(undefined);
+    setCurrentEmoji(null);
   };
 
   // Function to render the content of the Avatar based on whether an emoji is selected or not

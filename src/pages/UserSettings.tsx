@@ -13,7 +13,7 @@ import {
 
 import { useContext, useEffect, useState } from "react";
 import styled from "@emotion/styled";
-import { AddAPhoto, Delete, Logout, Settings } from "@mui/icons-material";
+import { AddAPhotoRounded, Delete, Logout, Settings } from "@mui/icons-material";
 import { PROFILE_PICTURE_MAX_LENGTH, USER_NAME_MAX_LENGTH } from "../constants";
 import { SettingsDialog, TopBar } from "../components";
 import { ColorPalette, DialogBtn } from "../styles";
@@ -87,7 +87,7 @@ const UserSettings = () => {
                   cursor: "pointer",
                 }}
               >
-                <AddAPhoto />
+                <AddAPhotoRounded />
               </Avatar>
             }
           >
