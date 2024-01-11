@@ -39,15 +39,13 @@ const Title = styled.h2`
 `;
 const BackBtn = styled.button`
   position: absolute;
-
-  /* top: 24px;
-  left: 16px; */
   display: flex;
   justify-content: center;
   align-items: center;
+
   font-size: 20px;
   padding: 8px 12px;
-  background-color: transparent;
+  background: transparent;
   color: ${ColorPalette.fontLight};
   border: none;
   border-radius: 12px;
@@ -57,5 +55,8 @@ const BackBtn = styled.button`
   text-shadow: 0 0 24px #00000068;
   &:hover {
     opacity: 0.8;
+  }
+  @media (max-width: 1024px) {
+    margin-top: 4px;
   }
 `;

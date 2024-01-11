@@ -8,6 +8,7 @@ import { getFontColorFromHex } from "../utils";
 import { Emoji, EmojiStyle } from "emoji-picker-react";
 import { UserContext } from "../contexts/UserContext";
 import { PushPinRounded } from "@mui/icons-material";
+import { USER_NAME_MAX_LENGTH } from "../constants";
 
 //FIXME: make everything type-safe
 const SharePage = () => {
@@ -21,21 +22,44 @@ const SharePage = () => {
   const [taskData, setTaskData] = useState<Task | null>(null);
   const [userName, setUserName] = useState<string>("");
   const [error, setError] = useState<boolean>(false);
+  const [errorDetails, setErrorDetails] = useState<string | undefined>();
+  const isHexColor = (value: string): boolean => /^#[0-9A-Fa-f]{6}$/.test(value);
 
   useEffect(() => {
     if (taskParam) {
       try {
         const decodedTask = decodeURIComponent(taskParam);
         const task = JSON.parse(decodedTask) as Task;
+
+        if (!isHexColor(task.color)) {
+          setError(true);
+          setErrorDetails("Invalid task color format.");
+          return;
+        }
+        if (task.category) {
+          task.category.forEach((taskCategory) => {
+            if (!isHexColor(taskCategory.color)) {
+              setError(true);
+              setErrorDetails("Invalid category color format.");
+              return;
+            }
+          });
+        }
         setTaskData(task);
       } catch (error) {
         console.error("Error decoding task data:", error);
+        setErrorDetails("Error decoding task data." + error);
         setError(true);
       }
     }
 
     if (userNameParam) {
       const decodedUserName = decodeURIComponent(userNameParam);
+      if (decodedUserName.length > USER_NAME_MAX_LENGTH) {
+        setError(true);
+        setErrorDetails("User name is too long.");
+        console.log("User name is too long");
+      }
       setUserName(decodedUserName);
     }
   }, [taskParam, userNameParam]);
@@ -74,8 +98,8 @@ const SharePage = () => {
       }));
 
       n("/");
-      toast.success(() => (
-        <div>
+      toast.success((t) => (
+        <div onClick={() => toast.dismiss(t.id)}>
           Added shared task - <b>{taskData.name}</b>
         </div>
       ));
@@ -202,7 +226,14 @@ const SharePage = () => {
             <DialogTitle>Something went wrong</DialogTitle>
             <DialogContent>
               {/* TODO: */}
-              <p> Oops! Something went wrong while processing the shared task.</p>
+              <p>
+                Oops! Something went wrong while processing the shared task.{" "}
+                {errorDetails && (
+                  <b>
+                    <br /> {errorDetails}
+                  </b>
+                )}
+              </p>
             </DialogContent>
             <DialogActions>
               <DialogBtn onClick={() => n("/")}>Close</DialogBtn>

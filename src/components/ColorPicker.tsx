@@ -67,8 +67,8 @@ export const ColorPicker: React.FC<ColorPickerProps> = ({ color, onColorChange, 
   // Check if the current color is a valid hex color and update it if not
   useEffect(() => {
     if (!isHexColor(color)) {
-      console.log(`Invalid hex color: ${color}`);
       handleColorChange(ColorPalette.purple);
+      console.error("Invalid hex color " + color);
     }
   }, [color]);
 

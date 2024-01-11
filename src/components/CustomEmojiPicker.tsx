@@ -6,6 +6,7 @@ import EmojiPicker, { Emoji, EmojiClickData, EmojiStyle, SuggestionMode } from "
 import { getFontColorFromHex } from "../utils";
 import { ColorPalette } from "../styles";
 import { UserContext } from "../contexts/UserContext";
+import { useOnlineStatus } from "../hooks/useOnlineStatus";
 
 interface EmojiPickerProps {
   emoji?: string;
@@ -15,11 +16,14 @@ interface EmojiPickerProps {
   width?: CSSProperties["width"];
 }
 
+//TODO: redesign emoji picker
 export const CustomEmojiPicker = ({ emoji, setEmoji, color, width }: EmojiPickerProps) => {
   const { user } = useContext(UserContext);
   const [showEmojiPicker, setShowEmojiPicker] = useState<boolean>(false);
 
   const [currentEmoji, setCurrentEmoji] = useState<string | null>(emoji || null);
+
+  const isOnline = useOnlineStatus();
 
   // const [emojiData, setEmojiData] = useState<EmojiClickData>();
 
@@ -125,6 +129,21 @@ export const CustomEmojiPicker = ({ emoji, setEmoji, color, width }: EmojiPicker
       {/* {emojiData && <EmojiName>{emojiData.names[0]}</EmojiName>} */}
       {showEmojiPicker && (
         <>
+          {!isOnline && (
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                maxWidth: width || "350px",
+                margin: "12px auto 6px auto",
+              }}
+            >
+              <span style={{ margin: 0, fontSize: "14px", opacity: 0.7 }}>
+                Emojis may not load correctly when offline. Try switching to the native emoji style.
+              </span>
+            </div>
+          )}
           <EmojiPickerContainer>
             <EmojiPicker
               width={width || "350px"}

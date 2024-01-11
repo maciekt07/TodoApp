@@ -303,6 +303,7 @@ const StyledMenuItem = styled(MenuItem)<{ clr?: string }>`
   padding: 12px;
   border-radius: 12px;
   box-shadow: none;
+  gap: 2px;
   color: ${({ clr }) => clr || ColorPalette.fontDark};
 
   &:hover {

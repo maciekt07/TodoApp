@@ -74,11 +74,11 @@ export const EditTask = ({ open, task, onClose, onSave }: EditTaskProps) => {
     document.body.style.overflow = "auto";
     if (editedTask && !nameError && !descriptionError) {
       onSave(editedTask);
-      toast.success(
-        <div>
+      toast.success((t) => (
+        <div onClick={() => toast.dismiss(t.id)}>
           Task <b>{editedTask.name}</b> updated.
         </div>
-      );
+      ));
     }
   };
 
@@ -86,21 +86,7 @@ export const EditTask = ({ open, task, onClose, onSave }: EditTaskProps) => {
     onClose();
     setEditedTask(task);
     setSelectedCategories(task?.category as Category[]);
-    // toast("Canceled editing task.");
   };
-
-  // Event handler for category change in the Select dropdown.
-  // const handleCategoryChange = (event: SelectChangeEvent<unknown>) => {
-  //   const categoryId = event.target.value as number;
-  //   const selectedCategory = user.categories.find(
-  //     (category) => category.id === categoryId
-  //   );
-
-  //   setEditedTask((prevTask) => ({
-  //     ...(prevTask as Task),
-  //     category: selectedCategory ? [selectedCategory] : undefined,
-  //   }));
-  // };
 
   useEffect(() => {
     setEditedTask((prevTask) => ({
@@ -219,45 +205,6 @@ export const EditTask = ({ open, task, onClose, onSave }: EditTaskProps) => {
               selectedCategories={selectedCategories}
               setSelectedCategories={setSelectedCategories}
             />
-
-            {/* {editedTask?.category &&
-                editedTask.category.length > 0 &&
-                !user.categories.some(
-                  (category) =>
-                    editedTask.category &&
-                    editedTask.category[0] &&
-                    category.id === editedTask.category[0].id
-                ) && (
-                  <div style={{ margin: "8px 0" }}>
-                    <span>
-                      Category <b>{editedTask.category[0]?.name}</b> has been
-                      deleted
-                      <br />
-                      <Button
-                        sx={{
-                          padding: "8px 12px",
-                          margin: "8px 0",
-                          borderRadius: "12px",
-                        }}
-                        onClick={() => {
-                          if (editedTask.category && editedTask.category[0]) {
-                            const updatedCategories = [
-                              ...user.categories,
-                              editedTask.category[0],
-                            ];
-
-                            setUser((prevUser) => ({
-                              ...prevUser,
-                              categories: updatedCategories,
-                            }));
-                          }
-                        }}
-                      >
-                        <Restore /> &nbsp; restore category
-                      </Button>
-                    </span>
-                  </div>
-                )} */}
           </>
         )}
         <Label>Color</Label>
@@ -301,13 +248,6 @@ const Label = styled(Typography)`
   font-weight: 500;
   font-size: 16px;
 `;
-
-// const StyledSelect = styled(Select)`
-//   border-radius: 16px;
-//   transition: 0.3s all;
-
-//   margin: 8px 0;
-// `;
 
 const LastEdit = styled.span`
   font-size: 14px;

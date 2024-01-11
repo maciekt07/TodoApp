@@ -52,6 +52,7 @@ import { useResponsiveDisplay } from "../hooks/useResponsiveDisplay";
 import Marquee from "react-fast-marquee";
 import { UserContext } from "../contexts/UserContext";
 import { useStorageState } from "../hooks/useStorageState";
+import { iOS } from "../utils/iOS";
 
 /**
  * Component to display a list of tasks.
@@ -189,8 +190,8 @@ export const Tasks = (): JSX.Element => {
       }));
 
       setDeleteDialogOpen(false);
-      toast.success(() => (
-        <div>
+      toast.success((t) => (
+        <div onClick={() => toast.dismiss(t.id)}>
           Deleted Task - <b>{user.tasks.find((task) => task.id === selectedTaskId)?.name}</b>
         </div>
       ));
@@ -638,7 +639,11 @@ export const Tasks = (): JSX.Element => {
                     <Done fontSize="large" />
                   ) : user.emojisStyle === EmojiStyle.NATIVE ? (
                     <div>
-                      <Emoji size={36} unified={task.emoji || ""} emojiStyle={EmojiStyle.NATIVE} />
+                      <Emoji
+                        size={iOS ? 48 : 36}
+                        unified={task.emoji || ""}
+                        emojiStyle={EmojiStyle.NATIVE}
+                      />
                     </div>
                   ) : (
                     <Emoji size={48} unified={task.emoji || ""} emojiStyle={user.emojisStyle} />

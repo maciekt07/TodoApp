@@ -33,6 +33,7 @@ import logo from "../assets/logo256.png";
 import { ColorPalette } from "../styles";
 import { UserContext } from "../contexts/UserContext";
 import { iOS } from "../utils/iOS";
+import { fetchGitHubInfo } from "../services/githubApi";
 
 export const ProfileAvatar = () => {
   const { user, setUser } = useContext(UserContext);
@@ -48,31 +49,10 @@ export const ProfileAvatar = () => {
 
   useEffect(() => {
     const fetchRepoInfo = async () => {
-      const username = "maciekt07";
-      const repo = "TodoApp";
-      const branch = "gh-pages";
       try {
-        // Make a request to the GitHub API for repository and branch information
-        const [repoResponse, branchResponse] = await Promise.all([
-          fetch(`https://api.github.com/repos/${username}/${repo}`),
-          fetch(`https://api.github.com/repos/${username}/${repo}/branches/${branch}`),
-        ]);
-
-        // Check if both requests were successful
-        if (repoResponse.ok && branchResponse.ok) {
-          const [repoData, branchData] = await Promise.all([
-            repoResponse.json(),
-            branchResponse.json(),
-          ]);
-
-          // Get the number of stars
-          setStars(repoData.stargazers_count);
-
-          // Get the 'committer' information
-          setLastUpdate(branchData.commit.commit.committer.date);
-        } else {
-          throw new Error("Failed to fetch repository information");
-        }
+        const { repoData, branchData } = await fetchGitHubInfo();
+        setStars(repoData.stargazers_count);
+        setLastUpdate(branchData.commit.commit.committer.date);
       } catch (error) {
         console.error(error);
       }
@@ -161,7 +141,7 @@ export const ProfileAvatar = () => {
             handleClose();
           }}
         >
-          <img src={logo} alt="logo" style={{ width: "48px", marginLeft: "18px" }} />
+          <img src={logo} alt="logo" style={{ width: "52px", marginLeft: "18px" }} />
           <h2>
             <span style={{ color: "#7764E8" }}>Todo</span> App
             <span style={{ color: "#7764E8" }}>.</span>

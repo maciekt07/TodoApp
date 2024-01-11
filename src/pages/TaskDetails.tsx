@@ -80,6 +80,12 @@ const TaskDetails = () => {
                 {task?.pinned ? <Done /> : <Clear />} {task?.pinned.toString()}
               </TableData>
             </TableRow>
+            {task?.sharedBy && (
+              <TableRow>
+                <TableHeader>Shared by: </TableHeader>
+                <TableData>{task.sharedBy}</TableData>
+              </TableRow>
+            )}
             <TableRow>
               <TableHeader>Categories:</TableHeader>
               <TableData>

@@ -22,13 +22,18 @@ import { ColorPalette, DialogBtn, fadeIn } from "../styles";
 import toast from "react-hot-toast";
 import NotFound from "./NotFound";
 import { UserContext } from "../contexts/UserContext";
+import { useStorageState } from "../hooks/useStorageState";
 
 const Categories = () => {
   const { user, setUser } = useContext(UserContext);
-  const [name, setName] = useState<string>("");
+  const [name, setName] = useStorageState<string>("", "catName", "sessionStorage");
   const [nameError, setNameError] = useState<string>("");
-  const [emoji, setEmoji] = useState<string | undefined>();
-  const [color, setColor] = useState<string>(ColorPalette.purple);
+  const [emoji, setEmoji] = useStorageState<string | null>(null, "catEmoji", "sessionStorage");
+  const [color, setColor] = useStorageState<string>(
+    ColorPalette.purple,
+    "catColor",
+    "sessionStorage"
+  );
 
   const [openDeleteDialog, setOpenDeleteDialog] = useState<boolean>(false);
   const [selectedCategoryId, setSelectedCategoryId] = useState<number>(0);
@@ -45,6 +50,9 @@ const Categories = () => {
     document.title = "Todo App - Categories";
     if (!user.settings[0].enableCategories) {
       n("/");
+    }
+    if (name.length > CATEGORY_NAME_MAX_LENGTH) {
+      setNameError(`Name is too long maximum ${CATEGORY_NAME_MAX_LENGTH} characters`);
     }
   }, []);
 
@@ -111,7 +119,7 @@ const Categories = () => {
       const newCategory: Category = {
         id: new Date().getTime() + Math.floor(Math.random() * 1000),
         name,
-        emoji: emoji !== "" ? emoji : undefined,
+        emoji: emoji !== "" && emoji !== null ? emoji : undefined,
         color,
       };
       toast.success(() => (
@@ -264,7 +272,11 @@ const Categories = () => {
         )}
         <AddContainer>
           <h2>Add New Category</h2>
-          <CustomEmojiPicker emoji={emoji} setEmoji={setEmoji} color={color} />
+          <CustomEmojiPicker
+            emoji={typeof emoji === "string" ? emoji : undefined}
+            setEmoji={setEmoji}
+            color={color}
+          />
           <StyledInput
             focused
             label="Category name"

@@ -50,14 +50,12 @@ export class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoun
           <h1
             style={{
               color: "#ff3131",
-              display: "flex",
-              justifyContent: "left",
               alignItems: "center",
             }}
           >
-            Oops! An error occurred&nbsp;
-            <Emoji size={38} unified="1f644" />.
-          </h1>{" "}
+            <span>Oops! An error occurred.&nbsp;</span>
+            <Emoji size={32} unified="1f644" />
+          </h1>
           <h2>
             To fix it, try clearing your local files (cookies and cache) and then refresh the page.
             If the problem persists, please report the issue via{" "}

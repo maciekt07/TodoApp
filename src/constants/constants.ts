@@ -11,7 +11,7 @@ export const DESCRIPTION_MAX_LENGTH = 300;
 /**
  * Shorter length for displaying descriptions with a "Show More" button.
  */
-// export const DESCRIPTION_SHORT_LENGTH: number = 100;
+// export const DESCRIPTION_SHORT_LENGTH = 100;
 
 /**
  * Maximum length allowed for user names.
@@ -36,4 +36,4 @@ export const MAX_CATEGORIES = 4;
 /**
  * Maximum number of tasks a user can have.
  */
-// export const MAX_TASKS: number = 999;
+// export const MAX_TASKS: number = 200;

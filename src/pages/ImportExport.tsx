@@ -2,7 +2,7 @@ import { useContext, useEffect, useRef } from "react";
 import Button from "@mui/material/Button";
 import Checkbox from "@mui/material/Checkbox";
 import { TopBar } from "../components";
-import { Task } from "../types/user";
+import { Category, Task } from "../types/user";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 import styled from "@emotion/styled";
@@ -86,14 +86,14 @@ const ImportExport = () => {
     exportTasksToJson(user.tasks);
     toast.success(`Exported all tasks (${user.tasks.length})`);
   };
-
   const handleImport = (taskFile: File) => {
+    //TODO: add is hex color statemant
     const file = taskFile;
 
     if (file) {
       const reader = new FileReader();
 
-      reader.onload = (e) => {
+      reader.onload = (e: ProgressEvent<FileReader>) => {
         try {
           const importedTasks = JSON.parse(e.target?.result as string) as Task[];
 
@@ -101,6 +101,7 @@ const ImportExport = () => {
             toast.error("Imported file has an invalid structure.");
             return;
           }
+
           // Check if any imported task property exceeds the maximum length
 
           const invalidTasks = importedTasks.filter((task) => {
@@ -119,6 +120,22 @@ const ImportExport = () => {
               `These tasks cannot be imported due to exceeding maximum character lengths: ${invalidTaskNames}`
             );
             toast.error(`Some tasks cannot be imported due to exceeding maximum character lengths`);
+            return;
+          }
+
+          const isHexColor = (value: string): boolean => /^#[0-9A-Fa-f]{6}$/.test(value);
+          const isCategoryColorValid = (category: Category) =>
+            category.color && isHexColor(category.color);
+
+          const hasInvalidColors = importedTasks.some((task) => {
+            return (
+              (task.color && !isHexColor(task.color)) ||
+              (task.category && !task.category.every((cat) => isCategoryColorValid(cat)))
+            );
+          });
+
+          if (hasInvalidColors) {
+            toast.error("Imported file contains tasks with invalid color formats.");
             return;
           }
 
@@ -205,6 +222,24 @@ const ImportExport = () => {
       };
 
       reader.readAsText(file);
+    }
+  };
+
+  const handleImportFromLink = async () => {
+    try {
+      const text = await navigator.clipboard.readText();
+      if (text.startsWith(`${location.protocol}//${location.hostname}`)) {
+        window.open(text, "_self");
+      } else {
+        toast.error((t) => (
+          <div onClick={() => toast.dismiss(t.id)}>
+            Failed to import task from the provided link. Please ensure that the link is copied
+            correctly.
+          </div>
+        ));
+      }
+    } catch (err) {
+      console.error("Failed to read clipboard contents: ", err);
     }
   };
 
@@ -324,28 +359,8 @@ const ImportExport = () => {
             <FileUpload /> &nbsp; Select JSON File
           </Button>
         </label>
-        <StyledButton
-          variant="outlined"
-          onClick={() => {
-            navigator.clipboard
-              .readText()
-              .then((text) => {
-                if (text.startsWith(`${location.protocol}//${location.hostname}`)) {
-                  window.open(text, "_self");
-                } else {
-                  toast.error((t) => (
-                    <div onClick={() => toast.dismiss(t.id)}>
-                      Failed to import task from the provided link. Please ensure that the link is
-                      copied correctly.
-                    </div>
-                  ));
-                }
-              })
-              .catch((err) => {
-                console.error("Failed to read clipboard contents: ", err);
-              });
-          }}
-        >
+        {/* Fix for PWA on iOS: */}
+        <StyledButton variant="outlined" onClick={handleImportFromLink}>
           <Link /> &nbsp; Import From Link
         </StyledButton>
       </Box>

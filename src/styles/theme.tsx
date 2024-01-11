@@ -14,6 +14,13 @@ export const MuiTheme = createTheme({
         disableInteractive: true,
       },
     },
+    MuiSelect: {
+      defaultProps: {
+        style: {
+          borderRadius: "18px",
+        },
+      },
+    },
   },
   typography: {
     fontFamily: '"Poppins", sans-serif',

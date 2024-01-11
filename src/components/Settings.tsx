@@ -407,7 +407,6 @@ const Container = styled.div`
 
 const StyledSelect = styled(Select)`
   width: 300px;
-  border-radius: 18px;
   color: black;
   margin: 8px 0;
 `;
