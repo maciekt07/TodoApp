@@ -1,5 +1,6 @@
 import { EmojiStyle } from "emoji-picker-react";
 import { User } from "../types/user";
+import { iOS } from "../utils/iOS";
 
 /**
  * Represents a default user object.
@@ -8,7 +9,7 @@ export const defaultUser: User = {
   name: null,
   createdAt: new Date(),
   profilePicture: null,
-  emojisStyle: EmojiStyle.APPLE,
+  emojisStyle: iOS ? EmojiStyle.NATIVE : EmojiStyle.APPLE,
   tasks: [],
   settings: [
     {

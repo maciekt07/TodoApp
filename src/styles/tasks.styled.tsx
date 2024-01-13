@@ -1,6 +1,6 @@
 import styled from "@emotion/styled";
 import { ColorPalette, fadeIn } from ".";
-import { Chip, TextField, css } from "@mui/material";
+import { Button, Chip, TextField, css } from "@mui/material";
 import { getFontColorFromHex } from "../utils";
 import { Alarm } from "@mui/icons-material";
 import { keyframes } from "@emotion/css";
@@ -92,6 +92,20 @@ export const TaskDescription = styled.p<{ done: boolean }>`
   word-break: break-word;
   /* white-space: pre-line;
   line-height: 1em; */
+`;
+
+export const ShowMoreBtn = styled(Button)<{ clr: string }>`
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: bolder;
+  transition: 0.3s color;
+  color: ${({ clr }) => getFontColorFromHex(clr)};
+  text-transform: capitalize;
+  border-radius: 6px;
+  padding: 0 4px;
+  margin: 0 4px;
 `;
 
 export const NoTasks = styled.div`
@@ -243,8 +257,6 @@ export const SearchInput = styled(TextField)`
   border-radius: 16px;
   transition: 0.3s all;
 
-  &:focus {
-  }
   & .MuiOutlinedInput-notchedOutline {
     border: 2px solid ${ColorPalette.purple} !important;
   }

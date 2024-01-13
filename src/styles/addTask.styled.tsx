@@ -37,7 +37,7 @@ export const AddTaskButton = styled(Button)`
   width: 400px;
   text-transform: capitalize;
   &:hover {
-    box-shadow: 0px 0px 24px 0px #7614ff;
+    box-shadow: 0px 0px 24px 0px ${ColorPalette.purple + 80};
     background: ${ColorPalette.purple};
   }
   &:disabled {
@@ -49,10 +49,14 @@ export const AddTaskButton = styled(Button)`
 `;
 export const StyledInput = styled(TextField)`
   margin: 12px;
-  .MuiOutlinedInput-root {
+  & .MuiOutlinedInput-root {
     border-radius: 16px;
     transition: 0.3s all;
     width: 400px;
     color: white;
+  }
+  .MuiFormHelperText-root {
+    color: white;
+    opacity: 0.8;
   }
 `;

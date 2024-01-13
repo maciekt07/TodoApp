@@ -6,6 +6,10 @@
 
 ## [https://react-cool-todo-app.netlify.app/](https://react-cool-todo-app.netlify.app/)
 
+[![Netlify Status](https://api.netlify.com/api/v1/badges/2ce8f787-18d6-4d8e-aeb9-8f66eba7341b/deploy-status)](https://app.netlify.com/sites/react-cool-todo-app/deploys)
+![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/maciekt07/TodoApp?color=%23b624ff)
+![GitHub License](https://img.shields.io/github/license/maciekt07/TodoApp?color=%23b624ff)
+
 <p align="center">
 
 <img src="public/screenshots/iPhone Mockup.png" width="400px" />

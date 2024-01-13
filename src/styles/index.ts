@@ -39,4 +39,5 @@ export {
   HighlightedText,
   SearchInput,
   RingAlarm,
+  ShowMoreBtn,
 } from "./tasks.styled";

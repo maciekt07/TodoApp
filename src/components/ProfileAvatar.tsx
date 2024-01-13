@@ -57,8 +57,6 @@ export const ProfileAvatar = () => {
         console.error(error);
       }
     };
-
-    // Call the fetch function
     fetchRepoInfo();
   }, []);
 
@@ -334,6 +332,7 @@ const StyledSwipeableDrawer = styled(SwipeableDrawer)`
     box-shadow: none;
     padding: 4px;
     background: #f9fafc;
+    z-index: 999;
     @media (max-width: 1024px) {
       min-width: 270px;
     }

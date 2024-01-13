@@ -276,7 +276,7 @@ export const SettingsDialog = ({ open, onClose }: SettingsProps) => {
                 <StyledSelect
                   // Set the value to the first voice in the availableVoices array
                   value={user.settings[0].voice}
-                  // Handle the voice selection change
+                  variant="outlined"
                   onChange={handleVoiceChange}
                   translate="no"
                   MenuProps={{
@@ -296,7 +296,7 @@ export const SettingsDialog = ({ open, onClose }: SettingsProps) => {
                       translate="no"
                       sx={{
                         padding: "10px",
-                        borderRadius: "6px",
+                        borderRadius: "8px",
                       }}
                     >
                       {voice.name} &nbsp;

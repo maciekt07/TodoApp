@@ -129,7 +129,7 @@ export const CustomEmojiPicker = ({ emoji, setEmoji, color, width }: EmojiPicker
       {/* {emojiData && <EmojiName>{emojiData.names[0]}</EmojiName>} */}
       {showEmojiPicker && (
         <>
-          {!isOnline && (
+          {!isOnline && user.emojisStyle !== EmojiStyle.NATIVE && (
             <div
               style={{
                 display: "flex",

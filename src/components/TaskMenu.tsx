@@ -82,7 +82,9 @@ export const TaskMenu = ({
     navigator.clipboard
       .writeText(linkToCopy)
       .then(() => {
-        toast.success("Copied link to clipboard");
+        toast.success((t) => (
+          <div onClick={() => toast.dismiss(t.id)}>Copied link to clipboard</div>
+        ));
       })
 
       .catch((error) => {

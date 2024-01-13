@@ -16,7 +16,6 @@ const NotFound = () => {
   return (
     <Container>
       <ErrorCode>404</ErrorCode>
-
       <NotFoundImg src={TaskNotFound} />
       <Description>
         Page{" "}

@@ -129,7 +129,7 @@ const AddTask = () => {
           onChange={handleNameChange}
           focused
           error={nameError !== ""}
-          helperText={nameError}
+          helperText={!nameError ? `${name.length}/${TASK_NAME_MAX_LENGTH}` : nameError}
         />
         <StyledInput
           label="Task Description (optional)"
@@ -141,7 +141,9 @@ const AddTask = () => {
           rows={4}
           focused
           error={descriptionError !== ""}
-          helperText={descriptionError}
+          helperText={
+            !descriptionError ? `${description.length}/${DESCRIPTION_MAX_LENGTH}` : descriptionError
+          }
         />
         <StyledInput
           label="Task Deadline (optional)"

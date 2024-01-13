@@ -1,4 +1,4 @@
-import { useState, useEffect, useContext } from "react";
+import { useState, useEffect, useContext, useMemo } from "react";
 import {
   Dialog,
   DialogTitle,
@@ -29,10 +29,21 @@ interface EditTaskProps {
 export const EditTask = ({ open, task, onClose, onSave }: EditTaskProps) => {
   const { user } = useContext(UserContext);
   const [editedTask, setEditedTask] = useState<Task | undefined>(task);
-  const [nameError, setNameError] = useState<boolean>(false);
-  const [descriptionError, setDescriptionError] = useState<boolean>(false);
   const [emoji, setEmoji] = useState<string | undefined>();
   const [selectedCategories, setSelectedCategories] = useState<Category[]>([]);
+
+  const nameError = useMemo(
+    () => (editedTask?.name ? editedTask.name.length > TASK_NAME_MAX_LENGTH : undefined),
+    [editedTask?.name]
+  );
+  const descriptionError = useMemo(
+    () =>
+      editedTask?.description ? editedTask.description.length > DESCRIPTION_MAX_LENGTH : undefined,
+    [editedTask?.description]
+  );
+
+  // const isMobile = useResponsiveDisplay(600);
+
   // Effect hook to update the editedTask with the selected emoji.
   useEffect(() => {
     setEditedTask((prevTask) => ({
@@ -52,17 +63,17 @@ export const EditTask = ({ open, task, onClose, onSave }: EditTaskProps) => {
     const { name, value } = event.target;
     // Update name error state if the name length exceeds the maximum allowed.
 
-    if (name === "name" && value.length > TASK_NAME_MAX_LENGTH) {
-      setNameError(true);
-    } else {
-      setNameError(false);
-    }
-    // Update description error state if the description length exceeds the maximum allowed.
-    if (name === "description" && value.length > DESCRIPTION_MAX_LENGTH) {
-      setDescriptionError(true);
-    } else {
-      setDescriptionError(false);
-    }
+    // if (name === "name" && value.length > TASK_NAME_MAX_LENGTH) {
+    //   setNameError(true);
+    // } else {
+    //   setNameError(false);
+    // }
+    // // Update description error state if the description length exceeds the maximum allowed.
+    // if (name === "description" && value.length > DESCRIPTION_MAX_LENGTH) {
+    //   setDescriptionError(true);
+    // } else {
+    //   setDescriptionError(false);
+    // }
     // Update the editedTask state with the changed value.
     setEditedTask((prevTask) => ({
       ...(prevTask as Task),
@@ -98,6 +109,7 @@ export const EditTask = ({ open, task, onClose, onSave }: EditTaskProps) => {
   return (
     <Dialog
       open={open}
+      // fullScreen={isMobile}
       onClose={() => {
         onClose();
         setEditedTask(task);
@@ -105,6 +117,7 @@ export const EditTask = ({ open, task, onClose, onSave }: EditTaskProps) => {
       }}
       PaperProps={{
         style: {
+          // borderRadius: !isMobile ? "24px" : 0,
           borderRadius: "24px",
           padding: "12px",
           maxWidth: "600px",
@@ -142,11 +155,13 @@ export const EditTask = ({ open, task, onClose, onSave }: EditTaskProps) => {
           fullWidth
           error={nameError || editedTask?.name === ""}
           helperText={
-            editedTask?.name === ""
-              ? "Name is required"
-              : nameError
-              ? `Name should be less than or equal to ${TASK_NAME_MAX_LENGTH} characters`
-              : undefined
+            editedTask?.name
+              ? editedTask?.name.length === 0
+                ? "Name is required"
+                : editedTask?.name.length > TASK_NAME_MAX_LENGTH
+                ? `Name is too long (maximum ${TASK_NAME_MAX_LENGTH} characters)`
+                : `${editedTask?.name?.length}/${TASK_NAME_MAX_LENGTH}`
+              : "Name is required"
           }
         />
         <StyledInput
@@ -160,10 +175,12 @@ export const EditTask = ({ open, task, onClose, onSave }: EditTaskProps) => {
           margin="normal"
           error={descriptionError}
           helperText={
-            descriptionError &&
-            `Description is too long (maximum ${DESCRIPTION_MAX_LENGTH} characters)`
+            descriptionError
+              ? `Description is too long (maximum ${DESCRIPTION_MAX_LENGTH} characters)`
+              : `${editedTask?.description?.length}/${DESCRIPTION_MAX_LENGTH}`
           }
         />
+
         <StyledInput
           label="Deadline date"
           name="deadline"
@@ -226,7 +243,13 @@ export const EditTask = ({ open, task, onClose, onSave }: EditTaskProps) => {
         <DialogBtn
           onClick={handleSave}
           color="primary"
-          disabled={nameError || editedTask?.name === ""}
+          disabled={
+            nameError ||
+            editedTask?.name === "" ||
+            descriptionError ||
+            nameError ||
+            JSON.stringify(editedTask) === JSON.stringify(task)
+          }
         >
           Save
         </DialogBtn>
@@ -241,6 +264,9 @@ const StyledInput = styled(TextField)`
   & .MuiInputBase-root {
     border-radius: 16px;
   }
+  /* & .MuiFormHelperText-root {
+    opacity: 0.9;
+  } */
 `;
 
 const Label = styled(Typography)`

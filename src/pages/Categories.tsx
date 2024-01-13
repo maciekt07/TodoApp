@@ -95,7 +95,7 @@ const Categories = () => {
     const newName = event.target.value;
     setName(newName);
     if (newName.length > CATEGORY_NAME_MAX_LENGTH) {
-      setNameError(`Name is too long maximum ${CATEGORY_NAME_MAX_LENGTH} characters`);
+      setNameError(`Name is too long (maximum ${CATEGORY_NAME_MAX_LENGTH} characters)`);
     } else {
       setNameError("");
     }
@@ -105,7 +105,7 @@ const Categories = () => {
     const newName = event.target.value;
     setEditName(newName);
     if (newName.length > CATEGORY_NAME_MAX_LENGTH) {
-      setEditNameError(`Name is too long maximum ${CATEGORY_NAME_MAX_LENGTH} characters`);
+      setEditNameError(`Name is too long (maximum ${CATEGORY_NAME_MAX_LENGTH} characters)`);
     } else {
       setEditNameError("");
     }
@@ -284,7 +284,7 @@ const Categories = () => {
             value={name}
             onChange={handleNameChange}
             error={nameError !== ""}
-            helperText={nameError}
+            helperText={!nameError ? `${name.length}/${CATEGORY_NAME_MAX_LENGTH}` : nameError}
           />
           <Typography>Color</Typography>
           <ColorPicker
@@ -373,8 +373,10 @@ const Categories = () => {
                 placeholder="Enter category name"
                 value={editName}
                 error={editNameError !== ""}
-                helperText={editNameError}
                 onChange={handleEditNameChange}
+                helperText={
+                  !editNameError ? `${editName.length}/${CATEGORY_NAME_MAX_LENGTH}` : editNameError
+                }
               />
               <ColorPicker
                 color={editColor}
@@ -481,6 +483,10 @@ const StyledInput = styled(TextField)`
     width: 350px;
     color: white;
   }
+  & .MuiFormHelperText-root {
+    color: white;
+    opacity: 0.8;
+  }
 `;
 
 const EditNameInput = styled(TextField)`
@@ -506,7 +512,7 @@ export const AddCategoryButton = styled(Button)`
   width: 350px;
   text-transform: capitalize;
   &:hover {
-    box-shadow: 0px 0px 24px 0px #7614ff;
+    box-shadow: 0px 0px 24px 0px ${ColorPalette.purple + 80};
     background: ${ColorPalette.purple};
   }
   &:disabled {
@@ -516,9 +522,3 @@ export const AddCategoryButton = styled(Button)`
     color: white;
   }
 `;
-// const DialogBtn = styled(Button)`
-//   padding: 8px 12px;
-//   border-radius: 12px;
-//   font-size: 16px;
-//   margin: 8px;
-// `;

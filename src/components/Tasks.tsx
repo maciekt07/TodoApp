@@ -36,6 +36,7 @@ import {
   Pinned,
   RingAlarm,
   SearchInput,
+  ShowMoreBtn,
   TaskComponent,
   TaskDate,
   TaskDescription,
@@ -53,6 +54,7 @@ import Marquee from "react-fast-marquee";
 import { UserContext } from "../contexts/UserContext";
 import { useStorageState } from "../hooks/useStorageState";
 import { iOS } from "../utils/iOS";
+import { DESCRIPTION_SHORT_LENGTH } from "../constants";
 
 /**
  * Component to display a list of tasks.
@@ -61,8 +63,10 @@ import { iOS } from "../utils/iOS";
 export const Tasks = (): JSX.Element => {
   const { user, setUser } = useContext(UserContext);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-  const [selectedTaskId, setSelectedTaskId] = useState<number | null>(null);
   const open = Boolean(anchorEl);
+  const [selectedTaskId, setSelectedTaskId] = useState<number | null>(null);
+  const [search, setSearch] = useStorageState<string>("", "search", "sessionStorage");
+  const [expandedTasks, setExpandedTasks] = useState<Set<number>>(new Set());
   const [deleteDialogOpen, setDeleteDialogOpen] = useState<boolean>(false);
   const [editModalOpen, setEditModalOpen] = useState<boolean>(false);
 
@@ -414,7 +418,7 @@ export const Tasks = (): JSX.Element => {
   }>({});
 
   useEffect(() => {
-    const tasks: Task[] = user.tasks;
+    const tasks: Task[] = reorderTasks(user.tasks);
     const uniqueCategories: Category[] = [];
 
     tasks.forEach((task) => {
@@ -445,9 +449,16 @@ export const Tasks = (): JSX.Element => {
 
     setCategories(uniqueCategories);
     setCategoryCounts(counts);
-  }, [user.tasks]);
+  }, [user.tasks, search]);
 
-  const [search, setSearch] = useStorageState<string>("", "search", "sessionStorage");
+  const toggleShowMore = (taskId: number) => {
+    setExpandedTasks((prevExpandedTasks) => {
+      const newSet = new Set(prevExpandedTasks);
+      newSet.has(taskId) ? newSet.delete(taskId) : newSet.add(taskId);
+      return newSet;
+    });
+  };
+
   const highlightMatchingText = (text: string, search: string): ReactNode => {
     if (!search) {
       return text;
@@ -486,6 +497,7 @@ export const Tasks = (): JSX.Element => {
   useEffect(() => {
     checkOverdueTasks(reorderTasks(user.tasks));
   }, []);
+
   return (
     <>
       <TaskMenu
@@ -535,7 +547,7 @@ export const Tasks = (): JSX.Element => {
           />
         )}
         {categories !== undefined &&
-          categories?.length > 1 &&
+          categories?.length > 0 &&
           user.settings[0].enableCategories && (
             <CategoriesListContainer
             // ref={scrollContainerRef}
@@ -668,7 +680,17 @@ export const Tasks = (): JSX.Element => {
                   </Tooltip>
                 </TaskHeader>
                 <TaskDescription done={task.done}>
-                  {highlightMatchingText(task.description || "", search)}
+                  {highlightMatchingText(
+                    expandedTasks.has(task.id) || !task.description
+                      ? task.description || ""
+                      : task.description?.slice(0, DESCRIPTION_SHORT_LENGTH) || "",
+                    search
+                  )}
+                  {task.description && task.description.length > DESCRIPTION_SHORT_LENGTH && (
+                    <ShowMoreBtn onClick={() => toggleShowMore(task.id)} clr={task.color}>
+                      {expandedTasks.has(task.id) ? "Show less" : "Show more"}
+                    </ShowMoreBtn>
+                  )}
                 </TaskDescription>
 
                 {task.deadline && (
@@ -677,15 +699,7 @@ export const Tasks = (): JSX.Element => {
                       fontSize="small"
                       animate={new Date() > new Date(task.deadline) && !task.done}
                       sx={{
-                        color:
-                          // new Date() > new Date(task.deadline) && !task.done
-                          false
-                            ? ColorPalette.red
-                            : `${getFontColorFromHex(task.color)} !important`,
-                        // filter:
-                        //   new Date() > new Date(task.deadline) && !task.done
-                        //     ? `drop-shadow(0 0 6px ${ColorPalette.red})`
-                        //     : "none",
+                        color: `${getFontColorFromHex(task.color)} !important`,
                       }}
                     />{" "}
                     &nbsp;
