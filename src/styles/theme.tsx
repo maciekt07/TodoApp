@@ -1,13 +1,13 @@
-import { createTheme } from "@mui/material";
+import { Theme, createTheme } from "@mui/material";
 
-export const ColorPalette = {
+export const ColorPalette: { [key: string]: string } = {
   fontDark: "#101727",
   fontLight: "#F5F5F5",
   purple: "#b624ff",
   red: "#ff3131",
 };
 
-export const MuiTheme = createTheme({
+export const MuiTheme: Theme = createTheme({
   components: {
     MuiTooltip: {
       defaultProps: {

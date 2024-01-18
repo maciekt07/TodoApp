@@ -2,6 +2,7 @@ import { Global, css, keyframes } from "@emotion/react";
 import styled from "@emotion/styled";
 import { Button } from "@mui/material";
 import { ColorPalette } from ".";
+import { ScrollBarLight } from "./CommonStyles";
 
 const globalStyles = css`
   * {
@@ -122,6 +123,13 @@ const globalStyles = css`
     --epr-highlight-color: #b624ff;
     --epr-search-border-color: #b624ff;
     --epr-category-icon-active-color: #b624ff;
+    border-radius: 20px !important;
+    padding: 8px !important;
+  }
+  .epr-body,
+  .MuiDialogContent-root,
+  .MuiDrawer-paper {
+    ${ScrollBarLight}
   }
 
   .MuiDialog-container {

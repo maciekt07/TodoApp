@@ -495,7 +495,7 @@ export const Tasks = (): JSX.Element => {
   };
 
   useEffect(() => {
-    checkOverdueTasks(reorderTasks(user.tasks));
+    checkOverdueTasks(user.tasks);
   }, []);
 
   return (

@@ -1,6 +1,14 @@
 import styled from "@emotion/styled";
 import { Category } from "../types/user";
-import { Avatar, Box, MenuItem, Select, SelectChangeEvent } from "@mui/material";
+import {
+  Avatar,
+  Box,
+  FormControl,
+  FormLabel,
+  MenuItem,
+  Select,
+  SelectChangeEvent,
+} from "@mui/material";
 import { CategoryChip, ColorPalette } from "../styles";
 import { Emoji, EmojiStyle } from "emoji-picker-react";
 import { getFontColorFromHex } from "../utils";
@@ -8,10 +16,12 @@ import { CSSProperties, useContext } from "react";
 import { MAX_CATEGORIES } from "../constants";
 import toast from "react-hot-toast";
 import { UserContext } from "../contexts/UserContext";
+import { ExpandMoreRounded } from "@mui/icons-material";
 
 interface CategorySelectProps {
   // variant?: "standard" | "outlined" | "filled";
   width?: CSSProperties["width"];
+  fontColor?: CSSProperties["color"];
   selectedCategories: Category[];
   setSelectedCategories: React.Dispatch<React.SetStateAction<Category[]>>;
 }
@@ -19,11 +29,12 @@ interface CategorySelectProps {
  * Component for selecting categories with emojis.
  */
 
-export const CategorySelect = ({
+export const CategorySelect: React.FC<CategorySelectProps> = ({
   width,
+  fontColor,
   selectedCategories,
   setSelectedCategories,
-}: CategorySelectProps): JSX.Element => {
+}) => {
   const { user } = useContext(UserContext);
   const handleCategoryChange = (event: SelectChangeEvent<unknown>): void => {
     const selectedCategoryIds = event.target.value as number[];
@@ -42,12 +53,26 @@ export const CategorySelect = ({
   };
 
   return (
-    <>
+    <FormControl sx={{ width: width || "100%" }}>
+      <FormLabel
+        sx={{
+          color: fontColor ? fontColor + "e8" : ColorPalette.fontLight + "e8",
+          marginLeft: "8px",
+          fontWeight: 500,
+        }}
+      >
+        Category
+      </FormLabel>
       <StyledSelect
         multiple
         width={width}
         value={selectedCategories.map((cat) => cat.id)}
         onChange={handleCategoryChange}
+        IconComponent={() => (
+          <ExpandMoreRounded
+            sx={{ marginRight: "14px", color: fontColor || ColorPalette.fontLight }}
+          />
+        )}
         sx={{ zIndex: 999 }}
         renderValue={() => (
           <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
@@ -88,7 +113,7 @@ export const CategorySelect = ({
         MenuProps={{
           PaperProps: {
             style: {
-              maxHeight: 400,
+              maxHeight: 450,
 
               zIndex: 999999,
               padding: "2px 6px",
@@ -130,7 +155,7 @@ export const CategorySelect = ({
           </MenuItem>
         )}
       </StyledSelect>
-    </>
+    </FormControl>
   );
 };
 const StyledSelect = styled(Select)<{ width?: CSSProperties["width"] }>`

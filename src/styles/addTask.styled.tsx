@@ -24,6 +24,7 @@ export const Input = styled.input`
 `;
 
 export const AddTaskButton = styled(Button)`
+  margin-top: 4px;
   border: none;
   padding: 16px 32px;
   font-size: 24px;

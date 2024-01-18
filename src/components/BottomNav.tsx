@@ -63,13 +63,12 @@ export const BottomNav = (): JSX.Element | null => {
       <StyledBottomNavigation
         showLabels
         value={value}
-        onChange={(event, newValue) => {
+        onChange={(_event, newValue) => {
           window.scrollTo({
             top: 0,
             behavior: "smooth",
           });
           setValue(newValue);
-          event.preventDefault();
         }}
       >
         <NavigationButton

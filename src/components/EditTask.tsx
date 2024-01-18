@@ -5,7 +5,6 @@ import {
   DialogContent,
   DialogActions,
   TextField,
-  Typography,
   InputAdornment,
   IconButton,
   Tooltip,
@@ -13,7 +12,7 @@ import {
 import { Category, Task } from "../types/user";
 import styled from "@emotion/styled";
 import { DESCRIPTION_MAX_LENGTH, TASK_NAME_MAX_LENGTH } from "../constants";
-import { DialogBtn } from "../styles";
+import { ColorPalette, DialogBtn } from "../styles";
 import { CategorySelect, ColorPicker, CustomEmojiPicker } from ".";
 import toast from "react-hot-toast";
 import { UserContext } from "../contexts/UserContext";
@@ -217,18 +216,27 @@ export const EditTask = ({ open, task, onClose, onSave }: EditTaskProps) => {
         />
         {user.settings[0].enableCategories !== undefined && user.settings[0].enableCategories && (
           <>
-            <Label>Category</Label>
+            {/* <Label>Category</Label> */}
             <CategorySelect
+              fontColor={ColorPalette.fontDark}
               selectedCategories={selectedCategories}
               setSelectedCategories={setSelectedCategories}
             />
           </>
         )}
-        <Label>Color</Label>
-        <div style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
+        {/* <Label>Color</Label> */}
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            marginTop: "8px",
+          }}
+        >
           <ColorPicker
             width={"100%"}
             color={editedTask?.color || "#000000"}
+            fontColor={ColorPalette.fontDark}
             onColorChange={(color) => {
               setEditedTask((prevTask) => ({
                 ...(prevTask as Task),
@@ -269,11 +277,11 @@ const StyledInput = styled(TextField)`
   } */
 `;
 
-const Label = styled(Typography)`
-  margin-left: 8px;
-  font-weight: 500;
-  font-size: 16px;
-`;
+// const Label = styled(Typography)`
+//   margin-left: 8px;
+//   font-weight: 500;
+//   font-size: 16px;
+// `;
 
 const LastEdit = styled.span`
   font-size: 14px;

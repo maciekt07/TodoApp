@@ -13,7 +13,6 @@ import {
   IconButton,
   TextField,
   Tooltip,
-  Typography,
 } from "@mui/material";
 import { Delete, Edit } from "@mui/icons-material";
 import { CATEGORY_NAME_MAX_LENGTH } from "../constants";
@@ -286,7 +285,7 @@ const Categories = () => {
             error={nameError !== ""}
             helperText={!nameError ? `${name.length}/${CATEGORY_NAME_MAX_LENGTH}` : nameError}
           />
-          <Typography>Color</Typography>
+          {/* <Typography>Color</Typography> */}
           <ColorPicker
             color={color}
             onColorChange={(color) => {
@@ -381,6 +380,7 @@ const Categories = () => {
               <ColorPicker
                 color={editColor}
                 width={300}
+                fontColor={ColorPalette.fontDark}
                 onColorChange={(clr) => {
                   setEditColor(clr);
                 }}

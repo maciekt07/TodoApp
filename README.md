@@ -20,7 +20,7 @@
 - **Local Storage**: Save all your tasks locally.
 - **Custom Emojis**: The app features different emoji styles to choose from, including Apple, Facebook, Twitter, Google and Native.
 <!-- <br /><img src="public/screenshots/EmojiSettings.png" width="250px" /> -->
-- **Share tasks by link**: Easily share your tasks with others using a link. [Example Link](https://react-cool-todo-app.netlify.app/share?task=%7B%22id%22%3A1687125388364.1978%2C%22done%22%3Afalse%2C%22pinned%22%3Atrue%2C%22name%22%3A%22Website%20Development%22%2C%22description%22%3A%22Create%20a%20landing%20page%20with%20React.js%20for%20client%22%2C%22emoji%22%3A%221f468-1f3fc-200d-1f4bb%22%2C%22color%22%3A%22%23884afc%22%2C%22date%22%3A%222023-06-18T21%3A56%3A28.364Z%22%2C%22category%22%3A%5B%7B%22id%22%3A1687125417463.03%2C%22name%22%3A%22Coding%22%2C%22emoji%22%3A%221f5a5-fe0f%22%2C%22color%22%3A%22%236d12ff%22%7D%2C%7B%22id%22%3A2%2C%22name%22%3A%22Work%22%2C%22emoji%22%3A%221f3e2%22%2C%22color%22%3A%22%23248eff%22%7D%5D%2C%22lastSave%22%3A%222023-12-19T00%3A18%3A47.928Z%22%7D&userName=Maciej)<br/><img src="public/screenshots/ShareDialog.png" width="300px" />
+- **Share tasks by link**: Easily share your tasks with others using a link. [Example Link](https://react-cool-todo-app.netlify.app/share?task=%7B%22id%22%3A1705265234363%2C%22done%22%3Afalse%2C%22pinned%22%3Atrue%2C%22name%22%3A%22Website%20Development%22%2C%22description%22%3A%22Create%20a%20landing%20page%20with%20React.js%20for%20client%22%2C%22emoji%22%3A%221f468-1f3fc-200d-1f4bb%22%2C%22color%22%3A%22%23b624ff%22%2C%22date%22%3A%222024-01-14T20%3A47%3A13.852Z%22%2C%22category%22%3A%5B%7B%22id%22%3A1687125417463.03%2C%22name%22%3A%22Coding%22%2C%22emoji%22%3A%221f5a5-fe0f%22%2C%22color%22%3A%22%236d12ff%22%7D%2C%7B%22id%22%3A2%2C%22name%22%3A%22Work%22%2C%22emoji%22%3A%221f3e2%22%2C%22color%22%3A%22%23248eff%22%7D%5D%2C%22lastSave%22%3A%222024-01-14T20%3A47%3A30.316Z%22%2C%22deadline%22%3A%222024-01-31T15%3A50%22%7D&userName=Maciej)<br/><img src="public/screenshots/ShareDialog.png" width="300px" />
 <!-- <br/><img src="public/screenshots/RecievedTask.png" width="250px" /> -->
 - **It has a clean and responsive design**, ensuring a smooth user experience across different devices.
 - **Customizable Categories**: Users can create and personalize task categories to suit their preferences.
@@ -60,3 +60,7 @@ To install and run the project locally, follow these steps:
 - Start the development server: `npm run dev`
 
 The app will now be running at [http://localhost:5173/](http://localhost:5173/).
+
+<a href="https://www.buymeacoffee.com/maciekt07" target="_blank">
+ <img src="https://img.buymeacoffee.com/button-api/?text=Buy me a coffee&emoji=&slug=maciekt07&button_colour=1a1b27&font_colour=ffffff&font_family=Lato&outline_colour=ffffff&coffee_colour=FFDD00"></a>
+</a>

@@ -3,7 +3,7 @@ import { useState, useEffect, useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { AddTaskButton, Container, StyledInput } from "../styles";
 import { CancelRounded, Edit } from "@mui/icons-material";
-import { Button, IconButton, InputAdornment, Tooltip, Typography } from "@mui/material";
+import { Button, IconButton, InputAdornment, Tooltip } from "@mui/material";
 import { DESCRIPTION_MAX_LENGTH, TASK_NAME_MAX_LENGTH } from "../constants";
 import { CategorySelect, ColorPicker, TopBar, CustomEmojiPicker } from "../components";
 import toast from "react-hot-toast";
@@ -69,10 +69,6 @@ const AddTask = () => {
     }
   };
 
-  // const handleColorChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-  //   setColor(event.target.value);
-  // };
-
   const handleDeadlineChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setDeadline(event.target.value);
   };
@@ -128,6 +124,7 @@ const AddTask = () => {
           value={name}
           onChange={handleNameChange}
           focused
+          required
           error={nameError !== ""}
           helperText={!nameError ? `${name.length}/${TASK_NAME_MAX_LENGTH}` : nameError}
         />
@@ -170,7 +167,7 @@ const AddTask = () => {
         {user.settings[0].enableCategories !== undefined && user.settings[0].enableCategories && (
           <>
             <br />
-            <Typography sx={{ fontWeight: 500 }}>Category (optional)</Typography>
+            {/* <Typography sx={{ fontWeight: 500 }}>Category (optional)</Typography> */}
 
             <CategorySelect
               selectedCategories={selectedCategories}
@@ -190,16 +187,13 @@ const AddTask = () => {
             </Link>
           </>
         )}
-        <Typography sx={{ fontWeight: 500 }}>Color</Typography>
         <ColorPicker
           color={color}
+          width="400px"
           onColorChange={(color) => {
             setColor(color);
           }}
         />
-
-        {/* <Typography>Color</Typography>
-        <ColorPicker type="color" value={color} onChange={handleColorChange} /> */}
         <AddTaskButton
           onClick={handleAddTask}
           disabled={

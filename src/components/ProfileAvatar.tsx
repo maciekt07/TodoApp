@@ -15,6 +15,8 @@ import {
 import styled from "@emotion/styled";
 import {
   AddRounded,
+  AdjustRounded,
+  BugReportRounded,
   CategoryRounded,
   Favorite,
   GetAppRounded,
@@ -46,6 +48,7 @@ export const ProfileAvatar = () => {
 
   const [stars, setStars] = useState<number | null>(null);
   const [lastUpdate, setLastUpdate] = useState<string | null>(null);
+  const [issuesCount, setIssuesCount] = useState<number | null>(null);
 
   useEffect(() => {
     const fetchRepoInfo = async () => {
@@ -53,6 +56,7 @@ export const ProfileAvatar = () => {
         const { repoData, branchData } = await fetchGitHubInfo();
         setStars(repoData.stargazers_count);
         setLastUpdate(branchData.commit.commit.committer.date);
+        setIssuesCount(repoData.open_issues_count);
       } catch (error) {
         console.error(error);
       }
@@ -66,7 +70,6 @@ export const ProfileAvatar = () => {
   };
   const handleClose = () => {
     setAnchorEl(null);
-
     document.getElementById("root")?.removeAttribute("aria-sidebar");
   };
   const handleLogoutConfirmationOpen = () => {
@@ -155,7 +158,7 @@ export const ProfileAvatar = () => {
         >
           <TaskAltRounded /> &nbsp; Tasks
           {user.tasks.filter((task) => !task.done).length > 0 && (
-            <MenuLabel clr={ColorPalette.purple}>
+            <MenuLabel>
               {user.tasks.filter((task) => !task.done).length > 99
                 ? "99+"
                 : user.tasks.filter((task) => !task.done).length}
@@ -214,7 +217,22 @@ export const ProfileAvatar = () => {
             </MenuLabel>
           )}
         </StyledMenuItem>
-
+        <StyledMenuItem
+          onClick={() => {
+            window.open("https://github.com/maciekt07/TodoApp/issues/new");
+          }}
+        >
+          <BugReportRounded /> &nbsp; Report Issue{" "}
+          {Boolean(issuesCount || issuesCount === 0) && (
+            <MenuLabel clr={issuesCount && issuesCount > 0 ? ColorPalette.red : "#3bb61c"}>
+              <span style={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
+                <AdjustRounded style={{ fontSize: "18px" }} />
+                &nbsp;
+                {issuesCount}
+              </span>
+            </MenuLabel>
+          )}
+        </StyledMenuItem>
         <StyledMenuItem onClick={handleLogoutConfirmationOpen} sx={{ color: "#ff4040 !important" }}>
           <Logout /> &nbsp; Logout
         </StyledMenuItem>
@@ -258,7 +276,10 @@ export const ProfileAvatar = () => {
               // marginBottom: "12px",
             }}
           >
-            <Avatar src={(user.profilePicture as string) || undefined}>
+            <Avatar
+              src={(user.profilePicture as string) || undefined}
+              sx={{ width: "44px", height: "44px" }}
+            >
               {user.name ? user.name[0].toUpperCase() : undefined}
             </Avatar>
             <h4 style={{ margin: 0, fontWeight: 600 }}> {user.name || "User"}</h4>
@@ -328,13 +349,18 @@ const Container = styled.div`
 const StyledSwipeableDrawer = styled(SwipeableDrawer)`
   & .MuiPaper-root {
     border-radius: 24px 0 0 0;
-    min-width: 300px;
+    min-width: 301px;
+
     box-shadow: none;
     padding: 4px;
     background: #f9fafc;
     z-index: 999;
+
     @media (max-width: 1024px) {
       min-width: 270px;
+    }
+    @media (max-width: 600px) {
+      min-width: 55vw;
     }
   }
 `;
@@ -362,11 +388,12 @@ const DialogBtn = styled(Button)`
   margin: 8px;
 `;
 
-const MenuLabel = styled.span<{ clr: string }>`
+const MenuLabel = styled.span<{ clr?: string }>`
   margin-left: auto;
   font-weight: 600;
-  background: ${({ clr }) => clr + "35"};
-  color: ${({ clr }) => clr};
+  background: ${({ clr }) => (clr || ColorPalette.purple) + "35"};
+  color: ${({ clr }) => clr || ColorPalette.purple};
+  /* border: 1px solid; */
   padding: 2px 12px;
   border-radius: 32px;
   font-size: 14px;

@@ -1,7 +1,6 @@
 export { MuiTheme, ColorPalette } from "./theme";
 export {
   GlobalStyles,
-  DialogBtn,
   fadeInLeft,
   fadeIn,
   slideIn,
@@ -41,3 +40,4 @@ export {
   RingAlarm,
   ShowMoreBtn,
 } from "./tasks.styled";
+export { DialogBtn, ScrollBarLight } from "./CommonStyles";

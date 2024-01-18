@@ -57,7 +57,7 @@ export const SettingsDialog = ({ open, onClose }: SettingsProps) => {
 
     for (const voice of voices) {
       if (voice.default) {
-        console.log(voice);
+        // console.log(voice);
       }
       voiceInfoArray.push(voice);
     }
@@ -69,7 +69,7 @@ export const SettingsDialog = ({ open, onClose }: SettingsProps) => {
   window.speechSynthesis.onvoiceschanged = () => {
     const availableVoices = getAvailableVoices();
     setAvailableVoices(availableVoices);
-    console.log(availableVoices);
+    // console.log(availableVoices);
   };
 
   // Handler for updating individual setting options
@@ -307,30 +307,13 @@ export const SettingsDialog = ({ open, onClose }: SettingsProps) => {
               ) : (
                 <NoVoiceStyles>
                   There are no voice styles available. Try to refresh the page.
-                  {/* <Emoji emojiStyle={user.emojisStyle} unified="2639-fe0f" size={24} /> */}
                 </NoVoiceStyles>
               )}
             </FormControl>
 
             <Box>
-              {/* <Typography sx={{ marginBottom: "2px", marginLeft: "18px", fontSize: "16px" }}>
-                Voice Volume
-              </Typography> */}
-
               <div style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
-                <VolumeSlider
-                  spacing={2}
-                  direction="row"
-                  sx={
-                    {
-                      // "@media (max-width: 600px)": {
-                      //   width: "180px",
-                      //   padding: "8px 18px 8px 9px",
-                      // },
-                    }
-                  }
-                  alignItems="center"
-                >
+                <VolumeSlider spacing={2} direction="row" alignItems="center">
                   <Tooltip
                     title={user.settings[0].voiceVolume ? "Mute" : "Unmute"}
                     onClick={handleMuteClick}
@@ -367,28 +350,7 @@ export const SettingsDialog = ({ open, onClose }: SettingsProps) => {
           </FormGroup>
         )}
       </Container>
-
-      <DialogActions
-      // style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}
-      >
-        {/* <span
-          style={{
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            wordBreak: "break-all",
-            fontSize: "14px",
-            margin: "0 18px",
-            gap: "4px",
-            opacity: 0.8,
-          }}
-        >
-          Made with <Emoji unified="2764-fe0f" size={14} emojiStyle={user.emojisStyle} />{" "}
-          {user.emojisStyle === EmojiStyle.NATIVE && "\u00A0"} by{" "}
-          <StyledLink href="https://github.com/maciekt07" target="_blank">
-            maciekt07
-          </StyledLink>
-        </span> */}
+      <DialogActions>
         <DialogBtn onClick={onClose}>Close</DialogBtn>
       </DialogActions>
     </Dialog>
