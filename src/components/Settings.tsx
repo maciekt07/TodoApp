@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import {
   Box,
   Dialog,
@@ -22,9 +22,10 @@ import { DialogBtn } from "../styles";
 import styled from "@emotion/styled";
 import { Emoji, EmojiStyle } from "emoji-picker-react";
 import { useOnlineStatus } from "../hooks/useOnlineStatus";
-import { VolumeDown, VolumeOff, VolumeUp, WifiOff } from "@mui/icons-material";
+import { CachedRounded, VolumeDown, VolumeOff, VolumeUp, WifiOff } from "@mui/icons-material";
 import { defaultUser } from "../constants/defaultUser";
 import { UserContext } from "../contexts/UserContext";
+import { iOS } from "../utils/iOS";
 
 interface SettingsProps {
   open: boolean;
@@ -54,6 +55,7 @@ export const SettingsDialog = ({ open, onClose }: SettingsProps) => {
   const getAvailableVoices = () => {
     const voices = window.speechSynthesis.getVoices();
     const voiceInfoArray = [];
+    console.log(voices);
 
     for (const voice of voices) {
       if (voice.default) {
@@ -65,10 +67,15 @@ export const SettingsDialog = ({ open, onClose }: SettingsProps) => {
     return voiceInfoArray;
   };
 
+  useEffect(() => {
+    const availableVoices = getAvailableVoices();
+    setAvailableVoices(availableVoices ?? []);
+  }, []);
+
   // Ensure the voices are loaded before calling getAvailableVoices
   window.speechSynthesis.onvoiceschanged = () => {
     const availableVoices = getAvailableVoices();
-    setAvailableVoices(availableVoices);
+    setAvailableVoices(availableVoices ?? []);
     // console.log(availableVoices);
   };
 
@@ -254,6 +261,7 @@ export const SettingsDialog = ({ open, onClose }: SettingsProps) => {
             label="Enable Read Aloud"
           />
         </FormGroup>
+
         <FormGroup>
           <FormControlLabel
             sx={{ opacity: settings.doneToBottom ? 1 : 0.8 }}
@@ -299,14 +307,25 @@ export const SettingsDialog = ({ open, onClose }: SettingsProps) => {
                         borderRadius: "8px",
                       }}
                     >
-                      {voice.name} &nbsp;
-                      {voice.default && <span style={{ fontWeight: 600 }}>Default</span>}
+                      {voice.name} &nbsp; {voice.lang} &nbsp;
+                      {voice.default && !iOS && <span style={{ fontWeight: 600 }}>Default</span>}
                     </MenuItem>
                   ))}
                 </StyledSelect>
               ) : (
                 <NoVoiceStyles>
-                  There are no voice styles available. Try to refresh the page.
+                  There are no voice styles available.
+                  {/* Try to refresh the page. */}
+                  <Tooltip title="Refetch voices">
+                    <IconButton
+                      size="large"
+                      onClick={() => {
+                        setAvailableVoices(getAvailableVoices() ?? []);
+                      }}
+                    >
+                      <CachedRounded fontSize="large" />
+                    </IconButton>
+                  </Tooltip>
                 </NoVoiceStyles>
               )}
             </FormControl>
@@ -376,6 +395,7 @@ const StyledSelect = styled(Select)`
 const NoVoiceStyles = styled.p`
   display: flex;
   align-items: center;
+  flex-direction: column;
   gap: 6px;
   opacity: 0.8;
   font-weight: 500;

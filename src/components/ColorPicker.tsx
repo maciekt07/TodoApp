@@ -77,6 +77,7 @@ export const ColorPicker: React.FC<ColorPickerProps> = ({
       console.error("Invalid hex color " + color);
     }
   }, [color]);
+
   const handleAccordionChange = (_event: React.ChangeEvent<{}>, isExpanded: boolean) =>
     setAccordionExpanded(isExpanded);
 
@@ -204,6 +205,7 @@ const ColorPreview = styled(Grid)<{ clr: string }>`
   padding: 8px;
   border-radius: 100px;
   transition: 0.3s all;
+  font-weight: 600;
   border: 2px solid #ffffffab;
 `;
 

@@ -174,7 +174,9 @@ export const EditTask = ({ open, task, onClose, onSave }: EditTaskProps) => {
           margin="normal"
           error={descriptionError}
           helperText={
-            descriptionError
+            editedTask?.description === "" || editedTask?.description === undefined
+              ? undefined
+              : descriptionError
               ? `Description is too long (maximum ${DESCRIPTION_MAX_LENGTH} characters)`
               : `${editedTask?.description?.length}/${DESCRIPTION_MAX_LENGTH}`
           }

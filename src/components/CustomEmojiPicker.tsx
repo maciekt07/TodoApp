@@ -7,6 +7,7 @@ import { getFontColorFromHex } from "../utils";
 import { ColorPalette } from "../styles";
 import { UserContext } from "../contexts/UserContext";
 import { useOnlineStatus } from "../hooks/useOnlineStatus";
+import { iOS } from "../utils/iOS";
 
 interface EmojiPickerProps {
   emoji?: string;
@@ -62,7 +63,15 @@ export const CustomEmojiPicker = ({ emoji, setEmoji, color, width }: EmojiPicker
   const renderAvatarContent = () => {
     if (currentEmoji) {
       // Determine the size of the emoji based on the user's emoji style preference
-      const emojiSize = user.emojisStyle === EmojiStyle.NATIVE ? 48 : 64;
+      // const emojiSize = user.emojisStyle === EmojiStyle.NATIVE ? 48 : 64;
+
+      const emojiSize =
+        user.emojisStyle === EmojiStyle.NATIVE && iOS
+          ? 64
+          : user.emojisStyle === EmojiStyle.NATIVE
+          ? 48
+          : 64;
+
       return (
         <div>
           <Emoji size={emojiSize} emojiStyle={user.emojisStyle} unified={currentEmoji} />

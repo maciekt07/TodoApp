@@ -1,7 +1,7 @@
 import { Category, Task } from "../types/user";
 import { useState, useEffect, useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { AddTaskButton, Container, StyledInput } from "../styles";
+import { AddTaskButton, ColorPalette, Container, StyledInput } from "../styles";
 import { CancelRounded, Edit } from "@mui/icons-material";
 import { Button, IconButton, InputAdornment, Tooltip } from "@mui/material";
 import { DESCRIPTION_MAX_LENGTH, TASK_NAME_MAX_LENGTH } from "../constants";
@@ -98,13 +98,13 @@ const AddTask = () => {
       }));
 
       n("/");
-      toast.success(() => (
-        <div>
+      toast.success((t) => (
+        <div onClick={() => toast.dismiss(t.id)}>
           Added task - <b>{newTask.name}</b>
         </div>
       ));
     } else {
-      toast.error("Please enter a task name");
+      toast.error((t) => <div onClick={() => toast.dismiss(t.id)}>Task name is required.</div>);
     }
   };
 
@@ -126,7 +126,14 @@ const AddTask = () => {
           focused
           required
           error={nameError !== ""}
-          helperText={!nameError ? `${name.length}/${TASK_NAME_MAX_LENGTH}` : nameError}
+          helperTxtColor={nameError && ColorPalette.red}
+          helperText={
+            name === ""
+              ? undefined
+              : !nameError
+              ? `${name.length}/${TASK_NAME_MAX_LENGTH}`
+              : nameError
+          }
         />
         <StyledInput
           label="Task Description (optional)"
@@ -138,8 +145,13 @@ const AddTask = () => {
           rows={4}
           focused
           error={descriptionError !== ""}
+          helperTxtColor={descriptionError && ColorPalette.red}
           helperText={
-            !descriptionError ? `${description.length}/${DESCRIPTION_MAX_LENGTH}` : descriptionError
+            description === ""
+              ? undefined
+              : !descriptionError
+              ? `${description.length}/${DESCRIPTION_MAX_LENGTH}`
+              : descriptionError
           }
         />
         <StyledInput

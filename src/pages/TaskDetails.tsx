@@ -22,9 +22,7 @@ const TaskDetails = () => {
   return (
     <>
       <TopBar title="Task Details" />
-      <Container
-        style={{ border: `2px solid ${task.color}`, boxShadow: `0 0 300px -50px ${task.color}` }}
-      >
+      <Container style={{ boxShadow: `0 0 128px -8px ${task.color}` }}>
         <TaskName>Task: {task.name}</TaskName>
         <TaskTable>
           <tbody>
@@ -143,7 +141,6 @@ export default TaskDetails;
 const Container = styled.div`
   display: flex;
   flex-direction: column;
-  background-color: ${(props) => props.color};
   padding: 16px;
   border-radius: 32px;
   margin: 0 auto;

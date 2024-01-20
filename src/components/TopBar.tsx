@@ -27,6 +27,8 @@ const Container = styled.div`
   top: 0;
   z-index: 99;
   backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  background-color: #232e58c1;
   margin-bottom: 48px;
 `;
 

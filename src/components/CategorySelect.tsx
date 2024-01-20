@@ -84,6 +84,7 @@ export const CategorySelect: React.FC<CategorySelectProps> = ({
                 backgroundclr={cat.color}
                 glow={false}
                 translate="no"
+                sx={{ cursor: "pointer" }}
                 avatar={
                   cat.emoji ? (
                     <Avatar
@@ -116,7 +117,7 @@ export const CategorySelect: React.FC<CategorySelectProps> = ({
               maxHeight: 450,
 
               zIndex: 999999,
-              padding: "2px 6px",
+              padding: "0px 8px",
               background: "white",
             },
           },

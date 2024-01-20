@@ -134,6 +134,8 @@ const Categories = () => {
       setName("");
       setColor(ColorPalette.purple);
       setEmoji("");
+    } else {
+      toast.error((t) => <div onClick={() => toast.dismiss(t.id)}>Category name is required.</div>);
     }
   };
 
@@ -278,12 +280,19 @@ const Categories = () => {
           />
           <StyledInput
             focused
+            required
             label="Category name"
             placeholder="Enter category name"
             value={name}
             onChange={handleNameChange}
             error={nameError !== ""}
-            helperText={!nameError ? `${name.length}/${CATEGORY_NAME_MAX_LENGTH}` : nameError}
+            helperText={
+              name == ""
+                ? undefined
+                : !nameError
+                ? `${name.length}/${CATEGORY_NAME_MAX_LENGTH}`
+                : nameError
+            }
           />
           {/* <Typography>Color</Typography> */}
           <ColorPicker
@@ -295,7 +304,7 @@ const Categories = () => {
           />
           <AddCategoryButton
             onClick={handleAddCategory}
-            disabled={name.length > CATEGORY_NAME_MAX_LENGTH || name === ""}
+            disabled={name.length > CATEGORY_NAME_MAX_LENGTH}
           >
             Create Category
           </AddCategoryButton>

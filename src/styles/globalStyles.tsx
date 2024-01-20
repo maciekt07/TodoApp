@@ -126,6 +126,7 @@ const globalStyles = css`
     border-radius: 20px !important;
     padding: 8px !important;
   }
+
   .epr-body,
   .MuiDialogContent-root,
   .MuiDrawer-paper {
