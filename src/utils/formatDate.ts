@@ -5,11 +5,15 @@ export const formatDate = (date: Date): string => {
   const oneDay = 24 * 60 * 60 * 1000; // One day in milliseconds
   const oneWeek = 7 * oneDay; // One week in milliseconds
 
+  const timeDifference = date.getTime() - today.getTime();
+
+  const rtf = new Intl.RelativeTimeFormat(navigator.language, { numeric: "auto" });
+
   if (isSameDay(date, today)) {
-    return `Today at ${formatTime(date)}`;
+    return rtf.format(0, "day") + ` ${formatTime(date)}`;
   } else if (isSameDay(date, yesterday)) {
-    return `Yesterday at ${formatTime(date)}`;
-  } else if (date.getTime() > today.getTime() - oneWeek) {
+    return rtf.format(-1, "day") + ` ${formatTime(date)}`;
+  } else if (timeDifference > -oneWeek) {
     return `${getDayOfWeek(date)} ${formatTime(date)}`;
   } else {
     return formatDateOnly(date);

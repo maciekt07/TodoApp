@@ -1,4 +1,4 @@
-import { useState, useEffect, ReactNode, useContext } from "react";
+import { useState, useEffect, ReactNode, useContext, useMemo } from "react";
 import { AddTaskBtn, Tasks } from "../components";
 import {
   ColorPalette,
@@ -26,9 +26,14 @@ const Home = () => {
   const [randomGreeting, setRandomGreeting] = useState<string | ReactNode>("");
   const [greetingKey, setGreetingKey] = useState<number>(0);
   const [completedTasksCount, setCompletedTasksCount] = useState<number>(0);
-  const [tasksWithDeadlineTodayCount, setTasksWithDeadlineTodayCount] = useState<number>(0);
 
-  const completedTaskPercentage = (completedTasksCount / user.tasks.length) * 100;
+  const [tasksWithDeadlineTodayCount, setTasksWithDeadlineTodayCount] = useState<number>(0);
+  const [tasksDueTodayNames, setTasksDueTodayNames] = useState<string[]>([]);
+
+  const completedTaskPercentage = useMemo(
+    () => (completedTasksCount / user.tasks.length) * 100,
+    [completedTasksCount, user.tasks.length]
+  );
 
   const isOnline = useOnlineStatus();
 
@@ -50,15 +55,19 @@ const Home = () => {
 
     const today = new Date().setHours(0, 0, 0, 0);
 
-    const count = user.tasks.filter((task) => {
+    const dueTodayTasks = user.tasks.filter((task) => {
       if (task.deadline) {
         const taskDeadline = new Date(task.deadline).setHours(0, 0, 0, 0);
         return taskDeadline === today && !task.done;
       }
       return false;
-    }).length;
+    });
 
-    setTasksWithDeadlineTodayCount(count);
+    setTasksWithDeadlineTodayCount(dueTodayTasks.length);
+
+    // Use Intl to format and display task names due today
+    const taskNamesDueToday = dueTodayTasks.map((task) => task.name);
+    setTasksDueTodayNames(taskNamesDueToday);
   }, [user.tasks]);
 
   const replaceEmojiCodes = (text: string): ReactNode[] => {
@@ -138,7 +147,10 @@ const Home = () => {
                 {getTaskCompletionText(completedTaskPercentage)}
               </TaskCompletionText>
               {tasksWithDeadlineTodayCount > 0 && (
-                <span>Tasks due today: {tasksWithDeadlineTodayCount}</span>
+                <span style={{ opacity: 0.8 }}>
+                  Tasks due today:{" "}
+                  {new Intl.ListFormat("en", { style: "long" }).format(tasksDueTodayNames)}
+                </span>
               )}
             </TaskCountTextContainer>
           </TasksCount>

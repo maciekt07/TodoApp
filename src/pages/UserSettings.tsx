@@ -117,16 +117,26 @@ const UserSettings = () => {
           </Badge>
         </Tooltip>
         <UserName translate="no">{user.name || "User"}</UserName>
+
+        {/* <CreatedAtDate>
+          Registered since {new Date(user.createdAt).toLocaleDateString()}
+        </CreatedAtDate> */}
+
         <Tooltip
           title={`Created at: ${new Date(user.createdAt).toLocaleDateString()} • ${new Date(
             user.createdAt
           ).toLocaleTimeString()}`}
         >
           <CreatedAtDate>
-            Registered since {new Date(user.createdAt).toLocaleDateString()}
+            Registered since{" "}
+            {new Intl.RelativeTimeFormat(navigator.language, { numeric: "auto" }).format(
+              -Math.floor(
+                (Date.now() - new Date(user.createdAt).getTime()) / (1000 * 60 * 60 * 24)
+              ),
+              "days"
+            )}
           </CreatedAtDate>
         </Tooltip>
-
         <StyledInput
           label={user.name === null ? "Add Name" : "Change Name"}
           value={name}

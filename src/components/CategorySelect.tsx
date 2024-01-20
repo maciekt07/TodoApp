@@ -36,6 +36,7 @@ export const CategorySelect: React.FC<CategorySelectProps> = ({
   setSelectedCategories,
 }) => {
   const { user } = useContext(UserContext);
+  const { categories, emojisStyle } = user;
   const handleCategoryChange = (event: SelectChangeEvent<unknown>): void => {
     const selectedCategoryIds = event.target.value as number[];
 
@@ -46,9 +47,7 @@ export const CategorySelect: React.FC<CategorySelectProps> = ({
       return;
     }
 
-    const selectedCategories = user.categories.filter((cat) =>
-      selectedCategoryIds.includes(cat.id)
-    );
+    const selectedCategories = categories.filter((cat) => selectedCategoryIds.includes(cat.id));
     setSelectedCategories(selectedCategories);
   };
 
@@ -95,12 +94,12 @@ export const CategorySelect: React.FC<CategorySelectProps> = ({
                       }}
                     >
                       {cat.emoji &&
-                        (user.emojisStyle === EmojiStyle.NATIVE ? (
+                        (emojisStyle === EmojiStyle.NATIVE ? (
                           <div>
                             <Emoji size={20} unified={cat.emoji} emojiStyle={EmojiStyle.NATIVE} />
                           </div>
                         ) : (
-                          <Emoji size={24} unified={cat.emoji} emojiStyle={user.emojisStyle} />
+                          <Emoji size={24} unified={cat.emoji} emojiStyle={emojisStyle} />
                         ))}
                     </Avatar>
                   ) : (
@@ -137,15 +136,15 @@ export const CategorySelect: React.FC<CategorySelectProps> = ({
           Select Categories (max {MAX_CATEGORIES})
         </MenuItem>
 
-        {user.categories && user.categories.length > 0 ? (
-          user.categories.map((category) => (
+        {categories && categories.length > 0 ? (
+          categories.map((category) => (
             <CategoriesMenu
               key={category.id}
               value={category.id}
               clr={category.color}
               translate="no"
             >
-              {category.emoji && <Emoji unified={category.emoji} emojiStyle={user.emojisStyle} />}
+              {category.emoji && <Emoji unified={category.emoji} emojiStyle={emojisStyle} />}
               &nbsp;
               {category.name}
             </CategoriesMenu>
@@ -168,7 +167,7 @@ const StyledSelect = styled(Select)<{ width?: CSSProperties["width"] }>`
   background: #ffffff1c;
 `;
 const CategoriesMenu = styled(MenuItem)<{ clr?: string }>`
-  padding: 12px 20px;
+  padding: 8px 12px;
   border-radius: 16px;
   margin: 8px;
   display: flex;

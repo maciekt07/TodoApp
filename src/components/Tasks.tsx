@@ -479,11 +479,21 @@ export const Tasks = (): JSX.Element => {
     });
 
     if (overdueTasks.length > 0) {
-      const taskNames = overdueTasks.map((task) => task.name).join(", ");
+      const taskNames = overdueTasks.map((task) => task.name);
+      const formatTasksArray = new Intl.ListFormat("en-US", {
+        style: "long",
+        type: "conjunction",
+      });
+
       toast.error(
         (t) => (
-          <div onClick={() => toast.dismiss(t.id)} style={{ wordBreak: "break-word" }}>
-            <b>Overdue task{overdueTasks.length > 1 && "s"}:</b> {taskNames}
+          <div
+            translate="no"
+            onClick={() => toast.dismiss(t.id)}
+            style={{ wordBreak: "break-word" }}
+          >
+            <b translate="yes">Overdue task{overdueTasks.length > 1 && "s"}: </b>
+            {formatTasksArray.format(taskNames)}
           </div>
         ),
         {

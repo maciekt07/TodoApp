@@ -12,6 +12,10 @@ export const MuiTheme: Theme = createTheme({
     MuiTooltip: {
       defaultProps: {
         disableInteractive: true,
+        style: {
+          backdropFilter: "blur(6px)",
+          WebkitBackdropFilter: "blur(6px)",
+        },
       },
     },
     MuiSelect: {

@@ -58,9 +58,6 @@ export const SettingsDialog = ({ open, onClose }: SettingsProps) => {
     console.log(voices);
 
     for (const voice of voices) {
-      if (voice.default) {
-        // console.log(voice);
-      }
       voiceInfoArray.push(voice);
     }
 
@@ -160,6 +157,7 @@ export const SettingsDialog = ({ open, onClose }: SettingsProps) => {
     }));
     setVoiceVolume(newVoiceVolume);
   };
+
   return (
     <Dialog
       open={open}
@@ -296,6 +294,20 @@ export const SettingsDialog = ({ open, onClose }: SettingsProps) => {
                     },
                   }}
                 >
+                  {/* <MenuItem
+                    disabled
+                    sx={{
+                      opacity: "1 !important",
+                      fontWeight: 500,
+                      position: "sticky !important",
+                      top: 0,
+                      background: "white",
+                      zIndex: 99,
+                      margin: 0,
+                    }}
+                  >
+                    <Switch checked /> Show only local language voices
+                  </MenuItem> */}
                   {/* Map over available voices to create MenuItem components */}
                   {availableVoices.map((voice) => (
                     <MenuItem
@@ -307,7 +319,16 @@ export const SettingsDialog = ({ open, onClose }: SettingsProps) => {
                         borderRadius: "8px",
                       }}
                     >
-                      {voice.name} &nbsp; {voice.lang} &nbsp;
+                      {voice.name} &nbsp;
+                      <span style={{ fontWeight: 500 }}>
+                        {/* Display the region of the voice's language using Intl.DisplayNames */}
+                        {new Intl.DisplayNames([voice.lang], { type: "region" }).of(
+                          voice.lang.split("-")[1]
+                        )}
+                      </span>
+                      &nbsp;
+                      {/* <span style={{ fontSize: "14px", fontWeight: 300 }}> ({voice.lang})</span>
+                      &nbsp; */}
                       {voice.default && !iOS && <span style={{ fontWeight: 600 }}>Default</span>}
                     </MenuItem>
                   ))}

@@ -1,30 +1,45 @@
-/**
- * Calculates the difference between a given date and the current date.
- * @param {Date} date - The target date.
- * @returns {string} - A string indicating the date difference.
- */
 export const calculateDateDifference = (date: Date): string => {
   const currentDate = new Date();
-  const currentDay = currentDate.getDate();
-  const targetDay = date.getDate();
-  const difference = date.getTime() - currentDate.getTime();
-  const differenceDays = Math.floor(difference / (1000 * 60 * 60 * 24)) + 1;
+  const targetDate = new Date(date);
 
-  if (date < currentDate) {
-    return "Task not completed on time";
-  } else if (targetDay === currentDay) {
-    return "Today";
-  } else if (targetDay === currentDay + 1) {
-    return "Tomorrow";
+  const difference = targetDate.getTime() - currentDate.getTime();
+  const differenceDays = Math.floor(difference / (1000 * 60 * 60 * 24));
+  const differenceHours = Math.floor(difference / (1000 * 60 * 60));
+  const differenceMinutes = Math.floor(difference / (1000 * 60));
+
+  const userLocale = navigator.language || "en-US";
+
+  if (targetDate < currentDate) {
+    return "Not completed on time";
+  } else if (targetDate.toDateString() === currentDate.toDateString()) {
+    if (differenceHours > 0) {
+      return new Intl.RelativeTimeFormat(userLocale, { numeric: "auto" }).format(
+        differenceHours,
+        "hour"
+      );
+    } else if (differenceMinutes > 0) {
+      return new Intl.RelativeTimeFormat(userLocale, { numeric: "auto" }).format(
+        differenceMinutes,
+        "minute"
+      );
+    } else {
+      return new Intl.RelativeTimeFormat(userLocale, { numeric: "auto" }).format(
+        differenceMinutes,
+        "minute"
+      );
+    }
+  } else if (targetDate.getDate() === currentDate.getDate() + 1) {
+    return new Intl.RelativeTimeFormat(userLocale, { numeric: "auto" }).format(1, "day");
   } else if (differenceDays <= 7) {
-    // "en-US"
-    const dayOfWeek = date.toLocaleString(navigator.language, {
-      weekday: "long",
-    });
-    return `On ${dayOfWeek} (${differenceDays} day${
-      differenceDays !== 1 ? "s" : ""
-    })`;
+    const dayOfWeek = new Intl.DateTimeFormat(userLocale, { weekday: "long" }).format(date);
+    return `${dayOfWeek} (${new Intl.RelativeTimeFormat(userLocale, { numeric: "auto" }).format(
+      differenceDays,
+      "day"
+    )})`;
   } else {
-    return `In ${differenceDays} days`;
+    return new Intl.RelativeTimeFormat(userLocale, { numeric: "auto" }).format(
+      differenceDays,
+      "day"
+    );
   }
 };
