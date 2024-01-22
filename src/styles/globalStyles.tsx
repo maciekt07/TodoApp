@@ -1,7 +1,7 @@
 import { Global, css, keyframes } from "@emotion/react";
 import styled from "@emotion/styled";
 import { Button } from "@mui/material";
-import { ColorPalette, ScrollBarLight } from ".";
+import { ColorPalette } from ".";
 
 const globalStyles = css`
   * {
@@ -129,7 +129,25 @@ const globalStyles = css`
   .epr-body,
   .MuiDialogContent-root,
   .MuiDrawer-paper {
-    ${ScrollBarLight}
+    ::-webkit-scrollbar {
+      width: 8px;
+      border-radius: 4px;
+      background-color: #84848415;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background-color: #8484844b;
+      border-radius: 4px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background-color: #84848476;
+    }
+
+    ::-webkit-scrollbar-track {
+      border-radius: 4px;
+      background-color: #84848415;
+    }
   }
 
   .MuiDialog-container {
@@ -193,7 +211,6 @@ export const DialogBtn = styled(Button)`
   font-size: 16px;
   margin: 8px;
 `;
-
 export const StyledLink = styled.a`
   cursor: pointer;
   color: ${ColorPalette.purple};

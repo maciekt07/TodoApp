@@ -7,6 +7,7 @@ export {
   slideInBottom,
   StyledLink,
   pulseAnimation,
+  DialogBtn,
 } from "./globalStyles";
 export {
   GreetingHeader,
@@ -40,4 +41,3 @@ export {
   RingAlarm,
   ShowMoreBtn,
 } from "./tasks.styled";
-export { DialogBtn, ScrollBarLight } from "./commonStyles";
