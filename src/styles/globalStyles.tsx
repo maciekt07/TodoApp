@@ -1,8 +1,7 @@
 import { Global, css, keyframes } from "@emotion/react";
 import styled from "@emotion/styled";
 import { Button } from "@mui/material";
-import { ColorPalette } from ".";
-import { ScrollBarLight } from "./commonStyles";
+import { ColorPalette, ScrollBarLight } from ".";
 
 const globalStyles = css`
   * {
