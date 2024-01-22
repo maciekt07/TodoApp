@@ -6,18 +6,23 @@ import { Avatar } from "@mui/material";
 import NotFound from "./NotFound";
 import { Clear, Done } from "@mui/icons-material";
 import { Emoji, EmojiStyle } from "emoji-picker-react";
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import { UserContext } from "../contexts/UserContext";
 
 const TaskDetails = () => {
   const { user } = useContext(UserContext);
+  const { tasks, emojisStyle } = user;
   const { id } = useParams();
   const formattedId = id?.replace(".", "");
-  const task = user.tasks.find((task) => task.id.toString().replace(".", "") === formattedId);
+  const task = tasks.find((task) => task.id.toString().replace(".", "") === formattedId);
 
   if (!task) {
     return <NotFound />;
   }
+
+  useEffect(() => {
+    document.title = `Todo App - ${task.name}`;
+  }, []);
 
   return (
     <>
@@ -31,7 +36,7 @@ const TaskDetails = () => {
               <TableData>
                 {task.emoji ? (
                   <>
-                    <Emoji unified={task?.emoji || ""} size={32} emojiStyle={user.emojisStyle} /> (
+                    <Emoji unified={task?.emoji || ""} size={32} emojiStyle={emojisStyle} /> (
                     {task.emoji})
                   </>
                 ) : (
@@ -104,7 +109,7 @@ const TaskDetails = () => {
                             }}
                           >
                             {cat.emoji &&
-                              (user.emojisStyle === EmojiStyle.NATIVE ? (
+                              (emojisStyle === EmojiStyle.NATIVE ? (
                                 <div>
                                   <Emoji
                                     size={18}
@@ -113,11 +118,7 @@ const TaskDetails = () => {
                                   />
                                 </div>
                               ) : (
-                                <Emoji
-                                  size={20}
-                                  unified={cat.emoji}
-                                  emojiStyle={user.emojisStyle}
-                                />
+                                <Emoji size={20} unified={cat.emoji} emojiStyle={emojisStyle} />
                               ))}
                           </Avatar>
                         ) : (

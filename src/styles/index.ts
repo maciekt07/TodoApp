@@ -40,4 +40,4 @@ export {
   RingAlarm,
   ShowMoreBtn,
 } from "./tasks.styled";
-export { DialogBtn, ScrollBarLight } from "./CommonStyles";
+export { DialogBtn, ScrollBarLight } from "./commonStyles";

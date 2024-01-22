@@ -20,6 +20,7 @@ interface EmojiPickerProps {
 //TODO: redesign emoji picker
 export const CustomEmojiPicker = ({ emoji, setEmoji, color, width }: EmojiPickerProps) => {
   const { user } = useContext(UserContext);
+  const { emojisStyle } = user;
   const [showEmojiPicker, setShowEmojiPicker] = useState<boolean>(false);
 
   const [currentEmoji, setCurrentEmoji] = useState<string | null>(emoji || null);
@@ -66,15 +67,11 @@ export const CustomEmojiPicker = ({ emoji, setEmoji, color, width }: EmojiPicker
       // const emojiSize = user.emojisStyle === EmojiStyle.NATIVE ? 48 : 64;
 
       const emojiSize =
-        user.emojisStyle === EmojiStyle.NATIVE && iOS
-          ? 64
-          : user.emojisStyle === EmojiStyle.NATIVE
-          ? 48
-          : 64;
+        emojisStyle === EmojiStyle.NATIVE && iOS ? 64 : emojisStyle === EmojiStyle.NATIVE ? 48 : 64;
 
       return (
         <div>
-          <Emoji size={emojiSize} emojiStyle={user.emojisStyle} unified={currentEmoji} />
+          <Emoji size={emojiSize} emojiStyle={emojisStyle} unified={currentEmoji} />
         </div>
       );
     } else {
@@ -138,7 +135,7 @@ export const CustomEmojiPicker = ({ emoji, setEmoji, color, width }: EmojiPicker
       {/* {emojiData && <EmojiName>{emojiData.names[0]}</EmojiName>} */}
       {showEmojiPicker && (
         <>
-          {!isOnline && user.emojisStyle !== EmojiStyle.NATIVE && (
+          {!isOnline && emojisStyle !== EmojiStyle.NATIVE && (
             <div
               style={{
                 display: "flex",
@@ -157,7 +154,7 @@ export const CustomEmojiPicker = ({ emoji, setEmoji, color, width }: EmojiPicker
             <EmojiPicker
               width={width || "350px"}
               height="500px"
-              emojiStyle={user.emojisStyle}
+              emojiStyle={emojisStyle}
               suggestedEmojisMode={SuggestionMode.RECENT}
               autoFocusSearch={false}
               lazyLoadEmojis

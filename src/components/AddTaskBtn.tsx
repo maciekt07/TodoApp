@@ -14,6 +14,7 @@ interface AddTaskBtnProps {
 
 export const AddTaskBtn = ({ animate }: AddTaskBtnProps): JSX.Element | null => {
   const { user } = useContext(UserContext);
+  const { tasks, settings } = user;
   const n = useNavigate();
   const isMobile = useResponsiveDisplay();
 
@@ -23,10 +24,10 @@ export const AddTaskBtn = ({ animate }: AddTaskBtnProps): JSX.Element | null => 
   }
 
   return (
-    <Tooltip title={user.tasks.length > 0 ? "Add New Task" : "Add Task"} placement="left">
+    <Tooltip title={tasks.length > 0 ? "Add New Task" : "Add Task"} placement="left">
       <Btn
         animate={animate}
-        glow={user.settings[0].enableGlow}
+        glow={settings[0].enableGlow}
         onClick={() => n("add")}
         aria-label="Add Task"
       >

@@ -18,11 +18,12 @@ import { displayGreeting, getRandomGreeting, getTaskCompletionText } from "../ut
 import { Emoji } from "emoji-picker-react";
 import { Box, Typography } from "@mui/material";
 import { useOnlineStatus } from "../hooks/useOnlineStatus";
-import { WifiOff } from "@mui/icons-material";
+import { TodayRounded, WifiOff } from "@mui/icons-material";
 import { UserContext } from "../contexts/UserContext";
 
 const Home = () => {
   const { user } = useContext(UserContext);
+  const { tasks, emojisStyle, settings, name } = user;
   const [randomGreeting, setRandomGreeting] = useState<string | ReactNode>("");
   const [greetingKey, setGreetingKey] = useState<number>(0);
   const [completedTasksCount, setCompletedTasksCount] = useState<number>(0);
@@ -30,9 +31,9 @@ const Home = () => {
   const [tasksWithDeadlineTodayCount, setTasksWithDeadlineTodayCount] = useState<number>(0);
   const [tasksDueTodayNames, setTasksDueTodayNames] = useState<string[]>([]);
 
-  const completedTaskPercentage = useMemo(
-    () => (completedTasksCount / user.tasks.length) * 100,
-    [completedTasksCount, user.tasks.length]
+  const completedTaskPercentage = useMemo<number>(
+    () => (completedTasksCount / tasks.length) * 100,
+    [completedTasksCount, tasks.length]
   );
 
   const isOnline = useOnlineStatus();
@@ -50,12 +51,12 @@ const Home = () => {
   }, []);
 
   useEffect(() => {
-    const completedCount = user.tasks.filter((task) => task.done).length;
+    const completedCount = tasks.filter((task) => task.done).length;
     setCompletedTasksCount(completedCount);
 
     const today = new Date().setHours(0, 0, 0, 0);
 
-    const dueTodayTasks = user.tasks.filter((task) => {
+    const dueTodayTasks = tasks.filter((task) => {
       if (task.deadline) {
         const taskDeadline = new Date(task.deadline).setHours(0, 0, 0, 0);
         return taskDeadline === today && !task.done;
@@ -68,7 +69,7 @@ const Home = () => {
     // Use Intl to format and display task names due today
     const taskNamesDueToday = dueTodayTasks.map((task) => task.name);
     setTasksDueTodayNames(taskNamesDueToday);
-  }, [user.tasks]);
+  }, [tasks]);
 
   const replaceEmojiCodes = (text: string): ReactNode[] => {
     const emojiRegex = /\*\*(.*?)\*\*/g;
@@ -78,7 +79,7 @@ const Home = () => {
       if (index % 2 === 1) {
         // It's an emoji code, render Emoji component
         const emojiCode = part.trim();
-        return <Emoji key={index} size={20} unified={emojiCode} emojiStyle={user.emojisStyle} />;
+        return <Emoji key={index} size={20} unified={emojiCode} emojiStyle={emojisStyle} />;
       } else {
         // It's regular text
         return part;
@@ -98,8 +99,8 @@ const Home = () => {
   return (
     <>
       <GreetingHeader>
-        <Emoji unified="1f44b" emojiStyle={user.emojisStyle} /> &nbsp; {displayGreeting()}
-        {user.name && <span translate="no">, {user.name}</span>}
+        <Emoji unified="1f44b" emojiStyle={emojisStyle} /> &nbsp; {displayGreeting()}
+        {name && <span translate="no">, {name}</span>}
       </GreetingHeader>
       <GreetingText key={greetingKey}>{renderGreetingWithEmojis(randomGreeting)}</GreetingText>
       {!isOnline && (
@@ -107,9 +108,9 @@ const Home = () => {
           <WifiOff /> You're offline but you can use the app!
         </Offline>
       )}
-      {user.tasks.length > 0 && (
+      {tasks.length > 0 && (
         <TasksCountContainer>
-          <TasksCount glow={user.settings[0].enableGlow}>
+          <TasksCount glow={settings[0].enableGlow}>
             <Box sx={{ position: "relative", display: "inline-flex" }}>
               <StyledProgress
                 variant="determinate"
@@ -118,7 +119,7 @@ const Home = () => {
                 thickness={5}
                 aria-label="Progress"
                 style={{
-                  filter: user.settings[0].enableGlow
+                  filter: settings[0].enableGlow
                     ? `drop-shadow(0 0 6px ${ColorPalette.purple + "C8"})`
                     : "none",
                 }}
@@ -135,21 +136,25 @@ const Home = () => {
             </Box>
             <TaskCountTextContainer>
               <TaskCountHeader>
-                {/* You have {user.tasks.length - completedTasksCount} unfinished tasks{" "}
-                {completedTasksCount > 0 && `and ${completedTasksCount} done`} */}
                 {completedTasksCount === 0
-                  ? `You have ${user.tasks.length} task${
-                      user.tasks.length > 1 ? "s" : ""
-                    } to complete.`
-                  : `You've completed ${completedTasksCount} out of ${user.tasks.length} tasks.`}
+                  ? `You have ${tasks.length} task${tasks.length > 1 ? "s" : ""} to complete.`
+                  : `You've completed ${completedTasksCount} out of ${tasks.length} tasks.`}
               </TaskCountHeader>
               <TaskCompletionText>
                 {getTaskCompletionText(completedTaskPercentage)}
               </TaskCompletionText>
               {tasksWithDeadlineTodayCount > 0 && (
-                <span style={{ opacity: 0.8 }}>
-                  Tasks due today:{" "}
-                  {new Intl.ListFormat("en", { style: "long" }).format(tasksDueTodayNames)}
+                <span
+                  style={{
+                    opacity: 0.8,
+                    display: "inline-block",
+                  }}
+                >
+                  <TodayRounded sx={{ fontSize: "20px", verticalAlign: "middle" }} />
+                  &nbsp;Tasks due today:&nbsp;
+                  <span translate="no">
+                    {new Intl.ListFormat("en", { style: "long" }).format(tasksDueTodayNames)}
+                  </span>
                 </span>
               )}
             </TaskCountTextContainer>
@@ -159,7 +164,7 @@ const Home = () => {
 
       <Tasks />
 
-      <AddTaskBtn animate={user.tasks.length === 0} />
+      <AddTaskBtn animate={tasks.length === 0} />
     </>
   );
 };

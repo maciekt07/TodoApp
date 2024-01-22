@@ -4,7 +4,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { useContext, useEffect, useState } from "react";
 import { Task } from "../types/user";
 import toast from "react-hot-toast";
-import { getFontColorFromHex } from "../utils";
+import { calculateDateDifference, getFontColorFromHex } from "../utils";
 import { Emoji, EmojiStyle } from "emoji-picker-react";
 import { UserContext } from "../contexts/UserContext";
 import { PushPinRounded } from "@mui/icons-material";
@@ -13,6 +13,7 @@ import { USER_NAME_MAX_LENGTH } from "../constants";
 //FIXME: make everything type-safe
 const SharePage = () => {
   const { user, setUser } = useContext(UserContext);
+  const { emojisStyle, settings } = user;
   const n = useNavigate();
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
@@ -63,6 +64,11 @@ const SharePage = () => {
       setUserName(decodedUserName);
     }
   }, [taskParam, userNameParam]);
+
+  useEffect(() => {
+    document.title = `Todo App - Recieved Task ${taskData ? "(" + taskData.name + ")" : ""}`;
+  }, [[], taskData]);
+
   const handleAddTask = () => {
     if (taskData) {
       // Add missing categories to user.categories
@@ -130,24 +136,23 @@ const SharePage = () => {
                 style={{
                   background: taskData.color,
                   color: getFontColorFromHex(taskData.color || ""),
-                  padding: "10px 20px",
-                  borderRadius: "16px",
+                  padding: "12px 24px",
+                  borderRadius: "22px",
                   width: "300px",
-                  borderLeft: taskData.done ? "6px solid #00ff11" : "none",
+                  borderLeft: taskData.done ? "6px solid #40da25" : "none",
                 }}
               >
                 <h3 style={{ display: "flex", alignItems: "center", gap: "6px", margin: "12px 0" }}>
                   {taskData.pinned && <PushPinRounded />}
-                  {taskData?.emoji && (
-                    <Emoji unified={taskData.emoji} emojiStyle={user.emojisStyle} />
-                  )}
+                  {taskData?.emoji && <Emoji unified={taskData.emoji} emojiStyle={emojisStyle} />}
                   {taskData.name}
                 </h3>
                 <p>{taskData.description}</p>
                 {taskData.deadline && (
                   <p>
-                    Deadline: {new Date(taskData.deadline).toLocaleDateString()} {" • "}
-                    {new Date(taskData.deadline).toLocaleTimeString()}
+                    <b>Deadline:</b> {new Date(taskData.deadline).toLocaleDateString()} {" • "}
+                    {new Date(taskData.deadline).toLocaleTimeString()} {" • "}{" "}
+                    {calculateDateDifference(new Date(taskData.deadline))}
                   </p>
                 )}
 
@@ -167,7 +172,7 @@ const SharePage = () => {
                         <CategoryChip
                           backgroundclr={cat.color}
                           borderclr={getFontColorFromHex(taskData.color)}
-                          glow={user.settings[0].enableGlow}
+                          glow={settings[0].enableGlow}
                           label={cat.name}
                           size="medium"
                           avatar={
@@ -180,7 +185,7 @@ const SharePage = () => {
                                 }}
                               >
                                 {cat.emoji &&
-                                  (user.emojisStyle === EmojiStyle.NATIVE ? (
+                                  (emojisStyle === EmojiStyle.NATIVE ? (
                                     <div>
                                       <Emoji
                                         size={18}
@@ -189,11 +194,7 @@ const SharePage = () => {
                                       />
                                     </div>
                                   ) : (
-                                    <Emoji
-                                      size={20}
-                                      unified={cat.emoji}
-                                      emojiStyle={user.emojisStyle}
-                                    />
+                                    <Emoji size={20} unified={cat.emoji} emojiStyle={emojisStyle} />
                                   ))}
                               </Avatar>
                             ) : (

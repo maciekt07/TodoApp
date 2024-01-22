@@ -23,7 +23,8 @@ import { UserContext } from "../contexts/UserContext";
 
 const UserSettings = () => {
   const { user, setUser } = useContext(UserContext);
-  const [name, setName] = useState<string>("");
+  const { name, profilePicture, createdAt } = user;
+  const [userName, setUserName] = useState<string>("");
   const [profilePictureURL, setProfilePictureURL] = useState<string>("");
   const [openChangeImage, setOpenChangeImage] = useState<boolean>(false);
   const [logoutConfirmationOpen, setLogoutConfirmationOpen] = useState<boolean>(false);
@@ -31,17 +32,17 @@ const UserSettings = () => {
   const [openSettings, setOpenSettings] = useState<boolean>(false);
 
   useEffect(() => {
-    document.title = `Todo App - User ${user.name ? `(${user.name})` : ""}`;
-  }, [user.name]);
+    document.title = `Todo App - User ${name ? `(${name})` : ""}`;
+  }, [name]);
 
   const handleSaveName = () => {
-    setUser({ ...user, name });
-    toast.success(() => (
-      <div>
-        Changed user name to - <b>{name}</b>.
+    setUser({ ...user, name: userName });
+    toast.success((t) => (
+      <div onClick={() => toast.dismiss(t.id)}>
+        Changed user name to - <b>{userName}</b>.
       </div>
     ));
-    setName("");
+    setUserName("");
   };
 
   const handleOpenImageDialog = () => {
@@ -74,7 +75,7 @@ const UserSettings = () => {
         >
           <Settings fontSize="large" />
         </IconButton>
-        <Tooltip title={user.profilePicture ? "Change profile picture" : "Add profile picture"}>
+        <Tooltip title={profilePicture ? "Change profile picture" : "Add profile picture"}>
           <Badge
             overlap="circular"
             anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
@@ -93,7 +94,7 @@ const UserSettings = () => {
           >
             <Avatar
               onClick={handleOpenImageDialog}
-              src={(user.profilePicture as string) || undefined}
+              src={(profilePicture as string) || undefined}
               onError={() => {
                 setUser((prevUser) => ({
                   ...prevUser,
@@ -108,43 +109,41 @@ const UserSettings = () => {
                 fontSize: "45px",
               }}
             >
-              {!user.profilePicture && name
+              {!profilePicture && userName
+                ? userName[0].toUpperCase()
+                : !user.profilePicture && !userName && name
                 ? name[0].toUpperCase()
-                : !user.profilePicture && !name && user.name
-                ? user.name[0].toUpperCase()
                 : undefined}
             </Avatar>
           </Badge>
         </Tooltip>
-        <UserName translate="no">{user.name || "User"}</UserName>
+        <UserName translate="no">{name || "User"}</UserName>
 
         {/* <CreatedAtDate>
           Registered since {new Date(user.createdAt).toLocaleDateString()}
         </CreatedAtDate> */}
 
         <Tooltip
-          title={`Created at: ${new Date(user.createdAt).toLocaleDateString()} • ${new Date(
-            user.createdAt
+          title={`Created at: ${new Date(createdAt).toLocaleDateString()} • ${new Date(
+            createdAt
           ).toLocaleTimeString()}`}
         >
           <CreatedAtDate>
             Registered since{" "}
             {new Intl.RelativeTimeFormat(navigator.language, { numeric: "auto" }).format(
-              -Math.floor(
-                (Date.now() - new Date(user.createdAt).getTime()) / (1000 * 60 * 60 * 24)
-              ),
+              -Math.floor((Date.now() - new Date(createdAt).getTime()) / (1000 * 60 * 60 * 24)),
               "days"
             )}
           </CreatedAtDate>
         </Tooltip>
         <StyledInput
-          label={user.name === null ? "Add Name" : "Change Name"}
-          value={name}
-          onChange={(e) => setName(e.target.value)}
+          label={name === null ? "Add Name" : "Change Name"}
+          value={userName}
+          onChange={(e) => setUserName(e.target.value)}
           onKeyDown={(e) => e.key === "Enter" && handleSaveName()}
-          error={name.length > USER_NAME_MAX_LENGTH}
+          error={userName.length > USER_NAME_MAX_LENGTH}
           helperText={
-            name.length > USER_NAME_MAX_LENGTH
+            userName.length > USER_NAME_MAX_LENGTH
               ? `Name is too long maximum ${USER_NAME_MAX_LENGTH} characters`
               : ""
           }
@@ -152,7 +151,7 @@ const UserSettings = () => {
 
         <SaveBtn
           onClick={handleSaveName}
-          disabled={name.length > USER_NAME_MAX_LENGTH || name === ""}
+          disabled={userName.length > USER_NAME_MAX_LENGTH || userName === "" || userName === name}
         >
           Save name
         </SaveBtn>

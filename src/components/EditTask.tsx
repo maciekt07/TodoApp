@@ -111,8 +111,8 @@ export const EditTask = ({ open, task, onClose, onSave }: EditTaskProps) => {
       // fullScreen={isMobile}
       onClose={() => {
         onClose();
-        setEditedTask(task);
-        setSelectedCategories(task?.category as Category[]);
+        // setEditedTask(task);
+        // setSelectedCategories(task?.category as Category[]);
       }}
       PaperProps={{
         style: {

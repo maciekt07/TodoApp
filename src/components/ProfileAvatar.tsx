@@ -203,6 +203,7 @@ export const ProfileAvatar = () => {
 
         <Divider sx={{ margin: "0 8px" }} />
         <StyledMenuItem
+          translate="no"
           onClick={() => {
             window.open("https://github.com/maciekt07/TodoApp");
           }}
@@ -285,7 +286,7 @@ export const ProfileAvatar = () => {
             <h4 style={{ margin: 0, fontWeight: 600 }}> {user.name || "User"}</h4>
           </StyledMenuItem>
           <Divider sx={{ margin: "0 8px" }} />
-          <CreditsContainer>
+          <CreditsContainer translate="no">
             <span style={{ display: "flex", alignItems: "center" }}>
               Made with &nbsp; <Favorite sx={{ fontSize: "16px" }} />
             </span>

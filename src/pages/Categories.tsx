@@ -25,6 +25,7 @@ import { useStorageState } from "../hooks/useStorageState";
 
 const Categories = () => {
   const { user, setUser } = useContext(UserContext);
+
   const [name, setName] = useStorageState<string>("", "catName", "sessionStorage");
   const [nameError, setNameError] = useState<string>("");
   const [emoji, setEmoji] = useStorageState<string | null>(null, "catEmoji", "sessionStorage");

@@ -17,6 +17,7 @@ import { UserContext } from "../contexts/UserContext";
  */
 export const BottomNav = (): JSX.Element | null => {
   const { user } = useContext(UserContext);
+  const { tasks, settings } = user;
   const isMobile = useResponsiveDisplay();
   const location = useLocation();
   const [value, setValue] = useState<number | undefined>();
@@ -80,7 +81,7 @@ export const BottomNav = (): JSX.Element | null => {
           onClick={() => n("/categories")}
           label="Categories"
           icon={<CategoryRounded sx={{ fontSize: smallIconSize }} />}
-          disabled={!user.settings[0].enableCategories}
+          disabled={!settings[0].enableCategories}
         />
         <NavigationButton
           onClick={() => n("add")}
@@ -89,7 +90,7 @@ export const BottomNav = (): JSX.Element | null => {
           icon={
             <AddIcon
               fontSize="large"
-              animate={user.tasks.length === 0 && value !== 2 ? true : undefined}
+              animate={tasks.length === 0 && value !== 2 ? true : undefined}
             />
           }
         />

@@ -10,6 +10,7 @@ import {
   RecordVoiceOverRounded,
 } from "@mui/icons-material";
 import {
+  Box,
   Button,
   Dialog,
   DialogActions,
@@ -19,7 +20,10 @@ import {
   InputAdornment,
   Menu,
   MenuItem,
+  Tab,
+  Tabs,
   TextField,
+  Typography,
 } from "@mui/material";
 import { BottomSheet } from "react-spring-bottom-sheet";
 import { Emoji, EmojiStyle } from "emoji-picker-react";
@@ -31,6 +35,7 @@ import { useNavigate } from "react-router-dom";
 import { useContext, useState } from "react";
 import toast from "react-hot-toast";
 import { UserContext } from "../contexts/UserContext";
+import QRCode from "react-qr-code";
 
 //TODO: Move all functions to TasksMenu component
 
@@ -182,6 +187,11 @@ export const TaskMenu = ({
     </div>
   );
   const isMobile = useResponsiveDisplay();
+
+  const [shareTabVal, setShareTabVal] = useState<number>(0);
+  const handleTabChange = (_event: React.SyntheticEvent, newValue: number) => {
+    setShareTabVal(newValue);
+  };
   return (
     <>
       {isMobile ? (
@@ -232,7 +242,7 @@ export const TaskMenu = ({
           style: {
             borderRadius: "28px",
             padding: "10px",
-            width: "100% !important",
+            width: "600px !important",
           },
         }}
       >
@@ -241,30 +251,52 @@ export const TaskMenu = ({
           <span>
             Share Task <b>{user.tasks.find((task) => task.id === selectedTaskId)?.name}</b>
           </span>
-          <ShareField
-            value={generateShareableLink(selectedTaskId, user.name || "User")}
-            fullWidth
-            variant="outlined"
-            label="Shareable Link"
-            InputProps={{
-              readOnly: true,
-              endAdornment: (
-                <InputAdornment position="end">
-                  <Button
-                    onClick={() => {
-                      handleCopyToClipboard();
-                    }}
-                    sx={{ padding: "8px 12px", borderRadius: "12px" }}
-                  >
-                    <ContentCopy /> &nbsp; Copy
-                  </Button>
-                </InputAdornment>
-              ),
-            }}
-            sx={{
-              mt: 3,
-            }}
-          />
+          <Tabs value={shareTabVal} onChange={handleTabChange} sx={{ m: "8px 0" }}>
+            <StyledTab label="Link" />
+            <StyledTab label="QR Code" />
+          </Tabs>
+          <CustomTabPanel value={shareTabVal} index={0}>
+            <ShareField
+              value={generateShareableLink(selectedTaskId, user.name || "User")}
+              fullWidth
+              variant="outlined"
+              label="Shareable Link"
+              InputProps={{
+                readOnly: true,
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <Button
+                      onClick={() => {
+                        handleCopyToClipboard();
+                      }}
+                      sx={{ padding: "8px 12px", borderRadius: "12px" }}
+                    >
+                      <ContentCopy /> &nbsp; Copy
+                    </Button>
+                  </InputAdornment>
+                ),
+              }}
+              sx={{
+                mt: 3,
+              }}
+            />
+          </CustomTabPanel>
+          <CustomTabPanel value={shareTabVal} index={1}>
+            <Box
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                background: "#fff",
+                margin: "8px 0",
+              }}
+            >
+              <QRCode
+                value={generateShareableLink(selectedTaskId, user.name || "User")}
+                size={300}
+              />
+            </Box>
+          </CustomTabPanel>
         </DialogContent>
         <DialogActions>
           <DialogBtn onClick={() => setShowShareDialog(false)}>Close</DialogBtn>
@@ -276,7 +308,30 @@ export const TaskMenu = ({
     </>
   );
 };
+interface TabPanelProps {
+  children?: React.ReactNode;
+  index: number;
+  value: number;
+}
+function CustomTabPanel(props: TabPanelProps) {
+  const { children, value, index, ...other } = props;
 
+  return (
+    <div
+      role="tabpanel"
+      hidden={value !== index}
+      id={`simple-tabpanel-${index}`}
+      aria-labelledby={`simple-tab-${index}`}
+      {...other}
+    >
+      {value === index && (
+        <Box>
+          <Typography>{children}</Typography>
+        </Box>
+      )}
+    </div>
+  );
+}
 const SheetHeader = styled.h3`
   display: flex;
   justify-content: center;
@@ -319,4 +374,8 @@ const ShareField = styled(TextField)`
     border-radius: 14px;
     transition: 0.3s all;
   }
+`;
+
+const StyledTab = styled(Tab)`
+  border-radius: 8px;
 `;

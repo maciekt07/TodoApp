@@ -52,7 +52,7 @@ export const SettingsDialog = ({ open, onClose }: SettingsProps) => {
     { label: "Native", style: EmojiStyle.NATIVE },
   ];
 
-  const getAvailableVoices = () => {
+  const getAvailableVoices = (): SpeechSynthesisVoice[] => {
     const voices = window.speechSynthesis.getVoices();
     const voiceInfoArray = [];
     console.log(voices);

@@ -76,11 +76,17 @@ export const Tasks = (): JSX.Element => {
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>, taskId: number) => {
     setAnchorEl(event.currentTarget);
     setSelectedTaskId(taskId);
+    if (!isMobile && !expandedTasks.has(taskId)) {
+      toggleShowMore(taskId);
+    }
   };
 
   const handleCloseMoreMenu = () => {
     setAnchorEl(null);
     document.body.style.overflow = "visible";
+    if (selectedTaskId && !isMobile && expandedTasks.has(selectedTaskId)) {
+      toggleShowMore(selectedTaskId);
+    }
   };
 
   const reorderTasks = (tasks: Task[]): Task[] => {
@@ -649,6 +655,7 @@ export const Tasks = (): JSX.Element => {
           reorderTasks(user.tasks).map((task) => (
             <TaskComponent
               key={task.id}
+              id={task.id.toString()}
               backgroundColor={task.color}
               clr={getFontColorFromHex(task.color)}
               glow={user.settings[0].enableGlow}
@@ -696,15 +703,17 @@ export const Tasks = (): JSX.Element => {
                       : task.description?.slice(0, DESCRIPTION_SHORT_LENGTH) || "",
                     search
                   )}
-                  {task.description && task.description.length > DESCRIPTION_SHORT_LENGTH && (
-                    <ShowMoreBtn onClick={() => toggleShowMore(task.id)} clr={task.color}>
-                      {expandedTasks.has(task.id) ? "Show less" : "Show more"}
-                    </ShowMoreBtn>
-                  )}
+                  {(!open || task.id !== selectedTaskId || isMobile) &&
+                    task.description &&
+                    task.description.length > DESCRIPTION_SHORT_LENGTH && (
+                      <ShowMoreBtn onClick={() => toggleShowMore(task.id)} clr={task.color}>
+                        {expandedTasks.has(task.id) ? "Show less" : "Show more"}
+                      </ShowMoreBtn>
+                    )}
                 </TaskDescription>
 
                 {task.deadline && (
-                  <TimeLeft done={task.done} translate="yes">
+                  <TimeLeft done={task.done}>
                     <RingAlarm
                       fontSize="small"
                       animate={new Date() > new Date(task.deadline) && !task.done}
