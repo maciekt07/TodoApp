@@ -124,6 +124,8 @@ export const Offline = styled.div`
   justify-content: center;
   align-items: center;
   gap: 6px;
+  text-shadow: 0 0 8px #ffffff56;
   margin-top: 24px;
+  opacity: 0.8;
   animation: ${fadeIn} 0.5s ease;
 `;

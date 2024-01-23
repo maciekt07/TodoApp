@@ -54,6 +54,8 @@ export const ProfileAvatar = () => {
     const fetchRepoInfo = async () => {
       try {
         const { repoData, branchData } = await fetchGitHubInfo();
+        console.log(branchData);
+
         setStars(repoData.stargazers_count);
         setLastUpdate(branchData.commit.commit.committer.date);
         setIssuesCount(repoData.open_issues_count);
@@ -96,6 +98,7 @@ export const ProfileAvatar = () => {
           aria-haspopup="true"
           aria-expanded={open ? "true" : undefined}
           onClick={handleClick}
+          sx={{ zIndex: 1 }}
         >
           <Avatar
             src={(user.profilePicture as string) || undefined}
@@ -115,7 +118,6 @@ export const ProfileAvatar = () => {
               background: "#747474",
               transition: ".2s all",
               fontSize: "26px",
-              // WebkitTransform: "translate3d(0,0,0)",
             }}
           >
             {user.name ? user.name[0].toUpperCase() : undefined}
@@ -272,7 +274,7 @@ export const ProfileAvatar = () => {
             style={{
               display: "flex",
               alignItems: "center",
-              gap: "8px",
+              gap: "10px",
               background: "#d7d7d7",
               // marginBottom: "12px",
             }}
@@ -290,13 +292,15 @@ export const ProfileAvatar = () => {
             <span style={{ display: "flex", alignItems: "center" }}>
               Made with &nbsp; <Favorite sx={{ fontSize: "16px" }} />
             </span>
-            <span style={{ marginLeft: "6px", marginRight: "4px" }}>by</span>{" "}
+            <span style={{ marginLeft: "6px", marginRight: "4px" }}>by</span>
+
             <a
               style={{ textDecoration: "none", color: "inherit" }}
               href="https://github.com/maciekt07"
             >
               maciekt07
             </a>
+
             <br />
           </CreditsContainer>
           <CreditsContainer>
@@ -398,6 +402,8 @@ const MenuLabel = styled.span<{ clr?: string }>`
   padding: 2px 12px;
   border-radius: 32px;
   font-size: 14px;
+  /* width: 40px;
+  text-align: center; */
 `;
 
 const LogoContainer = styled.div`

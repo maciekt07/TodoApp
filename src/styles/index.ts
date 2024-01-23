@@ -8,6 +8,7 @@ export {
   StyledLink,
   pulseAnimation,
   DialogBtn,
+  PathName,
 } from "./globalStyles";
 export {
   GreetingHeader,

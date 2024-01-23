@@ -60,19 +60,7 @@ export const EditTask = ({ open, task, onClose, onSave }: EditTaskProps) => {
   // Event handler for input changes in the form fields.
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
-    // Update name error state if the name length exceeds the maximum allowed.
 
-    // if (name === "name" && value.length > TASK_NAME_MAX_LENGTH) {
-    //   setNameError(true);
-    // } else {
-    //   setNameError(false);
-    // }
-    // // Update description error state if the description length exceeds the maximum allowed.
-    // if (name === "description" && value.length > DESCRIPTION_MAX_LENGTH) {
-    //   setDescriptionError(true);
-    // } else {
-    //   setDescriptionError(false);
-    // }
     // Update the editedTask state with the changed value.
     setEditedTask((prevTask) => ({
       ...(prevTask as Task),
@@ -217,16 +205,12 @@ export const EditTask = ({ open, task, onClose, onSave }: EditTaskProps) => {
           }}
         />
         {user.settings[0].enableCategories !== undefined && user.settings[0].enableCategories && (
-          <>
-            {/* <Label>Category</Label> */}
-            <CategorySelect
-              fontColor={ColorPalette.fontDark}
-              selectedCategories={selectedCategories}
-              setSelectedCategories={setSelectedCategories}
-            />
-          </>
+          <CategorySelect
+            fontColor={ColorPalette.fontDark}
+            selectedCategories={selectedCategories}
+            setSelectedCategories={setSelectedCategories}
+          />
         )}
-        {/* <Label>Color</Label> */}
         <div
           style={{
             display: "flex",

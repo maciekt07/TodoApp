@@ -2,11 +2,15 @@ import styled from "@emotion/styled";
 import { ArrowBackIosNew } from "@mui/icons-material";
 import { Button } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-import { ColorPalette } from "../styles";
-import { useEffect } from "react";
+import { ColorPalette, PathName } from "../styles";
+import { ReactNode, useEffect } from "react";
 import TaskNotFound from "../assets/TaskNotFound.png";
 
-const NotFound = () => {
+interface NotFoundProps {
+  message?: string | ReactNode;
+}
+
+const NotFound: React.FC<NotFoundProps> = ({ message }) => {
   const n = useNavigate();
 
   useEffect(() => {
@@ -18,13 +22,19 @@ const NotFound = () => {
       <ErrorCode>404</ErrorCode>
       <NotFoundImg src={TaskNotFound} />
       <Description>
-        Page{" "}
-        <PathName>
-          {location.pathname.length > 32
-            ? location.pathname.substring(0, 29) + "..."
-            : location.pathname}
-        </PathName>{" "}
-        was not found.
+        {message ? (
+          message
+        ) : (
+          <div>
+            Page{" "}
+            <PathName>
+              {location.pathname.length > 32
+                ? location.pathname.substring(0, 29) + "..."
+                : location.pathname}
+            </PathName>{" "}
+            was not found.
+          </div>
+        )}
       </Description>
       <BackButton variant="outlined" onClick={() => n("/")}>
         <ArrowBackIosNew /> &nbsp; Go back to tasks
@@ -53,7 +63,6 @@ const ErrorCode = styled.h1`
 
 const Description = styled.p`
   font-size: 22px;
-  opacity: 0.9;
   line-height: 1.8em;
   margin: 32px;
 `;
@@ -69,11 +78,4 @@ const NotFoundImg = styled.img`
   width: 350px;
   margin-left: 32px;
   filter: drop-shadow(0px 0px 128px ${ColorPalette.purple});
-`;
-
-const PathName = styled.code`
-  background: black;
-  font-family: consolas !important;
-  padding: 4px 6px;
-  border-radius: 8px;
 `;

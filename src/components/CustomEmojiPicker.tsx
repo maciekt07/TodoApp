@@ -145,7 +145,7 @@ export const CustomEmojiPicker = ({ emoji, setEmoji, color, width }: EmojiPicker
                 margin: "12px auto 6px auto",
               }}
             >
-              <span style={{ margin: 0, fontSize: "14px", opacity: 0.7 }}>
+              <span style={{ margin: 0, fontSize: "14px", opacity: 0.7, textAlign: "center" }}>
                 Emojis may not load correctly when offline. Try switching to the native emoji style.
               </span>
             </div>

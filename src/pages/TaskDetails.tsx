@@ -1,7 +1,7 @@
 import { useParams } from "react-router-dom";
 import { TopBar } from "../components";
 import styled from "@emotion/styled";
-import { CategoryChip } from "../styles";
+import { CategoryChip, PathName } from "../styles";
 import { Avatar } from "@mui/material";
 import NotFound from "./NotFound";
 import { Clear, Done } from "@mui/icons-material";
@@ -17,7 +17,15 @@ const TaskDetails = () => {
   const task = tasks.find((task) => task.id.toString().replace(".", "") === formattedId);
 
   if (!task) {
-    return <NotFound />;
+    return (
+      <NotFound
+        message={
+          <div>
+            Task with id <PathName>{formattedId}</PathName> was not found.
+          </div>
+        }
+      />
+    );
   }
 
   useEffect(() => {

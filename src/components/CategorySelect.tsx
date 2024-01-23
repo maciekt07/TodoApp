@@ -41,9 +41,16 @@ export const CategorySelect: React.FC<CategorySelectProps> = ({
     const selectedCategoryIds = event.target.value as number[];
 
     if (selectedCategoryIds.length > MAX_CATEGORIES) {
-      toast.error(`You cannot add more than ${MAX_CATEGORIES} categories`, {
-        position: "top-center",
-      });
+      toast.error(
+        (t) => (
+          <div onClick={() => toast.dismiss(t.id)}>
+            You cannot add more than {MAX_CATEGORIES} categories
+          </div>
+        ),
+        {
+          position: "top-center",
+        }
+      );
       return;
     }
 
@@ -131,6 +138,7 @@ export const CategorySelect: React.FC<CategorySelectProps> = ({
             top: 0,
             background: "white",
             zIndex: 99,
+            pointerEvents: "none",
           }}
         >
           Select Categories (max {MAX_CATEGORIES})

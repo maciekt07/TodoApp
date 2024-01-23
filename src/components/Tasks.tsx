@@ -151,8 +151,8 @@ export const Tasks = (): JSX.Element => {
 
       if (allTasksDone) {
         toast.success(
-          () => (
-            <div>
+          (t) => (
+            <div onClick={() => toast.dismiss(t.id)}>
               <b>All tasks done</b>
               <br />
               <span>You've checked off all your todos. Well done!</span>

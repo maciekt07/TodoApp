@@ -197,7 +197,7 @@ const Categories = () => {
   };
 
   if (!user.settings[0].enableCategories) {
-    return <NotFound />;
+    return <NotFound message="Categories are not enabled." />;
   }
 
   return (

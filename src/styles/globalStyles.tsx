@@ -201,6 +201,10 @@ const globalStyles = css`
   .MuiCircularProgress-circle {
     stroke-linecap: round !important;
   }
+  .MuiTabs-indicator {
+    border-radius: 24px !important;
+    height: 3px !important;
+  }
 `;
 
 export const GlobalStyles = () => <Global styles={globalStyles} />;
@@ -246,7 +250,12 @@ export const StyledLink = styled.a`
     box-shadow: none;
   }
 `;
-
+export const PathName = styled.code`
+  background: black;
+  font-family: consolas !important;
+  padding: 4px 6px;
+  border-radius: 8px;
+`;
 export const fadeInLeft = keyframes`
 from {
   opacity: 0;

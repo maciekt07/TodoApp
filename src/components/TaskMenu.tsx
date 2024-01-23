@@ -7,6 +7,7 @@ import {
   LaunchRounded,
   LinkRounded,
   PushPinRounded,
+  QrCode2Rounded,
   RecordVoiceOverRounded,
 } from "@mui/icons-material";
 import {
@@ -242,18 +243,18 @@ export const TaskMenu = ({
           style: {
             borderRadius: "28px",
             padding: "10px",
-            width: "600px !important",
+            width: "500px",
           },
         }}
       >
         <DialogTitle>Share Task</DialogTitle>
         <DialogContent>
           <span>
-            Share Task <b>{user.tasks.find((task) => task.id === selectedTaskId)?.name}</b>
+            Share Task: <b>{user.tasks.find((task) => task.id === selectedTaskId)?.name}</b>
           </span>
           <Tabs value={shareTabVal} onChange={handleTabChange} sx={{ m: "8px 0" }}>
-            <StyledTab label="Link" />
-            <StyledTab label="QR Code" />
+            <StyledTab label="Link" icon={<LinkRounded />} />
+            <StyledTab label="QR Code" icon={<QrCode2Rounded />} />
           </Tabs>
           <CustomTabPanel value={shareTabVal} index={0}>
             <ShareField
@@ -288,12 +289,12 @@ export const TaskMenu = ({
                 alignItems: "center",
                 justifyContent: "center",
                 background: "#fff",
-                margin: "8px 0",
+                marginTop: "22px",
               }}
             >
               <QRCode
                 value={generateShareableLink(selectedTaskId, user.name || "User")}
-                size={300}
+                size={384}
               />
             </Box>
           </CustomTabPanel>
@@ -320,8 +321,8 @@ function CustomTabPanel(props: TabPanelProps) {
     <div
       role="tabpanel"
       hidden={value !== index}
-      id={`simple-tabpanel-${index}`}
-      aria-labelledby={`simple-tab-${index}`}
+      id={`share-tabpanel-${index}`}
+      aria-labelledby={`share-tab-${index}`}
       {...other}
     >
       {value === index && (
@@ -377,5 +378,8 @@ const ShareField = styled(TextField)`
 `;
 
 const StyledTab = styled(Tab)`
-  border-radius: 8px;
+  border-radius: 12px 12px 0 0;
+  .MuiTabs-indicator {
+    border-radius: 24px;
+  }
 `;

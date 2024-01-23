@@ -8,7 +8,7 @@ export const fetchGitHubInfo = async (): Promise<{
 }> => {
   const username = "maciekt07";
   const repo = "TodoApp";
-  const branch = "gh-pages";
+  const branch = "main";
   try {
     const [repoResponse, branchResponse] = await Promise.all([
       fetch(`https://api.github.com/repos/${username}/${repo}`),
