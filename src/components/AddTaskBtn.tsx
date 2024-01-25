@@ -18,7 +18,6 @@ export const AddTaskBtn = ({ animate }: AddTaskBtnProps): JSX.Element | null => 
   const n = useNavigate();
   const isMobile = useResponsiveDisplay();
 
-  // If it's a mobile device, don't render the button.
   if (isMobile) {
     return null;
   }
@@ -31,7 +30,7 @@ export const AddTaskBtn = ({ animate }: AddTaskBtnProps): JSX.Element | null => 
         onClick={() => n("add")}
         aria-label="Add Task"
       >
-        <AddRounded style={{ fontSize: "42px" }} />
+        <AddRounded style={{ fontSize: "44px" }} />
       </Btn>
     </Tooltip>
   );

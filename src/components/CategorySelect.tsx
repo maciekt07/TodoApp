@@ -37,6 +37,7 @@ export const CategorySelect: React.FC<CategorySelectProps> = ({
 }) => {
   const { user } = useContext(UserContext);
   const { categories, emojisStyle } = user;
+
   const handleCategoryChange = (event: SelectChangeEvent<unknown>): void => {
     const selectedCategoryIds = event.target.value as number[];
 
@@ -109,9 +110,7 @@ export const CategorySelect: React.FC<CategorySelectProps> = ({
                           <Emoji size={24} unified={cat.emoji} emojiStyle={emojisStyle} />
                         ))}
                     </Avatar>
-                  ) : (
-                    <></>
-                  )
+                  ) : undefined
                 }
               />
             ))}
@@ -121,7 +120,6 @@ export const CategorySelect: React.FC<CategorySelectProps> = ({
           PaperProps: {
             style: {
               maxHeight: 450,
-
               zIndex: 999999,
               padding: "0px 8px",
               background: "white",
@@ -166,6 +164,7 @@ export const CategorySelect: React.FC<CategorySelectProps> = ({
     </FormControl>
   );
 };
+
 const StyledSelect = styled(Select)<{ width?: CSSProperties["width"] }>`
   margin: 12px 0;
   border-radius: 16px;
@@ -174,6 +173,7 @@ const StyledSelect = styled(Select)<{ width?: CSSProperties["width"] }>`
   color: white;
   background: #ffffff1c;
 `;
+
 const CategoriesMenu = styled(MenuItem)<{ clr?: string }>`
   padding: 8px 12px;
   border-radius: 16px;
@@ -185,6 +185,7 @@ const CategoriesMenu = styled(MenuItem)<{ clr?: string }>`
   color: ${(props) => getFontColorFromHex(props.clr || ColorPalette.fontLight)};
   background: ${({ clr }) => clr || "#bcbcbc"};
   border: 4px solid transparent;
+
   &:hover {
     background: ${({ clr }) => clr || "#bcbcbc"};
     opacity: 0.7;
@@ -193,6 +194,7 @@ const CategoriesMenu = styled(MenuItem)<{ clr?: string }>`
   &:focus {
     opacity: none;
   }
+
   &:focus-visible {
     border-color: ${ColorPalette.purple} !important;
     color: ${ColorPalette.fontDark} !important;
@@ -202,7 +204,6 @@ const CategoriesMenu = styled(MenuItem)<{ clr?: string }>`
   &.Mui-selected {
     background: ${({ clr }) => clr || "#bcbcbc"};
     color: ${(props) => getFontColorFromHex(props.clr || ColorPalette.fontLight)};
-    /* box-shadow: 0 0 14px 4px ${(props) => props.clr || "#bcbcbc"}; */
     border: 4px solid #38b71f;
     display: flex;
     justify-content: left;

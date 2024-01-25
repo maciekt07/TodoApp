@@ -129,9 +129,7 @@ const TaskDetails = () => {
                                 <Emoji size={20} unified={cat.emoji} emojiStyle={emojisStyle} />
                               ))}
                           </Avatar>
-                        ) : (
-                          <></>
-                        )
+                        ) : undefined
                       }
                     />
                   ))}

@@ -198,13 +198,6 @@ const EmojiContainer = styled.div`
   margin: 14px;
 `;
 
-// const EmojiName = styled.h5`
-//   text-align: center;
-//   margin: 0;
-//   opacity: 0.8;
-//   text-transform: capitalize;
-// `;
-
 const EmojiPickerContainer = styled.div`
   display: flex;
   justify-content: center;

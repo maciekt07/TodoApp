@@ -36,6 +36,7 @@ import { ColorPalette } from "../styles";
 import { UserContext } from "../contexts/UserContext";
 import { iOS } from "../utils/iOS";
 import { fetchGitHubInfo } from "../services/githubApi";
+import { timeAgo } from "../utils";
 
 export const ProfileAvatar = () => {
   const { user, setUser } = useContext(UserContext);
@@ -54,8 +55,6 @@ export const ProfileAvatar = () => {
     const fetchRepoInfo = async () => {
       try {
         const { repoData, branchData } = await fetchGitHubInfo();
-        console.log(branchData);
-
         setStars(repoData.stargazers_count);
         setLastUpdate(branchData.commit.commit.committer.date);
         setIssuesCount(repoData.open_issues_count);
@@ -70,10 +69,12 @@ export const ProfileAvatar = () => {
     setAnchorEl(event.currentTarget);
     document.getElementById("root")?.setAttribute("aria-sidebar", "true");
   };
+
   const handleClose = () => {
     setAnchorEl(null);
     document.getElementById("root")?.removeAttribute("aria-sidebar");
   };
+
   const handleLogoutConfirmationOpen = () => {
     setLogoutConfirmationOpen(true);
     setAnchorEl(null);
@@ -144,7 +145,7 @@ export const ProfileAvatar = () => {
             handleClose();
           }}
         >
-          <img src={logo} alt="logo" style={{ width: "52px", marginLeft: "18px" }} />
+          <Logo src={logo} alt="logo" />
           <h2>
             <span style={{ color: "#7764E8" }}>Todo</span> App
             <span style={{ color: "#7764E8" }}>.</span>
@@ -305,11 +306,13 @@ export const ProfileAvatar = () => {
           </CreditsContainer>
           <CreditsContainer>
             {lastUpdate && (
-              <span style={{ margin: 0 }}>
-                Last Update: {new Date(lastUpdate).toLocaleDateString()}
-                {" • "}
-                {new Date(lastUpdate).toLocaleTimeString()}
-              </span>
+              <Tooltip title={timeAgo(new Date(lastUpdate))} placement="left-start">
+                <span style={{ margin: 0 }}>
+                  Last Update: {new Date(lastUpdate).toLocaleDateString()}
+                  {" • "}
+                  {new Date(lastUpdate).toLocaleTimeString()}
+                </span>
+              </Tooltip>
             )}
           </CreditsContainer>
         </div>
@@ -398,7 +401,6 @@ const MenuLabel = styled.span<{ clr?: string }>`
   font-weight: 600;
   background: ${({ clr }) => (clr || ColorPalette.purple) + "35"};
   color: ${({ clr }) => clr || ColorPalette.purple};
-  /* border: 1px solid; */
   padding: 2px 12px;
   border-radius: 32px;
   font-size: 14px;
@@ -413,6 +415,11 @@ const LogoContainer = styled.div`
   margin-top: 8px;
   gap: 16px;
   cursor: pointer;
+`;
+
+const Logo = styled.img`
+  width: 52px;
+  margin-left: 18px;
 `;
 
 const CreditsContainer = styled.div`

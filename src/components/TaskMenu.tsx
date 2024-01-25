@@ -64,17 +64,20 @@ export const TaskMenu = ({
   handleReadAloud,
 }: TaskMenuProps) => {
   const { user } = useContext(UserContext);
+  const { tasks, name, settings, emojisStyle } = user;
   const [showShareDialog, setShowShareDialog] = useState<boolean>(false);
+  const [shareTabVal, setShareTabVal] = useState<number>(0);
+  const isMobile = useResponsiveDisplay();
   const n = useNavigate();
 
   const redirectToTaskDetails = () => {
-    const selectedTask = user.tasks.find((task) => task.id === selectedTaskId);
+    const selectedTask = tasks.find((task) => task.id === selectedTaskId);
     const taskId = selectedTask?.id.toString().replace(".", "");
     n(`/task/${taskId}`);
   };
   //TODO: make links shorter
   const generateShareableLink = (taskId: number | null, userName: string) => {
-    const task = user.tasks.find((task) => task.id === taskId);
+    const task = tasks.find((task) => task.id === taskId);
     if (task) {
       const encodedTask = encodeURIComponent(JSON.stringify(task));
       const encodedUserName = encodeURIComponent(userName);
@@ -83,7 +86,7 @@ export const TaskMenu = ({
     return "";
   };
   const handleCopyToClipboard = () => {
-    const linkToCopy = generateShareableLink(selectedTaskId, user.name || "User");
+    const linkToCopy = generateShareableLink(selectedTaskId, name || "User");
 
     navigator.clipboard
       .writeText(linkToCopy)
@@ -100,14 +103,12 @@ export const TaskMenu = ({
   };
 
   const handleShare = () => {
-    const linkToShare = generateShareableLink(selectedTaskId, user.name || "User");
+    const linkToShare = generateShareableLink(selectedTaskId, name || "User");
     if (navigator.share) {
       navigator
         .share({
           title: "Share Task",
-          text: `Check out this task: ${
-            user.tasks.find((task) => task.id === selectedTaskId)?.name
-          }`,
+          text: `Check out this task: ${tasks.find((task) => task.id === selectedTaskId)?.name}`,
           url: linkToShare,
         })
         .then(() => {
@@ -115,7 +116,7 @@ export const TaskMenu = ({
         })
         .catch((error) => {
           console.error("Error sharing link:", error);
-          toast.error("Error sharing link");
+          // toast.error("Error sharing link");
         });
     }
   };
@@ -129,7 +130,7 @@ export const TaskMenu = ({
         }}
       >
         <Done /> &nbsp;{" "}
-        {user.tasks.find((task) => task.id === selectedTaskId)?.done
+        {tasks.find((task) => task.id === selectedTaskId)?.done
           ? "Mark as not done"
           : "Mark as done"}
       </StyledMenuItem>
@@ -140,12 +141,12 @@ export const TaskMenu = ({
         }}
       >
         <PushPinRounded /> &nbsp;{" "}
-        {user.tasks.find((task) => task.id === selectedTaskId)?.pinned ? "Unpin" : "Pin"}
+        {tasks.find((task) => task.id === selectedTaskId)?.pinned ? "Unpin" : "Pin"}
       </StyledMenuItem>
       <StyledMenuItem onClick={redirectToTaskDetails}>
         <LaunchRounded /> &nbsp; Task details
       </StyledMenuItem>
-      {user.settings[0].enableReadAloud && (
+      {settings[0].enableReadAloud && (
         <StyledMenuItem
           onClick={handleReadAloud}
           disabled={window.speechSynthesis.speaking || window.speechSynthesis.pending}
@@ -157,7 +158,6 @@ export const TaskMenu = ({
       <StyledMenuItem
         onClick={() => {
           handleCloseMoreMenu();
-          // const shareableLink = generateShareableLink(selectedTaskId, user.name || "User");
           setShowShareDialog(true);
         }}
       >
@@ -187,9 +187,7 @@ export const TaskMenu = ({
       </StyledMenuItem>
     </div>
   );
-  const isMobile = useResponsiveDisplay();
 
-  const [shareTabVal, setShareTabVal] = useState<number>(0);
   const handleTabChange = (_event: React.SyntheticEvent, newValue: number) => {
     setShareTabVal(newValue);
   };
@@ -204,12 +202,12 @@ export const TaskMenu = ({
           header={
             <SheetHeader>
               <Emoji
-                emojiStyle={user.emojisStyle}
+                emojiStyle={emojisStyle}
                 size={32}
-                unified={user.tasks.find((task) => task.id === selectedTaskId)?.emoji || ""}
+                unified={tasks.find((task) => task.id === selectedTaskId)?.emoji || ""}
               />{" "}
-              {user.emojisStyle === EmojiStyle.NATIVE && "\u00A0 "}
-              {user.tasks.find((task) => task.id === selectedTaskId)?.name}
+              {emojisStyle === EmojiStyle.NATIVE && "\u00A0 "}
+              {tasks.find((task) => task.id === selectedTaskId)?.name}
             </SheetHeader>
           }
         >
@@ -243,14 +241,14 @@ export const TaskMenu = ({
           style: {
             borderRadius: "28px",
             padding: "10px",
-            width: "500px",
+            width: "560px",
           },
         }}
       >
         <DialogTitle>Share Task</DialogTitle>
         <DialogContent>
           <span>
-            Share Task: <b>{user.tasks.find((task) => task.id === selectedTaskId)?.name}</b>
+            Share Task: <b>{tasks.find((task) => task.id === selectedTaskId)?.name}</b>
           </span>
           <Tabs value={shareTabVal} onChange={handleTabChange} sx={{ m: "8px 0" }}>
             <StyledTab label="Link" icon={<LinkRounded />} />
@@ -258,7 +256,7 @@ export const TaskMenu = ({
           </Tabs>
           <CustomTabPanel value={shareTabVal} index={0}>
             <ShareField
-              value={generateShareableLink(selectedTaskId, user.name || "User")}
+              value={generateShareableLink(selectedTaskId, name || "User")}
               fullWidth
               variant="outlined"
               label="Shareable Link"
@@ -292,10 +290,7 @@ export const TaskMenu = ({
                 marginTop: "22px",
               }}
             >
-              <QRCode
-                value={generateShareableLink(selectedTaskId, user.name || "User")}
-                size={384}
-              />
+              <QRCode value={generateShareableLink(selectedTaskId, name || "User")} size={384} />
             </Box>
           </CustomTabPanel>
         </DialogContent>
@@ -379,7 +374,11 @@ const ShareField = styled(TextField)`
 
 const StyledTab = styled(Tab)`
   border-radius: 12px 12px 0 0;
+  width: 50%;
   .MuiTabs-indicator {
     border-radius: 24px;
   }
 `;
+StyledTab.defaultProps = {
+  iconPosition: "start",
+};

@@ -26,6 +26,7 @@ export const ColorPicker: React.FC<ColorPickerProps> = ({
 }) => {
   const [selectedColor, setSelectedColor] = useState<string>(color);
   const [accordionExpanded, setAccordionExpanded] = useState<boolean>(false);
+
   const isHexColor = (value: string): boolean => /^#[0-9A-Fa-f]{6}$/.test(value);
 
   // Predefined color options
@@ -78,8 +79,10 @@ export const ColorPicker: React.FC<ColorPickerProps> = ({
     }
   }, [color, handleColorChange]);
 
-  const handleAccordionChange = (_event: React.ChangeEvent<{}>, isExpanded: boolean) =>
-    setAccordionExpanded(isExpanded);
+  const handleAccordionChange = (
+    _event: React.SyntheticEvent<Element, Event>,
+    isExpanded: boolean
+  ) => setAccordionExpanded(isExpanded);
 
   return (
     <div>

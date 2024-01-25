@@ -627,9 +627,7 @@ export const Tasks = (): JSX.Element => {
                             <Emoji size={24} unified={cat.emoji} emojiStyle={user.emojisStyle} />
                           ))}
                       </Avatar>
-                    ) : (
-                      <></>
-                    )
+                    ) : undefined
                   }
                 />
               ))}
@@ -783,9 +781,7 @@ export const Tasks = (): JSX.Element => {
                                     />
                                   ))}
                               </Avatar>
-                            ) : (
-                              <></>
-                            )
+                            ) : undefined
                           }
                         />
                       </div>

@@ -20,6 +20,7 @@ import { ColorPalette, DialogBtn } from "../styles";
 import { defaultUser } from "../constants/defaultUser";
 import toast from "react-hot-toast";
 import { UserContext } from "../contexts/UserContext";
+import { timeAgo } from "../utils/timeAgo";
 
 const UserSettings = () => {
   const { user, setUser } = useContext(UserContext);
@@ -129,11 +130,12 @@ const UserSettings = () => {
           ).toLocaleTimeString()}`}
         >
           <CreatedAtDate>
-            Registered since{" "}
-            {new Intl.RelativeTimeFormat(navigator.language, { numeric: "auto" }).format(
+            Registered{" "}
+            {/* {new Intl.RelativeTimeFormat(navigator.language, { numeric: "auto" }).format(
               -Math.floor((Date.now() - new Date(createdAt).getTime()) / (1000 * 60 * 60 * 24)),
               "days"
-            )}
+            )} */}
+            {timeAgo(createdAt)}
           </CreatedAtDate>
         </Tooltip>
         <StyledInput

@@ -1,3 +1,5 @@
+import { timeAgo } from ".";
+
 export const calculateDateDifference = (date: Date): string => {
   const currentDate = new Date();
   const targetDate = new Date(date);
@@ -10,7 +12,7 @@ export const calculateDateDifference = (date: Date): string => {
   const userLocale = navigator.language || "en-US";
 
   if (targetDate < currentDate) {
-    return "Not completed on time";
+    return `Not completed on time (${timeAgo(targetDate)})`;
   } else if (targetDate.toDateString() === currentDate.toDateString()) {
     if (differenceHours > 0) {
       return new Intl.RelativeTimeFormat(userLocale, { numeric: "auto" }).format(

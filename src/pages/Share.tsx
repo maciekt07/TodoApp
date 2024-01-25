@@ -197,9 +197,7 @@ const SharePage = () => {
                                     <Emoji size={20} unified={cat.emoji} emojiStyle={emojisStyle} />
                                   ))}
                               </Avatar>
-                            ) : (
-                              <></>
-                            )
+                            ) : undefined
                           }
                         />
                       </div>

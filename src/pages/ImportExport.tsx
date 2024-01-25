@@ -229,6 +229,8 @@ const ImportExport = () => {
   const handleImportFromLink = async () => {
     try {
       const text = await navigator.clipboard.readText();
+      console.log(`${location.protocol}//${location.hostname}/share`);
+
       if (text.startsWith(`${location.protocol}//${location.hostname}`)) {
         window.open(text, "_self");
       } else {

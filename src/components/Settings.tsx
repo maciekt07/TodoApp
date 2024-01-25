@@ -22,7 +22,13 @@ import { DialogBtn } from "../styles";
 import styled from "@emotion/styled";
 import { Emoji, EmojiStyle } from "emoji-picker-react";
 import { useOnlineStatus } from "../hooks/useOnlineStatus";
-import { CachedRounded, VolumeDown, VolumeOff, VolumeUp, WifiOff } from "@mui/icons-material";
+import {
+  CachedRounded,
+  VolumeDown,
+  VolumeOff,
+  VolumeUp,
+  WifiOffRounded,
+} from "@mui/icons-material";
 import { defaultUser } from "../constants/defaultUser";
 import { UserContext } from "../contexts/UserContext";
 import { iOS } from "../utils/iOS";
@@ -34,12 +40,13 @@ interface SettingsProps {
 
 export const SettingsDialog = ({ open, onClose }: SettingsProps) => {
   const { user, setUser } = useContext(UserContext);
-  const [settings, setSettings] = useState<AppSettings>(user.settings[0]);
-  const [lastStyle] = useState<EmojiStyle>(user.emojisStyle);
+  const { settings, emojisStyle } = user;
+  const [userSettings, setUserSettings] = useState<AppSettings>(settings[0]);
+  const [lastStyle] = useState<EmojiStyle>(emojisStyle);
 
   const [availableVoices, setAvailableVoices] = useState<SpeechSynthesisVoice[]>([]);
-  const [voiceVolume, setVoiceVolume] = useState<number>(user.settings[0].voiceVolume);
-  const [prevVoiceVol, setPrevVoiceVol] = useState<number>(user.settings[0].voiceVolume);
+  const [voiceVolume, setVoiceVolume] = useState<number>(settings[0].voiceVolume);
+  const [prevVoiceVol, setPrevVoiceVol] = useState<number>(settings[0].voiceVolume);
 
   const isOnline = useOnlineStatus();
 
@@ -55,8 +62,6 @@ export const SettingsDialog = ({ open, onClose }: SettingsProps) => {
   const getAvailableVoices = (): SpeechSynthesisVoice[] => {
     const voices = window.speechSynthesis.getVoices();
     const voiceInfoArray = [];
-    console.log(voices);
-
     for (const voice of voices) {
       voiceInfoArray.push(voice);
     }
@@ -82,10 +87,10 @@ export const SettingsDialog = ({ open, onClose }: SettingsProps) => {
       // cancel read aloud
       name === "enableReadAloud" && window.speechSynthesis.cancel();
       const updatedSettings = {
-        ...settings,
+        ...userSettings,
         [name]: event.target.checked,
       };
-      setSettings(updatedSettings);
+      setUserSettings(updatedSettings);
       setUser((prevUser) => ({
         ...prevUser,
         settings: [updatedSettings],
@@ -100,13 +105,11 @@ export const SettingsDialog = ({ open, onClose }: SettingsProps) => {
       emojisStyle: selectedEmojiStyle,
     }));
   };
+
   const handleVoiceChange = (event: SelectChangeEvent<unknown>) => {
     // Handle the selected voice
     const selectedVoice = availableVoices.find((voice) => voice.name === event.target.value);
-
     if (selectedVoice) {
-      console.log("Selected Voice:", selectedVoice);
-
       // Update the user settings with the selected voice
       setUser((prevUser) => ({
         ...prevUser,
@@ -120,8 +123,7 @@ export const SettingsDialog = ({ open, onClose }: SettingsProps) => {
     }
   };
   // Function to handle changes in voice volume
-  const handleVoiceVolChange = (e: Event, value: number | number[]) => {
-    e.preventDefault();
+  const handleVoiceVolChange = (_event: Event, value: number | number[]) => {
     setVoiceVolume(value as number);
     // Update user settings with the new voice volume
     setUser((prevUser) => ({
@@ -175,7 +177,7 @@ export const SettingsDialog = ({ open, onClose }: SettingsProps) => {
         <FormGroup>
           <FormControl>
             <FormLabel>Emoji Settings</FormLabel>
-            <StyledSelect value={user.emojisStyle} onChange={handleEmojiStyleChange} translate="no">
+            <StyledSelect value={emojisStyle} onChange={handleEmojiStyleChange} translate="no">
               {/* Show a disabled menu item when offline, indicating that the style can't be changed */}
               {!isOnline && (
                 <MenuItem
@@ -187,7 +189,7 @@ export const SettingsDialog = ({ open, onClose }: SettingsProps) => {
                     fontWeight: 500,
                   }}
                 >
-                  <WifiOff /> You can't change the emoji style <br /> when you are offline
+                  <WifiOffRounded /> You can't change the emoji style <br /> when you are offline.
                 </MenuItem>
               )}
 
@@ -228,10 +230,10 @@ export const SettingsDialog = ({ open, onClose }: SettingsProps) => {
         <FormGroup>
           <FormLabel>App Settings</FormLabel>
           <FormControlLabel
-            sx={{ opacity: settings.enableCategories ? 1 : 0.8 }}
+            sx={{ opacity: userSettings.enableCategories ? 1 : 0.8 }}
             control={
               <Switch
-                checked={settings.enableCategories}
+                checked={userSettings.enableCategories}
                 onChange={handleSettingChange("enableCategories")}
               />
             }
@@ -240,19 +242,22 @@ export const SettingsDialog = ({ open, onClose }: SettingsProps) => {
         </FormGroup>
         <FormGroup>
           <FormControlLabel
-            sx={{ opacity: settings.enableGlow ? 1 : 0.8 }}
+            sx={{ opacity: userSettings.enableGlow ? 1 : 0.8 }}
             control={
-              <Switch checked={settings.enableGlow} onChange={handleSettingChange("enableGlow")} />
+              <Switch
+                checked={userSettings.enableGlow}
+                onChange={handleSettingChange("enableGlow")}
+              />
             }
             label="Enable Glow Effect"
           />
         </FormGroup>
         <FormGroup>
           <FormControlLabel
-            sx={{ opacity: settings.enableReadAloud ? 1 : 0.8 }}
+            sx={{ opacity: userSettings.enableReadAloud ? 1 : 0.8 }}
             control={
               <Switch
-                checked={settings.enableReadAloud}
+                checked={userSettings.enableReadAloud}
                 onChange={handleSettingChange("enableReadAloud")}
               />
             }
@@ -262,10 +267,10 @@ export const SettingsDialog = ({ open, onClose }: SettingsProps) => {
 
         <FormGroup>
           <FormControlLabel
-            sx={{ opacity: settings.doneToBottom ? 1 : 0.8 }}
+            sx={{ opacity: userSettings.doneToBottom ? 1 : 0.8 }}
             control={
               <Switch
-                checked={settings.doneToBottom}
+                checked={userSettings.doneToBottom}
                 onChange={handleSettingChange("doneToBottom")}
               />
             }
@@ -273,7 +278,7 @@ export const SettingsDialog = ({ open, onClose }: SettingsProps) => {
           />
         </FormGroup>
 
-        {user.settings[0].enableReadAloud && (
+        {settings[0].enableReadAloud && (
           <FormGroup>
             <FormControl>
               <FormLabel>Voice Settings</FormLabel>
@@ -281,7 +286,7 @@ export const SettingsDialog = ({ open, onClose }: SettingsProps) => {
               {availableVoices.length !== 0 ? (
                 <StyledSelect
                   // Set the value to the first voice in the availableVoices array
-                  value={user.settings[0].voice}
+                  value={settings[0].voice}
                   variant="outlined"
                   onChange={handleVoiceChange}
                   translate="no"
@@ -336,7 +341,6 @@ export const SettingsDialog = ({ open, onClose }: SettingsProps) => {
               ) : (
                 <NoVoiceStyles>
                   There are no voice styles available.
-                  {/* Try to refresh the page. */}
                   <Tooltip title="Refetch voices">
                     <IconButton
                       size="large"
@@ -355,13 +359,13 @@ export const SettingsDialog = ({ open, onClose }: SettingsProps) => {
               <div style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
                 <VolumeSlider spacing={2} direction="row" alignItems="center">
                   <Tooltip
-                    title={user.settings[0].voiceVolume ? "Mute" : "Unmute"}
+                    title={settings[0].voiceVolume ? "Mute" : "Unmute"}
                     onClick={handleMuteClick}
                   >
                     <IconButton sx={{ color: "black" }}>
-                      {user.settings[0].voiceVolume === 0 ? (
+                      {settings[0].voiceVolume === 0 ? (
                         <VolumeOff />
-                      ) : user.settings[0].voiceVolume <= 0.4 ? (
+                      ) : settings[0].voiceVolume <= 0.4 ? (
                         <VolumeDown />
                       ) : (
                         <VolumeUp />
@@ -379,7 +383,7 @@ export const SettingsDialog = ({ open, onClose }: SettingsProps) => {
                     step={0.01}
                     aria-label="Volume Slider"
                     valueLabelFormat={() => {
-                      const vol = Math.floor(user.settings[0].voiceVolume * 100);
+                      const vol = Math.floor(settings[0].voiceVolume * 100);
                       return vol === 0 ? "Muted" : vol + "%";
                     }}
                     valueLabelDisplay="auto"

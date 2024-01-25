@@ -139,7 +139,6 @@ export const EditTask = ({ open, task, onClose, onSave }: EditTaskProps) => {
           name="name"
           value={editedTask?.name || ""}
           onChange={handleInputChange}
-          fullWidth
           error={nameError || editedTask?.name === ""}
           helperText={
             editedTask?.name
@@ -156,7 +155,6 @@ export const EditTask = ({ open, task, onClose, onSave }: EditTaskProps) => {
           name="description"
           value={editedTask?.description || ""}
           onChange={handleInputChange}
-          fullWidth
           multiline
           rows={4}
           margin="normal"
@@ -176,7 +174,6 @@ export const EditTask = ({ open, task, onClose, onSave }: EditTaskProps) => {
           type="datetime-local"
           value={editedTask?.deadline || ""}
           onChange={handleInputChange}
-          fullWidth
           defaultValue=""
           InputLabelProps={{ shrink: true }}
           sx={{
@@ -258,11 +255,14 @@ const StyledInput = styled(TextField)`
   & .MuiInputBase-root {
     border-radius: 16px;
   }
+
   /* & .MuiFormHelperText-root {
     opacity: 0.9;
   } */
 `;
-
+StyledInput.defaultProps = {
+  fullWidth: true,
+};
 // const Label = styled(Typography)`
 //   margin-left: 8px;
 //   font-weight: 500;

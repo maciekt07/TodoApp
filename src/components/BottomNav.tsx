@@ -87,12 +87,7 @@ export const BottomNav = (): JSX.Element | null => {
           onClick={() => n("add")}
           showLabel={false}
           aria-label="Add"
-          icon={
-            <AddIcon
-              fontSize="large"
-              animate={tasks.length === 0 && value !== 2 ? true : undefined}
-            />
-          }
+          icon={<AddIcon fontSize="large" animate={tasks.length === 0 && value !== 2} />}
         />
         <NavigationButton
           onClick={() => n("import-export")}
@@ -109,7 +104,7 @@ export const BottomNav = (): JSX.Element | null => {
   );
 };
 
-const AddIcon = styled(AddRounded)<{ animate?: boolean }>`
+const AddIcon = styled(AddRounded)<{ animate: boolean }>`
   border: 2px solid ${ColorPalette.purple};
   background-color: #232e58;
   font-size: 38px;
@@ -153,9 +148,12 @@ const NavigationButton = styled(BottomNavigationAction)`
   }
   & .MuiBottomNavigationAction-label {
     font-size: 13px;
-    text-shadow: 0 0 12px #000000ce;
+
+    text-shadow: 0 0 12px #ffffff64;
+    /* text-shadow: 0 0 12px #000000ce; */
   }
   & .Mui-selected {
-    /* text-shadow: 0 0 5px ${ColorPalette.purple}; */
+    /* text-shadow: 0 0 12px #000000ce; */
+    text-shadow: 0 0 5px ${ColorPalette.purple + 45};
   }
 `;

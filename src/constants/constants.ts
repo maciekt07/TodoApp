@@ -1,17 +1,17 @@
 /**
  * Maximum length allowed for task names.
  */
-export const TASK_NAME_MAX_LENGTH = 30;
+export const TASK_NAME_MAX_LENGTH = 40;
 
 /**
  * Maximum length allowed for task descriptions.
  */
-export const DESCRIPTION_MAX_LENGTH = 350;
+export const DESCRIPTION_MAX_LENGTH = 300;
 
 /**
  * Shorter length for displaying descriptions with a "Show More" button.
  */
-export const DESCRIPTION_SHORT_LENGTH = 120;
+export const DESCRIPTION_SHORT_LENGTH = 100;
 
 /**
  * Maximum length allowed for user names.
