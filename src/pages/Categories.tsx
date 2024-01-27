@@ -513,7 +513,7 @@ export const AddCategoryButton = styled(Button)`
   padding: 18px 48px;
   font-size: 24px;
   background: ${ColorPalette.purple};
-  color: #ffffff;
+  color: ${getFontColorFromHex(ColorPalette.purple)};
   border-radius: 999px;
   font-weight: bold;
   cursor: pointer;

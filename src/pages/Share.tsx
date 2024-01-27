@@ -1,19 +1,20 @@
-import { Avatar, Dialog, DialogActions, DialogContent, DialogTitle } from "@mui/material";
-import { CategoryChip, DialogBtn } from "../styles";
+import { Dialog, DialogActions, DialogContent, DialogTitle } from "@mui/material";
+import { DialogBtn } from "../styles";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useContext, useEffect, useState } from "react";
 import { Task } from "../types/user";
 import toast from "react-hot-toast";
 import { calculateDateDifference, getFontColorFromHex } from "../utils";
-import { Emoji, EmojiStyle } from "emoji-picker-react";
+import { Emoji } from "emoji-picker-react";
 import { UserContext } from "../contexts/UserContext";
 import { PushPinRounded } from "@mui/icons-material";
 import { USER_NAME_MAX_LENGTH } from "../constants";
+import { CategoryBadge } from "../components";
 
 //FIXME: make everything type-safe
 const SharePage = () => {
   const { user, setUser } = useContext(UserContext);
-  const { emojisStyle, settings } = user;
+  const { emojisStyle } = user;
   const n = useNavigate();
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
@@ -130,7 +131,7 @@ const SharePage = () => {
             <DialogTitle>Recieved Task</DialogTitle>
             <DialogContent>
               <p>
-                <b>{userName}</b> shared you a task.
+                <b translate="no">{userName}</b> shared you a task.
               </p>
               <div
                 style={{
@@ -142,15 +143,19 @@ const SharePage = () => {
                   borderLeft: taskData.done ? "6px solid #40da25" : "none",
                 }}
               >
-                <h3 style={{ display: "flex", alignItems: "center", gap: "6px", margin: "12px 0" }}>
+                <h3
+                  translate="no"
+                  style={{ display: "flex", alignItems: "center", gap: "6px", margin: "12px 0" }}
+                >
                   {taskData.pinned && <PushPinRounded />}
                   {taskData?.emoji && <Emoji unified={taskData.emoji} emojiStyle={emojisStyle} />}
                   {taskData.name}
                 </h3>
-                <p>{taskData.description}</p>
+                <p translate="no">{taskData.description}</p>
                 {taskData.deadline && (
-                  <p>
-                    <b>Deadline:</b> {new Date(taskData.deadline).toLocaleDateString()} {" • "}
+                  <p translate="no">
+                    <b translate="yes">Deadline:</b>{" "}
+                    {new Date(taskData.deadline).toLocaleDateString()} {" • "}
                     {new Date(taskData.deadline).toLocaleTimeString()} {" • "}{" "}
                     {calculateDateDifference(new Date(taskData.deadline))}
                   </p>
@@ -169,36 +174,9 @@ const SharePage = () => {
                   >
                     {taskData.category.map((cat) => (
                       <div key={cat.id}>
-                        <CategoryChip
-                          backgroundclr={cat.color}
+                        <CategoryBadge
+                          category={cat}
                           borderclr={getFontColorFromHex(taskData.color)}
-                          glow={settings[0].enableGlow}
-                          label={cat.name}
-                          size="medium"
-                          avatar={
-                            cat.emoji ? (
-                              <Avatar
-                                alt={cat.name}
-                                sx={{
-                                  background: "transparent",
-                                  borderRadius: "0px",
-                                }}
-                              >
-                                {cat.emoji &&
-                                  (emojisStyle === EmojiStyle.NATIVE ? (
-                                    <div>
-                                      <Emoji
-                                        size={18}
-                                        unified={cat.emoji}
-                                        emojiStyle={EmojiStyle.NATIVE}
-                                      />
-                                    </div>
-                                  ) : (
-                                    <Emoji size={20} unified={cat.emoji} emojiStyle={emojisStyle} />
-                                  ))}
-                              </Avatar>
-                            ) : undefined
-                          }
                         />
                       </div>
                     ))}
@@ -224,7 +202,6 @@ const SharePage = () => {
           <>
             <DialogTitle>Something went wrong</DialogTitle>
             <DialogContent>
-              {/* TODO: */}
               <p>
                 Oops! Something went wrong while processing the shared task.{" "}
                 {errorDetails && (

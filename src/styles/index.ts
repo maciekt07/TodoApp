@@ -34,7 +34,6 @@ export {
   CategoriesListContainer,
   TasksContainer,
   Pinned,
-  CategoryChip,
   TimeLeft,
   TaskName,
   HighlightedText,

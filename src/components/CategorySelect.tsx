@@ -1,22 +1,15 @@
 import styled from "@emotion/styled";
 import { Category } from "../types/user";
-import {
-  Avatar,
-  Box,
-  FormControl,
-  FormLabel,
-  MenuItem,
-  Select,
-  SelectChangeEvent,
-} from "@mui/material";
-import { CategoryChip, ColorPalette } from "../styles";
-import { Emoji, EmojiStyle } from "emoji-picker-react";
+import { Box, FormControl, FormLabel, MenuItem, Select, SelectChangeEvent } from "@mui/material";
+import { ColorPalette } from "../styles";
+import { Emoji } from "emoji-picker-react";
 import { getFontColorFromHex } from "../utils";
 import { CSSProperties, useContext } from "react";
 import { MAX_CATEGORIES } from "../constants";
 import toast from "react-hot-toast";
 import { UserContext } from "../contexts/UserContext";
 import { ExpandMoreRounded } from "@mui/icons-material";
+import { CategoryBadge } from ".";
 
 interface CategorySelectProps {
   // variant?: "standard" | "outlined" | "filled";
@@ -82,37 +75,9 @@ export const CategorySelect: React.FC<CategorySelectProps> = ({
         )}
         sx={{ zIndex: 999 }}
         renderValue={() => (
-          <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
-            {selectedCategories.map((cat) => (
-              <CategoryChip
-                key={cat.id}
-                label={<span style={{ fontWeight: "bold" }}>{cat.name}</span>}
-                variant="outlined"
-                backgroundclr={cat.color}
-                glow={false}
-                translate="no"
-                sx={{ cursor: "pointer" }}
-                avatar={
-                  cat.emoji ? (
-                    <Avatar
-                      alt={cat.name}
-                      sx={{
-                        background: "transparent",
-                        borderRadius: "0px",
-                      }}
-                    >
-                      {cat.emoji &&
-                        (emojisStyle === EmojiStyle.NATIVE ? (
-                          <div>
-                            <Emoji size={20} unified={cat.emoji} emojiStyle={EmojiStyle.NATIVE} />
-                          </div>
-                        ) : (
-                          <Emoji size={24} unified={cat.emoji} emojiStyle={emojisStyle} />
-                        ))}
-                    </Avatar>
-                  ) : undefined
-                }
-              />
+          <Box sx={{ display: "flex", flexWrap: "wrap", gap: "4px 8px" }}>
+            {selectedCategories.map((category) => (
+              <CategoryBadge key={category.id} category={category} sx={{ cursor: "pointer" }} />
             ))}
           </Box>
         )}

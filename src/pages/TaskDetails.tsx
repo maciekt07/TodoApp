@@ -1,11 +1,10 @@
 import { useParams } from "react-router-dom";
-import { TopBar } from "../components";
+import { CategoryBadge, TopBar } from "../components";
 import styled from "@emotion/styled";
-import { CategoryChip, PathName } from "../styles";
-import { Avatar } from "@mui/material";
+import { PathName } from "../styles";
 import NotFound from "./NotFound";
 import { Clear, Done } from "@mui/icons-material";
-import { Emoji, EmojiStyle } from "emoji-picker-react";
+import { Emoji } from "emoji-picker-react";
 import { useContext, useEffect } from "react";
 import { UserContext } from "../contexts/UserContext";
 
@@ -101,37 +100,8 @@ const TaskDetails = () => {
               <TableHeader>Categories:</TableHeader>
               <TableData>
                 <CategoryContainer>
-                  {task?.category?.map((cat) => (
-                    <CategoryChip
-                      key={cat.id}
-                      backgroundclr={cat.color}
-                      glow={false}
-                      label={cat.name}
-                      avatar={
-                        cat.emoji ? (
-                          <Avatar
-                            alt={cat.name}
-                            sx={{
-                              background: "transparent",
-                              borderRadius: "0px",
-                            }}
-                          >
-                            {cat.emoji &&
-                              (emojisStyle === EmojiStyle.NATIVE ? (
-                                <div>
-                                  <Emoji
-                                    size={18}
-                                    unified={cat.emoji}
-                                    emojiStyle={EmojiStyle.NATIVE}
-                                  />
-                                </div>
-                              ) : (
-                                <Emoji size={20} unified={cat.emoji} emojiStyle={emojisStyle} />
-                              ))}
-                          </Avatar>
-                        ) : undefined
-                      }
-                    />
+                  {task?.category?.map((category) => (
+                    <CategoryBadge key={category.id} category={category} />
                   ))}
                 </CategoryContainer>
               </TableData>

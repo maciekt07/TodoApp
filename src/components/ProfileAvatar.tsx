@@ -299,6 +299,11 @@ export const ProfileAvatar = () => {
               style={{ textDecoration: "none", color: "inherit" }}
               href="https://github.com/maciekt07"
             >
+              {/* <Chip
+                avatar={<Avatar src="https://avatars.githubusercontent.com/u/85953204?v=4" />}
+                label="maciekt07"
+                sx={{ fontWeight: "bold" }}
+              /> */}
               maciekt07
             </a>
 
@@ -306,7 +311,7 @@ export const ProfileAvatar = () => {
           </CreditsContainer>
           <CreditsContainer>
             {lastUpdate && (
-              <Tooltip title={timeAgo(new Date(lastUpdate))} placement="left-start">
+              <Tooltip title={timeAgo(new Date(lastUpdate))}>
                 <span style={{ margin: 0 }}>
                   Last Update: {new Date(lastUpdate).toLocaleDateString()}
                   {" • "}
@@ -357,8 +362,7 @@ const Container = styled.div`
 const StyledSwipeableDrawer = styled(SwipeableDrawer)`
   & .MuiPaper-root {
     border-radius: 24px 0 0 0;
-    min-width: 301px;
-
+    min-width: 300px;
     box-shadow: none;
     padding: 4px;
     background: #f9fafc;

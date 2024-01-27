@@ -1,8 +1,8 @@
 import { Theme, createTheme } from "@mui/material";
 
-export const ColorPalette: { [key: string]: string } = {
+export const ColorPalette = {
   fontDark: "#101727",
-  fontLight: "#F5F5F5",
+  fontLight: "#f0f0f0",
   purple: "#b624ff",
   red: "#ff3131",
 };

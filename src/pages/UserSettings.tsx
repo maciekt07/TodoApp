@@ -138,6 +138,7 @@ const UserSettings = () => {
             {timeAgo(createdAt)}
           </CreatedAtDate>
         </Tooltip>
+
         <StyledInput
           label={name === null ? "Add Name" : "Change Name"}
           value={userName}

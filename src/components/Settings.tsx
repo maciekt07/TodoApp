@@ -38,7 +38,7 @@ interface SettingsProps {
   onClose: () => void;
 }
 
-export const SettingsDialog = ({ open, onClose }: SettingsProps) => {
+export const SettingsDialog: React.FC<SettingsProps> = ({ open, onClose }) => {
   const { user, setUser } = useContext(UserContext);
   const { settings, emojisStyle } = user;
   const [userSettings, setUserSettings] = useState<AppSettings>(settings[0]);
@@ -210,7 +210,7 @@ export const SettingsDialog = ({ open, onClose }: SettingsProps) => {
                   sx={{
                     padding: "12px 20px",
                     borderRadius: "12px",
-                    margin: "8px",
+                    margin: "0 8px",
                     display: "flex",
                     gap: "4px",
                   }}

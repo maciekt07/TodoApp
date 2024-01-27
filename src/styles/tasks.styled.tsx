@@ -1,6 +1,6 @@
 import styled from "@emotion/styled";
 import { ColorPalette, fadeIn } from ".";
-import { Button, Chip, TextField, css } from "@mui/material";
+import { Button, TextField, css } from "@mui/material";
 import { getFontColorFromHex } from "../utils";
 import { Alarm } from "@mui/icons-material";
 import { keyframes } from "@emotion/css";
@@ -102,6 +102,7 @@ export const ShowMoreBtn = styled(Button)<{ clr: string }>`
   font-weight: bolder;
   transition: 0.3s color;
   color: ${({ clr }) => getFontColorFromHex(clr)};
+  text-shadow: ${({ clr }) => `0 0 8px ${getFontColorFromHex(clr) + 45}`};
   text-transform: capitalize;
   border-radius: 6px;
   padding: 0 4px;
@@ -150,57 +151,6 @@ export const Pinned = styled.div`
   align-items: center;
   opacity: 0.8;
   font-size: 16px;
-`;
-
-interface CategoryChipProps {
-  backgroundclr: string;
-  borderclr?: string;
-  glow: boolean;
-  list?: boolean;
-}
-
-export const CategoryChip = styled(Chip)<CategoryChipProps>`
-  color: ${({ backgroundclr }) => getFontColorFromHex(backgroundclr)};
-  background-color: ${({ backgroundclr }) => backgroundclr};
-  box-shadow: ${(props) => (props.glow ? `0 0 8px 0 ${props.backgroundclr}` : "none")};
-  border: ${({ borderclr }) => (borderclr ? `2px solid ${borderclr}` : "none")};
-  font-weight: bold;
-  font-size: 14px;
-  margin: 6px 0 0 0;
-  padding: 8px;
-  transition: 0.3s all;
-  /* opacity: ${({ list }) => (list ? 1 : 0.9)}; */
-  animation: ${fadeIn} 0.5s ease-in;
-
-  &:hover {
-    background-color: ${(props) => props.backgroundclr};
-    box-shadow: ${(props) => props.list && `0 0 8px 0px ${props.backgroundclr}`};
-    opacity: ${({ list }) => list && 0.8};
-  }
-
-  &:focus-visible {
-    opacity: 0.8;
-    background-color: ${(props) => props.backgroundclr};
-  }
-  &:focus {
-    opacity: none;
-  }
-
-  & .MuiChip-deleteIcon {
-    color: ${(props) => getFontColorFromHex(props.backgroundclr)};
-    transition: 0.3s all;
-    width: 22px;
-    height: 22px;
-    stroke: transparent;
-    @media (max-width: 1024px) {
-      width: 26px;
-      height: 26px;
-    }
-    &:hover {
-      color: ${(props) => getFontColorFromHex(props.backgroundclr)};
-      opacity: 0.8;
-    }
-  }
 `;
 
 export const CategoriesListContainer = styled.div`

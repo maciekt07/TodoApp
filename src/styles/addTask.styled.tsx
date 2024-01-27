@@ -1,6 +1,7 @@
 import styled from "@emotion/styled";
 import { Button, TextField } from "@mui/material";
 import { ColorPalette } from ".";
+import { getFontColorFromHex } from "../utils";
 
 export const Container = styled.div`
   display: flex;
@@ -29,7 +30,7 @@ export const AddTaskButton = styled(Button)`
   padding: 16px 32px;
   font-size: 24px;
   background: ${ColorPalette.purple};
-  color: #ffffff;
+  color: ${getFontColorFromHex(ColorPalette.purple)};
   border-radius: 999px;
   font-weight: bold;
   cursor: pointer;

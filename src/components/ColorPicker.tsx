@@ -10,6 +10,7 @@ interface ColorPickerProps {
   onColorChange: (newColor: string) => void;
   width?: CSSProperties["width"];
   fontColor?: CSSProperties["color"];
+  label?: string;
 }
 
 // TODO: redesign color picker component
@@ -23,6 +24,7 @@ export const ColorPicker: React.FC<ColorPickerProps> = ({
   onColorChange,
   width,
   fontColor,
+  label,
 }) => {
   const [selectedColor, setSelectedColor] = useState<string>(color);
   const [accordionExpanded, setAccordionExpanded] = useState<boolean>(false);
@@ -98,7 +100,7 @@ export const ColorPicker: React.FC<ColorPickerProps> = ({
         >
           <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
             {!accordionExpanded && <AccordionPreview clr={selectedColor} />}
-            <span style={{ color: fontColor || ColorPalette.fontLight }}>Color</span>
+            <span style={{ color: fontColor || ColorPalette.fontLight }}>{label || "Color"}</span>
           </div>
         </AccordionSummary>
         <AccordionDetails>

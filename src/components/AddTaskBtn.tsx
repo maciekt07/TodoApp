@@ -7,6 +7,7 @@ import { Button, Tooltip } from "@mui/material";
 import { useResponsiveDisplay } from "../hooks/useResponsiveDisplay";
 import { useContext } from "react";
 import { UserContext } from "../contexts/UserContext";
+import { getFontColorFromHex } from "../utils";
 
 interface AddTaskBtnProps {
   animate: boolean;
@@ -48,7 +49,7 @@ const Btn = styled(Button)<{ animate: boolean; glow: boolean }>`
   height: 72px;
   border-radius: 100%;
   background-color: ${ColorPalette.purple};
-  color: white;
+  color: ${getFontColorFromHex(ColorPalette.purple)};
   right: 16vw;
   box-shadow: ${({ glow }) => (glow ? `0px 0px 32px -8px ${ColorPalette.purple}` : "none")};
   transition: background-color 0.3s, backdrop-filter 0.3s, box-shadow 0.3s;

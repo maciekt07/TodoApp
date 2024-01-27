@@ -14,7 +14,7 @@ const AddTask = () => {
   const { user, setUser } = useContext(UserContext);
   const [name, setName] = useStorageState<string>("", "name", "sessionStorage");
   const [emoji, setEmoji] = useStorageState<string | null>(null, "emoji", "sessionStorage");
-  const [color, setColor] = useStorageState<string>("#b624ff", "color", "sessionStorage");
+  const [color, setColor] = useStorageState<string>(ColorPalette.purple, "color", "sessionStorage");
   const [description, setDescription] = useStorageState<string>(
     "",
     "description",

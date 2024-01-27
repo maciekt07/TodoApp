@@ -6,3 +6,4 @@ export { formatDate } from "./formatDate";
 export { getTaskCompletionText } from "./getTaskCompletionText";
 export { exportTasksToJson } from "./exportTasksToJson";
 export { timeAgo } from "./timeAgo";
+export { iOS } from "./iOS";

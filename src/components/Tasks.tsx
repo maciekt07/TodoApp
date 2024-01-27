@@ -1,6 +1,6 @@
 import { Category, Task } from "../types/user";
 import { ReactNode, useContext, useEffect, useState } from "react";
-import { calculateDateDifference, formatDate, getFontColorFromHex } from "../utils";
+import { calculateDateDifference, formatDate, getFontColorFromHex, iOS } from "../utils";
 import {
   Cancel,
   Close,
@@ -14,7 +14,6 @@ import {
   Search,
 } from "@mui/icons-material";
 import {
-  Avatar,
   Dialog,
   DialogActions,
   DialogContent,
@@ -24,10 +23,9 @@ import {
   Tooltip,
 } from "@mui/material";
 import { Emoji, EmojiStyle } from "emoji-picker-react";
-import { EditTask } from ".";
+import { CategoryBadge, EditTask, TaskMenu } from ".";
 import {
   CategoriesListContainer,
-  CategoryChip,
   ColorPalette,
   DialogBtn,
   EmojiContainer,
@@ -46,21 +44,18 @@ import {
   TasksContainer,
   TimeLeft,
 } from "../styles";
-
-import { TaskMenu } from ".";
 import toast from "react-hot-toast";
 import { useResponsiveDisplay } from "../hooks/useResponsiveDisplay";
 import Marquee from "react-fast-marquee";
 import { UserContext } from "../contexts/UserContext";
 import { useStorageState } from "../hooks/useStorageState";
-import { iOS } from "../utils/iOS";
 import { DESCRIPTION_SHORT_LENGTH } from "../constants";
 
 /**
  * Component to display a list of tasks.
  */
 
-export const Tasks = (): JSX.Element => {
+export const Tasks: React.FC = () => {
   const { user, setUser } = useContext(UserContext);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
@@ -572,8 +567,11 @@ export const Tasks = (): JSX.Element => {
             // onMouseUp={handleMouseUp}
             >
               {categories?.map((cat) => (
-                <CategoryChip
-                  translate="no"
+                <CategoryBadge
+                  key={cat.id}
+                  category={cat}
+                  emojiSizes={[20, 24]}
+                  list
                   label={
                     <div>
                       <span style={{ fontWeight: "bold" }}>{cat.name}</span>
@@ -588,15 +586,11 @@ export const Tasks = (): JSX.Element => {
                       </span>
                     </div>
                   }
-                  glow={user.settings[0].enableGlow}
-                  backgroundclr={cat.color}
                   onClick={() =>
                     selectedCatId !== cat.id
                       ? setSelectedCatId(cat.id)
                       : setSelectedCatId(undefined)
                   }
-                  key={cat.id}
-                  list
                   onDelete={
                     selectedCatId === cat.id ? () => setSelectedCatId(undefined) : undefined
                   }
@@ -609,26 +603,6 @@ export const Tasks = (): JSX.Element => {
                     padding: "20px 14px",
                     fontSize: "16px",
                   }}
-                  avatar={
-                    cat.emoji ? (
-                      <Avatar
-                        alt={cat.name}
-                        sx={{
-                          background: "transparent",
-                          borderRadius: "0px",
-                        }}
-                      >
-                        {cat.emoji &&
-                          (user.emojisStyle === EmojiStyle.NATIVE ? (
-                            <div>
-                              <Emoji size={20} unified={cat.emoji} emojiStyle={EmojiStyle.NATIVE} />
-                            </div>
-                          ) : (
-                            <Emoji size={24} unified={cat.emoji} emojiStyle={user.emojisStyle} />
-                          ))}
-                      </Avatar>
-                    ) : undefined
-                  }
                 />
               ))}
             </CategoriesListContainer>
@@ -733,6 +707,7 @@ export const Tasks = (): JSX.Element => {
                 {task.sharedBy && (
                   <div style={{ opacity: 0.8, display: "flex", alignItems: "center", gap: "4px" }}>
                     <Link /> Shared by {task.sharedBy}
+                    {/* <Chip avatar={<Avatar>{task.sharedBy[0]}</Avatar>} label={task.sharedBy} /> */}
                   </div>
                 )}
                 <div
@@ -749,40 +724,9 @@ export const Tasks = (): JSX.Element => {
                     user.settings[0].enableCategories &&
                     task.category.map((category) => (
                       <div key={category.id}>
-                        <CategoryChip
-                          backgroundclr={category.color}
+                        <CategoryBadge
+                          category={category}
                           borderclr={getFontColorFromHex(task.color)}
-                          glow={user.settings[0].enableGlow}
-                          label={category.name}
-                          size="medium"
-                          avatar={
-                            category.emoji ? (
-                              <Avatar
-                                alt={category.name}
-                                sx={{
-                                  background: "transparent",
-                                  borderRadius: "0px",
-                                }}
-                              >
-                                {category.emoji &&
-                                  (user.emojisStyle === EmojiStyle.NATIVE ? (
-                                    <div>
-                                      <Emoji
-                                        size={18}
-                                        unified={category.emoji}
-                                        emojiStyle={EmojiStyle.NATIVE}
-                                      />
-                                    </div>
-                                  ) : (
-                                    <Emoji
-                                      size={20}
-                                      unified={category.emoji}
-                                      emojiStyle={user.emojisStyle}
-                                    />
-                                  ))}
-                              </Avatar>
-                            ) : undefined
-                          }
                         />
                       </div>
                     ))}
@@ -796,7 +740,7 @@ export const Tasks = (): JSX.Element => {
                 onClick={(event) => handleClick(event, task.id)}
                 sx={{
                   color: getFontColorFromHex(task.color),
-                  margin: "4px",
+                  // margin: "4px",
                 }}
               >
                 <MoreVert />

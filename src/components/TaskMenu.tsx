@@ -75,7 +75,7 @@ export const TaskMenu = ({
     const taskId = selectedTask?.id.toString().replace(".", "");
     n(`/task/${taskId}`);
   };
-  //TODO: make links shorter
+  //TODO: add bitly api
   const generateShareableLink = (taskId: number | null, userName: string) => {
     const task = tasks.find((task) => task.id === taskId);
     if (task) {
