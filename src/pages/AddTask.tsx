@@ -163,6 +163,7 @@ const AddTask = () => {
           onChange={handleDeadlineChange}
           defaultValue=""
           focused
+          sx={{ colorScheme: "dark" }}
           InputProps={{
             startAdornment:
               deadline && deadline !== "" ? (

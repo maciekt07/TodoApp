@@ -4,7 +4,7 @@ import { calculateDateDifference, formatDate, getFontColorFromHex, iOS } from ".
 import {
   Cancel,
   Close,
-  Done,
+  DoneRounded,
   Link,
   MoreVert,
   Pause,
@@ -570,7 +570,7 @@ export const Tasks: React.FC = () => {
                 <CategoryBadge
                   key={cat.id}
                   category={cat}
-                  emojiSizes={[20, 24]}
+                  emojiSizes={[24, 20]}
                   list
                   label={
                     <div>
@@ -634,10 +634,11 @@ export const Tasks: React.FC = () => {
               done={task.done}
               blur={selectedTaskId !== task.id && open && !isMobile}
             >
+              {/* <Radio sx={{ m: "0px", mr: "8px" }} /> */}
               {task.emoji || task.done ? (
                 <EmojiContainer clr={getFontColorFromHex(task.color)}>
                   {task.done ? (
-                    <Done fontSize="large" />
+                    <DoneRounded fontSize="large" />
                   ) : user.emojisStyle === EmojiStyle.NATIVE ? (
                     <div>
                       <Emoji
@@ -707,7 +708,11 @@ export const Tasks: React.FC = () => {
                 {task.sharedBy && (
                   <div style={{ opacity: 0.8, display: "flex", alignItems: "center", gap: "4px" }}>
                     <Link /> Shared by {task.sharedBy}
-                    {/* <Chip avatar={<Avatar>{task.sharedBy[0]}</Avatar>} label={task.sharedBy} /> */}
+                    {/* <Chip
+                      avatar={<Avatar>{task.sharedBy[0]}</Avatar>}
+                      label={task.sharedBy}
+                      sx={{ background: "white" }}
+                    /> */}
                   </div>
                 )}
                 <div

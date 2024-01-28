@@ -77,7 +77,12 @@ export const CategorySelect: React.FC<CategorySelectProps> = ({
         renderValue={() => (
           <Box sx={{ display: "flex", flexWrap: "wrap", gap: "4px 8px" }}>
             {selectedCategories.map((category) => (
-              <CategoryBadge key={category.id} category={category} sx={{ cursor: "pointer" }} />
+              <CategoryBadge
+                key={category.id}
+                category={category}
+                sx={{ cursor: "pointer" }}
+                glow={false}
+              />
             ))}
           </Box>
         )}

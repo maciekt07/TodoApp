@@ -1,3 +1,9 @@
+/**
+ * Converts a given date to a human-readable relative time string.
+ *
+ * @param {Date} date - The date to be converted.
+ * @returns {string} A string representing the relative time using `Intl` format (e.g., "2 days ago").
+ */
 export const timeAgo = (date: Date): string => {
   // Get the current date and time
   const now = new Date();

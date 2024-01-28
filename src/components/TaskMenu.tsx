@@ -52,7 +52,7 @@ interface TaskMenuProps {
   handleReadAloud: () => void;
 }
 
-export const TaskMenu = ({
+export const TaskMenu: React.FC<TaskMenuProps> = ({
   selectedTaskId,
   setEditModalOpen,
   anchorEl,
@@ -62,7 +62,7 @@ export const TaskMenu = ({
   handleDuplicateTask,
   handleCloseMoreMenu,
   handleReadAloud,
-}: TaskMenuProps) => {
+}) => {
   const { user } = useContext(UserContext);
   const { tasks, name, settings, emojisStyle } = user;
   const [showShareDialog, setShowShareDialog] = useState<boolean>(false);
@@ -76,7 +76,7 @@ export const TaskMenu = ({
     n(`/task/${taskId}`);
   };
   //TODO: add bitly api
-  const generateShareableLink = (taskId: number | null, userName: string) => {
+  const generateShareableLink = (taskId: number | null, userName: string): string => {
     const task = tasks.find((task) => task.id === taskId);
     if (task) {
       const encodedTask = encodeURIComponent(JSON.stringify(task));
@@ -143,6 +143,11 @@ export const TaskMenu = ({
         <PushPinRounded /> &nbsp;{" "}
         {tasks.find((task) => task.id === selectedTaskId)?.pinned ? "Unpin" : "Pin"}
       </StyledMenuItem>
+
+      {/* <StyledMenuItem>
+        <RadioButtonChecked /> &nbsp; Select
+      </StyledMenuItem> */}
+
       <StyledMenuItem onClick={redirectToTaskDetails}>
         <LaunchRounded /> &nbsp; Task details
       </StyledMenuItem>

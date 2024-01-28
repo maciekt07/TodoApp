@@ -7,7 +7,7 @@ interface TopBarProps {
   title: string;
 }
 
-export const TopBar = ({ title }: TopBarProps) => {
+export const TopBar: React.FC<TopBarProps> = ({ title }) => {
   const n = useNavigate();
   const handleBackClick = () => n("/");
   return (

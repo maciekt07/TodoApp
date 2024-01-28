@@ -22,7 +22,6 @@ import {
   GetAppRounded,
   GitHub,
   Logout,
-  PersonRounded,
   SettingsRounded,
   StarRounded,
   TaskAltRounded,
@@ -176,14 +175,6 @@ export const ProfileAvatar = () => {
         >
           <AddRounded /> &nbsp; Add Task
         </StyledMenuItem>
-        <StyledMenuItem
-          onClick={() => {
-            n("/user");
-            handleClose();
-          }}
-        >
-          <PersonRounded /> &nbsp; Profile
-        </StyledMenuItem>
 
         {user.settings[0].enableCategories !== undefined && user.settings[0].enableCategories && (
           <StyledMenuItem
@@ -203,7 +194,14 @@ export const ProfileAvatar = () => {
         >
           <GetAppRounded /> &nbsp; Import/Export
         </StyledMenuItem>
-
+        {/* <StyledMenuItem
+          onClick={() => {
+            n("/user");
+            handleClose();
+          }}
+        >
+          <PersonRounded /> &nbsp; Profile
+        </StyledMenuItem> */}
         <Divider sx={{ margin: "0 8px" }} />
         <StyledMenuItem
           translate="no"
@@ -291,7 +289,8 @@ export const ProfileAvatar = () => {
           <Divider sx={{ margin: "0 8px" }} />
           <CreditsContainer translate="no">
             <span style={{ display: "flex", alignItems: "center" }}>
-              Made with &nbsp; <Favorite sx={{ fontSize: "16px" }} />
+              Made with &nbsp;
+              <Favorite sx={{ fontSize: "16px" }} />
             </span>
             <span style={{ marginLeft: "6px", marginRight: "4px" }}>by</span>
 
@@ -300,9 +299,14 @@ export const ProfileAvatar = () => {
               href="https://github.com/maciekt07"
             >
               {/* <Chip
-                avatar={<Avatar src="https://avatars.githubusercontent.com/u/85953204?v=4" />}
+                avatar={
+                  <Avatar
+                    sx={{ opacity: "1 !important" }}
+                    src="https://avatars.githubusercontent.com/u/85953204?v=4"
+                  />
+                }
                 label="maciekt07"
-                sx={{ fontWeight: "bold" }}
+                sx={{ fontWeight: "bold", opacity: "1 !important" }}
               /> */}
               maciekt07
             </a>
@@ -429,8 +433,8 @@ const Logo = styled.img`
 const CreditsContainer = styled.div`
   font-size: 12px;
   margin: 0;
-  color: #101727;
-  opacity: 0.8;
+  color: #101727c0;
+
   text-align: center;
   display: flex;
   align-items: center;

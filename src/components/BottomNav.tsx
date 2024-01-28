@@ -5,7 +5,7 @@ import {
   PersonRounded,
   TaskAlt,
 } from "@mui/icons-material";
-import { BottomNavigation, BottomNavigationAction, Box, css, styled } from "@mui/material";
+import { Badge, BottomNavigation, BottomNavigationAction, Box, css, styled } from "@mui/material";
 import { ColorPalette, pulseAnimation, slideInBottom } from "../styles";
 import { useContext, useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -75,7 +75,18 @@ export const BottomNav = (): JSX.Element | null => {
         <NavigationButton
           onClick={() => n("/")}
           label="Tasks"
-          icon={<TaskAlt sx={{ fontSize: smallIconSize }} />}
+          icon={
+            <Badge
+              color="primary"
+              sx={{ fontWeight: "bolder" }}
+              badgeContent={
+                value !== 0 ? user.tasks.filter((task) => !task.done).length : undefined
+              }
+              max={99}
+            >
+              <TaskAlt sx={{ fontSize: smallIconSize }} />
+            </Badge>
+          }
         />
         <NavigationButton
           onClick={() => n("/categories")}

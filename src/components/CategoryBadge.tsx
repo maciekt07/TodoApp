@@ -8,6 +8,9 @@ import { Category } from "../types/user";
 
 interface CategoryBadgeProps extends ChipProps, StyledBadgeProps {
   category: Category;
+  /**
+   * Array representing emoji sizes: [normal, native]
+   */
   emojiSizes?: [number, number];
 }
 /**
@@ -39,14 +42,14 @@ export const CategoryBadge: React.FC<CategoryBadgeProps> = ({ category, emojiSiz
                 (emojisStyle === EmojiStyle.NATIVE ? (
                   <div>
                     <Emoji
-                      size={emojiSizes ? emojiSizes[0] : 18}
+                      size={emojiSizes ? emojiSizes[1] : 18}
                       unified={category.emoji}
                       emojiStyle={EmojiStyle.NATIVE}
                     />
                   </div>
                 ) : (
                   <Emoji
-                    size={emojiSizes ? emojiSizes[1] : 20}
+                    size={emojiSizes ? emojiSizes[0] : 20}
                     unified={category.emoji}
                     emojiStyle={emojisStyle}
                   />

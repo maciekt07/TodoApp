@@ -106,7 +106,7 @@ export const SettingsDialog: React.FC<SettingsProps> = ({ open, onClose }) => {
     }));
   };
 
-  const handleVoiceChange = (event: SelectChangeEvent<unknown>) => {
+  const handleVoiceChange = (event: SelectChangeEvent<unknown> | any) => {
     // Handle the selected voice
     const selectedVoice = availableVoices.find((voice) => voice.name === event.target.value);
     if (selectedVoice) {
@@ -177,6 +177,7 @@ export const SettingsDialog: React.FC<SettingsProps> = ({ open, onClose }) => {
         <FormGroup>
           <FormControl>
             <FormLabel>Emoji Settings</FormLabel>
+
             <StyledSelect value={emojisStyle} onChange={handleEmojiStyleChange} translate="no">
               {/* Show a disabled menu item when offline, indicating that the style can't be changed */}
               {!isOnline && (
@@ -284,22 +285,23 @@ export const SettingsDialog: React.FC<SettingsProps> = ({ open, onClose }) => {
               <FormLabel>Voice Settings</FormLabel>
 
               {availableVoices.length !== 0 ? (
-                <StyledSelect
-                  // Set the value to the first voice in the availableVoices array
-                  value={settings[0].voice}
-                  variant="outlined"
-                  onChange={handleVoiceChange}
-                  translate="no"
-                  MenuProps={{
-                    PaperProps: {
-                      style: {
-                        maxHeight: 500,
-                        padding: "2px 6px",
+                <>
+                  <StyledSelect
+                    // Set the value to the first voice in the availableVoices array
+                    value={settings[0].voice}
+                    variant="outlined"
+                    onChange={handleVoiceChange}
+                    translate="no"
+                    MenuProps={{
+                      PaperProps: {
+                        style: {
+                          maxHeight: 500,
+                          padding: "2px 6px",
+                        },
                       },
-                    },
-                  }}
-                >
-                  {/* <MenuItem
+                    }}
+                  >
+                    {/* <MenuItem
                     disabled
                     sx={{
                       opacity: "1 !important",
@@ -313,31 +315,42 @@ export const SettingsDialog: React.FC<SettingsProps> = ({ open, onClose }) => {
                   >
                     <Switch checked /> Show only local language voices
                   </MenuItem> */}
-                  {/* Map over available voices to create MenuItem components */}
-                  {availableVoices.map((voice) => (
-                    <MenuItem
-                      key={voice.name}
-                      value={voice.name}
-                      translate="no"
-                      sx={{
-                        padding: "10px",
-                        borderRadius: "8px",
-                      }}
-                    >
-                      {voice.name} &nbsp;
-                      <span style={{ fontWeight: 500 }}>
-                        {/* Display the region of the voice's language using Intl.DisplayNames */}
-                        {new Intl.DisplayNames([voice.lang], { type: "region" }).of(
-                          voice.lang.split("-")[1]
-                        )}
-                      </span>
-                      &nbsp;
-                      {/* <span style={{ fontSize: "14px", fontWeight: 300 }}> ({voice.lang})</span>
-                      &nbsp; */}
-                      {voice.default && !iOS && <span style={{ fontWeight: 600 }}>Default</span>}
-                    </MenuItem>
-                  ))}
-                </StyledSelect>
+                    {/* Map over available voices to create MenuItem components */}
+                    {availableVoices.map((voice) => (
+                      <MenuItem
+                        key={voice.name}
+                        value={voice.name}
+                        translate="no"
+                        sx={{
+                          padding: "10px",
+                          borderRadius: "8px",
+                        }}
+                      >
+                        {voice.name} &nbsp;
+                        <span style={{ fontWeight: 500 }}>
+                          {/* Display the region of the voice's language using Intl.DisplayNames */}
+                          {new Intl.DisplayNames([voice.lang], { type: "region" }).of(
+                            voice.lang.split("-")[1]
+                          )}
+                        </span>
+                        &nbsp;
+                        {voice.default && !iOS && <span style={{ fontWeight: 600 }}>Default</span>}
+                      </MenuItem>
+                    ))}
+                  </StyledSelect>
+
+                  {/* <StyledNativeSelect variant="outlined" onChange={handleVoiceChange}>
+                      {availableVoices.map((voice) => (
+                        <option key={voice.name} value={voice.name}>
+                          {voice.name} (
+                          {new Intl.DisplayNames([voice.lang], { type: "region" }).of(
+                            voice.lang.split("-")[1]
+                          )}
+                          )
+                        </option>
+                      ))}
+                    </StyledNativeSelect> */}
+                </>
               ) : (
                 <NoVoiceStyles>
                   There are no voice styles available.
