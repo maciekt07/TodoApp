@@ -126,7 +126,7 @@ const AddTask = () => {
           focused
           required
           error={nameError !== ""}
-          helperTxtColor={nameError && ColorPalette.red}
+          helpercolor={nameError && ColorPalette.red}
           helperText={
             name === ""
               ? undefined
@@ -145,7 +145,7 @@ const AddTask = () => {
           rows={4}
           focused
           error={descriptionError !== ""}
-          helperTxtColor={descriptionError && ColorPalette.red}
+          helpercolor={descriptionError && ColorPalette.red}
           helperText={
             description === ""
               ? undefined

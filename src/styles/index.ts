@@ -40,4 +40,6 @@ export {
   SearchInput,
   RingAlarm,
   ShowMoreBtn,
+  StyledRadio,
+  SelectedTasksContainer,
 } from "./tasks.styled";

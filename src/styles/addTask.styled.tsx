@@ -49,7 +49,7 @@ export const AddTaskButton = styled(Button)`
     color: white;
   }
 `;
-export const StyledInput = styled(TextField)<{ helperTxtColor?: string }>`
+export const StyledInput = styled(TextField)<{ helpercolor?: string }>`
   margin: 12px;
   & .MuiOutlinedInput-root {
     border-radius: 16px;
@@ -58,7 +58,7 @@ export const StyledInput = styled(TextField)<{ helperTxtColor?: string }>`
     color: white;
   }
   .MuiFormHelperText-root {
-    color: ${({ helperTxtColor }) => helperTxtColor || "white"};
+    color: ${({ helpercolor }) => helpercolor || "white"};
     opacity: 0.8;
   }
 `;

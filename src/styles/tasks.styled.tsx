@@ -1,6 +1,6 @@
 import styled from "@emotion/styled";
 import { ColorPalette, fadeIn } from ".";
-import { Button, TextField, css } from "@mui/material";
+import { Button, Checkbox, TextField, css } from "@mui/material";
 import { getFontColorFromHex } from "../utils";
 import { Alarm } from "@mui/icons-material";
 import { keyframes } from "@emotion/css";
@@ -19,7 +19,7 @@ export const TaskComponent = styled.div<TaskComponentProps>`
   margin-top: 12px;
   transition: 0.3s all;
   background-color: ${({ backgroundColor }) => backgroundColor};
-  opacity: ${({ done }) => (done ? 0.7 : 1)};
+  opacity: ${({ done }) => (done ? 0.8 : 1)};
   color: ${({ clr }) => clr};
   border-left: ${({ done }) => (done ? "8px solid #00ff1e" : "1px solid transparent")};
   box-shadow: ${(props) =>
@@ -151,6 +151,26 @@ export const Pinned = styled.div`
   align-items: center;
   opacity: 0.8;
   font-size: 16px;
+`;
+
+export const SelectedTasksContainer = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 8px 0;
+  background: #ffffff29;
+  padding: 16px 20px;
+  border-radius: 16px;
+`;
+
+export const StyledRadio = styled(Checkbox)<{ clr: string }>`
+  margin-left: -8px;
+  margin-right: 4px;
+  color: ${({ clr }) => clr} !important;
+  animation: ${fadeIn} 0.5s ease-in;
+  &.Mui-checked {
+    color: ${({ clr }) => clr} !important;
+  }
 `;
 
 export const CategoriesListContainer = styled.div`

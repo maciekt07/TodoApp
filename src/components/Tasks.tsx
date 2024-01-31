@@ -2,15 +2,16 @@ import { Category, Task } from "../types/user";
 import { ReactNode, useContext, useEffect, useState } from "react";
 import { calculateDateDifference, formatDate, getFontColorFromHex, iOS } from "../utils";
 import {
-  Cancel,
+  CancelRounded,
   Close,
+  Delete,
+  DoneAll,
   DoneRounded,
   Link,
   MoreVert,
-  Pause,
-  PlayArrow,
   PushPinRounded,
-  RecordVoiceOver,
+  RadioButtonChecked,
+  RadioButtonUnchecked,
   Search,
 } from "@mui/icons-material";
 import {
@@ -34,7 +35,9 @@ import {
   Pinned,
   RingAlarm,
   SearchInput,
+  SelectedTasksContainer,
   ShowMoreBtn,
+  StyledRadio,
   TaskComponent,
   TaskDate,
   TaskDescription,
@@ -46,10 +49,10 @@ import {
 } from "../styles";
 import toast from "react-hot-toast";
 import { useResponsiveDisplay } from "../hooks/useResponsiveDisplay";
-import Marquee from "react-fast-marquee";
 import { UserContext } from "../contexts/UserContext";
 import { useStorageState } from "../hooks/useStorageState";
 import { DESCRIPTION_SHORT_LENGTH } from "../constants";
+import { useCtrlS } from "../hooks/useCtrlS";
 
 /**
  * Component to display a list of tasks.
@@ -61,11 +64,20 @@ export const Tasks: React.FC = () => {
   const open = Boolean(anchorEl);
   const [selectedTaskId, setSelectedTaskId] = useState<number | null>(null);
   const [search, setSearch] = useStorageState<string>("", "search", "sessionStorage");
+  //FIXME: use storage state for set
   const [expandedTasks, setExpandedTasks] = useState<Set<number>>(new Set());
   const [deleteDialogOpen, setDeleteDialogOpen] = useState<boolean>(false);
   const [editModalOpen, setEditModalOpen] = useState<boolean>(false);
 
+  const [selectedTasks, setSelectedTasks] = useStorageState<number[]>(
+    [],
+    "selectedTasks",
+    "sessionStorage"
+  );
+
   const isMobile = useResponsiveDisplay();
+
+  useCtrlS(user.tasks);
 
   // Handler for clicking the more options button in a task
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>, taskId: number) => {
@@ -126,55 +138,6 @@ export const Tasks: React.FC = () => {
     }
 
     return [...pinnedTasks, ...unpinnedTasks];
-  };
-
-  const handleMarkAsDone = () => {
-    // Toggles the "done" property of the selected task
-    if (selectedTaskId) {
-      const updatedTasks = user.tasks.map((task) => {
-        if (task.id === selectedTaskId) {
-          return { ...task, done: !task.done };
-        }
-        return task;
-      });
-      setUser((prevUser) => ({
-        ...prevUser,
-        tasks: updatedTasks,
-      }));
-
-      const allTasksDone = updatedTasks.every((task) => task.done);
-
-      if (allTasksDone) {
-        toast.success(
-          (t) => (
-            <div onClick={() => toast.dismiss(t.id)}>
-              <b>All tasks done</b>
-              <br />
-              <span>You've checked off all your todos. Well done!</span>
-            </div>
-          ),
-          {
-            icon: <Emoji unified="1f60e" emojiStyle={user.emojisStyle} />,
-          }
-        );
-      }
-    }
-  };
-
-  const handlePin = () => {
-    // Toggles the "pinned" property of the selected task
-    if (selectedTaskId) {
-      const updatedTasks = user.tasks.map((task) => {
-        if (task.id === selectedTaskId) {
-          return { ...task, pinned: !task.pinned };
-        }
-        return task;
-      });
-      setUser((prevUser) => ({
-        ...prevUser,
-        tasks: updatedTasks,
-      }));
-    }
   };
 
   const handleDeleteTask = () => {
@@ -238,172 +201,42 @@ export const Tasks: React.FC = () => {
       tasks: updatedTasks,
     }));
   };
-  const handleDuplicateTask = () => {
-    if (selectedTaskId) {
-      // Close the menu
-      setAnchorEl(null);
-      // Find the selected task
-      const selectedTask = user.tasks.find((task) => task.id === selectedTaskId);
-      if (selectedTask) {
-        // Create a duplicated task with a new ID and current date
-        const duplicatedTask: Task = {
-          ...selectedTask,
-          id: new Date().getTime() + Math.floor(Math.random() * 1000),
-          date: new Date(),
-          lastSave: undefined,
-        };
-        // Add the duplicated task to the existing tasks
-        const updatedTasks = [...user.tasks, duplicatedTask];
-        // Update the user object with the updated tasks
-        setUser((prevUser) => ({
-          ...prevUser,
-          tasks: updatedTasks,
-        }));
+
+  const handleSelectTask = (taskId: number) => {
+    setAnchorEl(null);
+    setSelectedTasks((prevSelectedTaskIds) => {
+      if (prevSelectedTaskIds.includes(taskId)) {
+        // Deselect the task if already selected
+        return prevSelectedTaskIds.filter((id) => id !== taskId);
+      } else {
+        // Select the task if not selected
+        return [...prevSelectedTaskIds, taskId];
       }
-    }
+    });
   };
 
-  const handleReadAloud = () => {
-    const selectedTask = user.tasks.find((task) => task.id === selectedTaskId);
-    const voices = window.speechSynthesis.getVoices();
-    const voiceName = voices.find((voice) => voice.name === user.settings[0].voice);
-    const voiceVolume = user.settings[0].voiceVolume;
-    const taskName = selectedTask?.name || "";
-    const taskDescription = selectedTask?.description || "";
-    const taskDate = formatDate(new Date(selectedTask?.date || ""));
-    const taskDeadline = selectedTask?.deadline
-      ? ". Task Deadline: " + calculateDateDifference(new Date(selectedTask.deadline) || "")
-      : "";
+  const handleMarkSelectedAsDone = () => {
+    setUser((prevUser) => ({
+      ...prevUser,
+      tasks: prevUser.tasks.map((task) => {
+        if (selectedTasks.includes(task.id)) {
+          // Mark the task as done if selected
+          return { ...task, done: true };
+        }
+        return task;
+      }),
+    }));
+    // Clear the selected task IDs after the operation
+    setSelectedTasks([]);
+  };
 
-    const textToRead = `${taskName}. ${taskDescription}. Date: ${taskDate}${taskDeadline}`;
-
-    const utterThis: SpeechSynthesisUtterance = new SpeechSynthesisUtterance(textToRead);
-
-    if (voiceName) {
-      utterThis.voice = voiceName;
-    }
-
-    if (voiceVolume) {
-      utterThis.volume = voiceVolume;
-    }
-
-    setAnchorEl(null);
-    const pauseSpeech = () => {
-      window.speechSynthesis.pause();
-    };
-
-    const resumeSpeech = () => {
-      window.speechSynthesis.resume();
-    };
-
-    const cancelSpeech = () => {
-      window.speechSynthesis.cancel();
-      toast.dismiss(SpeechToastId);
-      setAnchorEl(null);
-    };
-
-    const SpeechToastId = toast(
-      () => {
-        const [isPlaying, setIsPlaying] = useState<boolean>(true);
-
-        return (
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              flexDirection: "column",
-              touchAction: "none",
-            }}
-          >
-            {/* FIXME: */}
-            <span
-              style={{
-                display: "inline-flex",
-                alignItems: "center",
-                fontWeight: 600,
-              }}
-            >
-              <RecordVoiceOver /> &nbsp; Speaking: {selectedTask?.name}
-            </span>
-
-            <span style={{ marginTop: "10px", fontSize: "16px" }}>
-              Voice: {utterThis.voice?.name || "Default"}
-            </span>
-
-            <div>
-              {/* FIXME: */}
-              <Marquee
-                delay={0.6}
-                play={isPlaying}
-                // gradient
-                // gradientColor="#14143166"
-                // style={{
-                //   borderRadius: "8px",
-                // }}
-              >
-                <p style={{ margin: "6px 0" }}>{utterThis.text} &nbsp;</p>
-              </Marquee>
-            </div>
-            <div
-              style={{
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-                marginTop: "16px",
-                gap: "8px",
-              }}
-            >
-              {isPlaying ? (
-                <IconButton
-                  sx={{ color: "white" }}
-                  onClick={() => {
-                    pauseSpeech();
-                    setIsPlaying(!isPlaying);
-                  }}
-                >
-                  <Pause fontSize="large" />
-                </IconButton>
-              ) : (
-                <IconButton
-                  sx={{ color: "white" }}
-                  onClick={() => {
-                    resumeSpeech();
-                    setIsPlaying(!isPlaying);
-                  }}
-                >
-                  <PlayArrow fontSize="large" />
-                </IconButton>
-              )}
-
-              <IconButton sx={{ color: "white" }} onClick={cancelSpeech}>
-                <Cancel fontSize="large" />
-              </IconButton>
-            </div>
-          </div>
-        );
-      },
-      {
-        duration: 999999999,
-        style: {
-          border: "1px solid #1b1d4eb7",
-          WebkitBackdropFilter: "blur(10px)",
-          backdropFilter: "blur(10px)",
-        },
-      }
-    );
-
-    // Set up event listener for the end of speech
-    utterThis.onend = () => {
-      // Close the menu
-      setAnchorEl(null);
-      // Hide the toast when speech ends
-      toast.dismiss(SpeechToastId);
-    };
-    console.log(utterThis);
-    if (voiceVolume > 0) {
-      window.speechSynthesis.speak(utterThis);
-    }
+  const handleDeleteSelected = () => {
+    setUser((prevUser) => ({
+      ...prevUser,
+      tasks: prevUser.tasks.filter((task) => !selectedTasks.includes(task.id)),
+    }));
+    // Clear the selected task IDs after the operation
+    setSelectedTasks([]);
   };
 
   const [categories, setCategories] = useState<Category[] | undefined>(undefined);
@@ -513,14 +346,12 @@ export const Tasks: React.FC = () => {
     <>
       <TaskMenu
         selectedTaskId={selectedTaskId}
+        selectedTasks={selectedTasks}
         setEditModalOpen={setEditModalOpen}
         anchorEl={anchorEl}
-        handleMarkAsDone={handleMarkAsDone}
-        handlePin={handlePin}
         handleDeleteTask={handleDeleteTask}
-        handleDuplicateTask={handleDuplicateTask}
         handleCloseMoreMenu={handleCloseMoreMenu}
-        handleReadAloud={handleReadAloud}
+        handleSelectTask={handleSelectTask}
       />
       <TasksContainer>
         {user.tasks.length > 0 && (
@@ -560,12 +391,7 @@ export const Tasks: React.FC = () => {
         {categories !== undefined &&
           categories?.length > 0 &&
           user.settings[0].enableCategories && (
-            <CategoriesListContainer
-            // ref={scrollContainerRef}
-            // onMouseDown={handleMouseDown}
-            // onMouseMove={handleMouseMove}
-            // onMouseUp={handleMouseUp}
-            >
+            <CategoriesListContainer>
               {categories?.map((cat) => (
                 <CategoryBadge
                   key={cat.id}
@@ -594,19 +420,56 @@ export const Tasks: React.FC = () => {
                   onDelete={
                     selectedCatId === cat.id ? () => setSelectedCatId(undefined) : undefined
                   }
-                  style={{
+                  sx={{
                     boxShadow: "none",
                     display:
                       selectedCatId === undefined || selectedCatId === cat.id
                         ? "inline-flex"
                         : "none",
-                    padding: "20px 14px",
+                    p: "20px 14px",
                     fontSize: "16px",
                   }}
                 />
               ))}
             </CategoriesListContainer>
           )}
+        {selectedTasks.length > 0 && (
+          <SelectedTasksContainer>
+            <div>
+              <h3 style={{ margin: 0, display: "flex", alignItems: "center" }}>
+                <RadioButtonChecked /> &nbsp; Selected {selectedTasks.length} task
+                {selectedTasks.length > 1 ? "s" : ""}
+              </h3>
+              <span style={{ fontSize: "14px", opacity: 0.8 }}>
+                {new Intl.ListFormat("en", {
+                  style: "long",
+                  type: "conjunction",
+                }).format(
+                  selectedTasks
+                    .map((taskId) => user.tasks.find((task) => task.id === taskId)?.name)
+                    .filter((taskName) => taskName !== undefined) as string[]
+                )}
+              </span>
+            </div>
+            <div style={{ display: "flex", alignItems: "center", gap: "4px" }}>
+              <Tooltip title="Mark selected as done">
+                <IconButton sx={{ color: "white" }} size="large" onClick={handleMarkSelectedAsDone}>
+                  <DoneAll />
+                </IconButton>
+              </Tooltip>
+              <Tooltip title="Delete selected">
+                <IconButton color="error" size="large" onClick={handleDeleteSelected}>
+                  <Delete />
+                </IconButton>
+              </Tooltip>
+              <Tooltip sx={{ color: "white" }} title="Cancel">
+                <IconButton size="large" onClick={() => setSelectedTasks([])}>
+                  <CancelRounded />
+                </IconButton>
+              </Tooltip>
+            </div>
+          </SelectedTasksContainer>
+        )}
         {search && reorderTasks(user.tasks).length > 0 && user.tasks.length > 0 && (
           <div
             style={{
@@ -614,7 +477,6 @@ export const Tasks: React.FC = () => {
               fontSize: "18px",
               opacity: 0.9,
               marginTop: "12px",
-              // marginBottom: "6px",
             }}
           >
             <b>
@@ -634,9 +496,26 @@ export const Tasks: React.FC = () => {
               done={task.done}
               blur={selectedTaskId !== task.id && open && !isMobile}
             >
-              {/* <Radio sx={{ m: "0px", mr: "8px" }} /> */}
+              {selectedTasks.length > 0 && (
+                <StyledRadio
+                  clr={getFontColorFromHex(task.color)}
+                  checked={selectedTasks.includes(task.id)}
+                  icon={<RadioButtonUnchecked />}
+                  checkedIcon={<RadioButtonChecked />}
+                  onChange={() => {
+                    if (selectedTasks.includes(task.id)) {
+                      setSelectedTasks((prevTasks) => prevTasks.filter((id) => id !== task.id));
+                    } else {
+                      handleSelectTask(task.id);
+                    }
+                  }}
+                />
+              )}
               {task.emoji || task.done ? (
-                <EmojiContainer clr={getFontColorFromHex(task.color)}>
+                <EmojiContainer
+                  clr={getFontColorFromHex(task.color)}
+                  // onDoubleClick={() => handleSelectTask(task.id)}
+                >
                   {task.done ? (
                     <DoneRounded fontSize="large" />
                   ) : user.emojisStyle === EmojiStyle.NATIVE ? (
@@ -660,7 +539,6 @@ export const Tasks: React.FC = () => {
                 )}
                 <TaskHeader>
                   <TaskName done={task.done}>{highlightMatchingText(task.name, search)}</TaskName>
-
                   <Tooltip
                     title={`Created at: ${new Date(task.date).toLocaleDateString()} • ${new Date(
                       task.date
@@ -684,7 +562,6 @@ export const Tasks: React.FC = () => {
                       </ShowMoreBtn>
                     )}
                 </TaskDescription>
-
                 {task.deadline && (
                   <TimeLeft done={task.done}>
                     <RingAlarm
@@ -743,10 +620,7 @@ export const Tasks: React.FC = () => {
                 aria-haspopup="true"
                 aria-expanded={open ? "true" : undefined}
                 onClick={(event) => handleClick(event, task.id)}
-                sx={{
-                  color: getFontColorFromHex(task.color),
-                  // margin: "4px",
-                }}
+                sx={{ color: getFontColorFromHex(task.color) }}
               >
                 <MoreVert />
               </IconButton>
@@ -773,7 +647,6 @@ export const Tasks: React.FC = () => {
             Try searching with different keywords.
           </div>
         )}
-
         <EditTask
           open={editModalOpen}
           task={user.tasks.find((task) => task.id === selectedTaskId)}

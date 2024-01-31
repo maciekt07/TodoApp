@@ -19,6 +19,7 @@ import toast from "react-hot-toast";
 import { ColorPalette } from "../styles";
 import { UserContext } from "../contexts/UserContext";
 import { useStorageState } from "../hooks/useStorageState";
+import { useCtrlS } from "../hooks/useCtrlS";
 
 const ImportExport = () => {
   const { user, setUser } = useContext(UserContext);
@@ -29,6 +30,8 @@ const ImportExport = () => {
   ); // Array of selected task IDs
 
   const fileInputRef = useRef<HTMLInputElement | null>(null);
+
+  useCtrlS(user.tasks);
 
   useEffect(() => {
     document.title = "Todo App - Transfer tasks";

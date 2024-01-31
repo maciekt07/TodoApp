@@ -5,6 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "devhost": "npm run dev -- --host",
     "build": "tsc && vite build",
     "deploy": "npm run build && gh-pages -d dist",
     "lint": "eslint src --ext ts,tsx --report-unused-disable-directives --max-warnings 0",

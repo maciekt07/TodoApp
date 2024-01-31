@@ -1,4 +1,5 @@
 import {
+  Cancel,
   ContentCopy,
   DeleteRounded,
   Done,
@@ -6,8 +7,12 @@ import {
   IosShare,
   LaunchRounded,
   LinkRounded,
+  Pause,
+  PlayArrow,
   PushPinRounded,
   QrCode2Rounded,
+  RadioButtonChecked,
+  RecordVoiceOver,
   RecordVoiceOverRounded,
 } from "@mui/icons-material";
 import {
@@ -18,6 +23,7 @@ import {
   DialogContent,
   DialogTitle,
   Divider,
+  IconButton,
   InputAdornment,
   Menu,
   MenuItem,
@@ -37,33 +43,32 @@ import { useContext, useState } from "react";
 import toast from "react-hot-toast";
 import { UserContext } from "../contexts/UserContext";
 import QRCode from "react-qr-code";
+import { Task } from "../types/user";
+import { calculateDateDifference, formatDate } from "../utils";
+import Marquee from "react-fast-marquee";
 
 //TODO: Move all functions to TasksMenu component
 
 interface TaskMenuProps {
   selectedTaskId: number | null;
+  selectedTasks: number[];
   setEditModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
   anchorEl: null | HTMLElement;
-  handleMarkAsDone: () => void;
-  handlePin: () => void;
   handleDeleteTask: () => void;
-  handleDuplicateTask: () => void;
   handleCloseMoreMenu: () => void;
-  handleReadAloud: () => void;
+  handleSelectTask: (taskId: number) => void;
 }
 
 export const TaskMenu: React.FC<TaskMenuProps> = ({
   selectedTaskId,
+  selectedTasks,
   setEditModalOpen,
   anchorEl,
-  handleMarkAsDone,
-  handlePin,
   handleDeleteTask,
-  handleDuplicateTask,
   handleCloseMoreMenu,
-  handleReadAloud,
+  handleSelectTask,
 }) => {
-  const { user } = useContext(UserContext);
+  const { user, setUser } = useContext(UserContext);
   const { tasks, name, settings, emojisStyle } = user;
   const [showShareDialog, setShowShareDialog] = useState<boolean>(false);
   const [shareTabVal, setShareTabVal] = useState<number>(0);
@@ -85,6 +90,7 @@ export const TaskMenu: React.FC<TaskMenuProps> = ({
     }
     return "";
   };
+
   const handleCopyToClipboard = () => {
     const linkToCopy = generateShareableLink(selectedTaskId, name || "User");
 
@@ -121,6 +127,211 @@ export const TaskMenu: React.FC<TaskMenuProps> = ({
     }
   };
 
+  const handleMarkAsDone = () => {
+    // Toggles the "done" property of the selected task
+    if (selectedTaskId) {
+      const updatedTasks = tasks.map((task) => {
+        if (task.id === selectedTaskId) {
+          return { ...task, done: !task.done };
+        }
+        return task;
+      });
+      setUser((prevUser) => ({
+        ...prevUser,
+        tasks: updatedTasks,
+      }));
+
+      const allTasksDone = updatedTasks.every((task) => task.done);
+
+      if (allTasksDone) {
+        toast.success(
+          (t) => (
+            <div onClick={() => toast.dismiss(t.id)}>
+              <b>All tasks done</b>
+              <br />
+              <span>You've checked off all your todos. Well done!</span>
+            </div>
+          ),
+          {
+            icon: <Emoji unified="1f60e" emojiStyle={emojisStyle} />,
+          }
+        );
+      }
+    }
+  };
+
+  const handlePin = () => {
+    // Toggles the "pinned" property of the selected task
+    if (selectedTaskId) {
+      const updatedTasks = tasks.map((task) => {
+        if (task.id === selectedTaskId) {
+          return { ...task, pinned: !task.pinned };
+        }
+        return task;
+      });
+      setUser((prevUser) => ({
+        ...prevUser,
+        tasks: updatedTasks,
+      }));
+    }
+  };
+
+  const handleDuplicateTask = () => {
+    if (selectedTaskId) {
+      // Close the menu
+      handleCloseMoreMenu();
+      // Find the selected task
+      const selectedTask = tasks.find((task) => task.id === selectedTaskId);
+      if (selectedTask) {
+        // Create a duplicated task with a new ID and current date
+        const duplicatedTask: Task = {
+          ...selectedTask,
+          id: new Date().getTime() + Math.floor(Math.random() * 1000),
+          date: new Date(),
+          lastSave: undefined,
+        };
+        // Add the duplicated task to the existing tasks
+        const updatedTasks = [...tasks, duplicatedTask];
+        // Update the user object with the updated tasks
+        setUser((prevUser) => ({
+          ...prevUser,
+          tasks: updatedTasks,
+        }));
+      }
+    }
+  };
+
+  const handleReadAloud = () => {
+    const selectedTask = tasks.find((task) => task.id === selectedTaskId);
+    const voices = window.speechSynthesis.getVoices();
+    const voiceName = voices.find((voice) => voice.name === settings[0].voice);
+    const voiceVolume = settings[0].voiceVolume;
+    const taskName = selectedTask?.name || "";
+    const taskDescription = selectedTask?.description || "";
+    const taskDate = formatDate(new Date(selectedTask?.date || ""));
+    const taskDeadline = selectedTask?.deadline
+      ? ". Task Deadline: " + calculateDateDifference(new Date(selectedTask.deadline) || "")
+      : "";
+
+    const textToRead = `${taskName}. ${taskDescription}. Date: ${taskDate}${taskDeadline}`;
+
+    const utterThis: SpeechSynthesisUtterance = new SpeechSynthesisUtterance(textToRead);
+
+    if (voiceName) {
+      utterThis.voice = voiceName;
+    }
+
+    if (voiceVolume) {
+      utterThis.volume = voiceVolume;
+    }
+
+    handleCloseMoreMenu();
+    const pauseSpeech = () => {
+      window.speechSynthesis.pause();
+    };
+
+    const resumeSpeech = () => {
+      window.speechSynthesis.resume();
+    };
+
+    const cancelSpeech = () => {
+      window.speechSynthesis.cancel();
+      toast.dismiss(SpeechToastId);
+      handleCloseMoreMenu();
+    };
+
+    const SpeechToastId = toast(
+      () => {
+        const [isPlaying, setIsPlaying] = useState<boolean>(true);
+
+        return (
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              flexDirection: "column",
+              touchAction: "none",
+            }}
+          >
+            <span
+              style={{
+                display: "inline-flex",
+                alignItems: "center",
+                fontWeight: 600,
+              }}
+            >
+              <RecordVoiceOver /> &nbsp; Speaking: {selectedTask?.name}
+            </span>
+            <span style={{ marginTop: "10px", fontSize: "16px" }}>
+              Voice: {utterThis.voice?.name || "Default"}
+            </span>
+            <div>
+              <Marquee delay={0.6} play={isPlaying}>
+                <p style={{ margin: "6px 0" }}>{utterThis.text} &nbsp;</p>
+              </Marquee>
+            </div>
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                marginTop: "16px",
+                gap: "8px",
+              }}
+            >
+              {isPlaying ? (
+                <IconButton
+                  sx={{ color: "white" }}
+                  onClick={() => {
+                    pauseSpeech();
+                    setIsPlaying(!isPlaying);
+                  }}
+                >
+                  <Pause fontSize="large" />
+                </IconButton>
+              ) : (
+                <IconButton
+                  sx={{ color: "white" }}
+                  onClick={() => {
+                    resumeSpeech();
+                    setIsPlaying(!isPlaying);
+                  }}
+                >
+                  <PlayArrow fontSize="large" />
+                </IconButton>
+              )}
+
+              <IconButton sx={{ color: "white" }} onClick={cancelSpeech}>
+                <Cancel fontSize="large" />
+              </IconButton>
+            </div>
+          </div>
+        );
+      },
+      {
+        duration: 999999999,
+        style: {
+          border: "1px solid #1b1d4eb7",
+          WebkitBackdropFilter: "blur(10px)",
+          backdropFilter: "blur(10px)",
+        },
+      }
+    );
+
+    // Set up event listener for the end of speech
+    utterThis.onend = () => {
+      // Close the menu
+      handleCloseMoreMenu();
+      // Hide the toast when speech ends
+      toast.dismiss(SpeechToastId);
+    };
+    console.log(utterThis);
+    if (voiceVolume > 0) {
+      window.speechSynthesis.speak(utterThis);
+    }
+  };
+
   const menuItems: JSX.Element = (
     <div>
       <StyledMenuItem
@@ -144,13 +355,16 @@ export const TaskMenu: React.FC<TaskMenuProps> = ({
         {tasks.find((task) => task.id === selectedTaskId)?.pinned ? "Unpin" : "Pin"}
       </StyledMenuItem>
 
-      {/* <StyledMenuItem>
-        <RadioButtonChecked /> &nbsp; Select
-      </StyledMenuItem> */}
+      {selectedTasks.length === 0 && (
+        <StyledMenuItem onClick={() => handleSelectTask(selectedTaskId || 0)}>
+          <RadioButtonChecked /> &nbsp; Select
+        </StyledMenuItem>
+      )}
 
       <StyledMenuItem onClick={redirectToTaskDetails}>
         <LaunchRounded /> &nbsp; Task details
       </StyledMenuItem>
+
       {settings[0].enableReadAloud && (
         <StyledMenuItem
           onClick={handleReadAloud}
@@ -168,6 +382,7 @@ export const TaskMenu: React.FC<TaskMenuProps> = ({
       >
         <LinkRounded /> &nbsp; Share
       </StyledMenuItem>
+
       <Divider />
       <StyledMenuItem
         onClick={() => {

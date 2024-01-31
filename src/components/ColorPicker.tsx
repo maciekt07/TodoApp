@@ -1,4 +1,4 @@
-import { CSSProperties, useEffect, useState } from "react";
+import { CSSProperties, useCallback, useEffect, useState } from "react";
 import { ColorPalette } from "../styles";
 import styled from "@emotion/styled";
 import { Casino, Colorize, Done, ExpandMoreRounded } from "@mui/icons-material";
@@ -58,10 +58,13 @@ export const ColorPicker: React.FC<ColorPickerProps> = ({
     setSelectedColor(color);
   }, [color]);
 
-  const handleColorChange = (color: string) => {
-    setSelectedColor(color);
-    onColorChange(color);
-  };
+  const handleColorChange = useCallback(
+    (color: string) => {
+      setSelectedColor(color);
+      onColorChange(color);
+    },
+    [onColorChange]
+  );
 
   const handlePickerChange = (e: React.ChangeEvent<HTMLInputElement>) =>
     handleColorChange(e.target.value as string);
