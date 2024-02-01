@@ -31,7 +31,7 @@ const ImportExport = () => {
 
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
-  useCtrlS(user.tasks);
+  useCtrlS();
 
   useEffect(() => {
     document.title = "Todo App - Transfer tasks";

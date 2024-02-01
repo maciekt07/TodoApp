@@ -4,7 +4,7 @@ import { Avatar, Badge, Button, Tooltip } from "@mui/material";
 import { AddReaction, Edit, RemoveCircleOutline } from "@mui/icons-material";
 import EmojiPicker, { Emoji, EmojiClickData, EmojiStyle, SuggestionMode } from "emoji-picker-react";
 import { getFontColorFromHex } from "../utils";
-import { ColorPalette } from "../styles";
+import { ColorPalette, fadeIn } from "../styles";
 import { UserContext } from "../contexts/UserContext";
 import { useOnlineStatus } from "../hooks/useOnlineStatus";
 import { iOS } from "../utils/iOS";
@@ -203,4 +203,5 @@ const EmojiPickerContainer = styled.div`
   justify-content: center;
   align-items: center;
   margin: 24px;
+  animation: ${fadeIn} 0.5s ease-in;
 `;

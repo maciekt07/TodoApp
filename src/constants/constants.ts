@@ -11,7 +11,7 @@ export const DESCRIPTION_MAX_LENGTH = 300;
 /**
  * Shorter length for displaying descriptions with a "Show More" button.
  */
-export const DESCRIPTION_SHORT_LENGTH = DESCRIPTION_MAX_LENGTH;
+export const DESCRIPTION_SHORT_LENGTH = 100;
 
 /**
  * Maximum length allowed for user names.

@@ -85,7 +85,7 @@ export const StyledCategoryBadge = styled(Chip)<StyledBadgeProps>`
 
   &:hover {
     background-color: ${(props) => props.backgroundclr + "!important"};
-    box-shadow: ${({ list, backgroundclr }) => list && `0 0 8px 0px ${backgroundclr}`};
+    /* box-shadow: ${({ list, backgroundclr }) => list && `0 0 8px 0px ${backgroundclr}`}; */
     opacity: ${({ list }) => list && 0.8};
   }
 

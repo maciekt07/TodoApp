@@ -7,13 +7,16 @@ export default defineConfig({
   plugins: [
     react(),
     VitePWA({
-      // add this to cache all the imports
+      // devOptions: {
+      //   enabled: true,
+      //   type: "module",
+      // },
+      // cache all the imports
       registerType: "autoUpdate",
       workbox: {
         globPatterns: ["**/*"],
       },
-      // add this to cache all the
-      // static assets in the public folder
+      // cache all the static assets in the public folder
       includeAssets: ["**/*"],
       manifest: {
         theme_color: "#232e58",

@@ -77,7 +77,7 @@ export const Tasks: React.FC = () => {
 
   const isMobile = useResponsiveDisplay();
 
-  useCtrlS(user.tasks);
+  useCtrlS();
 
   // Handler for clicking the more options button in a task
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>, taskId: number) => {

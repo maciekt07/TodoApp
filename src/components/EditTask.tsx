@@ -93,6 +93,22 @@ export const EditTask = ({ open, task, onClose, onSave }: EditTaskProps) => {
     }));
   }, [selectedCategories]);
 
+  useEffect(() => {
+    const handleBeforeUnload = (e: BeforeUnloadEvent) => {
+      if (JSON.stringify(editedTask) !== JSON.stringify(task) && open) {
+        const message = "You have unsaved changes. Are you sure you want to leave?";
+        e.returnValue = message;
+        return message;
+      }
+    };
+
+    window.addEventListener("beforeunload", handleBeforeUnload);
+
+    return () => {
+      window.removeEventListener("beforeunload", handleBeforeUnload);
+    };
+  }, [editedTask, task]);
+
   return (
     <Dialog
       open={open}
@@ -242,6 +258,7 @@ export const EditTask = ({ open, task, onClose, onSave }: EditTaskProps) => {
             JSON.stringify(editedTask) === JSON.stringify(task)
           }
         >
+          {/* <SaveRounded /> &nbsp;  */}
           Save
         </DialogBtn>
       </DialogActions>
