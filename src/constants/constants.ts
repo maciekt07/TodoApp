@@ -31,7 +31,7 @@ export const CATEGORY_NAME_MAX_LENGTH = 20;
 /**
  * Maximum number of categories a user can have.
  */
-export const MAX_CATEGORIES = 4;
+export const MAX_CATEGORIES = 3;
 
 /**
  * Maximum number of tasks a user can have.

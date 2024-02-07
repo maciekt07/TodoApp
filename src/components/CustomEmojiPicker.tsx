@@ -2,7 +2,13 @@ import { useState, useEffect, Dispatch, SetStateAction, CSSProperties, useContex
 import styled from "@emotion/styled";
 import { Avatar, Badge, Button, Tooltip } from "@mui/material";
 import { AddReaction, Edit, RemoveCircleOutline } from "@mui/icons-material";
-import EmojiPicker, { Emoji, EmojiClickData, EmojiStyle, SuggestionMode } from "emoji-picker-react";
+import EmojiPicker, {
+  Emoji,
+  EmojiClickData,
+  EmojiStyle,
+  SuggestionMode,
+  Theme,
+} from "emoji-picker-react";
 import { getFontColorFromHex } from "../utils";
 import { ColorPalette, fadeIn } from "../styles";
 import { UserContext } from "../contexts/UserContext";
@@ -17,9 +23,8 @@ interface EmojiPickerProps {
   width?: CSSProperties["width"];
 }
 
-//TODO: redesign emoji picker
 export const CustomEmojiPicker = ({ emoji, setEmoji, color, width }: EmojiPickerProps) => {
-  const { user } = useContext(UserContext);
+  const { user, setUser } = useContext(UserContext);
   const { emojisStyle } = user;
   const [showEmojiPicker, setShowEmojiPicker] = useState<boolean>(false);
 
@@ -70,9 +75,9 @@ export const CustomEmojiPicker = ({ emoji, setEmoji, color, width }: EmojiPicker
         emojisStyle === EmojiStyle.NATIVE && iOS ? 64 : emojisStyle === EmojiStyle.NATIVE ? 48 : 64;
 
       return (
-        <div>
+        <EmojiElement key={currentEmoji}>
           <Emoji size={emojiSize} emojiStyle={emojisStyle} unified={currentEmoji} />
-        </div>
+        </EmojiElement>
       );
     } else {
       // If no emoji is selected, show the AddReaction icon with the specified color or default purple
@@ -125,6 +130,9 @@ export const CustomEmojiPicker = ({ emoji, setEmoji, color, width }: EmojiPicker
                 background: color || ColorPalette.purple,
                 transition: ".3s all",
                 cursor: "pointer",
+                // "&:hover": {
+                //   boxShadow: `0 0 16px 1px ${color}`,
+                // },
               }}
             >
               {renderAvatarContent()}
@@ -142,11 +150,23 @@ export const CustomEmojiPicker = ({ emoji, setEmoji, color, width }: EmojiPicker
                 alignItems: "center",
                 justifyContent: "center",
                 maxWidth: width || "350px",
-                margin: "12px auto 6px auto",
+                margin: "6px auto -6px auto",
               }}
             >
-              <span style={{ margin: 0, fontSize: "14px", opacity: 0.7, textAlign: "center" }}>
+              <span style={{ margin: 0, fontSize: "14px", textAlign: "center" }}>
                 Emojis may not load correctly when offline. Try switching to the native emoji style.
+                <br />
+                <Button
+                  onClick={() => {
+                    setUser((prevUser) => ({
+                      ...prevUser,
+                      emojisStyle: EmojiStyle.NATIVE,
+                    }));
+                  }}
+                  sx={{ borderRadius: "12px", p: "10px 20px" }}
+                >
+                  Change Style
+                </Button>
               </span>
             </div>
           )}
@@ -155,6 +175,7 @@ export const CustomEmojiPicker = ({ emoji, setEmoji, color, width }: EmojiPicker
               width={width || "350px"}
               height="500px"
               emojiStyle={emojisStyle}
+              theme={Theme.LIGHT}
               suggestedEmojisMode={SuggestionMode.RECENT}
               autoFocusSearch={false}
               lazyLoadEmojis
@@ -203,5 +224,9 @@ const EmojiPickerContainer = styled.div`
   justify-content: center;
   align-items: center;
   margin: 24px;
-  animation: ${fadeIn} 0.5s ease-in;
+  animation: ${fadeIn} 0.4s ease-in;
+`;
+
+const EmojiElement = styled.div`
+  animation: ${fadeIn} 0.4s ease-in;
 `;

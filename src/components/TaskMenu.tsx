@@ -71,6 +71,7 @@ export const TaskMenu: React.FC<TaskMenuProps> = ({
   const { user, setUser } = useContext(UserContext);
   const { tasks, name, settings, emojisStyle } = user;
   const [showShareDialog, setShowShareDialog] = useState<boolean>(false);
+  const [isPlaying, setIsPlaying] = useState<boolean>(true);
   const [shareTabVal, setShareTabVal] = useState<number>(0);
   const isMobile = useResponsiveDisplay();
   const n = useNavigate();
@@ -242,8 +243,6 @@ export const TaskMenu: React.FC<TaskMenuProps> = ({
 
     const SpeechToastId = toast(
       () => {
-        const [isPlaying, setIsPlaying] = useState<boolean>(true);
-
         return (
           <div
             style={{
@@ -351,8 +350,20 @@ export const TaskMenu: React.FC<TaskMenuProps> = ({
           handlePin();
         }}
       >
-        <PushPinRounded /> &nbsp;{" "}
-        {tasks.find((task) => task.id === selectedTaskId)?.pinned ? "Unpin" : "Pin"}
+        {/* <Badge
+          anchorOrigin={{
+            horizontal: "right",
+            vertical: "bottom",
+          }}
+          badgeContent={
+            tasks.find((task) => task.id === selectedTaskId)?.pinned ? (
+              <Cancel sx={{ mb: "3px", mr: "3px", fontSize: "16px" }} />
+            ) : undefined
+          }
+        > */}
+        <PushPinRounded sx={{ textDecoration: "line-through" }} />
+        {/* </Badge> */}
+        &nbsp; {tasks.find((task) => task.id === selectedTaskId)?.pinned ? "Unpin" : "Pin"}
       </StyledMenuItem>
 
       {selectedTasks.length === 0 && (

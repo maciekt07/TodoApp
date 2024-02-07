@@ -121,9 +121,13 @@ const globalStyles = css`
     --epr-focus-bg-color: #b624ffaf;
     --epr-highlight-color: #b624ff;
     --epr-search-border-color: #b624ff;
-    --epr-category-icon-active-color: #b624ff;
+    /* --epr-category-icon-active-color: #b624ff; */
     border-radius: 20px !important;
     padding: 8px !important;
+  }
+
+  .EmojiPickerReact .epr-category-nav > button.epr-cat-btn {
+    filter: hue-rotate(75deg);
   }
 
   .epr-body,

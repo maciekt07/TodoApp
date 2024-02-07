@@ -120,8 +120,8 @@ const SharePage = () => {
         open
         PaperProps={{
           style: {
-            borderRadius: "28px",
-            padding: "10px",
+            borderRadius: "24px",
+            padding: "12px",
             width: "100% !important",
           },
         }}

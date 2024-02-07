@@ -1,4 +1,4 @@
-import { useContext, useEffect, useRef } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import Button from "@mui/material/Button";
 import Checkbox from "@mui/material/Checkbox";
 import { TopBar } from "../components";
@@ -28,14 +28,23 @@ const ImportExport = () => {
     "tasksToExport",
     "sessionStorage"
   ); // Array of selected task IDs
-
+  const [isDragging, setIsDragging] = useState<boolean>(false);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
+
+  console.log(fileInputRef.current?.textContent);
 
   useCtrlS();
 
   useEffect(() => {
     document.title = "Todo App - Transfer tasks";
   }, []);
+
+  // clear file input after logout
+  useEffect(() => {
+    if (fileInputRef.current) {
+      fileInputRef.current.value = "";
+    }
+  }, [user.createdAt]);
 
   const handleTaskClick = (taskId: number) => {
     setSelectedTasks((prevSelectedTasks) =>
@@ -45,17 +54,6 @@ const ImportExport = () => {
     );
   };
 
-  const handleDragOver = (event: React.DragEvent) => {
-    event.preventDefault();
-    event.dataTransfer.dropEffect = "copy";
-  };
-
-  const handleDrop = (event: React.DragEvent) => {
-    event.preventDefault();
-    const file = event.dataTransfer.files[0];
-    handleImport(file);
-    console.log(file);
-  };
   const handleExport = () => {
     const tasksToExport = user.tasks.filter((task: Task) => selectedTasks.includes(task.id));
     exportTasksToJson(tasksToExport);
@@ -90,8 +88,8 @@ const ImportExport = () => {
     exportTasksToJson(user.tasks);
     toast.success(`Exported all tasks (${user.tasks.length})`);
   };
+
   const handleImport = (taskFile: File) => {
-    //TODO: add is hex color statemant
     const file = taskFile;
 
     if (file) {
@@ -143,6 +141,10 @@ const ImportExport = () => {
             return;
           }
 
+          if (file.size > 50_000) {
+            toast.error(`File size is too large (${file.size})`);
+          }
+
           // Update user.categories if imported categories don't exist
           const updatedCategories = user.categories.slice(); // Create a copy of the existing categories
 
@@ -164,14 +166,8 @@ const ImportExport = () => {
             ...prevUser,
             categories: updatedCategories,
           }));
-          // Proceed with merging the imported tasks as before
+
           const mergedTasks = [...user.tasks, ...importedTasks];
-
-          // Remove duplicates based on task IDs (if any)
-          // const uniqueTasks = Array.from(new Set(mergedTasks.map((task) => task.id)))
-          //   .map((id) => mergedTasks.find((task) => task.id === id))
-          //   .filter(Boolean) as Task[]; // Remove any 'undefined' values
-
           const uniqueTasks = mergedTasks.reduce((acc, task) => {
             const existingTask = acc.find((t) => t.id === task.id);
             if (existingTask) {
@@ -216,12 +212,14 @@ const ImportExport = () => {
           }
         } catch (error) {
           console.error(`Error parsing the imported file ${file.name}:`, error);
-          // toast.error(`Error parsing the imported file -  ${file.name}`);
           toast.error(
             <div style={{ wordBreak: "break-all" }}>
               Error parsing the imported file: <br /> <i>{file.name}</i>
             </div>
           );
+          if (fileInputRef.current) {
+            fileInputRef.current.value = "";
+          }
         }
       };
 
@@ -232,8 +230,6 @@ const ImportExport = () => {
   const handleImportFromLink = async () => {
     try {
       const text = await navigator.clipboard.readText();
-      console.log(`${location.protocol}//${location.hostname}/share`);
-
       if (text.startsWith(`${location.protocol}//${location.hostname}`)) {
         window.open(text, "_self");
       } else {
@@ -249,12 +245,25 @@ const ImportExport = () => {
     }
   };
 
-  // clear file input after logout
-  useEffect(() => {
-    if (fileInputRef.current) {
-      fileInputRef.current.value = "";
-    }
-  }, [user.createdAt]);
+  const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    e.dataTransfer.dropEffect = "copy";
+    setIsDragging(true);
+  };
+
+  const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    setIsDragging(false);
+
+    const file = e.dataTransfer.files[0];
+    handleImport(file);
+    console.log(file);
+  };
+
+  const handleSelectChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files && e.target.files[0];
+    file && handleImport(file);
+  };
 
   return (
     <>
@@ -332,7 +341,12 @@ const ImportExport = () => {
 
         {/Windows|Linux|Macintosh/i.test(navigator.userAgent) && (
           <div style={{ width: "300px" }}>
-            <DropZone onDragOver={handleDragOver} onDrop={handleDrop}>
+            <DropZone
+              onDragOver={handleDragOver}
+              onDragLeave={() => setIsDragging(false)}
+              onDrop={handleDrop}
+              isDragging={isDragging}
+            >
               <FileUpload fontSize="large" color="primary" />
               <p style={{ fontWeight: 500, fontSize: "16px", margin: 0 }}>
                 Drop JSON file here to import tasks{" "}
@@ -347,10 +361,7 @@ const ImportExport = () => {
           type="file"
           ref={fileInputRef}
           style={{ display: "none" }}
-          onChange={(e) => {
-            const file = e.target.files && e.target.files[0];
-            file && handleImport(file);
-          }}
+          onChange={handleSelectChange}
         />
         <label htmlFor="import-file">
           <Button
@@ -365,7 +376,7 @@ const ImportExport = () => {
             <FileUpload /> &nbsp; Select JSON File
           </Button>
         </label>
-        {/* Fix for PWA on iOS: */}
+        {/* Solution for PWA on iOS: */}
         <StyledButton variant="outlined" onClick={handleImportFromLink}>
           <Link /> &nbsp; Import From Link
         </StyledButton>
@@ -398,7 +409,7 @@ const ListContent = styled.div`
   gap: 6px;
 `;
 
-const DropZone = styled.div`
+const DropZone = styled.div<{ isDragging: boolean }>`
   display: flex;
   justify-content: center;
   align-items: center;
@@ -409,6 +420,8 @@ const DropZone = styled.div`
   padding: 32px 64px;
   text-align: center;
   max-width: 300px;
+  box-shadow: ${({ isDragging }) => isDragging && `0 0 32px 0px ${ColorPalette.purple}`};
+  transition: 0.3s all;
 `;
 
 const Container = styled(Box)`

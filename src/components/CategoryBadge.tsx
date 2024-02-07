@@ -14,52 +14,50 @@ interface CategoryBadgeProps extends ChipProps, StyledBadgeProps {
   emojiSizes?: [number, number];
 }
 /**
- * React component for displaying a category badge.
+ * Component for displaying a category badge.
  */
 export const CategoryBadge: React.FC<CategoryBadgeProps> = ({ category, emojiSizes, ...props }) => {
   const { user } = useContext(UserContext);
   const { emojisStyle, settings } = user;
 
   return (
-    <>
-      <StyledCategoryBadge
-        key={category.id}
-        label={<span style={{ fontWeight: "bold" }}>{category.name}</span>}
-        variant="outlined"
-        backgroundclr={category.color}
-        glow={settings[0].enableGlow}
-        translate="no"
-        avatar={
-          category.emoji ? (
-            <Avatar
-              alt={category.name}
-              sx={{
-                background: "transparent",
-                borderRadius: "0px",
-              }}
-            >
-              {category.emoji &&
-                (emojisStyle === EmojiStyle.NATIVE ? (
-                  <div>
-                    <Emoji
-                      size={emojiSizes ? emojiSizes[1] : 18}
-                      unified={category.emoji}
-                      emojiStyle={EmojiStyle.NATIVE}
-                    />
-                  </div>
-                ) : (
+    <StyledCategoryBadge
+      key={category.id}
+      label={<span style={{ fontWeight: "bold" }}>{category.name}</span>}
+      variant="outlined"
+      backgroundclr={category.color}
+      glow={settings[0].enableGlow}
+      translate="no"
+      avatar={
+        category.emoji ? (
+          <Avatar
+            alt={category.name}
+            sx={{
+              background: "transparent",
+              borderRadius: "0px",
+            }}
+          >
+            {category.emoji &&
+              (emojisStyle === EmojiStyle.NATIVE ? (
+                <div>
                   <Emoji
-                    size={emojiSizes ? emojiSizes[0] : 20}
+                    size={emojiSizes ? emojiSizes[1] : 18}
                     unified={category.emoji}
-                    emojiStyle={emojisStyle}
+                    emojiStyle={EmojiStyle.NATIVE}
                   />
-                ))}
-            </Avatar>
-          ) : undefined
-        }
-        {...props}
-      />
-    </>
+                </div>
+              ) : (
+                <Emoji
+                  size={emojiSizes ? emojiSizes[0] : 20}
+                  unified={category.emoji}
+                  emojiStyle={emojisStyle}
+                />
+              ))}
+          </Avatar>
+        ) : undefined
+      }
+      {...props}
+    />
   );
 };
 

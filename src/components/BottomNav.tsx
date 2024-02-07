@@ -160,7 +160,7 @@ const NavigationButton = styled(BottomNavigationAction)`
   & .MuiBottomNavigationAction-label {
     font-size: 13px;
 
-    text-shadow: 0 0 12px #ffffff64;
+    text-shadow: 0 0 12px #ffffff3d;
     /* text-shadow: 0 0 12px #000000ce; */
   }
   & .Mui-selected {

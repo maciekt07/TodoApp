@@ -4,7 +4,7 @@ import { Box, FormControl, FormLabel, MenuItem, Select, SelectChangeEvent } from
 import { ColorPalette } from "../styles";
 import { Emoji } from "emoji-picker-react";
 import { getFontColorFromHex } from "../utils";
-import { CSSProperties, useContext } from "react";
+import { CSSProperties, useContext, useState } from "react";
 import { MAX_CATEGORIES } from "../constants";
 import toast from "react-hot-toast";
 import { UserContext } from "../contexts/UserContext";
@@ -30,6 +30,7 @@ export const CategorySelect: React.FC<CategorySelectProps> = ({
 }) => {
   const { user } = useContext(UserContext);
   const { categories, emojisStyle } = user;
+  const [isOpen, setIsOpen] = useState<boolean>(false);
 
   const handleCategoryChange = (event: SelectChangeEvent<unknown>): void => {
     const selectedCategoryIds = event.target.value as number[];
@@ -56,7 +57,7 @@ export const CategorySelect: React.FC<CategorySelectProps> = ({
     <FormControl sx={{ width: width || "100%" }}>
       <FormLabel
         sx={{
-          color: fontColor ? fontColor + "e8" : ColorPalette.fontLight + "e8",
+          color: fontColor ? `${fontColor}e8` : `${ColorPalette.fontLight}e8`,
           marginLeft: "8px",
           fontWeight: 500,
         }}
@@ -68,10 +69,22 @@ export const CategorySelect: React.FC<CategorySelectProps> = ({
         width={width}
         value={selectedCategories.map((cat) => cat.id)}
         onChange={handleCategoryChange}
+        open={isOpen}
+        onOpen={() => setIsOpen(true)}
+        onClose={() => setIsOpen(false)}
         IconComponent={() => (
-          <ExpandMoreRounded
-            sx={{ marginRight: "14px", color: fontColor || ColorPalette.fontLight }}
-          />
+          <Box
+            sx={{ display: "flex", alignItems: "center", cursor: "pointer" }}
+            onClick={() => setIsOpen((prev) => !prev)}
+          >
+            <ExpandMoreRounded
+              sx={{
+                marginRight: "14px",
+                color: fontColor || ColorPalette.fontLight,
+                transform: isOpen ? "rotate(180deg)" : "none",
+              }}
+            />
+          </Box>
         )}
         sx={{ zIndex: 999 }}
         renderValue={() => (
@@ -119,6 +132,10 @@ export const CategorySelect: React.FC<CategorySelectProps> = ({
               value={category.id}
               clr={category.color}
               translate="no"
+              disable={
+                selectedCategories.length >= MAX_CATEGORIES &&
+                !selectedCategories.includes(category)
+              }
             >
               {category.emoji && <Emoji unified={category.emoji} emojiStyle={emojisStyle} />}
               &nbsp;
@@ -144,7 +161,7 @@ const StyledSelect = styled(Select)<{ width?: CSSProperties["width"] }>`
   background: #ffffff1c;
 `;
 
-const CategoriesMenu = styled(MenuItem)<{ clr?: string }>`
+const CategoriesMenu = styled(MenuItem)<{ clr?: string; disable?: boolean }>`
   padding: 8px 12px;
   border-radius: 16px;
   margin: 8px;
@@ -155,10 +172,10 @@ const CategoriesMenu = styled(MenuItem)<{ clr?: string }>`
   color: ${(props) => getFontColorFromHex(props.clr || ColorPalette.fontLight)};
   background: ${({ clr }) => clr || "#bcbcbc"};
   border: 4px solid transparent;
-
+  opacity: ${({ disable }) => (disable ? ".6" : "none")};
   &:hover {
     background: ${({ clr }) => clr || "#bcbcbc"};
-    opacity: 0.7;
+    opacity: ${({ disable }) => (disable ? "none" : ".7")};
   }
 
   &:focus {

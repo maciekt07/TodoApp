@@ -172,7 +172,7 @@ const ColorElement = styled.button<{ clr: string }>`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  border-radius: 999px;
+  border-radius: 100px;
   transition: 0.2s all;
   transform: scale(1);
 

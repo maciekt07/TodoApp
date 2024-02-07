@@ -1,6 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
 import {
   Box,
+  Chip,
   Dialog,
   DialogActions,
   DialogTitle,
@@ -58,10 +59,12 @@ export const SettingsDialog: React.FC<SettingsProps> = ({ open, onClose }) => {
     { label: "Google", style: EmojiStyle.GOOGLE },
     { label: "Native", style: EmojiStyle.NATIVE },
   ];
+  const getFlagEmoji = (countryCode: string): string =>
+    String.fromCodePoint(...[...countryCode.toUpperCase()].map((x) => 0x1f1a5 + x.charCodeAt(0)));
 
   const getAvailableVoices = (): SpeechSynthesisVoice[] => {
     const voices = window.speechSynthesis.getVoices();
-    const voiceInfoArray = [];
+    const voiceInfoArray: SpeechSynthesisVoice[] = [];
     for (const voice of voices) {
       voiceInfoArray.push(voice);
     }
@@ -106,9 +109,11 @@ export const SettingsDialog: React.FC<SettingsProps> = ({ open, onClose }) => {
     }));
   };
 
-  const handleVoiceChange = (event: SelectChangeEvent<unknown> | any) => {
+  const handleVoiceChange = (event: SelectChangeEvent<unknown>) => {
     // Handle the selected voice
-    const selectedVoice = availableVoices.find((voice) => voice.name === event.target.value);
+    const selectedVoice = availableVoices.find(
+      (voice) => voice.name === (event.target.value as string)
+    );
     if (selectedVoice) {
       // Update the user settings with the selected voice
       setUser((prevUser) => ({
@@ -161,16 +166,7 @@ export const SettingsDialog: React.FC<SettingsProps> = ({ open, onClose }) => {
   };
 
   return (
-    <Dialog
-      open={open}
-      onClose={onClose}
-      PaperProps={{
-        style: {
-          borderRadius: "24px",
-          padding: "12px",
-        },
-      }}
-    >
+    <Dialog open={open} onClose={onClose}>
       <DialogTitle sx={{ fontWeight: 600 }}>Settings</DialogTitle>
       <Container>
         {/* Select component to choose the emoji style */}
@@ -285,23 +281,22 @@ export const SettingsDialog: React.FC<SettingsProps> = ({ open, onClose }) => {
               <FormLabel>Voice Settings</FormLabel>
 
               {availableVoices.length !== 0 ? (
-                <>
-                  <StyledSelect
-                    // Set the value to the first voice in the availableVoices array
-                    value={settings[0].voice}
-                    variant="outlined"
-                    onChange={handleVoiceChange}
-                    translate="no"
-                    MenuProps={{
-                      PaperProps: {
-                        style: {
-                          maxHeight: 500,
-                          padding: "2px 6px",
-                        },
+                <StyledSelect
+                  // Set the value to the first voice in the availableVoices array
+                  value={settings[0].voice}
+                  variant="outlined"
+                  onChange={handleVoiceChange}
+                  translate="no"
+                  MenuProps={{
+                    PaperProps: {
+                      style: {
+                        maxHeight: 500,
+                        padding: "2px 6px",
                       },
-                    }}
-                  >
-                    {/* <MenuItem
+                    },
+                  }}
+                >
+                  {/* <MenuItem
                     disabled
                     sx={{
                       opacity: "1 !important",
@@ -315,42 +310,45 @@ export const SettingsDialog: React.FC<SettingsProps> = ({ open, onClose }) => {
                   >
                     <Switch checked /> Show only local language voices
                   </MenuItem> */}
-                    {/* Map over available voices to create MenuItem components */}
-                    {availableVoices.map((voice) => (
-                      <MenuItem
-                        key={voice.name}
-                        value={voice.name}
-                        translate="no"
-                        sx={{
-                          padding: "10px",
-                          borderRadius: "8px",
-                        }}
-                      >
-                        {voice.name} &nbsp;
-                        <span style={{ fontWeight: 500 }}>
-                          {/* Display the region of the voice's language using Intl.DisplayNames */}
-                          {new Intl.DisplayNames([voice.lang], { type: "region" }).of(
-                            voice.lang.split("-")[1]
-                          )}
-                        </span>
-                        &nbsp;
-                        {voice.default && !iOS && <span style={{ fontWeight: 600 }}>Default</span>}
-                      </MenuItem>
-                    ))}
-                  </StyledSelect>
-
-                  {/* <StyledNativeSelect variant="outlined" onChange={handleVoiceChange}>
-                      {availableVoices.map((voice) => (
-                        <option key={voice.name} value={voice.name}>
-                          {voice.name} (
-                          {new Intl.DisplayNames([voice.lang], { type: "region" }).of(
-                            voice.lang.split("-")[1]
-                          )}
-                          )
-                        </option>
-                      ))}
-                    </StyledNativeSelect> */}
-                </>
+                  {/* Map over available voices to create MenuItem components */}
+                  {availableVoices.map((voice) => (
+                    <MenuItem
+                      key={voice.name}
+                      value={voice.name}
+                      translate="no"
+                      sx={{
+                        padding: "10px",
+                        borderRadius: "8px",
+                      }}
+                    >
+                      {voice.name} &nbsp;
+                      {/Macintosh|Android/.test(navigator.userAgent) ||
+                        (iOS ? (
+                          <Chip
+                            sx={{ fontWeight: 500, padding: "4px" }}
+                            label={new Intl.DisplayNames([voice.lang], { type: "region" }).of(
+                              voice.lang.split("-")[1]
+                            )}
+                            icon={
+                              <span style={{ fontSize: "16px" }}>
+                                {getFlagEmoji(voice.lang.split("-")[1])}
+                              </span>
+                            }
+                          />
+                        ) : (
+                          <span style={{ fontWeight: 500 }}>
+                            {/* Display the region of the voice's language using Intl.DisplayNames */}
+                            {new Intl.DisplayNames([voice.lang], { type: "region" }).of(
+                              voice.lang.split("-")[1]
+                            )}
+                          </span>
+                        ))}
+                      {voice.default && !iOS && (
+                        <span style={{ fontWeight: 600 }}>&nbsp;Default</span>
+                      )}
+                    </MenuItem>
+                  ))}
+                </StyledSelect>
               ) : (
                 <NoVoiceStyles>
                   There are no voice styles available.
@@ -387,7 +385,7 @@ export const SettingsDialog: React.FC<SettingsProps> = ({ open, onClose }) => {
                   </Tooltip>
                   <Slider
                     sx={{
-                      width: "200px",
+                      width: "230px",
                     }}
                     value={voiceVolume}
                     onChange={handleVoiceVolChange}
@@ -425,7 +423,7 @@ const Container = styled.div`
 `;
 
 const StyledSelect = styled(Select)`
-  width: 300px;
+  max-width: 330px;
   color: black;
   margin: 8px 0;
 `;
@@ -437,7 +435,7 @@ const NoVoiceStyles = styled.p`
   gap: 6px;
   opacity: 0.8;
   font-weight: 500;
-  max-width: 300px;
+  max-width: 330px;
 `;
 
 const VolumeSlider = styled(Stack)`

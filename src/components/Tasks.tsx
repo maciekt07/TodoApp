@@ -75,6 +75,8 @@ export const Tasks: React.FC = () => {
     "sessionStorage"
   );
 
+  const [deleteSelectedOpen, setDeleteSelectedOpen] = useState<boolean>(false);
+
   const isMobile = useResponsiveDisplay();
 
   useCtrlS();
@@ -230,14 +232,7 @@ export const Tasks: React.FC = () => {
     setSelectedTasks([]);
   };
 
-  const handleDeleteSelected = () => {
-    setUser((prevUser) => ({
-      ...prevUser,
-      tasks: prevUser.tasks.filter((task) => !selectedTasks.includes(task.id)),
-    }));
-    // Clear the selected task IDs after the operation
-    setSelectedTasks([]);
-  };
+  const handleDeleteSelected = () => setDeleteSelectedOpen(true);
 
   const [categories, setCategories] = useState<Category[] | undefined>(undefined);
 
@@ -470,7 +465,7 @@ export const Tasks: React.FC = () => {
             </div>
           </SelectedTasksContainer>
         )}
-        {search && reorderTasks(user.tasks).length > 0 && user.tasks.length > 0 && (
+        {search && reorderTasks(user.tasks).length > 1 && user.tasks.length > 0 && (
           <div
             style={{
               textAlign: "center",
@@ -628,6 +623,12 @@ export const Tasks: React.FC = () => {
           ))
         ) : (
           <NoTasks>
+            {/* <div>
+              <img
+                style={{ width: "256px", opacity: 0.5, filter: "grayscale(80%)" }}
+                src="http://localhost:5173/src/assets/TaskNotFound.png"
+              />
+            </div> */}
             <b>You don't have any tasks yet</b>
             <br />
             Click on the <b>+</b> button to add one
@@ -665,16 +666,7 @@ export const Tasks: React.FC = () => {
           }}
         />
       </TasksContainer>
-      <Dialog
-        open={deleteDialogOpen}
-        onClose={cancelDeleteTask}
-        PaperProps={{
-          style: {
-            borderRadius: "28px",
-            padding: "10px",
-          },
-        }}
-      >
+      <Dialog open={deleteDialogOpen} onClose={cancelDeleteTask}>
         <DialogTitle>Are you sure you want to delete the task?</DialogTitle>
         <DialogContent>
           {user.tasks.find((task) => task.id === selectedTaskId)?.emoji !== undefined && (
@@ -721,6 +713,38 @@ export const Tasks: React.FC = () => {
             Cancel
           </DialogBtn>
           <DialogBtn onClick={confirmDeleteTask} color="error">
+            Delete
+          </DialogBtn>
+        </DialogActions>
+      </Dialog>
+      <Dialog open={deleteSelectedOpen}>
+        <DialogTitle>Are you sure you want to delete selected tasks?</DialogTitle>
+        <DialogContent>
+          {new Intl.ListFormat("en", {
+            style: "long",
+            type: "conjunction",
+          }).format(
+            selectedTasks
+              .map((taskId) => user.tasks.find((task) => task.id === taskId)?.name)
+              .filter((taskName) => taskName !== undefined) as string[]
+          )}
+        </DialogContent>
+        <DialogActions>
+          <DialogBtn onClick={() => setDeleteSelectedOpen(false)} color="primary">
+            Cancel
+          </DialogBtn>
+          <DialogBtn
+            onClick={() => {
+              setUser((prevUser) => ({
+                ...prevUser,
+                tasks: prevUser.tasks.filter((task) => !selectedTasks.includes(task.id)),
+              }));
+              // Clear the selected task IDs after the operation
+              setSelectedTasks([]);
+              setDeleteSelectedOpen(false);
+            }}
+            color="error"
+          >
             Delete
           </DialogBtn>
         </DialogActions>

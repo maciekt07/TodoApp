@@ -103,6 +103,9 @@ const AddTask = () => {
           Added task - <b>{newTask.name}</b>
         </div>
       ));
+
+      const itemsToRemove = ["name", "color", "description", "emoji", "deadline", "categories"];
+      itemsToRemove.map((item) => sessionStorage.removeItem(item));
     } else {
       toast.error((t) => <div onClick={() => toast.dismiss(t.id)}>Task name is required.</div>);
     }
@@ -180,8 +183,6 @@ const AddTask = () => {
         {user.settings[0].enableCategories !== undefined && user.settings[0].enableCategories && (
           <>
             <br />
-            {/* <Typography sx={{ fontWeight: 500 }}>Category (optional)</Typography> */}
-
             <CategorySelect
               selectedCategories={selectedCategories}
               setSelectedCategories={setSelectedCategories}

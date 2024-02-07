@@ -169,13 +169,7 @@ const UserSettings = () => {
           &nbsp; Logout
         </Button>
       </Container>
-      <Dialog
-        open={openChangeImage}
-        onClose={handleCloseImageDialog}
-        PaperProps={{
-          style: { borderRadius: "24px", padding: "12px" },
-        }}
-      >
+      <Dialog open={openChangeImage} onClose={handleCloseImageDialog}>
         <DialogTitle>Change Profile Picture</DialogTitle>
         <DialogContent>
           <StyledInput
@@ -233,16 +227,7 @@ const UserSettings = () => {
           </DialogBtn>
         </DialogActions>
       </Dialog>
-      <Dialog
-        open={logoutConfirmationOpen}
-        onClose={handleLogoutConfirmationClose}
-        PaperProps={{
-          style: {
-            borderRadius: "24px",
-            padding: "10px",
-          },
-        }}
-      >
+      <Dialog open={logoutConfirmationOpen} onClose={handleLogoutConfirmationClose}>
         <DialogTitle>Logout Confirmation</DialogTitle>
         <DialogContent>
           Are you sure you want to logout? <b>Your tasks will not be saved.</b>

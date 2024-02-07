@@ -25,6 +25,16 @@ export const MuiTheme: Theme = createTheme({
         },
       },
     },
+    MuiDialog: {
+      defaultProps: {
+        PaperProps: {
+          style: {
+            padding: "12px",
+            borderRadius: "24px",
+          },
+        },
+      },
+    },
   },
   typography: {
     fontFamily: '"Poppins", sans-serif',
