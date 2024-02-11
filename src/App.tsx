@@ -1,7 +1,7 @@
 import { useStorageState } from "./hooks/useStorageState";
 import { defaultUser } from "./constants/defaultUser";
 import { User } from "./types/user";
-import { ColorPalette, GlobalStyles, MuiTheme, Themes } from "./styles";
+import { ColorPalette, GlobalStyles, Themes } from "./styles";
 import { ThemeProvider, useTheme } from "@mui/material";
 import { useEffect } from "react";
 import { ErrorBoundary } from "./components";
@@ -77,14 +77,12 @@ function App() {
 
   const getMuiTheme = () => {
     const selectedTheme = Themes.find((theme) => theme.name === user.theme);
-    return selectedTheme ? selectedTheme.MuiTheme : MuiTheme;
+    return selectedTheme && selectedTheme.MuiTheme;
   };
 
   const getPrimaryColor = () => {
     const selectedTheme = Themes.find((theme) => theme.name === user.theme);
-    return selectedTheme
-      ? selectedTheme.MuiTheme.palette.primary.main
-      : MuiTheme.palette.primary.main;
+    return selectedTheme && selectedTheme.MuiTheme.palette.primary.main;
   };
 
   return (
@@ -113,7 +111,7 @@ function App() {
             },
             success: {
               iconTheme: {
-                primary: getPrimaryColor(),
+                primary: getPrimaryColor() || "green",
                 secondary: "white",
               },
             },

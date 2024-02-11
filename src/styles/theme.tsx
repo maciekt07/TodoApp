@@ -50,72 +50,41 @@ const commonComponentProps: Theme["components"] = {
   },
 };
 
-export const MuiTheme: Theme = createTheme({
-  components: {
-    ...commonComponentProps,
-  },
-  palette: {
-    primary: {
-      main: ColorPalette.purple,
+const createCustomTheme = (primaryColor: string): Theme => {
+  return createTheme({
+    components: {
+      ...commonComponentProps,
     },
-    secondary: {
-      main: "#bababa",
+    palette: {
+      primary: {
+        main: primaryColor,
+      },
+      error: {
+        main: ColorPalette.red,
+      },
     },
-    error: {
-      main: ColorPalette.red,
-    },
-  },
-});
+  });
+};
 
-export const MuiThemeBlue: Theme = createTheme({
-  components: {
-    ...commonComponentProps,
-  },
-  palette: {
-    primary: {
-      main: "#2a93d5",
-    },
-    secondary: {
-      main: "#bababa",
-    },
-    error: {
-      main: ColorPalette.red,
-    },
-  },
-});
-
-export const MuiThemeOrange: Theme = createTheme({
-  components: {
-    ...commonComponentProps,
-  },
-  palette: {
-    primary: {
-      main: "#e58b2a",
-    },
-    secondary: {
-      main: "#bababa",
-    },
-    error: {
-      main: ColorPalette.red,
-    },
-  },
-});
-
-export type AppTheme = "purple" | "blue" | "orange";
+export type AppTheme = "purple" | "blue" | "orange" | "pink";
 /**
- * To add new theme: Add theme name to `AppTheme` in `types/user.ts`, create new mui theme and add it here
+ * To add new theme: Add theme name to `AppTheme` interface, create new Mui theme and it to this `Themes` object
  */
 export const Themes: { name: AppTheme; MuiTheme: Theme }[] = [
   {
     name: "purple",
-    MuiTheme: MuiTheme,
+    MuiTheme: createCustomTheme(ColorPalette.purple),
+  },
+  {
+    name: "pink",
+    MuiTheme: createCustomTheme("#e5369a"),
   },
   {
     name: "blue",
-    MuiTheme: MuiThemeBlue,
+    MuiTheme: createCustomTheme("#2a93d5"),
   },
   {
     name: "orange",
-    MuiTheme: MuiThemeOrange,
+    MuiTheme: createCustomTheme("#ff8e2b"),
   },
 ];

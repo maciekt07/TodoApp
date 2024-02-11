@@ -22,6 +22,7 @@ import { defaultUser } from "../constants/defaultUser";
 import toast from "react-hot-toast";
 import { UserContext } from "../contexts/UserContext";
 import { timeAgo } from "../utils/timeAgo";
+import { getFontColorFromHex } from "../utils";
 
 const UserSettings = () => {
   const { user, setUser } = useContext(UserContext);
@@ -296,7 +297,7 @@ const SaveBtn = styled(Button)`
   width: 300px;
   border: none;
   background: ${({ theme }) => theme.primary};
-  color: white;
+  color: ${({ theme }) => getFontColorFromHex(theme.primary)};
   font-size: 18px;
   padding: 14px;
   border-radius: 16px;

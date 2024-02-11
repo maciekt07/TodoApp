@@ -173,7 +173,7 @@ const NavigationButton = styled(BottomNavigationAction)`
     }
   }
   & .MuiBottomNavigationAction-label {
-    font-size: 13px;
+    font-size: 13px !important;
 
     text-shadow: 0 0 12px #ffffff3d;
     /* text-shadow: 0 0 12px #000000ce; */

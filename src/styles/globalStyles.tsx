@@ -5,6 +5,7 @@ import { getFontColorFromHex } from "../utils";
 
 export const GlobalStyles = () => {
   const theme = useTheme();
+
   return (
     <Global
       styles={css`
@@ -12,9 +13,9 @@ export const GlobalStyles = () => {
           font-family: "Poppins", sans-serif !important;
           -webkit-tap-highlight-color: transparent;
           &::selection {
-            background-color: ${"#000000" + "e1"};
-            color: #ffffff;
-            text-shadow: 0 0 8px ${"#000000" + "c8"};
+            background-color: ${theme.primary};
+            color: ${getFontColorFromHex(theme.primary)};
+            text-shadow: 0 0 8px ${"#000000c8"};
           }
         }
         :root {

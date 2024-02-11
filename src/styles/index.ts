@@ -1,4 +1,4 @@
-export { MuiTheme, ColorPalette, MuiThemeBlue, Themes } from "./theme";
+export { ColorPalette, Themes } from "./theme";
 export {
   GlobalStyles,
   fadeInLeft,
