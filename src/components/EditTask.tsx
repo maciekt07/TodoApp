@@ -153,6 +153,7 @@ export const EditTask = ({ open, task, onClose, onSave }: EditTaskProps) => {
         <StyledInput
           label="Name"
           name="name"
+          autoComplete="off"
           value={editedTask?.name || ""}
           onChange={handleInputChange}
           error={nameError || editedTask?.name === ""}
@@ -169,6 +170,7 @@ export const EditTask = ({ open, task, onClose, onSave }: EditTaskProps) => {
         <StyledInput
           label="Description"
           name="description"
+          autoComplete="off"
           value={editedTask?.description || ""}
           onChange={handleInputChange}
           multiline

@@ -1,4 +1,4 @@
-export { MuiTheme, ColorPalette } from "./theme";
+export { MuiTheme, ColorPalette, MuiThemeBlue, Themes } from "./theme";
 export {
   GlobalStyles,
   fadeInLeft,
@@ -9,6 +9,7 @@ export {
   pulseAnimation,
   DialogBtn,
   PathName,
+  ColorElement,
 } from "./globalStyles";
 export {
   GreetingHeader,

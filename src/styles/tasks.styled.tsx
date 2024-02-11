@@ -228,7 +228,7 @@ export const SearchInput = styled(TextField)`
   transition: 0.3s all;
 
   & .MuiOutlinedInput-notchedOutline {
-    border: 2px solid ${ColorPalette.purple} !important;
+    border: 2px solid ${({ theme }) => theme.primary} !important;
   }
   & .MuiOutlinedInput-root {
     padding: 2px 16px;

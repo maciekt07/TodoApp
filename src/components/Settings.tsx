@@ -311,43 +311,49 @@ export const SettingsDialog: React.FC<SettingsProps> = ({ open, onClose }) => {
                     <Switch checked /> Show only local language voices
                   </MenuItem> */}
                   {/* Map over available voices to create MenuItem components */}
-                  {availableVoices.map((voice) => (
-                    <MenuItem
-                      key={voice.name}
-                      value={voice.name}
-                      translate="no"
-                      sx={{
-                        padding: "10px",
-                        borderRadius: "8px",
-                      }}
-                    >
-                      {voice.name} &nbsp;
-                      {/Macintosh|Android/.test(navigator.userAgent) ||
-                        (iOS ? (
-                          <Chip
-                            sx={{ fontWeight: 500, padding: "4px" }}
-                            label={new Intl.DisplayNames([voice.lang], { type: "region" }).of(
-                              voice.lang.split("-")[1]
-                            )}
-                            icon={
-                              <span style={{ fontSize: "16px" }}>
-                                {getFlagEmoji(voice.lang.split("-")[1])}
-                              </span>
-                            }
-                          />
-                        ) : (
-                          <span style={{ fontWeight: 500 }}>
-                            {/* Display the region of the voice's language using Intl.DisplayNames */}
-                            {new Intl.DisplayNames([voice.lang], { type: "region" }).of(
-                              voice.lang.split("-")[1]
-                            )}
-                          </span>
-                        ))}
-                      {voice.default && !iOS && (
-                        <span style={{ fontWeight: 600 }}>&nbsp;Default</span>
-                      )}
-                    </MenuItem>
-                  ))}
+                  {availableVoices
+                    // .slice()
+                    // .sort((a, b) =>
+                    //   a.lang.split("-")[1].localeCompare(b.lang.split("-")[1])
+                    // )
+                    /* Sort available voices alphabetically by language */
+                    .map((voice) => (
+                      <MenuItem
+                        key={voice.name}
+                        value={voice.name}
+                        translate="no"
+                        sx={{
+                          padding: "10px",
+                          borderRadius: "8px",
+                        }}
+                      >
+                        {voice.name} &nbsp;
+                        {/Macintosh|Android/.test(navigator.userAgent) ||
+                          (iOS ? (
+                            <Chip
+                              sx={{ fontWeight: 500, padding: "4px" }}
+                              label={new Intl.DisplayNames([voice.lang], { type: "region" }).of(
+                                voice.lang.split("-")[1]
+                              )}
+                              icon={
+                                <span style={{ fontSize: "16px" }}>
+                                  {getFlagEmoji(voice.lang.split("-")[1])}
+                                </span>
+                              }
+                            />
+                          ) : (
+                            <span style={{ fontWeight: 500 }}>
+                              {/* Display the region of the voice's language using Intl.DisplayNames */}
+                              {new Intl.DisplayNames([voice.lang], { type: "region" }).of(
+                                voice.lang.split("-")[1]
+                              )}
+                            </span>
+                          ))}
+                        {voice.default && !iOS && (
+                          <span style={{ fontWeight: 600 }}>&nbsp;Default</span>
+                        )}
+                      </MenuItem>
+                    ))}
                 </StyledSelect>
               ) : (
                 <NoVoiceStyles>
@@ -423,7 +429,7 @@ const Container = styled.div`
 `;
 
 const StyledSelect = styled(Select)`
-  max-width: 330px;
+  width: 330px;
   color: black;
   margin: 8px 0;
 `;

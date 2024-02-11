@@ -400,8 +400,8 @@ const DialogBtn = styled(Button)`
 const MenuLabel = styled.span<{ clr?: string }>`
   margin-left: auto;
   font-weight: 600;
-  background: ${({ clr }) => (clr || ColorPalette.purple) + "35"};
-  color: ${({ clr }) => clr || ColorPalette.purple};
+  background: ${({ clr, theme }) => (clr || theme.primary) + "35"};
+  color: ${({ clr, theme }) => clr || theme.primary};
   padding: 2px 12px;
   border-radius: 32px;
   font-size: 14px;

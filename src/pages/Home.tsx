@@ -1,7 +1,6 @@
 import { useState, useEffect, ReactNode, useContext, useMemo } from "react";
 import { AddTaskBtn, Tasks } from "../components";
 import {
-  ColorPalette,
   GreetingHeader,
   GreetingText,
   Offline,
@@ -118,11 +117,7 @@ const Home = () => {
                 size={64}
                 thickness={5}
                 aria-label="Progress"
-                style={{
-                  filter: settings[0].enableGlow
-                    ? `drop-shadow(0 0 6px ${ColorPalette.purple + "C8"})`
-                    : "none",
-                }}
+                glow={settings[0].enableGlow}
               />
 
               <ProgressPercentageContainer>

@@ -113,11 +113,17 @@ export const ProgressPercentageContainer = styled(Box)`
 //     filter: drop-shadow(0 0 6px ${ColorPalette.purple});
 //   }
 // `;
-export const StyledProgress = styled(CircularProgress)`
+export const StyledProgress = styled(CircularProgress)<{ glow: boolean }>`
   z-index: 1;
   margin: 2px;
-  /* filter: drop-shadow(0 0 8px ${ColorPalette.purple + "35"}); */
+  filter: ${({ glow, theme }) => (glow ? `drop-shadow(0 0 6px ${theme.primary}c8)` : "none")};
 `;
+
+/* style={{
+                  filter: settings[0].enableGlow
+                    ? `drop-shadow(0 0 6px ${ColorPalette.purple + "C8"})`
+                    : "none",
+                }} */
 
 export const Offline = styled.div`
   display: flex;

@@ -16,7 +16,6 @@ import {
   TASK_NAME_MAX_LENGTH,
 } from "../constants";
 import toast from "react-hot-toast";
-import { ColorPalette } from "../styles";
 import { UserContext } from "../contexts/UserContext";
 import { useStorageState } from "../hooks/useStorageState";
 import { useCtrlS } from "../hooks/useCtrlS";
@@ -126,6 +125,7 @@ const ImportExport = () => {
           }
 
           const isHexColor = (value: string): boolean => /^#[0-9A-Fa-f]{6}$/.test(value);
+
           const isCategoryColorValid = (category: Category) =>
             category.color && isHexColor(category.color);
 
@@ -141,8 +141,9 @@ const ImportExport = () => {
             return;
           }
 
-          if (file.size > 50_000) {
-            toast.error(`File size is too large (${file.size})`);
+          const maxFileSize = 50_000;
+          if (file.size > maxFileSize) {
+            toast.error(`File size is too large (${file.size}/${maxFileSize})`);
           }
 
           // Update user.categories if imported categories don't exist
@@ -187,13 +188,15 @@ const ImportExport = () => {
           toast((t) => (
             <div>
               Tasks Successfully Imported from <br />
-              <i style={{ wordBreak: "break-all" }}>{file.name}</i>
+              <i translate="no" style={{ wordBreak: "break-all" }}>
+                {file.name}
+              </i>
               <ul>
                 {importedTasks.map((task) => (
                   <li key={task.id}>
                     <ListContent>
                       <Emoji unified={task.emoji || ""} size={20} emojiStyle={user.emojisStyle} />
-                      <span>{task.name}</span>
+                      <span translate="no">{task.name}</span>
                     </ListContent>
                   </li>
                 ))}
@@ -368,7 +371,7 @@ const ImportExport = () => {
             component="span"
             variant="outlined"
             sx={{
-              padding: "12px 18px",
+              p: "12px 20px",
               borderRadius: "14px",
               width: "300px",
             }}
@@ -415,12 +418,12 @@ const DropZone = styled.div<{ isDragging: boolean }>`
   align-items: center;
   flex-direction: column;
   gap: 6px;
-  border: 2px dashed ${ColorPalette.purple};
+  border: 2px dashed ${({ theme }) => theme.primary};
   border-radius: 16px;
   padding: 32px 64px;
   text-align: center;
   max-width: 300px;
-  box-shadow: ${({ isDragging }) => isDragging && `0 0 32px 0px ${ColorPalette.purple}`};
+  box-shadow: ${({ isDragging, theme }) => isDragging && `0 0 32px 0px ${theme.primary}`};
   transition: 0.3s all;
 `;
 

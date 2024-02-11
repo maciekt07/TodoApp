@@ -1,4 +1,5 @@
 import { EmojiStyle } from "emoji-picker-react";
+import { AppTheme } from "../styles/theme";
 
 /**
  * Represents a user in the application.
@@ -12,6 +13,7 @@ export interface User {
   categories: Category[];
   // colors: string[];
   settings: AppSettings[];
+  theme: AppTheme;
 }
 
 /**

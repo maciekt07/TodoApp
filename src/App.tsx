@@ -1,29 +1,37 @@
 import { useStorageState } from "./hooks/useStorageState";
 import { defaultUser } from "./constants/defaultUser";
 import { User } from "./types/user";
-import { ColorPalette, GlobalStyles, MuiTheme } from "./styles";
-import { ThemeProvider } from "@mui/material";
+import { ColorPalette, GlobalStyles, MuiTheme, Themes } from "./styles";
+import { ThemeProvider, useTheme } from "@mui/material";
 import { useEffect } from "react";
 import { ErrorBoundary } from "./components";
 import { MainLayout } from "./layouts/MainLayout";
 import AppRouter from "./router";
-import { Toaster } from "react-hot-toast";
+import toast, { Toaster } from "react-hot-toast";
 import { useResponsiveDisplay } from "./hooks/useResponsiveDisplay";
 import { UserContext } from "./contexts/UserContext";
+import { DataObjectRounded } from "@mui/icons-material";
+import { ThemeProvider as EmotionTheme } from "@emotion/react";
 
 function App() {
   const [user, setUser] = useStorageState<User>(defaultUser, "user");
   const isMobile = useResponsiveDisplay();
-
+  const theme = useTheme();
   // Initialize user properties if they are undefined
   // this allows to add new properties to the user object without error
+
   useEffect(() => {
+    console.log(theme.palette.primary.main);
+
     const updateNestedProperties = (userObject: any, defaultObject: any) => {
       if (!userObject) {
         return defaultObject;
       }
 
       Object.keys(defaultObject).forEach((key) => {
+        if (key === "categories") {
+          return;
+        }
         const userValue = userObject[key];
         const defaultValue = defaultObject[key];
 
@@ -33,6 +41,21 @@ function App() {
         } else if (userValue === undefined) {
           // Update only if the property is missing in user
           userObject[key] = defaultValue;
+          // Notify users about update
+          toast.success(
+            (t) => (
+              <div onClick={() => toast.dismiss(t.id)}>
+                Added new property to user object{" "}
+                <i>
+                  {key}: {userObject[key]}
+                </i>
+              </div>
+            ),
+            {
+              duration: 6000,
+              icon: <DataObjectRounded />,
+            }
+          );
         }
       });
 
@@ -52,9 +75,21 @@ function App() {
     });
   }, []);
 
+  const getMuiTheme = () => {
+    const selectedTheme = Themes.find((theme) => theme.name === user.theme);
+    return selectedTheme ? selectedTheme.MuiTheme : MuiTheme;
+  };
+
+  const getPrimaryColor = () => {
+    const selectedTheme = Themes.find((theme) => theme.name === user.theme);
+    return selectedTheme
+      ? selectedTheme.MuiTheme.palette.primary.main
+      : MuiTheme.palette.primary.main;
+  };
+
   return (
-    <>
-      <ThemeProvider theme={MuiTheme}>
+    <ThemeProvider theme={getMuiTheme}>
+      <EmotionTheme theme={{ primary: getPrimaryColor() }}>
         <GlobalStyles />
         <Toaster
           position="top-center"
@@ -70,7 +105,7 @@ function App() {
               padding: "14px 22px",
               borderRadius: "18px",
               fontSize: "17px",
-              border: `2px solid ${ColorPalette.purple}`,
+              border: `2px solid ${getPrimaryColor()}`,
               background: "#141431e0",
               WebkitBackdropFilter: "blur(6px)",
               backdropFilter: "blur(6px)",
@@ -78,10 +113,9 @@ function App() {
             },
             success: {
               iconTheme: {
-                primary: ColorPalette.purple,
+                primary: getPrimaryColor(),
                 secondary: "white",
               },
-              style: {},
             },
             error: {
               iconTheme: {
@@ -101,8 +135,8 @@ function App() {
             </MainLayout>
           </ErrorBoundary>
         </UserContext.Provider>
-      </ThemeProvider>
-    </>
+      </EmotionTheme>
+    </ThemeProvider>
   );
 }
 

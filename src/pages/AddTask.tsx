@@ -9,12 +9,14 @@ import { CategorySelect, ColorPicker, TopBar, CustomEmojiPicker } from "../compo
 import toast from "react-hot-toast";
 import { UserContext } from "../contexts/UserContext";
 import { useStorageState } from "../hooks/useStorageState";
+import { useTheme } from "@emotion/react";
 
 const AddTask = () => {
   const { user, setUser } = useContext(UserContext);
+  const theme = useTheme();
   const [name, setName] = useStorageState<string>("", "name", "sessionStorage");
   const [emoji, setEmoji] = useStorageState<string | null>(null, "emoji", "sessionStorage");
-  const [color, setColor] = useStorageState<string>(ColorPalette.purple, "color", "sessionStorage");
+  const [color, setColor] = useStorageState<string>(theme.primary, "color", "sessionStorage");
   const [description, setDescription] = useStorageState<string>(
     "",
     "description",
@@ -124,6 +126,7 @@ const AddTask = () => {
           label="Task Name"
           name="name"
           placeholder="Enter task name"
+          autoComplete="off"
           value={name}
           onChange={handleNameChange}
           focused
@@ -142,6 +145,7 @@ const AddTask = () => {
           label="Task Description (optional)"
           name="name"
           placeholder="Enter task description"
+          autoComplete="off"
           value={description}
           onChange={handleDescriptionChange}
           multiline
@@ -192,8 +196,8 @@ const AddTask = () => {
               <Button
                 sx={{
                   margin: "8px 0 24px 0 ",
-                  padding: "12px 24px",
-                  borderRadius: "12px",
+                  p: "12px 20px",
+                  borderRadius: "14px",
                 }}
               >
                 <Edit /> &nbsp; Modify Categories

@@ -22,18 +22,16 @@ import toast from "react-hot-toast";
 import NotFound from "./NotFound";
 import { UserContext } from "../contexts/UserContext";
 import { useStorageState } from "../hooks/useStorageState";
+import { useTheme } from "@emotion/react";
 
 const Categories = () => {
   const { user, setUser } = useContext(UserContext);
+  const theme = useTheme();
 
   const [name, setName] = useStorageState<string>("", "catName", "sessionStorage");
   const [nameError, setNameError] = useState<string>("");
   const [emoji, setEmoji] = useStorageState<string | null>(null, "catEmoji", "sessionStorage");
-  const [color, setColor] = useStorageState<string>(
-    ColorPalette.purple,
-    "catColor",
-    "sessionStorage"
-  );
+  const [color, setColor] = useStorageState<string>(theme.primary, "catColor", "sessionStorage");
 
   const [openDeleteDialog, setOpenDeleteDialog] = useState<boolean>(false);
   const [selectedCategoryId, setSelectedCategoryId] = useState<number>(0);
@@ -512,8 +510,8 @@ export const AddCategoryButton = styled(Button)`
   border: none;
   padding: 18px 48px;
   font-size: 24px;
-  background: ${ColorPalette.purple};
-  color: ${getFontColorFromHex(ColorPalette.purple)};
+  background: ${({ theme }) => theme.primary};
+  color: ${({ theme }) => getFontColorFromHex(theme.primary)};
   border-radius: 999px;
   font-weight: bold;
   cursor: pointer;
@@ -522,8 +520,8 @@ export const AddCategoryButton = styled(Button)`
   width: 350px;
   text-transform: capitalize;
   &:hover {
-    box-shadow: 0px 0px 24px 0px ${ColorPalette.purple + 80};
-    background: ${ColorPalette.purple};
+    box-shadow: 0px 0px 24px 0px ${({ theme }) => theme.primary + "80"};
+    background: ${({ theme }) => theme.primary};
   }
   &:disabled {
     box-shadow: none;

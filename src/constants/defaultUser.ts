@@ -11,6 +11,7 @@ export const defaultUser: User = {
   profilePicture: null,
   emojisStyle: iOS ? EmojiStyle.NATIVE : EmojiStyle.APPLE,
   tasks: [],
+  theme: "purple",
   settings: [
     {
       enableCategories: true,

@@ -72,7 +72,7 @@ export class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoun
             <Button
               size="large"
               variant="outlined"
-              sx={{ p: "12px 20px", borderRadius: "14px" }}
+              sx={{ p: "10px 20px", borderRadius: "12px" }}
               onClick={() => {
                 localStorage.clear();
                 location.reload();

@@ -1,9 +1,10 @@
 import { CSSProperties, useCallback, useEffect, useState } from "react";
-import { ColorPalette } from "../styles";
+import { ColorElement, ColorPalette } from "../styles";
 import styled from "@emotion/styled";
 import { Casino, Colorize, Done, ExpandMoreRounded } from "@mui/icons-material";
 import { getFontColorFromHex } from "../utils";
 import { Accordion, AccordionDetails, AccordionSummary, Grid, Tooltip } from "@mui/material";
+import { useTheme } from "@emotion/react";
 
 interface ColorPickerProps {
   color: string;
@@ -29,11 +30,13 @@ export const ColorPicker: React.FC<ColorPickerProps> = ({
   const [selectedColor, setSelectedColor] = useState<string>(color);
   const [accordionExpanded, setAccordionExpanded] = useState<boolean>(false);
 
+  const theme = useTheme();
+
   const isHexColor = (value: string): boolean => /^#[0-9A-Fa-f]{6}$/.test(value);
 
   // Predefined color options
   const colors: string[] = [
-    ColorPalette.purple,
+    theme.primary,
     "#FF69B4",
     "#FB34FF",
     "#FF22B4",
@@ -79,7 +82,8 @@ export const ColorPicker: React.FC<ColorPickerProps> = ({
   // Check if the current color is a valid hex color and update it if not
   useEffect(() => {
     if (!isHexColor(color)) {
-      handleColorChange(ColorPalette.purple);
+      handleColorChange(theme.primary);
+      setSelectedColor(theme.primary);
       console.error("Invalid hex color " + color);
     }
   }, [color, handleColorChange]);
@@ -160,31 +164,6 @@ export const ColorPicker: React.FC<ColorPickerProps> = ({
     </div>
   );
 };
-// Styled button for color selection
-const ColorElement = styled.button<{ clr: string }>`
-  background-color: ${({ clr }) => clr};
-  color: ${({ clr }) => getFontColorFromHex(clr)};
-  border: none;
-  cursor: pointer;
-  width: 48px;
-  height: 48px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  border-radius: 100px;
-  transition: 0.2s all;
-  transform: scale(1);
-
-  &:focus-visible {
-    outline: 4px solid ${ColorPalette.purple};
-  }
-  &:hover {
-    transform: scale(1.05);
-    box-shadow: 0 0 12px ${({ clr }) => clr};
-    /* outline: none; */
-  }
-`;
 
 const StyledAccordion = styled(Accordion)`
   background: #ffffff1c;

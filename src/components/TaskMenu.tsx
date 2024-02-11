@@ -47,8 +47,6 @@ import { Task } from "../types/user";
 import { calculateDateDifference, formatDate } from "../utils";
 import Marquee from "react-fast-marquee";
 
-//TODO: Move all functions to TasksMenu component
-
 interface TaskMenuProps {
   selectedTaskId: number | null;
   selectedTasks: number[];
@@ -71,7 +69,6 @@ export const TaskMenu: React.FC<TaskMenuProps> = ({
   const { user, setUser } = useContext(UserContext);
   const { tasks, name, settings, emojisStyle } = user;
   const [showShareDialog, setShowShareDialog] = useState<boolean>(false);
-  const [isPlaying, setIsPlaying] = useState<boolean>(true);
   const [shareTabVal, setShareTabVal] = useState<number>(0);
   const isMobile = useResponsiveDisplay();
   const n = useNavigate();
@@ -243,6 +240,7 @@ export const TaskMenu: React.FC<TaskMenuProps> = ({
 
     const SpeechToastId = toast(
       () => {
+        const [isPlaying, setIsPlaying] = useState<boolean>(true);
         return (
           <div
             style={{
@@ -499,7 +497,7 @@ export const TaskMenu: React.FC<TaskMenuProps> = ({
                       onClick={() => {
                         handleCopyToClipboard();
                       }}
-                      sx={{ padding: "8px 12px", borderRadius: "12px" }}
+                      sx={{ p: "12px 20px", borderRadius: "14px" }}
                     >
                       <ContentCopy /> &nbsp; Copy
                     </Button>

@@ -1,6 +1,14 @@
 import styled from "@emotion/styled";
 import { Category } from "../types/user";
-import { Box, FormControl, FormLabel, MenuItem, Select, SelectChangeEvent } from "@mui/material";
+import {
+  Box,
+  Button,
+  FormControl,
+  FormLabel,
+  MenuItem,
+  Select,
+  SelectChangeEvent,
+} from "@mui/material";
 import { ColorPalette } from "../styles";
 import { Emoji } from "emoji-picker-react";
 import { getFontColorFromHex } from "../utils";
@@ -8,33 +16,35 @@ import { CSSProperties, useContext, useState } from "react";
 import { MAX_CATEGORIES } from "../constants";
 import toast from "react-hot-toast";
 import { UserContext } from "../contexts/UserContext";
-import { ExpandMoreRounded } from "@mui/icons-material";
+import { ExpandMoreRounded, RadioButtonChecked } from "@mui/icons-material";
 import { CategoryBadge } from ".";
+import { useNavigate } from "react-router-dom";
 
 interface CategorySelectProps {
-  // variant?: "standard" | "outlined" | "filled";
-  width?: CSSProperties["width"];
-  fontColor?: CSSProperties["color"];
   selectedCategories: Category[];
   setSelectedCategories: React.Dispatch<React.SetStateAction<Category[]>>;
+  width?: CSSProperties["width"];
+  fontColor?: CSSProperties["color"];
 }
+
 /**
  * Component for selecting categories with emojis.
  */
-
 export const CategorySelect: React.FC<CategorySelectProps> = ({
-  width,
-  fontColor,
   selectedCategories,
   setSelectedCategories,
+  width,
+  fontColor,
 }) => {
   const { user } = useContext(UserContext);
   const { categories, emojisStyle } = user;
+  const [selectedCats, setSelectedCats] = useState<Category[]>(selectedCategories);
   const [isOpen, setIsOpen] = useState<boolean>(false);
+
+  const n = useNavigate();
 
   const handleCategoryChange = (event: SelectChangeEvent<unknown>): void => {
     const selectedCategoryIds = event.target.value as number[];
-
     if (selectedCategoryIds.length > MAX_CATEGORIES) {
       toast.error(
         (t) => (
@@ -48,9 +58,9 @@ export const CategorySelect: React.FC<CategorySelectProps> = ({
       );
       return;
     }
-
     const selectedCategories = categories.filter((cat) => selectedCategoryIds.includes(cat.id));
     setSelectedCategories(selectedCategories);
+    setSelectedCats(selectedCategories);
   };
 
   return (
@@ -67,7 +77,7 @@ export const CategorySelect: React.FC<CategorySelectProps> = ({
       <StyledSelect
         multiple
         width={width}
-        value={selectedCategories.map((cat) => cat.id)}
+        value={selectedCats.map((cat) => cat.id)}
         onChange={handleCategoryChange}
         open={isOpen}
         onOpen={() => setIsOpen(true)}
@@ -86,10 +96,9 @@ export const CategorySelect: React.FC<CategorySelectProps> = ({
             />
           </Box>
         )}
-        sx={{ zIndex: 999 }}
         renderValue={() => (
           <Box sx={{ display: "flex", flexWrap: "wrap", gap: "4px 8px" }}>
-            {selectedCategories.map((category) => (
+            {selectedCats.map((category) => (
               <CategoryBadge
                 key={category.id}
                 category={category}
@@ -110,20 +119,21 @@ export const CategorySelect: React.FC<CategorySelectProps> = ({
           },
         }}
       >
-        <MenuItem
-          disabled
-          sx={{
-            opacity: "1 !important",
-            fontWeight: 500,
-            position: "sticky !important",
-            top: 0,
-            background: "white",
-            zIndex: 99,
-            pointerEvents: "none",
-          }}
-        >
-          Select Categories (max {MAX_CATEGORIES})
-        </MenuItem>
+        <HeaderMenuItem disabled>
+          <div style={{ display: "flex", flexDirection: "column", gap: "2px" }}>
+            <b>Select Categories (max {MAX_CATEGORIES})</b>
+            {selectedCats.length > 0 && (
+              <SelectedNames>
+                Selected{" "}
+                {selectedCats.length > 0 &&
+                  new Intl.ListFormat("en", {
+                    style: "long",
+                    type: "conjunction",
+                  }).format(selectedCats.map((category) => category.name))}
+              </SelectedNames>
+            )}
+          </div>
+        </HeaderMenuItem>
 
         {categories && categories.length > 0 ? (
           categories.map((category) => (
@@ -133,19 +143,27 @@ export const CategorySelect: React.FC<CategorySelectProps> = ({
               clr={category.color}
               translate="no"
               disable={
-                selectedCategories.length >= MAX_CATEGORIES &&
-                !selectedCategories.includes(category)
+                selectedCats.length >= MAX_CATEGORIES &&
+                !selectedCats.some((cat) => cat.id === category.id)
               }
             >
+              {selectedCats.some((cat) => cat.id === category.id) && <RadioButtonChecked />}{" "}
               {category.emoji && <Emoji unified={category.emoji} emojiStyle={emojisStyle} />}
               &nbsp;
               {category.name}
             </CategoriesMenu>
           ))
         ) : (
-          <MenuItem disabled sx={{ opacity: "1 !important" }}>
-            You don't have any categories
-          </MenuItem>
+          <NoCategories disableTouchRipple>
+            <p>You don't have any categories</p>
+            <Button
+              onClick={() => {
+                n("/categories");
+              }}
+            >
+              Add Category
+            </Button>
+          </NoCategories>
         )}
       </StyledSelect>
     </FormControl>
@@ -159,10 +177,11 @@ const StyledSelect = styled(Select)<{ width?: CSSProperties["width"] }>`
   width: ${({ width }) => width || "100%"};
   color: white;
   background: #ffffff1c;
+  z-index: 999;
 `;
 
-const CategoriesMenu = styled(MenuItem)<{ clr?: string; disable?: boolean }>`
-  padding: 8px 12px;
+const CategoriesMenu = styled(MenuItem)<{ clr: string; disable?: boolean }>`
+  padding: 12px 16px;
   border-radius: 16px;
   margin: 8px;
   display: flex;
@@ -170,12 +189,12 @@ const CategoriesMenu = styled(MenuItem)<{ clr?: string; disable?: boolean }>`
   font-weight: 500;
   transition: 0.2s all;
   color: ${(props) => getFontColorFromHex(props.clr || ColorPalette.fontLight)};
-  background: ${({ clr }) => clr || "#bcbcbc"};
-  border: 4px solid transparent;
+  background: ${({ clr }) => clr};
+  /* border: 4px solid transparent; */
   opacity: ${({ disable }) => (disable ? ".6" : "none")};
   &:hover {
-    background: ${({ clr }) => clr || "#bcbcbc"};
-    opacity: ${({ disable }) => (disable ? "none" : ".7")};
+    background: ${({ clr }) => clr};
+    opacity: ${({ disable }) => (disable ? "none" : ".8")};
   }
 
   &:focus {
@@ -183,27 +202,52 @@ const CategoriesMenu = styled(MenuItem)<{ clr?: string; disable?: boolean }>`
   }
 
   &:focus-visible {
-    border-color: ${ColorPalette.purple} !important;
+    border-color: ${({ theme }) => theme.primary} !important;
     color: ${ColorPalette.fontDark} !important;
-    transform: scale(1.05);
   }
 
   &.Mui-selected {
-    background: ${({ clr }) => clr || "#bcbcbc"};
+    background: ${({ clr }) => clr};
     color: ${(props) => getFontColorFromHex(props.clr || ColorPalette.fontLight)};
-    border: 4px solid #38b71f;
+    /* border: 4px solid #38b71f; */
     display: flex;
     justify-content: left;
     align-items: center;
     font-weight: bold;
-    &::after {
-      content: "• selected";
-      font-size: 14px;
-      font-weight: 400;
-    }
     &:hover {
-      background: ${({ clr }) => clr || "#bcbcbc"};
+      background: ${({ clr }) => clr};
       opacity: 0.7;
     }
+  }
+`;
+
+const HeaderMenuItem = styled(MenuItem)`
+  opacity: 1 !important;
+  font-weight: 500;
+  position: sticky !important;
+  top: 0;
+  background: white;
+  z-index: 99;
+  pointer-events: none;
+`;
+
+const SelectedNames = styled.span`
+  opacity: 0.9;
+  font-size: 15px;
+  word-break: break-all;
+  max-width: 300px;
+`;
+
+const NoCategories = styled(MenuItem)`
+  opacity: 1 !important;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  margin: 12px 0;
+  gap: 6px;
+  cursor: default !important;
+  &:hover {
+    background: transparent !important;
   }
 `;

@@ -18,6 +18,7 @@ import { iOS } from "../utils/iOS";
 interface EmojiPickerProps {
   emoji?: string;
   setEmoji: Dispatch<SetStateAction<any>>;
+  //TODO:
   // onEmojiChange: (emojiData: EmojiClickData) => void;
   color?: string;
   width?: CSSProperties["width"];
@@ -176,7 +177,7 @@ export const CustomEmojiPicker = ({ emoji, setEmoji, color, width }: EmojiPicker
               height="500px"
               emojiStyle={emojisStyle}
               theme={Theme.LIGHT}
-              suggestedEmojisMode={SuggestionMode.RECENT}
+              suggestedEmojisMode={SuggestionMode.FREQUENT}
               autoFocusSearch={false}
               lazyLoadEmojis
               onEmojiClick={handleEmojiClick}
@@ -200,7 +201,7 @@ export const CustomEmojiPicker = ({ emoji, setEmoji, color, width }: EmojiPicker
                 variant="outlined"
                 color="error"
                 onClick={handleRemoveEmoji}
-                sx={{ p: "8px 20px", borderRadius: "14px" }}
+                sx={{ p: "10px 20px", borderRadius: "12px" }}
               >
                 <RemoveCircleOutline /> &nbsp; Remove Emoji
               </Button>

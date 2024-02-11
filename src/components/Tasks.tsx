@@ -354,6 +354,7 @@ export const Tasks: React.FC = () => {
             focused
             color="primary"
             placeholder="Search for task..."
+            autoComplete="off"
             value={search}
             onChange={(e) => {
               setSearch(e.target.value);

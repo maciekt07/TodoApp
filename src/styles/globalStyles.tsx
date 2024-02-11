@@ -1,217 +1,222 @@
-import { Global, css, keyframes } from "@emotion/react";
+import { Global, css, keyframes, useTheme } from "@emotion/react";
 import styled from "@emotion/styled";
 import { Button } from "@mui/material";
-import { ColorPalette } from ".";
+import { getFontColorFromHex } from "../utils";
 
-const globalStyles = css`
-  * {
-    font-family: "Poppins", sans-serif !important;
-    -webkit-tap-highlight-color: transparent;
-    &::selection {
-      background-color: #9a52ff;
-      color: #ffffff;
-      text-shadow: 0 0 8px #d22eff;
-    }
-  }
-  :root {
-    font-family: "Poppins", sans-serif;
-    line-height: 1.5;
-    font-weight: 400;
+export const GlobalStyles = () => {
+  const theme = useTheme();
+  return (
+    <Global
+      styles={css`
+        * {
+          font-family: "Poppins", sans-serif !important;
+          -webkit-tap-highlight-color: transparent;
+          &::selection {
+            background-color: ${"#000000" + "e1"};
+            color: #ffffff;
+            text-shadow: 0 0 8px ${"#000000" + "c8"};
+          }
+        }
+        :root {
+          font-family: "Poppins", sans-serif;
+          line-height: 1.5;
+          font-weight: 400;
 
-    color-scheme: light;
-    color: #f5f5f5;
+          color-scheme: light;
+          color: #f5f5f5;
 
-    font-synthesis: none;
-    text-rendering: optimizeLegibility;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-    -webkit-text-size-adjust: 100%;
-    --rsbs-backdrop-bg: rgba(0, 0, 0, 0.3);
-  }
+          font-synthesis: none;
+          text-rendering: optimizeLegibility;
+          -webkit-font-smoothing: antialiased;
+          -moz-osx-font-smoothing: grayscale;
+          -webkit-text-size-adjust: 100%;
+          --rsbs-backdrop-bg: rgba(0, 0, 0, 0.3);
+        }
 
-  /* div[data-rsbs-backdrop="true"] {
-    backdrop-filter: blur(2px);
-  } */
+        /* div[data-rsbs-backdrop="true"] {
+  backdrop-filter: blur(2px);
+} */
 
-  div[role="dialog"] {
-    border-radius: 42px 42px 0 0;
-    z-index: 9999999;
-  }
+        div[role="dialog"] {
+          border-radius: 42px 42px 0 0;
+          z-index: 9999999;
+        }
 
-  div[data-rsbs-backdrop="true"] {
-    z-index: 999;
-  }
+        div[data-rsbs-backdrop="true"] {
+          z-index: 999;
+        }
 
-  div[data-rsbs-header="true"] {
-    z-index: 999999;
-    &::before {
-      width: 60px;
-      height: 6px;
-      border-radius: 100px;
-      background: #cfcfcf;
-      margin-top: 2px;
-    }
-  }
+        div[data-rsbs-header="true"] {
+          z-index: 999999;
+          &::before {
+            width: 60px;
+            height: 6px;
+            border-radius: 100px;
+            background: #cfcfcf;
+            margin-top: 2px;
+          }
+        }
 
-  body {
-    margin: 8px 16vw;
-    touch-action: manipulation;
-    //FIXME:
-    /* background: linear-gradient(180deg, #232e58 0%, #171d34 100%); */
-    background: #232e58;
-    background-attachment: fixed;
-    background-size: cover;
-    @media (max-width: 1024px) {
-      margin: 20px;
-    }
+        body {
+          margin: 8px 16vw;
+          touch-action: manipulation;
+          //FIXME:
+          /* background: linear-gradient(180deg, #232e58 0%, #171d34 100%); */
+          background: #232e58;
+          background-attachment: fixed;
+          background-size: cover;
+          @media (max-width: 1024px) {
+            margin: 20px;
+          }
 
-    /* Custom Scrollbar Styles */
-    ::-webkit-scrollbar {
-      width: 8px;
+          /* Custom Scrollbar Styles */
+          ::-webkit-scrollbar {
+            width: 8px;
 
-      background-color: #232e58;
-    }
+            background-color: #232e58;
+          }
 
-    ::-webkit-scrollbar-thumb {
-      background-color: #6d2aff;
-      border-radius: 64px;
-    }
+          ::-webkit-scrollbar-thumb {
+            background-color: ${theme.primary};
+            border-radius: 64px;
+          }
 
-    ::-webkit-scrollbar-thumb:hover {
-      background-color: #8750ff;
-    }
+          ::-webkit-scrollbar-thumb:hover {
+            background-color: ${theme.primary + "d8"};
+          }
 
-    ::-webkit-scrollbar-track {
-      border-radius: 64px;
-      background-color: #232e58;
-    }
-  }
+          ::-webkit-scrollbar-track {
+            border-radius: 64px;
+            background-color: #232e58;
+          }
+        }
 
-  pre {
-    background-color: black;
-    color: white;
-    padding: 16px;
-    border-radius: 16px;
-    overflow-x: auto;
-    border: 2px solid #40404062;
-    ::-webkit-scrollbar {
-      width: 8px;
-      height: 8px;
+        pre {
+          background-color: black;
+          color: white;
+          padding: 16px;
+          border-radius: 16px;
+          overflow-x: auto;
+          border: 2px solid #40404062;
+          ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
 
-      background-color: #232e58;
-    }
+            background-color: #232e58;
+          }
 
-    ::-webkit-scrollbar-thumb {
-      background-color: #6d2aff;
-      border-radius: 64px;
-    }
+          ::-webkit-scrollbar-thumb {
+            background-color: #6d2aff;
+            border-radius: 64px;
+          }
 
-    ::-webkit-scrollbar-thumb:hover {
-      background-color: #8750ff;
-    }
+          ::-webkit-scrollbar-thumb:hover {
+            background-color: #8750ff;
+          }
 
-    ::-webkit-scrollbar-track {
-      border-radius: 64px;
-      background-color: #232e58;
-    }
-  }
+          ::-webkit-scrollbar-track {
+            border-radius: 64px;
+            background-color: #232e58;
+          }
+        }
 
-  .EmojiPickerReact {
-    --epr-hover-bg-color: #b624ffaf;
-    --epr-focus-bg-color: #b624ffaf;
-    --epr-highlight-color: #b624ff;
-    --epr-search-border-color: #b624ff;
-    /* --epr-category-icon-active-color: #b624ff; */
-    border-radius: 20px !important;
-    padding: 8px !important;
-  }
+        .EmojiPickerReact {
+          --epr-hover-bg-color: ${theme.primary + "af"};
+          --epr-focus-bg-color: ${theme.primary + "af"};
+          --epr-highlight-color: ${theme.primary};
+          --epr-search-border-color: ${theme.primary};
+          /* --epr-category-icon-active-color: ${theme.primary}; */
+          border-radius: 20px !important;
+          padding: 8px !important;
+        }
 
-  .EmojiPickerReact .epr-category-nav > button.epr-cat-btn {
-    filter: hue-rotate(75deg);
-  }
+        .EmojiPickerReact .epr-category-nav > button.epr-cat-btn {
+          filter: hue-rotate(75deg);
+        }
 
-  .epr-body,
-  .MuiDialogContent-root,
-  .MuiDrawer-paper {
-    ::-webkit-scrollbar {
-      width: 8px;
-      border-radius: 4px;
-      background-color: #84848415;
-    }
+        .epr-body,
+        .MuiDialogContent-root,
+        .MuiDrawer-paper {
+          ::-webkit-scrollbar {
+            width: 8px;
+            border-radius: 4px;
+            background-color: #84848415;
+          }
 
-    ::-webkit-scrollbar-thumb {
-      background-color: #8484844b;
-      border-radius: 4px;
-    }
+          ::-webkit-scrollbar-thumb {
+            background-color: #8484844b;
+            border-radius: 4px;
+          }
 
-    ::-webkit-scrollbar-thumb:hover {
-      background-color: #84848476;
-    }
+          ::-webkit-scrollbar-thumb:hover {
+            background-color: #84848476;
+          }
 
-    ::-webkit-scrollbar-track {
-      border-radius: 4px;
-      background-color: #84848415;
-    }
-  }
+          ::-webkit-scrollbar-track {
+            border-radius: 4px;
+            background-color: #84848415;
+          }
+        }
 
-  .MuiDialog-container {
-    backdrop-filter: blur(4px);
-  }
-  .MuiPaper-elevation8 {
-    border-radius: 16px !important;
-  }
-  .MuiSelect-select,
-  .MuiSelect-select {
-    display: flex !important;
-    justify-content: left;
-    align-items: center;
-    gap: 4px;
-  }
-  .MuiTooltip-tooltip {
-    color: white !important;
-    background-color: #141431dd !important;
-    backdrop-filter: blur(6px) !important;
-    padding: 8px 16px !important;
-    border-radius: 8px !important;
-    font-size: 12px !important;
-  }
-  .MuiBottomNavigationAction-root {
-    padding: 12px !important;
-    margin: 0 !important;
-    max-height: none;
-  }
-  .MuiSlider-valueLabel {
-    border-radius: 10px !important;
-    /* box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.25) !important;
-    text-shadow: 0px 2px 6px rgba(0, 0, 0, 0.25) !important; */
-    padding: 6px 14px !important;
-    color: #ffffff !important;
-    background-color: #141431dd !important;
-    /* backdrop-filter: blur(6px) !important; */
+        .MuiDialog-container {
+          backdrop-filter: blur(4px);
+        }
+        .MuiPaper-elevation8 {
+          border-radius: 16px !important;
+        }
+        .MuiSelect-select,
+        .MuiSelect-select {
+          display: flex !important;
+          justify-content: left;
+          align-items: center;
+          gap: 4px;
+        }
+        .MuiTooltip-tooltip {
+          color: white !important;
+          background-color: #141431dd !important;
+          backdrop-filter: blur(6px) !important;
+          padding: 8px 16px !important;
+          border-radius: 8px !important;
+          font-size: 12px !important;
+        }
+        .MuiBottomNavigationAction-root {
+          padding: 12px !important;
+          margin: 0 !important;
+          max-height: none;
+        }
+        .MuiSlider-valueLabel {
+          border-radius: 10px !important;
+          /* box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.25) !important;
+  text-shadow: 0px 2px 6px rgba(0, 0, 0, 0.25) !important; */
+          padding: 6px 14px !important;
+          color: #ffffff !important;
+          background-color: #141431dd !important;
+          /* backdrop-filter: blur(6px) !important; */
 
-    /* margin-top: 90px; */
-    &::before,
-    &::after {
-      display: none;
-    }
-  }
-  .MuiCheckbox-colorPrimary {
-    color: #ffffffc8 !important;
-  }
-  /* .MuiModal-backdrop {
-    backdrop-filter: blur(2px);
-  } */
+          /* margin-top: 90px; */
+          &::before,
+          &::after {
+            display: none;
+          }
+        }
+        .MuiCheckbox-colorPrimary {
+          color: #ffffffc8 !important;
+        }
+        /* .MuiModal-backdrop {
+  backdrop-filter: blur(2px);
+} */
 
-  .MuiCircularProgress-circle {
-    stroke-linecap: round !important;
-  }
-  .MuiTabs-indicator {
-    border-radius: 24px !important;
-    height: 3px !important;
-  }
-`;
-
-export const GlobalStyles = () => <Global styles={globalStyles} />;
+        .MuiCircularProgress-circle {
+          stroke-linecap: round !important;
+        }
+        .MuiTabs-indicator {
+          border-radius: 24px !important;
+          height: 3px !important;
+        }
+      `}
+    />
+  );
+};
 
 export const DialogBtn = styled(Button)`
   padding: 10px 16px;
@@ -219,9 +224,9 @@ export const DialogBtn = styled(Button)`
   font-size: 16px;
   margin: 8px;
 `;
-export const StyledLink = styled.a`
+export const StyledLink = styled.a<{ clr?: string }>`
   cursor: pointer;
-  color: ${ColorPalette.purple};
+  color: ${({ clr, theme }) => clr || theme.primary};
   display: inline-block;
   position: relative;
   text-decoration: none;
@@ -235,7 +240,7 @@ export const StyledLink = styled.a`
     height: 2px;
     bottom: 0;
     left: 0;
-    background-color: ${ColorPalette.purple};
+    background-color: ${({ clr, theme }) => clr || theme.primary};
     transform-origin: bottom right;
     transition: transform 0.25s ease-out;
     border-radius: 100px;
@@ -246,7 +251,7 @@ export const StyledLink = styled.a`
     transform-origin: bottom left;
   }
   &:hover {
-    text-shadow: 0px 0px 20px ${ColorPalette.purple};
+    text-shadow: 0px 0px 20px ${({ clr, theme }) => clr || theme.primary};
   }
   &:focus,
   &:focus-visible {
@@ -254,6 +259,33 @@ export const StyledLink = styled.a`
     box-shadow: none;
   }
 `;
+
+// Styled button for color selection
+export const ColorElement = styled.button<{ clr: string; size?: string }>`
+  background-color: ${({ clr }) => clr};
+  color: ${({ clr }) => getFontColorFromHex(clr || "")};
+  border: none;
+  cursor: pointer;
+  width: ${({ size }) => size || "48px"};
+  height: ${({ size }) => size || "48px"};
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  border-radius: 999px;
+  transition: 0.2s all;
+  transform: scale(1);
+
+  &:focus-visible {
+    outline: 4px solid ${({ theme }) => theme.primary};
+  }
+  &:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 12px ${({ clr }) => clr};
+    /* outline: none; */
+  }
+`;
+
 export const PathName = styled.code`
   background: black;
   font-family: consolas !important;
@@ -293,6 +325,7 @@ export const slideInBottom = keyframes`
   }
 `;
 
+//TODO: theme color
 export const pulseAnimation = keyframes`
   0% {
     transform: scale(0.95);

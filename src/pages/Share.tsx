@@ -113,7 +113,6 @@ const SharePage = () => {
     }
   };
 
-  //TODO: finish ui
   return (
     <div>
       <Dialog

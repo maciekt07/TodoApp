@@ -6,6 +6,7 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
+  Grid,
   IconButton,
   TextField,
   Tooltip,
@@ -13,10 +14,10 @@ import {
 
 import { useContext, useEffect, useState } from "react";
 import styled from "@emotion/styled";
-import { AddAPhotoRounded, Delete, Logout, Settings } from "@mui/icons-material";
+import { AddAPhotoRounded, CheckRounded, Delete, Logout, Settings } from "@mui/icons-material";
 import { PROFILE_PICTURE_MAX_LENGTH, USER_NAME_MAX_LENGTH } from "../constants";
 import { SettingsDialog, TopBar } from "../components";
-import { ColorPalette, DialogBtn } from "../styles";
+import { ColorElement, ColorPalette, DialogBtn, Themes } from "../styles";
 import { defaultUser } from "../constants/defaultUser";
 import toast from "react-hot-toast";
 import { UserContext } from "../contexts/UserContext";
@@ -61,6 +62,7 @@ const UserSettings = () => {
     handleLogoutConfirmationClose();
     toast.success("You have been successfully logged out");
   };
+
   return (
     <>
       <TopBar title="User Profile" />
@@ -119,26 +121,42 @@ const UserSettings = () => {
           </Badge>
         </Tooltip>
         <UserName translate="no">{name || "User"}</UserName>
-
-        {/* <CreatedAtDate>
-          Registered since {new Date(user.createdAt).toLocaleDateString()}
-        </CreatedAtDate> */}
-
         <Tooltip
           title={`Created at: ${new Date(createdAt).toLocaleDateString()} • ${new Date(
             createdAt
           ).toLocaleTimeString()}`}
         >
-          <CreatedAtDate>
-            Registered{" "}
-            {/* {new Intl.RelativeTimeFormat(navigator.language, { numeric: "auto" }).format(
-              -Math.floor((Date.now() - new Date(createdAt).getTime()) / (1000 * 60 * 60 * 24)),
-              "days"
-            )} */}
-            {timeAgo(createdAt)}
-          </CreatedAtDate>
+          <CreatedAtDate>Registered {timeAgo(createdAt)}</CreatedAtDate>
         </Tooltip>
 
+        <Grid
+          container
+          spacing={1}
+          maxWidth={400}
+          m={"1 0"}
+          display="flex"
+          justifyContent="center"
+          alignItems="center"
+        >
+          {Themes.map((theme) => (
+            <Grid item key={theme.name}>
+              <Tooltip title={theme.name[0].toUpperCase() + theme.name.replace(theme.name[0], "")}>
+                <ColorElement
+                  clr={theme.MuiTheme.palette.primary.main}
+                  size="40px"
+                  onClick={() => {
+                    setUser((prevUser) => ({
+                      ...prevUser,
+                      theme: theme.name,
+                    }));
+                  }}
+                >
+                  {theme.name === user.theme && <CheckRounded />}
+                </ColorElement>
+              </Tooltip>
+            </Grid>
+          ))}
+        </Grid>
         <StyledInput
           label={name === null ? "Add Name" : "Change Name"}
           value={userName}
@@ -150,19 +168,18 @@ const UserSettings = () => {
               ? `Name is too long maximum ${USER_NAME_MAX_LENGTH} characters`
               : ""
           }
+          autoComplete="nickname"
         />
-
         <SaveBtn
           onClick={handleSaveName}
           disabled={userName.length > USER_NAME_MAX_LENGTH || userName === "" || userName === name}
         >
           Save name
         </SaveBtn>
-
         <Button
           color="error"
           variant="outlined"
-          sx={{ padding: "8px 20px", borderRadius: "14px", marginTop: "8px" }}
+          sx={{ p: "12px 20px", borderRadius: "14px", marginTop: "8px" }}
           onClick={() => setLogoutConfirmationOpen(true)}
         >
           <Logout />
@@ -177,15 +194,16 @@ const UserSettings = () => {
             label="Link to profile picture"
             sx={{ margin: "8px 0" }}
             value={profilePictureURL}
+            onChange={(e) => {
+              setProfilePictureURL(e.target.value);
+            }}
             error={profilePictureURL.length > PROFILE_PICTURE_MAX_LENGTH}
             helperText={
               profilePictureURL.length > PROFILE_PICTURE_MAX_LENGTH
                 ? `URL is too long maximum ${PROFILE_PICTURE_MAX_LENGTH} characters`
                 : ""
             }
-            onChange={(e) => {
-              setProfilePictureURL(e.target.value);
-            }}
+            autoComplete="url"
           />
           <br />
           <Button
@@ -196,7 +214,7 @@ const UserSettings = () => {
             }}
             color="error"
             variant="outlined"
-            sx={{ margin: "16px 0", padding: "8px 18px", borderRadius: "12px" }}
+            sx={{ margin: "16px 0", p: "12px 20px", borderRadius: "14px" }}
           >
             <Delete /> &nbsp; Delete Image
           </Button>
@@ -245,7 +263,7 @@ const UserSettings = () => {
 };
 
 export default UserSettings;
-
+//@ts-nocheck
 const Container = styled.div`
   margin: 0 auto;
   max-width: 400px;
@@ -254,8 +272,9 @@ const Container = styled.div`
   box-shadow: 0px 4px 50px rgba(0, 0, 0, 0.25);
   background: #f5f5f5;
   color: ${ColorPalette.fontDark};
-  border: 4px solid ${ColorPalette.purple};
-  box-shadow: 0 0 72px -1px ${ColorPalette.purple + "bf"};
+  transition: border 0.3s;
+  border: 4px solid ${({ theme }) => theme.primary};
+  box-shadow: 0 0 72px -1px ${({ theme }) => theme.primary + "bf"};
   display: flex;
   gap: 14px;
   flex-direction: column;
@@ -276,7 +295,7 @@ const StyledInput = styled(TextField)`
 const SaveBtn = styled(Button)`
   width: 300px;
   border: none;
-  background: ${ColorPalette.purple};
+  background: ${({ theme }) => theme.primary};
   color: white;
   font-size: 18px;
   padding: 14px;
@@ -284,7 +303,7 @@ const SaveBtn = styled(Button)`
   cursor: pointer;
   text-transform: capitalize;
   &:hover {
-    background: ${ColorPalette.purple};
+    background: ${({ theme }) => theme.primary};
   }
   &:disabled {
     cursor: not-allowed;
@@ -303,14 +322,3 @@ const CreatedAtDate = styled.span`
   font-weight: 300;
   opacity: 0.8;
 `;
-
-// const Beta = styled.span`
-//   background: #0e8e0e;
-//   color: #00ff00;
-//   font-size: 12px;
-//   letter-spacing: 0.03em;
-//   padding: 2px 6px;
-//   border-radius: 5px;
-//   font-weight: 600;
-//   box-shadow: 0 0 4px 0 #0e8e0e91;
-// `;

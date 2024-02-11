@@ -5,7 +5,15 @@ import {
   PersonRounded,
   TaskAlt,
 } from "@mui/icons-material";
-import { Badge, BottomNavigation, BottomNavigationAction, Box, css, styled } from "@mui/material";
+import {
+  Badge,
+  BottomNavigation,
+  BottomNavigationAction,
+  Box,
+  css,
+  styled,
+  useTheme,
+} from "@mui/material";
 import { ColorPalette, pulseAnimation, slideInBottom } from "../styles";
 import { useContext, useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -18,6 +26,7 @@ import { UserContext } from "../contexts/UserContext";
 export const BottomNav = (): JSX.Element | null => {
   const { user } = useContext(UserContext);
   const { tasks, settings } = user;
+  const theme = useTheme();
   const isMobile = useResponsiveDisplay();
   const location = useLocation();
   const [value, setValue] = useState<number | undefined>();
@@ -98,7 +107,13 @@ export const BottomNav = (): JSX.Element | null => {
           onClick={() => n("add")}
           showLabel={false}
           aria-label="Add"
-          icon={<AddIcon fontSize="large" animate={tasks.length === 0 && value !== 2} />}
+          icon={
+            <AddIcon
+              clr={theme.palette.primary.main}
+              fontSize="large"
+              animate={tasks.length === 0 && value !== 2}
+            />
+          }
         />
         <NavigationButton
           onClick={() => n("import-export")}
@@ -115,8 +130,8 @@ export const BottomNav = (): JSX.Element | null => {
   );
 };
 
-const AddIcon = styled(AddRounded)<{ animate: boolean }>`
-  border: 2px solid ${ColorPalette.purple};
+const AddIcon = styled(AddRounded)<{ clr: string; animate: boolean }>`
+  border: 2px solid ${({ clr }) => clr};
   background-color: #232e58;
   font-size: 38px;
   border-radius: 100px;
@@ -165,6 +180,6 @@ const NavigationButton = styled(BottomNavigationAction)`
   }
   & .Mui-selected {
     /* text-shadow: 0 0 12px #000000ce; */
-    text-shadow: 0 0 5px ${ColorPalette.purple + 45};
+    /* text-shadow: 0 0 5px ${ColorPalette.purple + 45}; */
   }
 `;
