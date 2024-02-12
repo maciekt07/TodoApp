@@ -25,7 +25,7 @@
 - **Clean and responsive design**: Ensures smooth user experience on various devices.
 - **Native Intl Integration**: Adapts to your language, timezone, and date preferences using the native `Intl` API
 - **Customizable Categories**: Users can create and personalize task categories to suit their preferences.
-- **Color Themes**: Users can choose several app color themes.
+- **Color Themes**: Users can choose several app color themes. <br/> <img src="public/screenshots/ColorThemes.png" width="200px" />
 - **Multi-Task Selection**: Option to select multiple tasks and perform actions on all of them at once.
 - **Search Tasks**: Search functionality allows you to filter tasks by name or description, making it easy to find what you need.
 - **Task Reading Aloud**: Option to have tasks read aloud, with a selection of voices to choose from. <br/>

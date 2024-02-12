@@ -13,7 +13,7 @@ export const TopBar: React.FC<TopBarProps> = ({ title }) => {
   return (
     <Container>
       <BackBtn onClick={handleBackClick}>
-        <ArrowBackIosNew />
+        <ArrowBackIosNew sx={{ color: "currentColor" }} />
       </BackBtn>
       <Title>{title}</Title>
     </Container>
@@ -28,7 +28,7 @@ const Container = styled.div`
   z-index: 99;
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
-  background-color: #232e58c1;
+  background-color: ${({ theme }) => theme.secondary + "c1"};
   margin-bottom: 48px;
 `;
 

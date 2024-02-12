@@ -39,13 +39,16 @@ const UserSettings = () => {
   }, [name]);
 
   const handleSaveName = () => {
-    setUser({ ...user, name: userName });
-    toast.success((t) => (
-      <div onClick={() => toast.dismiss(t.id)}>
-        Changed user name to - <b>{userName}</b>.
-      </div>
-    ));
-    setUserName("");
+    if (userName.length <= USER_NAME_MAX_LENGTH) {
+      setUser({ ...user, name: userName });
+      toast.success((t) => (
+        <div onClick={() => toast.dismiss(t.id)}>
+          Changed user name to - <b>{userName}</b>.
+        </div>
+      ));
+
+      setUserName("");
+    }
   };
 
   const handleOpenImageDialog = () => {
@@ -61,7 +64,9 @@ const UserSettings = () => {
   const handleLogout = () => {
     setUser(defaultUser);
     handleLogoutConfirmationClose();
-    toast.success("You have been successfully logged out");
+    toast.success((t) => (
+      <div onClick={() => toast.dismiss(t.id)}>You have been successfully logged out</div>
+    ));
   };
 
   return (
@@ -134,7 +139,7 @@ const UserSettings = () => {
           container
           spacing={1}
           maxWidth={400}
-          m={"1 0"}
+          marginBottom="4px"
           display="flex"
           justifyContent="center"
           alignItems="center"
@@ -144,6 +149,7 @@ const UserSettings = () => {
               <Tooltip title={theme.name[0].toUpperCase() + theme.name.replace(theme.name[0], "")}>
                 <ColorElement
                   clr={theme.MuiTheme.palette.primary.main}
+                  secondClr={theme.MuiTheme.palette.secondary.main}
                   size="40px"
                   onClick={() => {
                     setUser((prevUser) => ({
@@ -152,7 +158,7 @@ const UserSettings = () => {
                     }));
                   }}
                 >
-                  {theme.name === user.theme && <CheckRounded />}
+                  {theme.name === user.theme && <CheckRounded sx={{ color: "white" }} />}
                 </ColorElement>
               </Tooltip>
             </Grid>
@@ -210,7 +216,9 @@ const UserSettings = () => {
           <Button
             onClick={() => {
               handleCloseImageDialog();
-              toast.success("Deleted profile image");
+              toast.success((t) => (
+                <div onClick={() => toast.dismiss(t.id)}>Deleted profile image.</div>
+              ));
               setUser({ ...user, profilePicture: null });
             }}
             color="error"
@@ -238,7 +246,7 @@ const UserSettings = () => {
                   profilePicture: profilePictureURL,
                 }));
 
-                toast.success("Changed profile picture");
+                toast.success("Changed profile picture.");
               }
             }}
           >
@@ -322,4 +330,6 @@ const CreatedAtDate = styled.span`
   font-style: italic;
   font-weight: 300;
   opacity: 0.8;
+  margin-top: -6px;
+  margin-bottom: 2px;
 `;

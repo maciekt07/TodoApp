@@ -2,7 +2,7 @@ import { useStorageState } from "./hooks/useStorageState";
 import { defaultUser } from "./constants/defaultUser";
 import { User } from "./types/user";
 import { ColorPalette, GlobalStyles, Themes } from "./styles";
-import { ThemeProvider, useTheme } from "@mui/material";
+import { ThemeProvider } from "@mui/material";
 import { useEffect } from "react";
 import { ErrorBoundary } from "./components";
 import { MainLayout } from "./layouts/MainLayout";
@@ -16,13 +16,11 @@ import { ThemeProvider as EmotionTheme } from "@emotion/react";
 function App() {
   const [user, setUser] = useStorageState<User>(defaultUser, "user");
   const isMobile = useResponsiveDisplay();
-  const theme = useTheme();
+
   // Initialize user properties if they are undefined
   // this allows to add new properties to the user object without error
 
   useEffect(() => {
-    console.log(theme.palette.primary.main);
-
     const updateNestedProperties = (userObject: any, defaultObject: any) => {
       if (!userObject) {
         return defaultObject;
@@ -77,17 +75,26 @@ function App() {
 
   const getMuiTheme = () => {
     const selectedTheme = Themes.find((theme) => theme.name === user.theme);
-    return selectedTheme && selectedTheme.MuiTheme;
+    return selectedTheme ? selectedTheme.MuiTheme : Themes[0].MuiTheme;
   };
 
   const getPrimaryColor = () => {
     const selectedTheme = Themes.find((theme) => theme.name === user.theme);
-    return selectedTheme && selectedTheme.MuiTheme.palette.primary.main;
+    return selectedTheme
+      ? selectedTheme.MuiTheme.palette.primary.main
+      : Themes[0].MuiTheme.palette.primary.main;
+  };
+
+  const getSecondaryColor = () => {
+    const selectedTheme = Themes.find((theme) => theme.name === user.theme);
+    return selectedTheme
+      ? selectedTheme.MuiTheme.palette.secondary.main
+      : Themes[0].MuiTheme.palette.secondary.main;
   };
 
   return (
     <ThemeProvider theme={getMuiTheme}>
-      <EmotionTheme theme={{ primary: getPrimaryColor() }}>
+      <EmotionTheme theme={{ primary: getPrimaryColor(), secondary: getSecondaryColor() }}>
         <GlobalStyles />
         <Toaster
           position="top-center"

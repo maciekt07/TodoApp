@@ -348,19 +348,7 @@ export const TaskMenu: React.FC<TaskMenuProps> = ({
           handlePin();
         }}
       >
-        {/* <Badge
-          anchorOrigin={{
-            horizontal: "right",
-            vertical: "bottom",
-          }}
-          badgeContent={
-            tasks.find((task) => task.id === selectedTaskId)?.pinned ? (
-              <Cancel sx={{ mb: "3px", mr: "3px", fontSize: "16px" }} />
-            ) : undefined
-          }
-        > */}
         <PushPinRounded sx={{ textDecoration: "line-through" }} />
-        {/* </Badge> */}
         &nbsp; {tasks.find((task) => task.id === selectedTaskId)?.pinned ? "Unpin" : "Pin"}
       </StyledMenuItem>
 

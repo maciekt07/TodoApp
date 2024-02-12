@@ -26,7 +26,7 @@ const commonComponentProps: Theme["components"] = {
   MuiButton: {
     defaultProps: {
       sx: {
-        p: "12px 20px",
+        p: "12px 24px",
         borderRadius: "14px",
       },
     },
@@ -50,7 +50,7 @@ const commonComponentProps: Theme["components"] = {
   },
 };
 
-const createCustomTheme = (primaryColor: string): Theme => {
+export const createCustomTheme = (primaryColor: string, backgroundColor = "#232e58"): Theme => {
   return createTheme({
     components: {
       ...commonComponentProps,
@@ -59,6 +59,9 @@ const createCustomTheme = (primaryColor: string): Theme => {
       primary: {
         main: primaryColor,
       },
+      secondary: {
+        main: backgroundColor,
+      },
       error: {
         main: ColorPalette.red,
       },
@@ -66,7 +69,7 @@ const createCustomTheme = (primaryColor: string): Theme => {
   });
 };
 
-export type AppTheme = "purple" | "blue" | "orange" | "pink";
+export type AppTheme = "purple" | "blue" | "orange" | "pink" | "ultraPink";
 /**
  * To add new theme: Add theme name to `AppTheme` interface, create new Mui theme and it to this `Themes` object
  */
@@ -75,16 +78,21 @@ export const Themes: { name: AppTheme; MuiTheme: Theme }[] = [
     name: "purple",
     MuiTheme: createCustomTheme(ColorPalette.purple),
   },
+
+  {
+    name: "blue",
+    MuiTheme: createCustomTheme("#2a93d5"),
+  },
+  // {
+  //   name: "orange",
+  //   MuiTheme: createCustomTheme("#ff8e2b"),
+  // },
   {
     name: "pink",
     MuiTheme: createCustomTheme("#e5369a"),
   },
   {
-    name: "blue",
-    MuiTheme: createCustomTheme("#2a93d5"),
-  },
-  {
-    name: "orange",
-    MuiTheme: createCustomTheme("#ff8e2b"),
+    name: "ultraPink",
+    MuiTheme: createCustomTheme("#ff0090", "#ff94d1"),
   },
 ];

@@ -2,6 +2,7 @@ import { Global, css, keyframes, useTheme } from "@emotion/react";
 import styled from "@emotion/styled";
 import { Button } from "@mui/material";
 import { getFontColorFromHex } from "../utils";
+import { ColorPalette } from ".";
 
 export const GlobalStyles = () => {
   const theme = useTheme();
@@ -22,10 +23,8 @@ export const GlobalStyles = () => {
           font-family: "Poppins", sans-serif;
           line-height: 1.5;
           font-weight: 400;
-
           color-scheme: light;
-          color: #f5f5f5;
-
+          color: ${ColorPalette.fontLight};
           font-synthesis: none;
           text-rendering: optimizeLegibility;
           -webkit-font-smoothing: antialiased;
@@ -63,7 +62,7 @@ export const GlobalStyles = () => {
           touch-action: manipulation;
           //FIXME:
           /* background: linear-gradient(180deg, #232e58 0%, #171d34 100%); */
-          background: #232e58;
+          background: ${theme.secondary};
           background-attachment: fixed;
           background-size: cover;
           @media (max-width: 1024px) {
@@ -74,7 +73,7 @@ export const GlobalStyles = () => {
           ::-webkit-scrollbar {
             width: 8px;
 
-            background-color: #232e58;
+            background-color: ${theme.secondary};
           }
 
           ::-webkit-scrollbar-thumb {
@@ -88,7 +87,7 @@ export const GlobalStyles = () => {
 
           ::-webkit-scrollbar-track {
             border-radius: 64px;
-            background-color: #232e58;
+            background-color: ${theme.secondary};
           }
         }
 
@@ -262,8 +261,10 @@ export const StyledLink = styled.a<{ clr?: string }>`
 `;
 
 // Styled button for color selection
-export const ColorElement = styled.button<{ clr: string; size?: string }>`
-  background-color: ${({ clr }) => clr};
+export const ColorElement = styled.button<{ clr: string; secondClr?: string; size?: string }>`
+  background: ${({ clr, secondClr }) =>
+    secondClr ? `linear-gradient(135deg, ${clr} 50%, ${secondClr} 50%)` : clr};
+
   color: ${({ clr }) => getFontColorFromHex(clr || "")};
   border: none;
   cursor: pointer;

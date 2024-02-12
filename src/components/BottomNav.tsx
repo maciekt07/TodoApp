@@ -132,7 +132,7 @@ export const BottomNav = (): JSX.Element | null => {
 
 const AddIcon = styled(AddRounded)<{ clr: string; animate: boolean }>`
   border: 2px solid ${({ clr }) => clr};
-  background-color: #232e58;
+  background-color: ${({ theme }) => theme.palette.secondary.main};
   font-size: 38px;
   border-radius: 100px;
   padding: 6px;
@@ -155,7 +155,7 @@ const Container = styled(Box)`
 
 const StyledBottomNavigation = styled(BottomNavigation)`
   border-radius: 24px 24px 0 0;
-  background: #232e58e1;
+  background: ${({ theme }) => theme.palette.secondary.main + "c8"};
   backdrop-filter: blur(18px);
   margin: 0px 20px 0px -20px;
   padding: 18px 10px 32px 10px;
