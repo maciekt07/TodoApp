@@ -300,6 +300,7 @@ const Categories = () => {
               setColor(color);
             }}
             width={360}
+            fontColor={getFontColorFromHex(theme.secondary)}
           />
           <AddCategoryButton
             onClick={handleAddCategory}
@@ -387,7 +388,7 @@ const Categories = () => {
               />
               <ColorPicker
                 color={editColor}
-                width={300}
+                width="300px"
                 fontColor={ColorPalette.fontDark}
                 onColorChange={(clr) => {
                   setEditColor(clr);
@@ -485,14 +486,15 @@ const ActionButton = styled.div`
 `;
 const StyledInput = styled(TextField)`
   margin: 12px;
+
   .MuiOutlinedInput-root {
     border-radius: 16px;
     transition: 0.3s all;
     width: 350px;
-    color: white;
+    color: ${({ theme }) => getFontColorFromHex(theme.secondary)};
   }
   & .MuiFormHelperText-root {
-    color: white;
+    color: ${({ theme }) => getFontColorFromHex(theme.secondary)};
     opacity: 0.8;
   }
 `;

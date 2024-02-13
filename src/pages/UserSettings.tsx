@@ -43,7 +43,14 @@ const UserSettings = () => {
       setUser({ ...user, name: userName });
       toast.success((t) => (
         <div onClick={() => toast.dismiss(t.id)}>
-          Changed user name to - <b>{userName}</b>.
+          Changed user name
+          {userName && (
+            <>
+              {" "}
+              to <b>{userName}</b>
+            </>
+          )}
+          .
         </div>
       ));
 
@@ -246,7 +253,9 @@ const UserSettings = () => {
                   profilePicture: profilePictureURL,
                 }));
 
-                toast.success("Changed profile picture.");
+                toast.success((t) => (
+                  <div onClick={() => toast.dismiss(t.id)}>Changed profile picture.</div>
+                ));
               }
             }}
           >

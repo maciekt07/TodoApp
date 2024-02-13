@@ -2,7 +2,6 @@ import { Global, css, keyframes, useTheme } from "@emotion/react";
 import styled from "@emotion/styled";
 import { Button } from "@mui/material";
 import { getFontColorFromHex } from "../utils";
-import { ColorPalette } from ".";
 
 export const GlobalStyles = () => {
   const theme = useTheme();
@@ -24,7 +23,7 @@ export const GlobalStyles = () => {
           line-height: 1.5;
           font-weight: 400;
           color-scheme: light;
-          color: ${ColorPalette.fontLight};
+          color: ${getFontColorFromHex(theme.secondary)};
           font-synthesis: none;
           text-rendering: optimizeLegibility;
           -webkit-font-smoothing: antialiased;

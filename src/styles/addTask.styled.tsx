@@ -9,20 +9,6 @@ export const Container = styled.div`
   flex-direction: column;
 `;
 
-export const Input = styled.input`
-  font-size: 24px;
-  border: none;
-  width: 400px;
-  padding: 16px;
-  border-radius: 20px;
-  background-color: #ffffffd8;
-  border: 4px solid #7614ff;
-  color: #212121;
-  &::placeholder {
-    color: #212121;
-  }
-`;
-
 export const AddTaskButton = styled(Button)`
   margin-top: 4px;
   border: none;
@@ -45,7 +31,7 @@ export const AddTaskButton = styled(Button)`
     box-shadow: none;
     cursor: not-allowed;
     opacity: 0.7;
-    color: white;
+    color: ${({ theme }) => getFontColorFromHex(theme.secondary)};
   }
 `;
 export const StyledInput = styled(TextField)<{ helpercolor?: string }>`
@@ -54,10 +40,10 @@ export const StyledInput = styled(TextField)<{ helpercolor?: string }>`
     border-radius: 16px;
     transition: 0.3s all;
     width: 400px;
-    color: white;
+    color: ${({ theme }) => getFontColorFromHex(theme.secondary)};
   }
   .MuiFormHelperText-root {
-    color: ${({ helpercolor }) => helpercolor || "white"};
+    color: ${({ helpercolor, theme }) => helpercolor || getFontColorFromHex(theme.secondary)};
     opacity: 0.8;
   }
 `;

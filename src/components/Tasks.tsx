@@ -53,6 +53,7 @@ import { UserContext } from "../contexts/UserContext";
 import { useStorageState } from "../hooks/useStorageState";
 import { DESCRIPTION_SHORT_LENGTH } from "../constants";
 import { useCtrlS } from "../hooks/useCtrlS";
+import { useTheme } from "@emotion/react";
 
 /**
  * Component to display a list of tasks.
@@ -78,6 +79,8 @@ export const Tasks: React.FC = () => {
   const [deleteSelectedOpen, setDeleteSelectedOpen] = useState<boolean>(false);
 
   const isMobile = useResponsiveDisplay();
+
+  const theme = useTheme();
 
   useCtrlS();
 
@@ -449,7 +452,11 @@ export const Tasks: React.FC = () => {
             </div>
             <div style={{ display: "flex", alignItems: "center", gap: "4px" }}>
               <Tooltip title="Mark selected as done">
-                <IconButton sx={{ color: "white" }} size="large" onClick={handleMarkSelectedAsDone}>
+                <IconButton
+                  sx={{ color: getFontColorFromHex(theme.secondary) }}
+                  size="large"
+                  onClick={handleMarkSelectedAsDone}
+                >
                   <DoneAll />
                 </IconButton>
               </Tooltip>
@@ -458,7 +465,7 @@ export const Tasks: React.FC = () => {
                   <Delete />
                 </IconButton>
               </Tooltip>
-              <Tooltip sx={{ color: "white" }} title="Cancel">
+              <Tooltip sx={{ color: getFontColorFromHex(theme.secondary) }} title="Cancel">
                 <IconButton size="large" onClick={() => setSelectedTasks([])}>
                   <CancelRounded />
                 </IconButton>

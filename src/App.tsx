@@ -17,6 +17,11 @@ function App() {
   const [user, setUser] = useStorageState<User>(defaultUser, "user");
   const isMobile = useResponsiveDisplay();
 
+  // Update the theme color meta tag in the document's head based on the user's selected theme.
+  useEffect(() => {
+    document.querySelector("meta[name=theme-color]")?.setAttribute("content", getSecondaryColor());
+  }, [user.theme]);
+
   // Initialize user properties if they are undefined
   // this allows to add new properties to the user object without error
 
@@ -105,7 +110,7 @@ function App() {
           }}
           toastOptions={{
             position: "bottom-center",
-            duration: 4000,
+            duration: 3800,
             style: {
               padding: "14px 22px",
               borderRadius: "18px",

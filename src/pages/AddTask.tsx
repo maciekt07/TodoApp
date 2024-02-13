@@ -10,6 +10,7 @@ import toast from "react-hot-toast";
 import { UserContext } from "../contexts/UserContext";
 import { useStorageState } from "../hooks/useStorageState";
 import { useTheme } from "@emotion/react";
+import { getFontColorFromHex } from "../utils";
 
 const AddTask = () => {
   const { user, setUser } = useContext(UserContext);
@@ -170,7 +171,10 @@ const AddTask = () => {
           onChange={handleDeadlineChange}
           defaultValue=""
           focused
-          sx={{ colorScheme: "dark" }}
+          sx={{
+            colorScheme:
+              getFontColorFromHex(theme.secondary) === ColorPalette.fontDark ? "light" : "dark",
+          }}
           InputProps={{
             startAdornment:
               deadline && deadline !== "" ? (
@@ -191,6 +195,7 @@ const AddTask = () => {
               selectedCategories={selectedCategories}
               setSelectedCategories={setSelectedCategories}
               width="400px"
+              fontColor={getFontColorFromHex(theme.secondary)}
             />
             <Link to="/categories">
               <Button
@@ -211,6 +216,7 @@ const AddTask = () => {
           onColorChange={(color) => {
             setColor(color);
           }}
+          fontColor={getFontColorFromHex(theme.secondary)}
         />
         <AddTaskButton
           onClick={handleAddTask}

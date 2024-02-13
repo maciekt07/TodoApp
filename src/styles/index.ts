@@ -23,7 +23,7 @@ export {
   Offline,
   StyledProgress,
 } from "./home.styled";
-export { Container, Input, AddTaskButton, StyledInput } from "./addTask.styled";
+export { Container, AddTaskButton, StyledInput } from "./addTask.styled";
 export {
   TaskComponent,
   EmojiContainer,

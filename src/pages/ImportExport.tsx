@@ -8,7 +8,7 @@ import Box from "@mui/material/Box";
 import styled from "@emotion/styled";
 import { Emoji } from "emoji-picker-react";
 import { FileDownload, FileUpload, Info, Link } from "@mui/icons-material";
-import { exportTasksToJson } from "../utils";
+import { exportTasksToJson, getFontColorFromHex } from "../utils";
 import { IconButton, Tooltip } from "@mui/material";
 import {
   CATEGORY_NAME_MAX_LENGTH,
@@ -282,7 +282,7 @@ const ImportExport = () => {
         Select Tasks To Export&nbsp;
         <Tooltip title="Duplicates will be removed during import">
           <IconButton style={{ color: "#ffffff" }}>
-            <Info />
+            <InfoIcon />
           </IconButton>
         </Tooltip>
       </h2>
@@ -398,6 +398,7 @@ const TaskContainer = styled(Box)<{ backgroundclr: string; selected: boolean }>`
   padding: 10px 4px;
   border-radius: 16px;
   background: #19172b94;
+  color: white;
   border: 2px solid ${(props) => props.backgroundclr};
   box-shadow: ${(props) => props.selected && `0 0 8px 1px ${props.backgroundclr}`};
   transition: 0.3s all;
@@ -425,6 +426,10 @@ const DropZone = styled.div<{ isDragging: boolean }>`
   max-width: 300px;
   box-shadow: ${({ isDragging, theme }) => isDragging && `0 0 32px 0px ${theme.primary}`};
   transition: 0.3s all;
+`;
+
+const InfoIcon = styled(Info)`
+  color: ${({ theme }) => getFontColorFromHex(theme.secondary)};
 `;
 
 const Container = styled(Box)`
