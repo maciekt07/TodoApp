@@ -22,9 +22,7 @@ const NotFound: React.FC<NotFoundProps> = ({ message }) => {
       <ErrorCode>404</ErrorCode>
       <NotFoundImg src={TaskNotFound} />
       <Description>
-        {message ? (
-          message
-        ) : (
+        {message || (
           <div>
             Page{" "}
             <PathName>

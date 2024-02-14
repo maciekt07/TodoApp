@@ -70,7 +70,7 @@ export const createCustomTheme = (primaryColor: string, backgroundColor = "#232e
   });
 };
 
-export type AppTheme = "purple" | "blue" | "orange" | "pink" | "ultraPink";
+export type AppTheme = "purple" | "light purple" | "blue" | "pink" | "ultra pink";
 /**
  * To add a new theme:
  * 1. Update the AppTheme interface with the new theme name.
@@ -82,21 +82,20 @@ export const Themes: { name: AppTheme; MuiTheme: Theme }[] = [
     name: "purple",
     MuiTheme: createCustomTheme(ColorPalette.purple),
   },
-
+  {
+    name: "light purple",
+    MuiTheme: createCustomTheme(ColorPalette.purple, "#edeef6"),
+  },
   {
     name: "blue",
     MuiTheme: createCustomTheme("#2a93d5"),
   },
-  // {
-  //   name: "orange",
-  //   MuiTheme: createCustomTheme("#ff8e2b"),
-  // },
   {
     name: "pink",
     MuiTheme: createCustomTheme("#e5369a"),
   },
   {
-    name: "ultraPink",
+    name: "ultra pink",
     MuiTheme: createCustomTheme("#ff0090", "#ff94d1"),
   },
 ];

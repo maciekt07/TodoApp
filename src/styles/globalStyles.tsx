@@ -1,7 +1,7 @@
 import { Global, css, keyframes, useTheme } from "@emotion/react";
 import styled from "@emotion/styled";
 import { Button } from "@mui/material";
-import { getFontColorFromHex } from "../utils";
+import { getFontColor } from "../utils";
 
 export const GlobalStyles = () => {
   const theme = useTheme();
@@ -14,8 +14,8 @@ export const GlobalStyles = () => {
           -webkit-tap-highlight-color: transparent;
           &::selection {
             background-color: ${theme.primary};
-            color: ${getFontColorFromHex(theme.primary)};
-            text-shadow: 0 0 8px ${"#000000c8"};
+            color: ${getFontColor(theme.primary)};
+            text-shadow: 0 0 12px ${getFontColor(theme.primary) + "b9"};
           }
         }
         :root {
@@ -23,7 +23,7 @@ export const GlobalStyles = () => {
           line-height: 1.5;
           font-weight: 400;
           color-scheme: light;
-          color: ${getFontColorFromHex(theme.secondary)};
+          color: ${getFontColor(theme.secondary)};
           font-synthesis: none;
           text-rendering: optimizeLegibility;
           -webkit-font-smoothing: antialiased;
@@ -264,7 +264,7 @@ export const ColorElement = styled.button<{ clr: string; secondClr?: string; siz
   background: ${({ clr, secondClr }) =>
     secondClr ? `linear-gradient(135deg, ${clr} 50%, ${secondClr} 50%)` : clr};
 
-  color: ${({ clr }) => getFontColorFromHex(clr || "")};
+  color: ${({ clr }) => getFontColor(clr || "")};
   border: none;
   cursor: pointer;
   width: ${({ size }) => size || "48px"};
@@ -281,7 +281,7 @@ export const ColorElement = styled.button<{ clr: string; secondClr?: string; siz
     outline: 4px solid ${({ theme }) => theme.primary};
   }
   &:hover {
-    transform: scale(1.05);
+    /* transform: scale(1.05); */
     box-shadow: 0 0 12px ${({ clr }) => clr};
     /* outline: none; */
   }
@@ -289,6 +289,7 @@ export const ColorElement = styled.button<{ clr: string; secondClr?: string; siz
 
 export const PathName = styled.code`
   background: black;
+  color: white;
   font-family: consolas !important;
   padding: 4px 6px;
   border-radius: 8px;

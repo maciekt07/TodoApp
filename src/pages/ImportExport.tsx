@@ -8,7 +8,7 @@ import Box from "@mui/material/Box";
 import styled from "@emotion/styled";
 import { Emoji } from "emoji-picker-react";
 import { FileDownload, FileUpload, Info, Link } from "@mui/icons-material";
-import { exportTasksToJson, getFontColorFromHex } from "../utils";
+import { exportTasksToJson, getFontColor } from "../utils";
 import { IconButton, Tooltip } from "@mui/material";
 import {
   CATEGORY_NAME_MAX_LENGTH,
@@ -429,7 +429,7 @@ const DropZone = styled.div<{ isDragging: boolean }>`
 `;
 
 const InfoIcon = styled(Info)`
-  color: ${({ theme }) => getFontColorFromHex(theme.secondary)};
+  color: ${({ theme }) => getFontColor(theme.secondary)};
 `;
 
 const Container = styled(Box)`
@@ -469,7 +469,7 @@ const StyledButton = styled(Button)`
   width: 300px;
 
   &:disabled {
-    color: #ffffff58;
-    border-color: #ffffff58;
+    color: ${({ theme }) => getFontColor(theme.secondary) + "82"};
+    border-color: ${({ theme }) => getFontColor(theme.secondary) + "82"};
   }
 `;

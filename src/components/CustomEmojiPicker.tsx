@@ -9,7 +9,7 @@ import EmojiPicker, {
   SuggestionMode,
   Theme,
 } from "emoji-picker-react";
-import { getFontColorFromHex } from "../utils";
+import { getFontColor } from "../utils";
 import { ColorPalette, fadeIn } from "../styles";
 import { UserContext } from "../contexts/UserContext";
 import { useOnlineStatus } from "../hooks/useOnlineStatus";
@@ -22,11 +22,13 @@ interface EmojiPickerProps {
   // onEmojiChange: (emojiData: EmojiClickData) => void;
   color?: string;
   width?: CSSProperties["width"];
+  theme?: "light" | "dark";
 }
 
-export const CustomEmojiPicker = ({ emoji, setEmoji, color, width }: EmojiPickerProps) => {
+export const CustomEmojiPicker = ({ emoji, setEmoji, color, width, theme }: EmojiPickerProps) => {
   const { user, setUser } = useContext(UserContext);
   const { emojisStyle } = user;
+
   const [showEmojiPicker, setShowEmojiPicker] = useState<boolean>(false);
 
   const [currentEmoji, setCurrentEmoji] = useState<string | null>(emoji || null);
@@ -82,7 +84,7 @@ export const CustomEmojiPicker = ({ emoji, setEmoji, color, width }: EmojiPicker
       );
     } else {
       // If no emoji is selected, show the AddReaction icon with the specified color or default purple
-      const fontColor = color ? getFontColorFromHex(color) : ColorPalette.fontLight;
+      const fontColor = color ? getFontColor(color) : ColorPalette.fontLight;
       return (
         <AddReaction
           sx={{
@@ -176,7 +178,7 @@ export const CustomEmojiPicker = ({ emoji, setEmoji, color, width }: EmojiPicker
               width={width || "350px"}
               height="500px"
               emojiStyle={emojisStyle}
-              theme={Theme.LIGHT}
+              theme={theme === "light" ? Theme.LIGHT : Theme.DARK}
               suggestedEmojisMode={SuggestionMode.FREQUENT}
               autoFocusSearch={false}
               lazyLoadEmojis

@@ -1,6 +1,6 @@
 import { Category, Task } from "../types/user";
 import { ReactNode, useContext, useEffect, useState } from "react";
-import { calculateDateDifference, formatDate, getFontColorFromHex, iOS } from "../utils";
+import { calculateDateDifference, formatDate, getFontColor, iOS } from "../utils";
 import {
   CancelRounded,
   Close,
@@ -453,7 +453,7 @@ export const Tasks: React.FC = () => {
             <div style={{ display: "flex", alignItems: "center", gap: "4px" }}>
               <Tooltip title="Mark selected as done">
                 <IconButton
-                  sx={{ color: getFontColorFromHex(theme.secondary) }}
+                  sx={{ color: getFontColor(theme.secondary) }}
                   size="large"
                   onClick={handleMarkSelectedAsDone}
                 >
@@ -465,7 +465,7 @@ export const Tasks: React.FC = () => {
                   <Delete />
                 </IconButton>
               </Tooltip>
-              <Tooltip sx={{ color: getFontColorFromHex(theme.secondary) }} title="Cancel">
+              <Tooltip sx={{ color: getFontColor(theme.secondary) }} title="Cancel">
                 <IconButton size="large" onClick={() => setSelectedTasks([])}>
                   <CancelRounded />
                 </IconButton>
@@ -494,14 +494,14 @@ export const Tasks: React.FC = () => {
               key={task.id}
               id={task.id.toString()}
               backgroundColor={task.color}
-              clr={getFontColorFromHex(task.color)}
+              clr={getFontColor(task.color)}
               glow={user.settings[0].enableGlow}
               done={task.done}
               blur={selectedTaskId !== task.id && open && !isMobile}
             >
               {selectedTasks.length > 0 && (
                 <StyledRadio
-                  clr={getFontColorFromHex(task.color)}
+                  clr={getFontColor(task.color)}
                   checked={selectedTasks.includes(task.id)}
                   icon={<RadioButtonUnchecked />}
                   checkedIcon={<RadioButtonChecked />}
@@ -516,7 +516,7 @@ export const Tasks: React.FC = () => {
               )}
               {task.emoji || task.done ? (
                 <EmojiContainer
-                  clr={getFontColorFromHex(task.color)}
+                  clr={getFontColor(task.color)}
                   // onDoubleClick={() => handleSelectTask(task.id)}
                 >
                   {task.done ? (
@@ -571,7 +571,7 @@ export const Tasks: React.FC = () => {
                       fontSize="small"
                       animate={new Date() > new Date(task.deadline) && !task.done}
                       sx={{
-                        color: `${getFontColorFromHex(task.color)} !important`,
+                        color: `${getFontColor(task.color)} !important`,
                       }}
                     />{" "}
                     &nbsp;
@@ -609,10 +609,7 @@ export const Tasks: React.FC = () => {
                     user.settings[0].enableCategories &&
                     task.category.map((category) => (
                       <div key={category.id}>
-                        <CategoryBadge
-                          category={category}
-                          borderclr={getFontColorFromHex(task.color)}
-                        />
+                        <CategoryBadge category={category} borderclr={getFontColor(task.color)} />
                       </div>
                     ))}
                 </div>
@@ -623,7 +620,7 @@ export const Tasks: React.FC = () => {
                 aria-haspopup="true"
                 aria-expanded={open ? "true" : undefined}
                 onClick={(event) => handleClick(event, task.id)}
-                sx={{ color: getFontColorFromHex(task.color) }}
+                sx={{ color: getFontColor(task.color) }}
               >
                 <MoreVert />
               </IconButton>

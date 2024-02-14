@@ -4,10 +4,10 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { useContext, useEffect, useState } from "react";
 import { Task } from "../types/user";
 import toast from "react-hot-toast";
-import { calculateDateDifference, getFontColorFromHex } from "../utils";
+import { calculateDateDifference, getFontColor } from "../utils";
 import { Emoji } from "emoji-picker-react";
 import { UserContext } from "../contexts/UserContext";
-import { PushPinRounded } from "@mui/icons-material";
+import { PushPinRounded, TodayRounded } from "@mui/icons-material";
 import { USER_NAME_MAX_LENGTH } from "../constants";
 import { CategoryBadge } from "../components";
 
@@ -135,7 +135,7 @@ const SharePage = () => {
               <div
                 style={{
                   background: taskData.color,
-                  color: getFontColorFromHex(taskData.color || ""),
+                  color: getFontColor(taskData.color || ""),
                   padding: "12px 24px",
                   borderRadius: "22px",
                   width: "300px",
@@ -153,7 +153,9 @@ const SharePage = () => {
                 <p translate="no">{taskData.description}</p>
                 {taskData.deadline && (
                   <p translate="no">
-                    <b translate="yes">Deadline:</b>{" "}
+                    <b translate="yes" style={{ display: "inline-block" }}>
+                      <TodayRounded sx={{ verticalAlign: "middle" }} /> Deadline:
+                    </b>{" "}
                     {new Date(taskData.deadline).toLocaleDateString()} {" • "}
                     {new Date(taskData.deadline).toLocaleTimeString()} {" • "}{" "}
                     {calculateDateDifference(new Date(taskData.deadline))}
@@ -173,10 +175,7 @@ const SharePage = () => {
                   >
                     {taskData.category.map((cat) => (
                       <div key={cat.id}>
-                        <CategoryBadge
-                          category={cat}
-                          borderclr={getFontColorFromHex(taskData.color)}
-                        />
+                        <CategoryBadge category={cat} borderclr={getFontColor(taskData.color)} />
                       </div>
                     ))}
                   </div>

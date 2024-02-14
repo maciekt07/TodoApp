@@ -16,7 +16,7 @@ import {
 } from "@mui/material";
 import { Delete, Edit } from "@mui/icons-material";
 import { CATEGORY_NAME_MAX_LENGTH } from "../constants";
-import { getFontColorFromHex } from "../utils";
+import { getFontColor } from "../utils";
 import { ColorPalette, DialogBtn, fadeIn } from "../styles";
 import toast from "react-hot-toast";
 import NotFound from "./NotFound";
@@ -276,6 +276,7 @@ const Categories = () => {
             emoji={typeof emoji === "string" ? emoji : undefined}
             setEmoji={setEmoji}
             color={color}
+            theme={getFontColor(theme.secondary) === ColorPalette.fontDark ? "dark" : "light"}
           />
           <StyledInput
             focused
@@ -300,7 +301,7 @@ const Categories = () => {
               setColor(color);
             }}
             width={360}
-            fontColor={getFontColorFromHex(theme.secondary)}
+            fontColor={getFontColor(theme.secondary)}
           />
           <AddCategoryButton
             onClick={handleAddCategory}
@@ -432,21 +433,21 @@ const CategoriesContainer = styled.div`
   ::-webkit-scrollbar {
     width: 8px;
     border-radius: 4px;
-    background-color: #ffffff15;
+    background-color: ${({ theme }) => getFontColor(theme.secondary) + "15"};
   }
 
   ::-webkit-scrollbar-thumb {
-    background-color: #ffffff30;
+    background-color: ${({ theme }) => getFontColor(theme.secondary) + "30"};
     border-radius: 4px;
   }
 
   ::-webkit-scrollbar-thumb:hover {
-    background-color: #ffffff50;
+    background-color: ${({ theme }) => getFontColor(theme.secondary) + "50"};
   }
 
   ::-webkit-scrollbar-track {
     border-radius: 4px;
-    background-color: #ffffff15;
+    background-color: ${({ theme }) => getFontColor(theme.secondary) + "15"};
   }
 `;
 
@@ -467,7 +468,7 @@ const CategoryDiv = styled.div<{ clr: string }>`
   padding: 12px;
   border-radius: 18px;
   background: ${({ clr }) => clr};
-  color: ${({ clr }) => getFontColorFromHex(clr)};
+  color: ${({ clr }) => getFontColor(clr)};
   animation: ${fadeIn} 0.5s ease-in-out;
 `;
 
@@ -491,10 +492,10 @@ const StyledInput = styled(TextField)`
     border-radius: 16px;
     transition: 0.3s all;
     width: 350px;
-    color: ${({ theme }) => getFontColorFromHex(theme.secondary)};
+    color: ${({ theme }) => getFontColor(theme.secondary)};
   }
   & .MuiFormHelperText-root {
-    color: ${({ theme }) => getFontColorFromHex(theme.secondary)};
+    color: ${({ theme }) => getFontColor(theme.secondary)};
     opacity: 0.8;
   }
 `;
@@ -513,7 +514,7 @@ export const AddCategoryButton = styled(Button)`
   padding: 18px 48px;
   font-size: 24px;
   background: ${({ theme }) => theme.primary};
-  color: ${({ theme }) => getFontColorFromHex(theme.primary)};
+  color: ${({ theme }) => getFontColor(theme.primary)};
   border-radius: 999px;
   font-weight: bold;
   cursor: pointer;

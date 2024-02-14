@@ -1,7 +1,7 @@
 import styled from "@emotion/styled";
 import { ArrowBackIosNewRounded } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
-import { getFontColorFromHex } from "../utils";
+import { getFontColor } from "../utils";
 import { IconButton } from "@mui/material";
 
 interface TopBarProps {
@@ -34,7 +34,7 @@ const Container = styled.div`
 `;
 
 const ArrowIcon = styled(ArrowBackIosNewRounded)`
-  color: ${({ theme }) => getFontColorFromHex(theme.secondary)};
+  color: ${({ theme }) => getFontColor(theme.secondary)};
 `;
 
 const Title = styled.h2`
@@ -46,7 +46,7 @@ const Title = styled.h2`
 `;
 const BackBtn = styled(IconButton)`
   position: absolute;
-  color: ${({ theme }) => getFontColorFromHex(theme.secondary)};
+  color: ${({ theme }) => getFontColor(theme.secondary)};
   @media (max-width: 1024px) {
     margin-top: 4px;
   }

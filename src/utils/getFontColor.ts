@@ -5,7 +5,7 @@ import { ColorPalette } from "../styles";
  * @param {string} backgroundColor - The background color in hexformat (e.g., "#FFFFFF").
  * @returns {string} The font color in hex format.
  */
-export const getFontColorFromHex = (backgroundColor: string): string => {
+export const getFontColor = (backgroundColor: string): string => {
   const hexColor = backgroundColor.replace("#", "");
   const red = parseInt(hexColor.substr(0, 2), 16);
   const green = parseInt(hexColor.substr(2, 2), 16);

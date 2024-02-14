@@ -1,5 +1,5 @@
 import { Avatar, Chip, ChipProps, styled } from "@mui/material";
-import { getFontColorFromHex } from "../utils";
+import { getFontColor } from "../utils";
 import { fadeIn } from "../styles";
 import { Emoji, EmojiStyle } from "emoji-picker-react";
 import { useContext } from "react";
@@ -69,7 +69,7 @@ interface StyledBadgeProps {
 }
 
 export const StyledCategoryBadge = styled(Chip)<StyledBadgeProps>`
-  color: ${({ backgroundclr }) => getFontColorFromHex(backgroundclr || "")};
+  color: ${({ backgroundclr }) => getFontColor(backgroundclr || "")};
   background-color: ${({ backgroundclr }) => backgroundclr};
   box-shadow: ${({ glow, backgroundclr }) => (glow ? `0 0 8px 0 ${backgroundclr}` : "none")};
   border: ${({ borderclr }) => (borderclr ? `2px solid ${borderclr}` : "none")};
@@ -96,7 +96,7 @@ export const StyledCategoryBadge = styled(Chip)<StyledBadgeProps>`
   }
 
   & .MuiChip-deleteIcon {
-    color: ${({ backgroundclr }) => getFontColorFromHex(backgroundclr || "")};
+    color: ${({ backgroundclr }) => getFontColor(backgroundclr || "")};
     transition: 0.3s all;
     width: 22px;
     height: 22px;
@@ -106,7 +106,7 @@ export const StyledCategoryBadge = styled(Chip)<StyledBadgeProps>`
       height: 26px;
     }
     &:hover {
-      color: ${({ backgroundclr }) => getFontColorFromHex(backgroundclr || "")};
+      color: ${({ backgroundclr }) => getFontColor(backgroundclr || "")};
       opacity: 0.8;
     }
   }

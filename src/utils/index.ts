@@ -1,6 +1,6 @@
 export { displayGreeting } from "./displayGreeting";
 export { getRandomGreeting } from "./getRandomGreeting";
-export { getFontColorFromHex } from "./getFontColorFromHex";
+export { getFontColor } from "./getFontColor";
 export { calculateDateDifference } from "./calculateTimeDiff";
 export { formatDate } from "./formatDate";
 export { getTaskCompletionText } from "./getTaskCompletionText";

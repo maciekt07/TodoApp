@@ -2,7 +2,7 @@ import { CSSProperties, useCallback, useEffect, useState } from "react";
 import { ColorElement, ColorPalette } from "../styles";
 import styled from "@emotion/styled";
 import { Casino, Colorize, Done, ExpandMoreRounded } from "@mui/icons-material";
-import { getFontColorFromHex } from "../utils";
+import { getFontColor } from "../utils";
 import { Accordion, AccordionDetails, AccordionSummary, Grid, Tooltip } from "@mui/material";
 import { useTheme } from "@emotion/react";
 
@@ -188,7 +188,7 @@ const ColorPreview = styled(Grid)<{ clr: string }>`
   justify-content: center;
   align-items: center;
   background: ${({ clr }) => clr};
-  color: ${({ clr }) => getFontColorFromHex(clr)};
+  color: ${({ clr }) => getFontColor(clr)};
   padding: 8px;
   border-radius: 100px;
   transition: 0.3s all;
@@ -224,7 +224,7 @@ const StyledColorPicker = styled.input`
 `;
 
 const ColorizeIcon = styled(Colorize)<{ clr: string }>`
-  color: ${({ clr }) => getFontColorFromHex(clr)};
+  color: ${({ clr }) => getFontColor(clr)};
   position: absolute;
   cursor: pointer;
   pointer-events: none;

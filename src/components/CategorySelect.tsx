@@ -11,7 +11,7 @@ import {
 } from "@mui/material";
 import { ColorPalette } from "../styles";
 import { Emoji } from "emoji-picker-react";
-import { getFontColorFromHex } from "../utils";
+import { getFontColor } from "../utils";
 import { CSSProperties, useContext, useState } from "react";
 import { MAX_CATEGORIES } from "../constants";
 import toast from "react-hot-toast";
@@ -188,7 +188,7 @@ const CategoriesMenu = styled(MenuItem)<{ clr: string; disable?: boolean }>`
   gap: 4px;
   font-weight: 500;
   transition: 0.2s all;
-  color: ${(props) => getFontColorFromHex(props.clr || ColorPalette.fontLight)};
+  color: ${(props) => getFontColor(props.clr || ColorPalette.fontLight)};
   background: ${({ clr }) => clr};
   /* border: 4px solid transparent; */
   opacity: ${({ disable }) => (disable ? ".6" : "none")};
@@ -208,7 +208,7 @@ const CategoriesMenu = styled(MenuItem)<{ clr: string; disable?: boolean }>`
 
   &.Mui-selected {
     background: ${({ clr }) => clr};
-    color: ${(props) => getFontColorFromHex(props.clr || ColorPalette.fontLight)};
+    color: ${(props) => getFontColor(props.clr || ColorPalette.fontLight)};
     /* border: 4px solid #38b71f; */
     display: flex;
     justify-content: left;

@@ -14,15 +14,20 @@ import {
 
 import { useContext, useEffect, useState } from "react";
 import styled from "@emotion/styled";
-import { AddAPhotoRounded, CheckRounded, Delete, Logout, Settings } from "@mui/icons-material";
+import {
+  AddAPhotoRounded,
+  CheckCircleTwoTone,
+  Delete,
+  Logout,
+  Settings,
+} from "@mui/icons-material";
 import { PROFILE_PICTURE_MAX_LENGTH, USER_NAME_MAX_LENGTH } from "../constants";
 import { SettingsDialog, TopBar } from "../components";
 import { ColorElement, ColorPalette, DialogBtn, Themes } from "../styles";
 import { defaultUser } from "../constants/defaultUser";
 import toast from "react-hot-toast";
 import { UserContext } from "../contexts/UserContext";
-import { timeAgo } from "../utils/timeAgo";
-import { getFontColorFromHex } from "../utils";
+import { timeAgo, getFontColor } from "../utils";
 
 const UserSettings = () => {
   const { user, setUser } = useContext(UserContext);
@@ -74,6 +79,21 @@ const UserSettings = () => {
     toast.success((t) => (
       <div onClick={() => toast.dismiss(t.id)}>You have been successfully logged out</div>
     ));
+  };
+
+  const handleSaveImage = () => {
+    if (
+      profilePictureURL.length <= PROFILE_PICTURE_MAX_LENGTH &&
+      profilePictureURL.startsWith("https://")
+    ) {
+      handleCloseImageDialog();
+      setUser((prevUser) => ({
+        ...prevUser,
+        profilePicture: profilePictureURL,
+      }));
+
+      toast.success((t) => <div onClick={() => toast.dismiss(t.id)}>Changed profile picture.</div>);
+    }
   };
 
   return (
@@ -165,7 +185,16 @@ const UserSettings = () => {
                     }));
                   }}
                 >
-                  {theme.name === user.theme && <CheckRounded sx={{ color: "white" }} />}
+                  {theme.name === user.theme && (
+                    <CheckCircleTwoTone
+                      sx={{
+                        color: getFontColor(theme.MuiTheme.palette.secondary.main),
+                        fontSize: "32px",
+                        backdropFilter: "blur(20px)",
+                        borderRadius: "100px",
+                      }}
+                    />
+                  )}
                 </ColorElement>
               </Tooltip>
             </Grid>
@@ -186,7 +215,7 @@ const UserSettings = () => {
         />
         <SaveBtn
           onClick={handleSaveName}
-          disabled={userName.length > USER_NAME_MAX_LENGTH || userName === "" || userName === name}
+          disabled={userName.length > USER_NAME_MAX_LENGTH || userName === name}
         >
           Save name
         </SaveBtn>
@@ -211,6 +240,7 @@ const UserSettings = () => {
             onChange={(e) => {
               setProfilePictureURL(e.target.value);
             }}
+            onKeyDown={(e) => e.key === "Enter" && handleSaveImage()}
             error={profilePictureURL.length > PROFILE_PICTURE_MAX_LENGTH}
             helperText={
               profilePictureURL.length > PROFILE_PICTURE_MAX_LENGTH
@@ -218,6 +248,7 @@ const UserSettings = () => {
                 : ""
             }
             autoComplete="url"
+            type="url"
           />
           <br />
           <Button
@@ -242,22 +273,7 @@ const UserSettings = () => {
               profilePictureURL.length > PROFILE_PICTURE_MAX_LENGTH ||
               !profilePictureURL.startsWith("https://")
             }
-            onClick={() => {
-              if (
-                profilePictureURL.length <= PROFILE_PICTURE_MAX_LENGTH &&
-                profilePictureURL.startsWith("https://")
-              ) {
-                handleCloseImageDialog();
-                setUser((prevUser) => ({
-                  ...prevUser,
-                  profilePicture: profilePictureURL,
-                }));
-
-                toast.success((t) => (
-                  <div onClick={() => toast.dismiss(t.id)}>Changed profile picture.</div>
-                ));
-              }
-            }}
+            onClick={handleSaveImage}
           >
             Save
           </DialogBtn>
@@ -314,7 +330,7 @@ const SaveBtn = styled(Button)`
   width: 300px;
   border: none;
   background: ${({ theme }) => theme.primary};
-  color: ${({ theme }) => getFontColorFromHex(theme.primary)};
+  color: ${({ theme }) => getFontColor(theme.primary)};
   font-size: 18px;
   padding: 14px;
   border-radius: 16px;

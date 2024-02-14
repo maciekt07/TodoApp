@@ -1,6 +1,6 @@
 import styled from "@emotion/styled";
 import { Button, TextField } from "@mui/material";
-import { getFontColorFromHex } from "../utils";
+import { getFontColor } from "../utils";
 
 export const Container = styled.div`
   display: flex;
@@ -15,7 +15,7 @@ export const AddTaskButton = styled(Button)`
   padding: 16px 32px;
   font-size: 24px;
   background: ${({ theme }) => theme.primary};
-  color: ${({ theme }) => getFontColorFromHex(theme.primary)};
+  color: ${({ theme }) => getFontColor(theme.primary)};
   border-radius: 999px;
   font-weight: bold;
   cursor: pointer;
@@ -31,7 +31,7 @@ export const AddTaskButton = styled(Button)`
     box-shadow: none;
     cursor: not-allowed;
     opacity: 0.7;
-    color: ${({ theme }) => getFontColorFromHex(theme.secondary)};
+    color: ${({ theme }) => getFontColor(theme.secondary)};
   }
 `;
 export const StyledInput = styled(TextField)<{ helpercolor?: string }>`
@@ -40,10 +40,10 @@ export const StyledInput = styled(TextField)<{ helpercolor?: string }>`
     border-radius: 16px;
     transition: 0.3s all;
     width: 400px;
-    color: ${({ theme }) => getFontColorFromHex(theme.secondary)};
+    color: ${({ theme }) => getFontColor(theme.secondary)};
   }
   .MuiFormHelperText-root {
-    color: ${({ helpercolor, theme }) => helpercolor || getFontColorFromHex(theme.secondary)};
+    color: ${({ helpercolor, theme }) => helpercolor || getFontColor(theme.secondary)};
     opacity: 0.8;
   }
 `;

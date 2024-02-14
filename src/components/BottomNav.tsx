@@ -19,7 +19,7 @@ import { useContext, useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useResponsiveDisplay } from "../hooks/useResponsiveDisplay";
 import { UserContext } from "../contexts/UserContext";
-import { getFontColorFromHex } from "../utils";
+import { getFontColor } from "../utils";
 
 /**
  * Component for rendering the bottom navigation bar.
@@ -165,7 +165,7 @@ const StyledBottomNavigation = styled(BottomNavigation)`
 const NavigationButton = styled(BottomNavigationAction)`
   border-radius: 18px;
   margin: 4px;
-  color: ${({ theme }) => getFontColorFromHex(theme.palette.secondary.main)};
+  color: ${({ theme }) => getFontColor(theme.palette.secondary.main)};
 
   &:disabled {
     opacity: 0.6;

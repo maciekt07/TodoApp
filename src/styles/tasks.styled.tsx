@@ -1,7 +1,7 @@
 import styled from "@emotion/styled";
 import { ColorPalette, fadeIn } from ".";
 import { Button, Checkbox, TextField, css } from "@mui/material";
-import { getFontColorFromHex } from "../utils";
+import { getFontColor } from "../utils";
 import { Alarm } from "@mui/icons-material";
 import { keyframes } from "@emotion/css";
 
@@ -101,8 +101,8 @@ export const ShowMoreBtn = styled(Button)<{ clr: string }>`
   font-size: 16px;
   font-weight: bolder;
   transition: 0.3s color;
-  color: ${({ clr }) => getFontColorFromHex(clr)};
-  text-shadow: ${({ clr }) => `0 0 8px ${getFontColorFromHex(clr) + 45}`};
+  color: ${({ clr }) => getFontColor(clr)};
+  text-shadow: ${({ clr }) => `0 0 8px ${getFontColor(clr) + 45}`};
   text-transform: capitalize;
   border-radius: 6px;
   padding: 0 4px;
@@ -158,7 +158,7 @@ export const SelectedTasksContainer = styled.div`
   align-items: center;
   justify-content: space-between;
   margin: 8px 0;
-  background: #ffffff29;
+  background: ${({ theme }) => getFontColor(theme.secondary) + "29"};
   padding: 16px 20px;
   border-radius: 16px;
 `;
@@ -192,21 +192,21 @@ export const CategoriesListContainer = styled.div`
     width: 8px;
     height: 8px;
     border-radius: 4px;
-    background-color: #ffffff15;
+    background-color: ${({ theme }) => getFontColor(theme.secondary) + "15"};
   }
 
   ::-webkit-scrollbar-thumb {
-    background-color: #ffffff30;
+    background-color: ${({ theme }) => getFontColor(theme.secondary) + "30"};
     border-radius: 4px;
   }
 
   ::-webkit-scrollbar-thumb:hover {
-    background-color: #ffffff50;
+    background-color: ${({ theme }) => getFontColor(theme.secondary) + "50"};
   }
 
   ::-webkit-scrollbar-track {
     border-radius: 4px;
-    background-color: #ffffff15;
+    background-color: ${({ theme }) => getFontColor(theme.secondary) + "15"};
   }
 `;
 

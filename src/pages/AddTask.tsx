@@ -10,7 +10,7 @@ import toast from "react-hot-toast";
 import { UserContext } from "../contexts/UserContext";
 import { useStorageState } from "../hooks/useStorageState";
 import { useTheme } from "@emotion/react";
-import { getFontColorFromHex } from "../utils";
+import { getFontColor } from "../utils";
 
 const AddTask = () => {
   const { user, setUser } = useContext(UserContext);
@@ -122,6 +122,7 @@ const AddTask = () => {
           emoji={typeof emoji === "string" ? emoji : undefined}
           setEmoji={setEmoji}
           color={color}
+          theme={getFontColor(theme.secondary) === ColorPalette.fontDark ? "dark" : "light"}
         />
         <StyledInput
           label="Task Name"
@@ -172,8 +173,7 @@ const AddTask = () => {
           defaultValue=""
           focused
           sx={{
-            colorScheme:
-              getFontColorFromHex(theme.secondary) === ColorPalette.fontDark ? "light" : "dark",
+            colorScheme: getFontColor(theme.secondary) === ColorPalette.fontDark ? "light" : "dark",
           }}
           InputProps={{
             startAdornment:
@@ -195,7 +195,7 @@ const AddTask = () => {
               selectedCategories={selectedCategories}
               setSelectedCategories={setSelectedCategories}
               width="400px"
-              fontColor={getFontColorFromHex(theme.secondary)}
+              fontColor={getFontColor(theme.secondary)}
             />
             <Link to="/categories">
               <Button
@@ -216,7 +216,7 @@ const AddTask = () => {
           onColorChange={(color) => {
             setColor(color);
           }}
-          fontColor={getFontColorFromHex(theme.secondary)}
+          fontColor={getFontColor(theme.secondary)}
         />
         <AddTaskButton
           onClick={handleAddTask}
