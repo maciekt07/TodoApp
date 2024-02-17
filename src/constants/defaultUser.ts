@@ -11,10 +11,7 @@ export const defaultUser: User = {
   profilePicture: null,
   emojisStyle: iOS ? EmojiStyle.NATIVE : EmojiStyle.APPLE,
   tasks: [],
-  theme:
-    window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches
-      ? "purple"
-      : "light purple",
+  theme: window.matchMedia("(prefers-color-scheme: dark)").matches ? "purple" : "light purple",
   settings: [
     {
       enableCategories: true,

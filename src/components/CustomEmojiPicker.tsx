@@ -178,7 +178,7 @@ export const CustomEmojiPicker = ({ emoji, setEmoji, color, width, theme }: Emoj
               width={width || "350px"}
               height="500px"
               emojiStyle={emojisStyle}
-              theme={theme === "light" ? Theme.LIGHT : Theme.DARK}
+              theme={theme === "dark" ? Theme.DARK : Theme.LIGHT}
               suggestedEmojisMode={SuggestionMode.FREQUENT}
               autoFocusSearch={false}
               lazyLoadEmojis

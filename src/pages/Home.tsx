@@ -23,6 +23,7 @@ import { UserContext } from "../contexts/UserContext";
 const Home = () => {
   const { user } = useContext(UserContext);
   const { tasks, emojisStyle, settings, name } = user;
+
   const [randomGreeting, setRandomGreeting] = useState<string | ReactNode>("");
   const [greetingKey, setGreetingKey] = useState<number>(0);
   const [completedTasksCount, setCompletedTasksCount] = useState<number>(0);
@@ -120,7 +121,9 @@ const Home = () => {
                 glow={settings[0].enableGlow}
               />
 
-              <ProgressPercentageContainer>
+              <ProgressPercentageContainer
+                glow={settings[0].enableGlow && completedTaskPercentage > 0}
+              >
                 <Typography
                   variant="caption"
                   component="div"

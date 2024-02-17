@@ -36,6 +36,14 @@ export const GlobalStyles = () => {
   backdrop-filter: blur(2px);
 } */
 
+        img {
+          -webkit-user-select: none;
+          -khtml-user-select: none;
+          -moz-user-select: none;
+          -o-user-select: none;
+          user-select: none;
+        }
+
         div[role="dialog"] {
           border-radius: 42px 42px 0 0;
           z-index: 9999999;

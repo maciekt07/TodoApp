@@ -65,7 +65,7 @@ interface StyledBadgeProps {
   backgroundclr?: string;
   borderclr?: string;
   glow?: boolean;
-  list?: boolean;
+  list?: boolean | string;
 }
 
 export const StyledCategoryBadge = styled(Chip)<StyledBadgeProps>`

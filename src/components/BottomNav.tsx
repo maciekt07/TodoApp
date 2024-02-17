@@ -14,7 +14,7 @@ import {
   styled,
   useTheme,
 } from "@mui/material";
-import { ColorPalette, pulseAnimation, slideInBottom } from "../styles";
+import { pulseAnimation, slideInBottom } from "../styles";
 import { useContext, useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useResponsiveDisplay } from "../hooks/useResponsiveDisplay";
@@ -27,11 +27,12 @@ import { getFontColor } from "../utils";
 export const BottomNav = (): JSX.Element | null => {
   const { user } = useContext(UserContext);
   const { tasks, settings } = user;
+  const [value, setValue] = useState<number | undefined>();
+
   const theme = useTheme();
+  const n = useNavigate();
   const isMobile = useResponsiveDisplay();
   const location = useLocation();
-  const [value, setValue] = useState<number | undefined>();
-  const n = useNavigate();
 
   const smallIconSize = "29px";
 
@@ -73,6 +74,7 @@ export const BottomNav = (): JSX.Element | null => {
     <Container>
       <StyledBottomNavigation
         showLabels
+        glow={settings[0].enableGlow}
         value={value}
         onChange={(_event, newValue) => {
           window.scrollTo({
@@ -88,7 +90,6 @@ export const BottomNav = (): JSX.Element | null => {
           icon={
             <Badge
               color="primary"
-              sx={{ fontWeight: "bolder" }}
               badgeContent={
                 value !== 0 ? user.tasks.filter((task) => !task.done).length : undefined
               }
@@ -151,12 +152,12 @@ const Container = styled(Box)`
   width: 100%;
   margin: 0;
   animation: ${slideInBottom} 0.5s ease;
-  z-index: 999; /*9999*/
+  z-index: 999;
 `;
 
-const StyledBottomNavigation = styled(BottomNavigation)`
+const StyledBottomNavigation = styled(BottomNavigation)<{ glow: boolean }>`
   border-radius: 24px 24px 0 0;
-  background: ${({ theme }) => theme.palette.secondary.main + "c8"};
+  background: ${({ theme, glow }) => `${theme.palette.secondary.main}${glow ? "c8" : "e6"}`};
   backdrop-filter: blur(18px);
   margin: 0px 20px 0px -20px;
   padding: 18px 10px 32px 10px;
@@ -173,14 +174,8 @@ const NavigationButton = styled(BottomNavigationAction)`
       text-shadow: none;
     }
   }
+
   & .MuiBottomNavigationAction-label {
     font-size: 13px !important;
-
-    text-shadow: 0 0 12px #ffffff3d;
-    /* text-shadow: 0 0 12px #000000ce; */
-  }
-  & .Mui-selected {
-    /* text-shadow: 0 0 12px #000000ce; */
-    /* text-shadow: 0 0 5px ${ColorPalette.purple + 45}; */
   }
 `;

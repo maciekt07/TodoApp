@@ -11,7 +11,6 @@ import {
   MoreVert,
   PushPinRounded,
   RadioButtonChecked,
-  RadioButtonUnchecked,
   Search,
 } from "@mui/icons-material";
 import {
@@ -33,6 +32,8 @@ import {
   HighlightedText,
   NoTasks,
   Pinned,
+  RadioChecked,
+  RadioUnchecked,
   RingAlarm,
   SearchInput,
   SelectedTasksContainer,
@@ -331,6 +332,9 @@ export const Tasks: React.FC = () => {
         {
           duration: 3400,
           icon: <RingAlarm animate sx={{ color: ColorPalette.red }} />,
+          style: {
+            borderColor: ColorPalette.red,
+          },
         }
       );
     }
@@ -396,7 +400,7 @@ export const Tasks: React.FC = () => {
                   key={cat.id}
                   category={cat}
                   emojiSizes={[24, 20]}
-                  list
+                  list={"true"}
                   label={
                     <div>
                       <span style={{ fontWeight: "bold" }}>{cat.name}</span>
@@ -450,6 +454,7 @@ export const Tasks: React.FC = () => {
                 )}
               </span>
             </div>
+            {/* TODO: add more features */}
             <div style={{ display: "flex", alignItems: "center", gap: "4px" }}>
               <Tooltip title="Mark selected as done">
                 <IconButton
@@ -503,8 +508,8 @@ export const Tasks: React.FC = () => {
                 <StyledRadio
                   clr={getFontColor(task.color)}
                   checked={selectedTasks.includes(task.id)}
-                  icon={<RadioButtonUnchecked />}
-                  checkedIcon={<RadioButtonChecked />}
+                  icon={<RadioUnchecked />}
+                  checkedIcon={<RadioChecked />}
                   onChange={() => {
                     if (selectedTasks.includes(task.id)) {
                       setSelectedTasks((prevTasks) => prevTasks.filter((id) => id !== task.id));

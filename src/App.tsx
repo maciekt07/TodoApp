@@ -98,7 +98,7 @@ function App() {
   };
 
   return (
-    <ThemeProvider theme={getMuiTheme}>
+    <ThemeProvider theme={getMuiTheme()}>
       <EmotionTheme theme={{ primary: getPrimaryColor(), secondary: getSecondaryColor() }}>
         <GlobalStyles />
         <Toaster

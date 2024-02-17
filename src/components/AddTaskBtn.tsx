@@ -26,7 +26,7 @@ export const AddTaskBtn = ({ animate }: AddTaskBtnProps): JSX.Element | null => 
   return (
     <Tooltip title={tasks.length > 0 ? "Add New Task" : "Add Task"} placement="left">
       <AddButton
-        animate={animate}
+        animate={animate ? true : undefined}
         glow={settings[0].enableGlow}
         onClick={() => n("add")}
         aria-label="Add Task"
@@ -37,7 +37,7 @@ export const AddTaskBtn = ({ animate }: AddTaskBtnProps): JSX.Element | null => 
   );
 };
 
-const AddButton = styled(Button)<{ animate: boolean; glow: boolean }>`
+const AddButton = styled(Button)<{ animate?: boolean; glow: boolean }>`
   cursor: pointer;
   border: none;
   display: flex;

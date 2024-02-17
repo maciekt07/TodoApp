@@ -2,6 +2,7 @@ import styled from "@emotion/styled";
 import { fadeIn, fadeInLeft } from "./globalStyles";
 import { Box, CircularProgress } from "@mui/material";
 import { ColorPalette } from ".";
+import { keyframes } from "@emotion/css";
 
 export const GreetingHeader = styled.div`
   display: flex;
@@ -54,7 +55,7 @@ export const TasksCount = styled.div<{ glow: boolean }>`
 `;
 
 export const TaskCountTextContainer = styled.div`
-  line-height: 1.75;
+  line-height: 1.7;
   margin-left: 6px;
 `;
 
@@ -71,24 +72,19 @@ export const TaskCompletionText = styled.p`
   font-size: 16px;
 `;
 
-// export const DeleteDoneBtn = styled.button`
-//   position: fixed;
-//   display: flex;
-//   cursor: pointer;
-//   border: none;
-//   font-weight: bold;
-//   bottom: 24px;
-//   width: auto;
+const pulse = (clr: string) => keyframes`
+  0% {
+    filter: none;
+  }
+  50% {
+    filter: drop-shadow(0 0 10px ${clr + "78"});
+  }
+  100% {
+    filter: none;
+  }
+`;
 
-//   font-size: 17px;
-//   padding: 18px;
-//   background-color: #ff453f;
-//   color: white;
-//   border-radius: 18px;
-//   box-shadow: 0 0 6px 0 #ff453fd6;
-// `;
-
-export const ProgressPercentageContainer = styled(Box)`
+export const ProgressPercentageContainer = styled(Box)<{ glow: boolean }>`
   top: 0;
   left: 0;
   bottom: 0;
@@ -102,29 +98,15 @@ export const ProgressPercentageContainer = styled(Box)`
   margin: -5px;
   border: 1px solid #44479cb7;
   box-shadow: 0 0 18px -2px #090b2287;
+  animation: ${({ theme, glow }) =>
+    glow ? `${pulse(theme.primary)} 4s infinite ease-in` : "none"};
 `;
-// const pulse = keyframes`
-//   0% {
-//     filter: drop-shadow(0 0 6px ${ColorPalette.purple});
-//   }
-//   50% {
-//     filter: drop-shadow(0 0 2px ${ColorPalette.purple});
-//   }
-//   100% {
-//     filter: drop-shadow(0 0 6px ${ColorPalette.purple});
-//   }
-// `;
+
 export const StyledProgress = styled(CircularProgress)<{ glow: boolean }>`
   z-index: 1;
   margin: 2px;
   filter: ${({ glow, theme }) => (glow ? `drop-shadow(0 0 6px ${theme.primary}c8)` : "none")};
 `;
-
-/* style={{
-                  filter: settings[0].enableGlow
-                    ? `drop-shadow(0 0 6px ${ColorPalette.purple + "C8"})`
-                    : "none",
-                }} */
 
 export const Offline = styled.div`
   display: flex;
@@ -132,7 +114,7 @@ export const Offline = styled.div`
   align-items: center;
   gap: 6px;
   text-shadow: 0 0 8px #ffffff56;
-  margin-top: 24px;
+  margin-top: 20px;
   opacity: 0.8;
   animation: ${fadeIn} 0.5s ease;
 `;

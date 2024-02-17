@@ -115,7 +115,7 @@ export const ProfileAvatar = () => {
             sx={{
               width: "52px",
               height: "52px",
-              background: "#747474",
+              background: user.profilePicture ? "#ffffff1c" : "#747474",
               transition: ".2s all",
               fontSize: "26px",
             }}

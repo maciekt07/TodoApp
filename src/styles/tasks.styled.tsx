@@ -2,7 +2,7 @@ import styled from "@emotion/styled";
 import { ColorPalette, fadeIn } from ".";
 import { Button, Checkbox, TextField, css } from "@mui/material";
 import { getFontColor } from "../utils";
-import { Alarm } from "@mui/icons-material";
+import { Alarm, RadioButtonChecked, RadioButtonUnchecked } from "@mui/icons-material";
 import { keyframes } from "@emotion/css";
 
 interface TaskComponentProps {
@@ -167,10 +167,35 @@ export const StyledRadio = styled(Checkbox)<{ clr: string }>`
   margin-left: -8px;
   margin-right: 4px;
   color: ${({ clr }) => clr} !important;
-  animation: ${fadeIn} 0.5s ease-in;
+  animation: ${fadeIn} 0.3s ease-in;
   &.Mui-checked {
     color: ${({ clr }) => clr} !important;
   }
+`;
+
+const scale = keyframes`
+  from {
+    transform: scale(0)
+  }
+  to {
+    transform: scale(1)
+  }
+`;
+
+const radioIconStyles = css`
+  animation: ${scale} 0.2s ease-in;
+  font-size: 24px;
+  @media (max-width: 768px) {
+    font-size: 26px;
+  }
+`;
+
+export const RadioChecked = styled(RadioButtonChecked)`
+  ${radioIconStyles}
+`;
+
+export const RadioUnchecked = styled(RadioButtonUnchecked)`
+  ${radioIconStyles}
 `;
 
 export const CategoriesListContainer = styled.div`
@@ -218,7 +243,7 @@ export const HighlightedText = styled.span`
   box-shadow: 0 0 2px rgba(0, 0, 0, 0.2);
   margin: 0;
   font-weight: bold;
-  border: 1px solid #ffffff7f;
+  border: 1px solid #ffffff5f;
   transition: 0.3s all;
 `;
 
@@ -226,7 +251,7 @@ export const SearchInput = styled(TextField)`
   margin: 8px 0 0 0;
   border-radius: 16px;
   transition: 0.3s all;
-
+  width: 100%;
   & .MuiOutlinedInput-notchedOutline {
     border: 2px solid ${({ theme }) => theme.primary} !important;
   }

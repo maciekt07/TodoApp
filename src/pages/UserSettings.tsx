@@ -16,7 +16,7 @@ import { useContext, useEffect, useState } from "react";
 import styled from "@emotion/styled";
 import {
   AddAPhotoRounded,
-  CheckCircleTwoTone,
+  CheckCircleRounded,
   Delete,
   Logout,
   Settings,
@@ -164,8 +164,8 @@ const UserSettings = () => {
 
         <Grid
           container
-          spacing={1}
-          maxWidth={400}
+          spacing="12px"
+          maxWidth={300}
           marginBottom="4px"
           display="flex"
           justifyContent="center"
@@ -186,14 +186,7 @@ const UserSettings = () => {
                   }}
                 >
                   {theme.name === user.theme && (
-                    <CheckCircleTwoTone
-                      sx={{
-                        color: getFontColor(theme.MuiTheme.palette.secondary.main),
-                        fontSize: "32px",
-                        backdropFilter: "blur(20px)",
-                        borderRadius: "100px",
-                      }}
-                    />
+                    <CheckIcon clr={getFontColor(theme.MuiTheme.palette.secondary.main)} />
                   )}
                 </ColorElement>
               </Tooltip>
@@ -318,6 +311,15 @@ const Container = styled.div`
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
+`;
+
+const CheckIcon = styled(CheckCircleRounded)<{ clr: string }>`
+  color: ${({ clr }) => clr};
+  font-size: 36px;
+  /* backdrop-filter: blur(20px);
+  border-radius: 100px;
+  transform: rotate(3deg);
+  padding: 6px; */
 `;
 
 const StyledInput = styled(TextField)`

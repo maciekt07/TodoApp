@@ -72,10 +72,10 @@ export const createCustomTheme = (primaryColor: string, backgroundColor = "#232e
 
 export type AppTheme = "purple" | "light purple" | "blue" | "pink" | "ultra pink";
 /**
- * To add a new theme:
- * 1. Update the AppTheme interface with the new theme name.
- * 2. Create a new Mui theme using `createCustomTheme()`.
- * 3. Add the new theme to the `Themes` object with its `name` and `MuiTheme`.
+ * ### To add a new theme:
+ * - Update the AppTheme interface with the new theme name.
+ * - Create a new Mui theme using `createCustomTheme()`.
+ * - Add the new theme to the `Themes` object with its `name` and `MuiTheme`.
  */
 export const Themes: { name: AppTheme; MuiTheme: Theme }[] = [
   {
@@ -86,6 +86,7 @@ export const Themes: { name: AppTheme; MuiTheme: Theme }[] = [
     name: "light purple",
     MuiTheme: createCustomTheme(ColorPalette.purple, "#edeef6"),
   },
+
   {
     name: "blue",
     MuiTheme: createCustomTheme("#2a93d5"),

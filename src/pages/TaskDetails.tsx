@@ -34,7 +34,7 @@ const TaskDetails = () => {
   return (
     <>
       <TopBar title="Task Details" />
-      <Container style={{ boxShadow: `0 0 128px -8px ${task.color}` }}>
+      <Container>
         <TaskName>Task: {task.name}</TaskName>
         <TaskTable>
           <tbody>
@@ -101,7 +101,7 @@ const TaskDetails = () => {
               <TableData>
                 <CategoryContainer>
                   {task?.category?.map((category) => (
-                    <CategoryBadge key={category.id} category={category} />
+                    <CategoryBadge key={category.id} category={category} glow={false} />
                   ))}
                 </CategoryContainer>
               </TableData>
@@ -122,7 +122,7 @@ const Container = styled.div`
   border-radius: 32px;
   margin: 0 auto;
   margin-top: 100px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 0px 24px 2px rgba(0, 0, 0, 0.3);
 
   @media (min-width: 768px) {
     padding: 24px;
@@ -184,7 +184,7 @@ const TableData = styled.td`
 const ColorSquare = styled.div<{ clr: string }>`
   width: 20px;
   height: 20px;
-  border-radius: 4px;
+  border-radius: 6px;
   background-color: ${({ clr }) => clr};
 `;
 
