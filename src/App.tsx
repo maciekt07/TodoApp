@@ -5,17 +5,19 @@ import { ColorPalette, GlobalStyles, Themes } from "./styles";
 import { ThemeProvider } from "@mui/material";
 import { useEffect } from "react";
 import { ErrorBoundary } from "./components";
-import { MainLayout } from "./layouts/MainLayout";
+import MainLayout from "./layouts/MainLayout";
 import AppRouter from "./router";
 import toast, { Toaster } from "react-hot-toast";
 import { useResponsiveDisplay } from "./hooks/useResponsiveDisplay";
 import { UserContext } from "./contexts/UserContext";
 import { DataObjectRounded } from "@mui/icons-material";
 import { ThemeProvider as EmotionTheme } from "@emotion/react";
+import { useSystemTheme } from "./hooks/useSystemTheme";
 
 function App() {
   const [user, setUser] = useStorageState<User>(defaultUser, "user");
   const isMobile = useResponsiveDisplay();
+  const systemTheme = useSystemTheme();
 
   // Update the theme color meta tag in the document's head based on the user's selected theme.
   useEffect(() => {
@@ -79,22 +81,24 @@ function App() {
   }, []);
 
   const getMuiTheme = () => {
+    if (systemTheme === "unknown") {
+      return Themes[0].MuiTheme;
+    }
+    if (user.theme === "system") {
+      return systemTheme === "dark" ? Themes[0].MuiTheme : Themes[1].MuiTheme;
+    }
     const selectedTheme = Themes.find((theme) => theme.name === user.theme);
     return selectedTheme ? selectedTheme.MuiTheme : Themes[0].MuiTheme;
   };
 
   const getPrimaryColor = () => {
-    const selectedTheme = Themes.find((theme) => theme.name === user.theme);
-    return selectedTheme
-      ? selectedTheme.MuiTheme.palette.primary.main
-      : Themes[0].MuiTheme.palette.primary.main;
+    const theme = getMuiTheme();
+    return theme.palette.primary.main;
   };
 
   const getSecondaryColor = () => {
-    const selectedTheme = Themes.find((theme) => theme.name === user.theme);
-    return selectedTheme
-      ? selectedTheme.MuiTheme.palette.secondary.main
-      : Themes[0].MuiTheme.palette.secondary.main;
+    const theme = getMuiTheme();
+    return theme.palette.secondary.main;
   };
 
   return (
@@ -123,7 +127,7 @@ function App() {
             },
             success: {
               iconTheme: {
-                primary: getPrimaryColor() || "green",
+                primary: getPrimaryColor(),
                 secondary: "white",
               },
             },

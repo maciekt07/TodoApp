@@ -18,7 +18,7 @@ import {
   Switch,
   Tooltip,
 } from "@mui/material";
-import { AppSettings } from "../types/user";
+import type { AppSettings } from "../types/user";
 import { DialogBtn } from "../styles";
 import styled from "@emotion/styled";
 import { Emoji, EmojiStyle } from "emoji-picker-react";
@@ -49,6 +49,8 @@ export const SettingsDialog: React.FC<SettingsProps> = ({ open, onClose }) => {
   const [voiceVolume, setVoiceVolume] = useState<number>(settings[0].voiceVolume);
   const [prevVoiceVol, setPrevVoiceVol] = useState<number>(settings[0].voiceVolume);
 
+  const [showLocalVoices, setShowLocalVoices] = useState<boolean>(false);
+
   const isOnline = useOnlineStatus();
 
   // Array of available emoji styles with their labels
@@ -59,12 +61,14 @@ export const SettingsDialog: React.FC<SettingsProps> = ({ open, onClose }) => {
     { label: "Google", style: EmojiStyle.GOOGLE },
     { label: "Native", style: EmojiStyle.NATIVE },
   ];
+
   const getFlagEmoji = (countryCode: string): string =>
     String.fromCodePoint(...[...countryCode.toUpperCase()].map((x) => 0x1f1a5 + x.charCodeAt(0)));
 
   const getAvailableVoices = (): SpeechSynthesisVoice[] => {
     const voices = window.speechSynthesis.getVoices();
     const voiceInfoArray: SpeechSynthesisVoice[] = [];
+
     for (const voice of voices) {
       voiceInfoArray.push(voice);
     }
@@ -164,8 +168,19 @@ export const SettingsDialog: React.FC<SettingsProps> = ({ open, onClose }) => {
     }));
     setVoiceVolume(newVoiceVolume);
   };
-  const getLanguageRegion = (lang: string) =>
-    new Intl.DisplayNames([lang], { type: "region" }).of(lang.split("-")[1]);
+  const getLanguageRegion = (lang: string) => {
+    const langParts = lang.split("-");
+    if (langParts.length > 1) {
+      return new Intl.DisplayNames([lang], { type: "region" }).of(langParts[1]);
+    } else {
+      // If region is not specified, return the language itself
+      return lang;
+    }
+  };
+
+  const filteredVoices = showLocalVoices
+    ? availableVoices.filter((voice) => voice.lang.startsWith(navigator.language))
+    : availableVoices;
 
   return (
     <Dialog open={open} onClose={onClose}>
@@ -175,7 +190,6 @@ export const SettingsDialog: React.FC<SettingsProps> = ({ open, onClose }) => {
         <FormGroup>
           <FormControl>
             <FormLabel>Emoji Settings</FormLabel>
-
             <StyledSelect value={emojisStyle} onChange={handleEmojiStyleChange} translate="no">
               {/* Show a disabled menu item when offline, indicating that the style can't be changed */}
               {!isOnline && (
@@ -228,7 +242,7 @@ export const SettingsDialog: React.FC<SettingsProps> = ({ open, onClose }) => {
         {/* Switch components to control different app settings */}
         <FormGroup>
           <FormLabel>App Settings</FormLabel>
-          <FormControlLabel
+          <StyledFormLabel
             sx={{ opacity: userSettings.enableCategories ? 1 : 0.8 }}
             control={
               <Switch
@@ -240,7 +254,7 @@ export const SettingsDialog: React.FC<SettingsProps> = ({ open, onClose }) => {
           />
         </FormGroup>
         <FormGroup>
-          <FormControlLabel
+          <StyledFormLabel
             sx={{ opacity: userSettings.enableGlow ? 1 : 0.8 }}
             control={
               <Switch
@@ -252,20 +266,20 @@ export const SettingsDialog: React.FC<SettingsProps> = ({ open, onClose }) => {
           />
         </FormGroup>
         <FormGroup>
-          <FormControlLabel
+          <StyledFormLabel
             sx={{ opacity: userSettings.enableReadAloud ? 1 : 0.8 }}
             control={
               <Switch
-                checked={userSettings.enableReadAloud}
+                checked={"speechSynthesis" in window && userSettings.enableReadAloud ? true : false}
                 onChange={handleSettingChange("enableReadAloud")}
+                disabled={"speechSynthesis" in window ? false : true}
               />
             }
             label="Enable Read Aloud"
           />
         </FormGroup>
-
         <FormGroup>
-          <FormControlLabel
+          <StyledFormLabel
             sx={{ opacity: userSettings.doneToBottom ? 1 : 0.8 }}
             control={
               <Switch
@@ -276,13 +290,21 @@ export const SettingsDialog: React.FC<SettingsProps> = ({ open, onClose }) => {
             label="Move Done Tasks To Bottom"
           />
         </FormGroup>
-
         {settings[0].enableReadAloud && (
           <FormGroup>
             <FormControl>
               <FormLabel>Voice Settings</FormLabel>
-
-              {availableVoices.length !== 0 ? (
+              <StyledFormLabel
+                sx={{ opacity: showLocalVoices ? 1 : 0.8, maxWidth: "300px" }}
+                control={
+                  <Switch
+                    checked={showLocalVoices}
+                    onChange={() => setShowLocalVoices((prev) => !prev)}
+                  />
+                }
+                label={`Local language voices only (${getLanguageRegion(navigator.language)})`}
+              />
+              {filteredVoices.length !== 0 ? (
                 <StyledSelect
                   // Set the value to the first voice in the availableVoices array
                   value={settings[0].voice}
@@ -298,22 +320,8 @@ export const SettingsDialog: React.FC<SettingsProps> = ({ open, onClose }) => {
                     },
                   }}
                 >
-                  {/* <MenuItem
-                    disabled
-                    sx={{
-                      opacity: "1 !important",
-                      fontWeight: 500,
-                      position: "sticky !important",
-                      top: 0,
-                      background: "white",
-                      zIndex: 99,
-                      margin: 0,
-                    }}
-                  >
-                    <Switch checked /> Show only local language voices
-                  </MenuItem> */}
                   {/* Map over available voices to create MenuItem components */}
-                  {availableVoices.map((voice) => (
+                  {filteredVoices.map((voice) => (
                     <MenuItem
                       key={voice.name}
                       value={voice.name}
@@ -421,6 +429,10 @@ const StyledSelect = styled(Select)`
   width: 330px;
   color: black;
   margin: 8px 0;
+`;
+
+const StyledFormLabel = styled(FormControlLabel)`
+  max-width: 300px;
 `;
 
 const NoVoiceStyles = styled.p`

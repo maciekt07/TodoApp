@@ -5,7 +5,7 @@ interface MainLayoutProps {
   children: ReactNode;
 }
 
-export const MainLayout = ({ children }: MainLayoutProps) => {
+const MainLayout = ({ children }: MainLayoutProps) => {
   return (
     <>
       <ProfileAvatar />
@@ -15,3 +15,5 @@ export const MainLayout = ({ children }: MainLayoutProps) => {
     </>
   );
 };
+
+export default MainLayout;

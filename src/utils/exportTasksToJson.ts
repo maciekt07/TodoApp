@@ -1,4 +1,4 @@
-import { Task } from "../types/user";
+import type { Task } from "../types/user";
 
 /**
  * Exports an array of tasks to a JSON file and initiates the download.

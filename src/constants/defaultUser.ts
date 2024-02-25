@@ -11,13 +11,13 @@ export const defaultUser: User = {
   profilePicture: null,
   emojisStyle: iOS ? EmojiStyle.NATIVE : EmojiStyle.APPLE,
   tasks: [],
-  theme: window.matchMedia("(prefers-color-scheme: dark)").matches ? "purple" : "light purple",
+  theme: "system",
   settings: [
     {
       enableCategories: true,
       doneToBottom: false,
       enableGlow: true,
-      enableReadAloud: true,
+      enableReadAloud: "speechSynthesis" in window,
       voice: "Google UK English Male",
       voiceVolume: 0.6,
     },

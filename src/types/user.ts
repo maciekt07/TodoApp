@@ -1,5 +1,5 @@
-import { EmojiStyle } from "emoji-picker-react";
-import { AppTheme } from "../styles/theme";
+import type { EmojiStyle } from "emoji-picker-react";
+import type { AppTheme } from "../styles/theme";
 
 /**
  * Represents a user in the application.

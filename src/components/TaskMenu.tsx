@@ -252,18 +252,20 @@ export const TaskMenu: React.FC<TaskMenuProps> = ({
             }}
           >
             <span
+              translate="yes"
               style={{
                 display: "inline-flex",
                 alignItems: "center",
                 fontWeight: 600,
+                gap: "6px",
               }}
             >
-              <RecordVoiceOver /> &nbsp; Speaking: {selectedTask?.name}
+              <RecordVoiceOver /> Read aloud: <span translate="no">{selectedTask?.name}</span>
             </span>
-            <span style={{ marginTop: "10px", fontSize: "16px" }}>
-              Voice: {utterThis.voice?.name || "Default"}
+            <span translate="yes" style={{ marginTop: "10px", fontSize: "16px" }}>
+              Voice: <span translate="no">{utterThis.voice?.name || "Default"}</span>
             </span>
-            <div>
+            <div translate="no">
               <Marquee delay={0.6} play={isPlaying}>
                 <p style={{ margin: "6px 0" }}>{utterThis.text} &nbsp;</p>
               </Marquee>

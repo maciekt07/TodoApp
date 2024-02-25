@@ -17,9 +17,12 @@ import styled from "@emotion/styled";
 import {
   AddAPhotoRounded,
   CheckCircleRounded,
+  CheckRounded,
   Delete,
   Logout,
+  PersonalVideoRounded,
   Settings,
+  TodayRounded,
 } from "@mui/icons-material";
 import { PROFILE_PICTURE_MAX_LENGTH, USER_NAME_MAX_LENGTH } from "../constants";
 import { SettingsDialog, TopBar } from "../components";
@@ -28,6 +31,7 @@ import { defaultUser } from "../constants/defaultUser";
 import toast from "react-hot-toast";
 import { UserContext } from "../contexts/UserContext";
 import { timeAgo, getFontColor } from "../utils";
+import { useSystemTheme } from "../hooks/useSystemTheme";
 
 const UserSettings = () => {
   const { user, setUser } = useContext(UserContext);
@@ -36,8 +40,9 @@ const UserSettings = () => {
   const [profilePictureURL, setProfilePictureURL] = useState<string>("");
   const [openChangeImage, setOpenChangeImage] = useState<boolean>(false);
   const [logoutConfirmationOpen, setLogoutConfirmationOpen] = useState<boolean>(false);
-
   const [openSettings, setOpenSettings] = useState<boolean>(false);
+
+  const systemTheme = useSystemTheme();
 
   useEffect(() => {
     document.title = `Todo App - User ${name ? `(${name})` : ""}`;
@@ -155,28 +160,66 @@ const UserSettings = () => {
         </Tooltip>
         <UserName translate="no">{name || "User"}</UserName>
         <Tooltip
-          title={`Created at: ${new Date(createdAt).toLocaleDateString()} • ${new Date(
-            createdAt
-          ).toLocaleTimeString()}`}
+          title={new Intl.DateTimeFormat(navigator.language, {
+            dateStyle: "full",
+            timeStyle: "medium",
+          }).format(new Date(createdAt))}
         >
-          <CreatedAtDate>Registered {timeAgo(createdAt)}</CreatedAtDate>
+          <CreatedAtDate>
+            <TodayRounded fontSize="small" />
+            &nbsp;Registered {timeAgo(createdAt)}
+          </CreatedAtDate>
         </Tooltip>
 
         <Grid
           container
-          spacing="12px"
-          maxWidth={300}
-          marginBottom="4px"
+          maxWidth="300px"
+          marginBottom="6px"
+          marginTop="1px"
           display="flex"
-          justifyContent="center"
+          justifyContent="left"
           alignItems="center"
+          gap={1}
+          sx={{ background: "#d9d9d9", padding: "10px", borderRadius: "32px" }}
         >
+          <Grid item>
+            <Tooltip title={`System (${systemTheme})`}>
+              <ColorElement
+                clr="#3d3e59"
+                size="40px"
+                onClick={() => {
+                  setUser((prevUser) => ({
+                    ...prevUser,
+                    theme: "system",
+                  }));
+                }}
+              >
+                <Badge
+                  badgeContent={
+                    user.theme === "system" ? (
+                      <CheckRounded
+                        sx={{
+                          fontSize: "18px",
+                          color: "white",
+                          background: "#141414",
+                          borderRadius: "100px",
+                        }}
+                      />
+                    ) : undefined
+                  }
+                >
+                  <PersonalVideoRounded sx={{ color: "white" }} />
+                </Badge>
+              </ColorElement>
+            </Tooltip>
+          </Grid>
           {Themes.map((theme) => (
             <Grid item key={theme.name}>
               <Tooltip title={theme.name[0].toUpperCase() + theme.name.replace(theme.name[0], "")}>
                 <ColorElement
                   clr={theme.MuiTheme.palette.primary.main}
                   secondClr={theme.MuiTheme.palette.secondary.main}
+                  aria-label={`Change theme - ${theme.name}`}
                   size="40px"
                   onClick={() => {
                     setUser((prevUser) => ({
@@ -193,6 +236,7 @@ const UserSettings = () => {
             </Grid>
           ))}
         </Grid>
+
         <StyledInput
           label={name === null ? "Add Name" : "Change Name"}
           value={userName}
@@ -290,7 +334,6 @@ const UserSettings = () => {
 };
 
 export default UserSettings;
-//@ts-nocheck
 const Container = styled.div`
   margin: 0 auto;
   max-width: 400px;
@@ -354,9 +397,11 @@ const UserName = styled.span`
 `;
 
 const CreatedAtDate = styled.span`
+  display: flex;
+  align-items: center;
   font-style: italic;
-  font-weight: 300;
+  font-weight: 400;
   opacity: 0.8;
-  margin-top: -6px;
+  margin-top: -5px;
   margin-bottom: 2px;
 `;

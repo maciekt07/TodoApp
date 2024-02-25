@@ -25,7 +25,7 @@ export {
 } from "./home.styled";
 export { Container, AddTaskButton, StyledInput } from "./addTask.styled";
 export {
-  TaskComponent,
+  TaskContainer,
   EmojiContainer,
   TaskDate,
   TaskInfo,

@@ -16,7 +16,8 @@ import { ColorPalette, DialogBtn } from "../styles";
 import { CategorySelect, ColorPicker, CustomEmojiPicker } from ".";
 import toast from "react-hot-toast";
 import { UserContext } from "../contexts/UserContext";
-import { CancelRounded } from "@mui/icons-material";
+import { CancelRounded, EditCalendarRounded } from "@mui/icons-material";
+import { timeAgo } from "../utils";
 
 interface EditTaskProps {
   open: boolean;
@@ -136,11 +137,14 @@ export const EditTask = ({ open, task, onClose, onSave }: EditTaskProps) => {
       >
         <span>Edit Task</span>
         {editedTask?.lastSave && (
-          <LastEdit>
-            Last Edited: {new Date(editedTask?.lastSave).toLocaleDateString()}
-            {" • "}
-            {new Date(editedTask?.lastSave).toLocaleTimeString()}
-          </LastEdit>
+          <Tooltip title={timeAgo(editedTask.lastSave)}>
+            <LastEdit>
+              <EditCalendarRounded sx={{ fontSize: "20px" }} /> Last Edited:{" "}
+              {new Date(editedTask.lastSave).toLocaleDateString()}
+              {" • "}
+              {new Date(editedTask.lastSave).toLocaleTimeString()}
+            </LastEdit>
+          </Tooltip>
         )}
       </DialogTitle>
       <DialogContent>
@@ -289,8 +293,14 @@ StyledInput.defaultProps = {
 // `;
 
 const LastEdit = styled.span`
-  font-size: 14px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 15px;
   font-style: italic;
   font-weight: 400;
   opacity: 0.8;
+  @media (max-width: 768px) {
+    font-size: 14px;
+  }
 `;

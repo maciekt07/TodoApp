@@ -1,4 +1,4 @@
-import { Category, Task } from "../types/user";
+import type { Category, Task } from "../types/user";
 import { ReactNode, useContext, useEffect, useState } from "react";
 import { calculateDateDifference, formatDate, getFontColor, iOS } from "../utils";
 import {
@@ -39,7 +39,7 @@ import {
   SelectedTasksContainer,
   ShowMoreBtn,
   StyledRadio,
-  TaskComponent,
+  TaskContainer,
   TaskDate,
   TaskDescription,
   TaskHeader,
@@ -66,24 +66,35 @@ export const Tasks: React.FC = () => {
   const open = Boolean(anchorEl);
   const [selectedTaskId, setSelectedTaskId] = useState<number | null>(null);
   const [search, setSearch] = useStorageState<string>("", "search", "sessionStorage");
-  //FIXME: use storage state for set
-  const [expandedTasks, setExpandedTasks] = useState<Set<number>>(new Set());
+  const [expandedTasks, setExpandedTasks] = useState<Set<number>>(new Set()); //FIXME: use storage state for set
   const [deleteDialogOpen, setDeleteDialogOpen] = useState<boolean>(false);
   const [editModalOpen, setEditModalOpen] = useState<boolean>(false);
-
-  const [selectedTasks, setSelectedTasks] = useStorageState<number[]>(
+  const [multipleSelectedTasks, setMultipleSelectedTasks] = useStorageState<number[]>(
     [],
     "selectedTasks",
     "sessionStorage"
   );
-
   const [deleteSelectedOpen, setDeleteSelectedOpen] = useState<boolean>(false);
+  const [categories, setCategories] = useState<Category[] | undefined>(undefined);
+  const [selectedCatId, setSelectedCatId] = useStorageState<number | undefined>(
+    undefined,
+    "selectedCategory",
+    "sessionStorage"
+  );
+  const [categoryCounts, setCategoryCounts] = useState<{
+    [categoryId: number]: number;
+  }>({});
 
   const isMobile = useResponsiveDisplay();
-
   const theme = useTheme();
-
   useCtrlS();
+
+  const listFormat = new Intl.ListFormat("en-US", {
+    style: "long",
+    type: "conjunction",
+  });
+
+  const selectedTask = user.tasks.find((task) => task.id === selectedTaskId) || ({} as Task);
 
   // Handler for clicking the more options button in a task
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>, taskId: number) => {
@@ -176,41 +187,9 @@ export const Tasks: React.FC = () => {
     setDeleteDialogOpen(false);
   };
 
-  const handleEditTask = (
-    taskId: number,
-    newName: string,
-    newColor: string,
-    newEmoji?: string,
-    newDescription?: string,
-    newDeadline?: Date,
-    newCategory?: Category[]
-  ) => {
-    // Update the selected task with the new values
-    const updatedTasks = user.tasks.map((task) => {
-      if (task.id === taskId) {
-        return {
-          ...task,
-          name: newName,
-          color: newColor,
-          emoji: newEmoji,
-          description: newDescription,
-          deadline: newDeadline,
-          category: newCategory,
-          lastSave: new Date(),
-        };
-      }
-      return task;
-    });
-    // Update the user object with the updated tasks
-    setUser((prevUser) => ({
-      ...prevUser,
-      tasks: updatedTasks,
-    }));
-  };
-
   const handleSelectTask = (taskId: number) => {
     setAnchorEl(null);
-    setSelectedTasks((prevSelectedTaskIds) => {
+    setMultipleSelectedTasks((prevSelectedTaskIds) => {
       if (prevSelectedTaskIds.includes(taskId)) {
         // Deselect the task if already selected
         return prevSelectedTaskIds.filter((id) => id !== taskId);
@@ -225,7 +204,7 @@ export const Tasks: React.FC = () => {
     setUser((prevUser) => ({
       ...prevUser,
       tasks: prevUser.tasks.map((task) => {
-        if (selectedTasks.includes(task.id)) {
+        if (multipleSelectedTasks.includes(task.id)) {
           // Mark the task as done if selected
           return { ...task, done: true };
         }
@@ -233,22 +212,10 @@ export const Tasks: React.FC = () => {
       }),
     }));
     // Clear the selected task IDs after the operation
-    setSelectedTasks([]);
+    setMultipleSelectedTasks([]);
   };
 
   const handleDeleteSelected = () => setDeleteSelectedOpen(true);
-
-  const [categories, setCategories] = useState<Category[] | undefined>(undefined);
-
-  const [selectedCatId, setSelectedCatId] = useStorageState<number | undefined>(
-    undefined,
-    "selectedCategory",
-    "sessionStorage"
-  );
-
-  const [categoryCounts, setCategoryCounts] = useState<{
-    [categoryId: number]: number;
-  }>({});
 
   useEffect(() => {
     const tasks: Task[] = reorderTasks(user.tasks);
@@ -313,10 +280,6 @@ export const Tasks: React.FC = () => {
 
     if (overdueTasks.length > 0) {
       const taskNames = overdueTasks.map((task) => task.name);
-      const formatTasksArray = new Intl.ListFormat("en-US", {
-        style: "long",
-        type: "conjunction",
-      });
 
       toast.error(
         (t) => (
@@ -326,7 +289,7 @@ export const Tasks: React.FC = () => {
             style={{ wordBreak: "break-word" }}
           >
             <b translate="yes">Overdue task{overdueTasks.length > 1 && "s"}: </b>
-            {formatTasksArray.format(taskNames)}
+            {listFormat.format(taskNames)}
           </div>
         ),
         {
@@ -348,7 +311,7 @@ export const Tasks: React.FC = () => {
     <>
       <TaskMenu
         selectedTaskId={selectedTaskId}
-        selectedTasks={selectedTasks}
+        selectedTasks={multipleSelectedTasks}
         setEditModalOpen={setEditModalOpen}
         anchorEl={anchorEl}
         handleDeleteTask={handleDeleteTask}
@@ -436,19 +399,16 @@ export const Tasks: React.FC = () => {
               ))}
             </CategoriesListContainer>
           )}
-        {selectedTasks.length > 0 && (
+        {multipleSelectedTasks.length > 0 && (
           <SelectedTasksContainer>
             <div>
               <h3 style={{ margin: 0, display: "flex", alignItems: "center" }}>
-                <RadioButtonChecked /> &nbsp; Selected {selectedTasks.length} task
-                {selectedTasks.length > 1 ? "s" : ""}
+                <RadioButtonChecked /> &nbsp; Selected {multipleSelectedTasks.length} task
+                {multipleSelectedTasks.length > 1 ? "s" : ""}
               </h3>
               <span style={{ fontSize: "14px", opacity: 0.8 }}>
-                {new Intl.ListFormat("en", {
-                  style: "long",
-                  type: "conjunction",
-                }).format(
-                  selectedTasks
+                {listFormat.format(
+                  multipleSelectedTasks
                     .map((taskId) => user.tasks.find((task) => task.id === taskId)?.name)
                     .filter((taskName) => taskName !== undefined) as string[]
                 )}
@@ -471,7 +431,7 @@ export const Tasks: React.FC = () => {
                 </IconButton>
               </Tooltip>
               <Tooltip sx={{ color: getFontColor(theme.secondary) }} title="Cancel">
-                <IconButton size="large" onClick={() => setSelectedTasks([])}>
+                <IconButton size="large" onClick={() => setMultipleSelectedTasks([])}>
                   <CancelRounded />
                 </IconButton>
               </Tooltip>
@@ -495,24 +455,25 @@ export const Tasks: React.FC = () => {
         )}
         {user.tasks.length !== 0 ? (
           reorderTasks(user.tasks).map((task) => (
-            <TaskComponent
+            <TaskContainer
               key={task.id}
               id={task.id.toString()}
               backgroundColor={task.color}
-              clr={getFontColor(task.color)}
               glow={user.settings[0].enableGlow}
               done={task.done}
               blur={selectedTaskId !== task.id && open && !isMobile}
             >
-              {selectedTasks.length > 0 && (
+              {multipleSelectedTasks.length > 0 && (
                 <StyledRadio
                   clr={getFontColor(task.color)}
-                  checked={selectedTasks.includes(task.id)}
+                  checked={multipleSelectedTasks.includes(task.id)}
                   icon={<RadioUnchecked />}
                   checkedIcon={<RadioChecked />}
                   onChange={() => {
-                    if (selectedTasks.includes(task.id)) {
-                      setSelectedTasks((prevTasks) => prevTasks.filter((id) => id !== task.id));
+                    if (multipleSelectedTasks.includes(task.id)) {
+                      setMultipleSelectedTasks((prevTasks) =>
+                        prevTasks.filter((id) => id !== task.id)
+                      );
                     } else {
                       handleSelectTask(task.id);
                     }
@@ -548,9 +509,10 @@ export const Tasks: React.FC = () => {
                 <TaskHeader>
                   <TaskName done={task.done}>{highlightMatchingText(task.name, search)}</TaskName>
                   <Tooltip
-                    title={`Created at: ${new Date(task.date).toLocaleDateString()} • ${new Date(
-                      task.date
-                    ).toLocaleTimeString()}`}
+                    title={new Intl.DateTimeFormat(navigator.language, {
+                      dateStyle: "full",
+                      timeStyle: "medium",
+                    }).format(new Date(task.date))}
                   >
                     <TaskDate>{formatDate(new Date(task.date))}</TaskDate>
                   </Tooltip>
@@ -593,11 +555,6 @@ export const Tasks: React.FC = () => {
                 {task.sharedBy && (
                   <div style={{ opacity: 0.8, display: "flex", alignItems: "center", gap: "4px" }}>
                     <Link /> Shared by {task.sharedBy}
-                    {/* <Chip
-                      avatar={<Avatar>{task.sharedBy[0]}</Avatar>}
-                      label={task.sharedBy}
-                      sx={{ background: "white" }}
-                    /> */}
                   </div>
                 )}
                 <div
@@ -610,7 +567,6 @@ export const Tasks: React.FC = () => {
                   }}
                 >
                   {task.category &&
-                    user.settings[0].enableCategories !== undefined &&
                     user.settings[0].enableCategories &&
                     task.category.map((category) => (
                       <div key={category.id}>
@@ -629,16 +585,10 @@ export const Tasks: React.FC = () => {
               >
                 <MoreVert />
               </IconButton>
-            </TaskComponent>
+            </TaskContainer>
           ))
         ) : (
           <NoTasks>
-            {/* <div>
-              <img
-                style={{ width: "256px", opacity: 0.5, filter: "grayscale(80%)" }}
-                src="http://localhost:5173/src/assets/TaskNotFound.png"
-              />
-            </div> */}
             <b>You don't have any tasks yet</b>
             <br />
             Click on the <b>+</b> button to add one
@@ -663,15 +613,25 @@ export const Tasks: React.FC = () => {
           task={user.tasks.find((task) => task.id === selectedTaskId)}
           onClose={() => setEditModalOpen(false)}
           onSave={(editedTask) => {
-            handleEditTask(
-              editedTask.id,
-              editedTask.name,
-              editedTask.color,
-              editedTask.emoji || undefined,
-              editedTask.description || undefined,
-              editedTask.deadline || undefined,
-              editedTask.category || undefined
-            );
+            const updatedTasks = user.tasks.map((task) => {
+              if (task.id === editedTask.id) {
+                return {
+                  ...task,
+                  name: editedTask.name,
+                  color: editedTask.color,
+                  emoji: editedTask.emoji || undefined,
+                  description: editedTask.description || undefined,
+                  deadline: editedTask.deadline || undefined,
+                  category: editedTask.category || undefined,
+                  lastSave: new Date(),
+                };
+              }
+              return task;
+            });
+            setUser((prevUser) => ({
+              ...prevUser,
+              tasks: updatedTasks,
+            }));
             setEditModalOpen(false);
           }}
         />
@@ -679,44 +639,37 @@ export const Tasks: React.FC = () => {
       <Dialog open={deleteDialogOpen} onClose={cancelDeleteTask}>
         <DialogTitle>Are you sure you want to delete the task?</DialogTitle>
         <DialogContent>
-          {user.tasks.find((task) => task.id === selectedTaskId)?.emoji !== undefined && (
-            <p
-              style={{
-                display: "flex",
-                justifyContent: "left",
-                alignItems: "center",
-                gap: "6px",
-              }}
-            >
-              <b>Emoji:</b>{" "}
-              <Emoji
-                size={28}
-                emojiStyle={user.emojisStyle}
-                unified={user.tasks.find((task) => task.id === selectedTaskId)?.emoji || ""}
-              />
-            </p>
-          )}
-          <p>
-            <b>Task Name:</b> {user.tasks.find((task) => task.id === selectedTaskId)?.name}
-          </p>
-          {user.tasks.find((task) => task.id === selectedTaskId)?.description !== undefined && (
-            <p>
-              <b>Task Description:</b>{" "}
-              {user.tasks.find((task) => task.id === selectedTaskId)?.description}
-            </p>
-          )}
-
-          {selectedTaskId !== null &&
-            user.tasks.find((task) => task.id === selectedTaskId)?.category?.[0]?.name !==
-              undefined && (
+          {selectedTask.emoji !== undefined && (
+            <>
+              {selectedTask.emoji && (
+                <p
+                  style={{
+                    display: "flex",
+                    justifyContent: "left",
+                    alignItems: "center",
+                    gap: "6px",
+                  }}
+                >
+                  <b>Emoji:</b>{" "}
+                  <Emoji size={28} emojiStyle={user.emojisStyle} unified={selectedTask.emoji} />
+                </p>
+              )}
               <p>
-                <b>Category:</b>{" "}
-                {user.tasks
-                  .find((task) => task.id === selectedTaskId)
-                  ?.category?.map((cat) => cat.name)
-                  .join(", ")}
+                <b>Task Name:</b> {selectedTask.name}
               </p>
-            )}
+              {selectedTask.description && (
+                <p>
+                  <b>Task Description:</b> {selectedTask.description}
+                </p>
+              )}
+              {selectedTask.category?.[0]?.name && (
+                <p>
+                  <b>{selectedTask.category.length > 1 ? "Categories" : "Category"}:</b>{" "}
+                  {listFormat.format(selectedTask.category.map((cat) => cat.name))}
+                </p>
+              )}
+            </>
+          )}
         </DialogContent>
         <DialogActions>
           <DialogBtn onClick={cancelDeleteTask} color="primary">
@@ -730,11 +683,8 @@ export const Tasks: React.FC = () => {
       <Dialog open={deleteSelectedOpen}>
         <DialogTitle>Are you sure you want to delete selected tasks?</DialogTitle>
         <DialogContent>
-          {new Intl.ListFormat("en", {
-            style: "long",
-            type: "conjunction",
-          }).format(
-            selectedTasks
+          {listFormat.format(
+            multipleSelectedTasks
               .map((taskId) => user.tasks.find((task) => task.id === taskId)?.name)
               .filter((taskName) => taskName !== undefined) as string[]
           )}
@@ -747,10 +697,10 @@ export const Tasks: React.FC = () => {
             onClick={() => {
               setUser((prevUser) => ({
                 ...prevUser,
-                tasks: prevUser.tasks.filter((task) => !selectedTasks.includes(task.id)),
+                tasks: prevUser.tasks.filter((task) => !multipleSelectedTasks.includes(task.id)),
               }));
               // Clear the selected task IDs after the operation
-              setSelectedTasks([]);
+              setMultipleSelectedTasks([]);
               setDeleteSelectedOpen(false);
             }}
             color="error"

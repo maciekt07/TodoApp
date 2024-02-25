@@ -281,7 +281,7 @@ export const ColorElement = styled.button<{ clr: string; secondClr?: string; siz
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  border-radius: 999px;
+  border-radius: 100%;
   transition: 0.2s all;
   transform: scale(1);
 

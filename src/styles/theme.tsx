@@ -1,4 +1,5 @@
-import { Theme, createTheme } from "@mui/material";
+import { createTheme } from "@mui/material";
+import type { Theme } from "@mui/material";
 
 export const ColorPalette = {
   fontDark: "#101727",
@@ -70,14 +71,21 @@ export const createCustomTheme = (primaryColor: string, backgroundColor = "#232e
   });
 };
 
-export type AppTheme = "purple" | "light purple" | "blue" | "pink" | "ultra pink";
+export type AppTheme =
+  | "system"
+  | "purple"
+  | "light purple"
+  | "blue"
+  | "pink"
+  | "ultra pink"
+  | "giga blue";
 /**
  * ### To add a new theme:
  * - Update the AppTheme interface with the new theme name.
  * - Create a new Mui theme using `createCustomTheme()`.
  * - Add the new theme to the `Themes` object with its `name` and `MuiTheme`.
  */
-export const Themes: { name: AppTheme; MuiTheme: Theme }[] = [
+export const Themes: { name: Exclude<AppTheme, "system">; MuiTheme: Theme }[] = [
   {
     name: "purple",
     MuiTheme: createCustomTheme(ColorPalette.purple),
@@ -86,7 +94,6 @@ export const Themes: { name: AppTheme; MuiTheme: Theme }[] = [
     name: "light purple",
     MuiTheme: createCustomTheme(ColorPalette.purple, "#edeef6"),
   },
-
   {
     name: "blue",
     MuiTheme: createCustomTheme("#2a93d5"),

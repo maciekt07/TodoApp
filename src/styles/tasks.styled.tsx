@@ -7,20 +7,19 @@ import { keyframes } from "@emotion/css";
 
 interface TaskComponentProps {
   backgroundColor: string;
-  clr: string;
   done: boolean;
-  glow: boolean;
-  blur: boolean;
+  glow?: boolean;
+  blur?: boolean;
 }
 
-export const TaskComponent = styled.div<TaskComponentProps>`
+export const TaskContainer = styled.div<TaskComponentProps>`
   display: flex;
   align-items: center;
   margin-top: 12px;
   transition: 0.3s all;
   background-color: ${({ backgroundColor }) => backgroundColor};
   opacity: ${({ done }) => (done ? 0.8 : 1)};
-  color: ${({ clr }) => clr};
+  color: ${({ backgroundColor }) => getFontColor(backgroundColor)};
   border-left: ${({ done }) => (done ? "8px solid #00ff1ee3" : "1px solid transparent")};
   box-shadow: ${(props) =>
     props.glow && !props.blur ? `0 0 128px -28px ${props.backgroundColor}` : "none"};
