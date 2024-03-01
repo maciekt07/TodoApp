@@ -1,6 +1,4 @@
-import { Global, css, keyframes, useTheme } from "@emotion/react";
-import styled from "@emotion/styled";
-import { Button } from "@mui/material";
+import { Global, css, useTheme } from "@emotion/react";
 import { getFontColor } from "../utils";
 
 export const GlobalStyles = () => {
@@ -31,11 +29,6 @@ export const GlobalStyles = () => {
           -webkit-text-size-adjust: 100%;
           --rsbs-backdrop-bg: rgba(0, 0, 0, 0.3);
         }
-
-        /* div[data-rsbs-backdrop="true"] {
-  backdrop-filter: blur(2px);
-} */
-
         img {
           -webkit-user-select: none;
           -khtml-user-select: none;
@@ -43,7 +36,9 @@ export const GlobalStyles = () => {
           -o-user-select: none;
           user-select: none;
         }
-
+        input[type="file"]::-webkit-file-upload-button {
+          display: none;
+        }
         div[role="dialog"] {
           border-radius: 42px 42px 0 0;
           z-index: 9999999;
@@ -68,7 +63,6 @@ export const GlobalStyles = () => {
           margin: 8px 16vw;
           touch-action: manipulation;
           //FIXME:
-          /* background: linear-gradient(180deg, #232e58 0%, #171d34 100%); */
           background: ${theme.secondary};
           background-attachment: fixed;
           background-size: cover;
@@ -132,15 +126,15 @@ export const GlobalStyles = () => {
           --epr-focus-bg-color: ${theme.primary + "af"};
           --epr-highlight-color: ${theme.primary};
           --epr-search-border-color: ${theme.primary};
-          /* --epr-category-icon-active-color: ${theme.primary}; */
           border-radius: 20px !important;
           padding: 8px !important;
+          & .epr-category-nav > button.epr-cat-btn {
+            filter: hue-rotate(75deg);
+          }
         }
-
-        .EmojiPickerReact .epr-category-nav > button.epr-cat-btn {
-          filter: hue-rotate(75deg);
+        .epr-reactions {
+          background: ${getFontColor(theme.secondary)} !important;
         }
-
         .epr-body,
         .MuiDialogContent-root,
         .MuiDrawer-paper {
@@ -193,14 +187,9 @@ export const GlobalStyles = () => {
         }
         .MuiSlider-valueLabel {
           border-radius: 10px !important;
-          /* box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.25) !important;
-  text-shadow: 0px 2px 6px rgba(0, 0, 0, 0.25) !important; */
           padding: 6px 14px !important;
           color: #ffffff !important;
           background-color: #141431dd !important;
-          /* backdrop-filter: blur(6px) !important; */
-
-          /* margin-top: 90px; */
           &::before,
           &::after {
             display: none;
@@ -209,10 +198,6 @@ export const GlobalStyles = () => {
         .MuiCheckbox-colorPrimary {
           color: #ffffffc8 !important;
         }
-        /* .MuiModal-backdrop {
-  backdrop-filter: blur(2px);
-} */
-
         .MuiCircularProgress-circle {
           stroke-linecap: round !important;
         }
@@ -224,129 +209,3 @@ export const GlobalStyles = () => {
     />
   );
 };
-
-export const DialogBtn = styled(Button)`
-  padding: 10px 16px;
-  border-radius: 16px;
-  font-size: 16px;
-  margin: 8px;
-`;
-export const StyledLink = styled.a<{ clr?: string }>`
-  cursor: pointer;
-  color: ${({ clr, theme }) => clr || theme.primary};
-  display: inline-block;
-  position: relative;
-  text-decoration: none;
-  font-weight: 500;
-  transition: 0.3s all;
-  &::after {
-    content: "";
-    position: absolute;
-    width: 100%;
-    transform: scaleX(0);
-    height: 2px;
-    bottom: 0;
-    left: 0;
-    background-color: ${({ clr, theme }) => clr || theme.primary};
-    transform-origin: bottom right;
-    transition: transform 0.25s ease-out;
-    border-radius: 100px;
-  }
-  &:hover::after,
-  &:focus-visible::after {
-    transform: scaleX(1);
-    transform-origin: bottom left;
-  }
-  &:hover {
-    text-shadow: 0px 0px 20px ${({ clr, theme }) => clr || theme.primary};
-  }
-  &:focus,
-  &:focus-visible {
-    outline: none;
-    box-shadow: none;
-  }
-`;
-
-// Styled button for color selection
-export const ColorElement = styled.button<{ clr: string; secondClr?: string; size?: string }>`
-  background: ${({ clr, secondClr }) =>
-    secondClr ? `linear-gradient(135deg, ${clr} 50%, ${secondClr} 50%)` : clr};
-
-  color: ${({ clr }) => getFontColor(clr || "")};
-  border: none;
-  cursor: pointer;
-  width: ${({ size }) => size || "48px"};
-  height: ${({ size }) => size || "48px"};
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  border-radius: 100%;
-  transition: 0.2s all;
-  transform: scale(1);
-
-  &:focus-visible {
-    outline: 4px solid ${({ theme }) => theme.primary};
-  }
-  &:hover {
-    /* transform: scale(1.05); */
-    box-shadow: 0 0 12px ${({ clr }) => clr};
-    /* outline: none; */
-  }
-`;
-
-export const PathName = styled.code`
-  background: black;
-  color: white;
-  font-family: consolas !important;
-  padding: 4px 6px;
-  border-radius: 8px;
-`;
-export const fadeInLeft = keyframes`
-from {
-  opacity: 0;
-  transform: translateX(-40px)
-}
-to {
-  opacity: 1;
-  transform: translateX(0px)
-  }
-`;
-export const fadeIn = keyframes`
-from {
-  opacity: 0;
-}
-
-`;
-export const slideIn = keyframes`
-  from{
-    transform: translateX(-100%);
-  }
-  to {
-    transform: translateX(0);
-  }
-`;
-export const slideInBottom = keyframes`
-  from{
-    transform: translateY(100%);
-  }
-  to {
-    transform: translateY(0);
-  }
-`;
-
-//TODO: theme color
-export const pulseAnimation = keyframes`
-  0% {
-    transform: scale(0.95);
-    box-shadow: 0 0 0 0 rgba(182, 36, 255, 0.7);
-  }
-  70% {
-    transform: scale(1);
-    box-shadow: 0 0 0 12px rgba(182, 36, 255, 0);
-  }
-  100% {
-    transform: scale(0.95);
-    box-shadow: 0 0 0 0 rgba(182, 36, 255, 0);
-  }
-`;

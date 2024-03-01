@@ -1,16 +1,5 @@
 export { ColorPalette, Themes } from "./theme";
-export {
-  GlobalStyles,
-  fadeInLeft,
-  fadeIn,
-  slideIn,
-  slideInBottom,
-  StyledLink,
-  pulseAnimation,
-  DialogBtn,
-  PathName,
-  ColorElement,
-} from "./globalStyles";
+export { GlobalStyles } from "./globalStyles";
 export {
   GreetingHeader,
   GreetingText,
@@ -46,3 +35,14 @@ export {
   RadioChecked,
   RadioUnchecked,
 } from "./tasks.styled";
+export {
+  pulseAnimation,
+  fadeInLeft,
+  fadeIn,
+  slideIn,
+  slideInBottom,
+  progressPulse,
+  ring,
+  scale,
+} from "./keyframes.styled";
+export { DialogBtn, StyledLink, PathName, ColorElement } from "./common.styled";

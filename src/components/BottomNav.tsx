@@ -139,10 +139,10 @@ const AddIcon = styled(AddRounded)<{ clr: string; animate: boolean }>`
   border-radius: 100px;
   padding: 6px;
   margin: 14px;
-  ${({ animate }) =>
+  ${({ animate, theme }) =>
     animate &&
     css`
-      animation: ${pulseAnimation} 1.2s infinite;
+      animation: ${pulseAnimation(theme.palette.primary.main)} 1.2s infinite;
     `}
 `;
 

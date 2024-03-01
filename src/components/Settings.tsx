@@ -1,6 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
 import {
   Box,
+  Button,
   Chip,
   Dialog,
   DialogActions,
@@ -25,6 +26,7 @@ import { Emoji, EmojiStyle } from "emoji-picker-react";
 import { useOnlineStatus } from "../hooks/useOnlineStatus";
 import {
   CachedRounded,
+  DeleteRounded,
   VolumeDown,
   VolumeOff,
   VolumeUp,
@@ -33,6 +35,7 @@ import {
 import { defaultUser } from "../constants/defaultUser";
 import { UserContext } from "../contexts/UserContext";
 import { iOS } from "../utils/iOS";
+import toast from "react-hot-toast";
 
 interface SettingsProps {
   open: boolean;
@@ -236,7 +239,34 @@ export const SettingsDialog: React.FC<SettingsProps> = ({ open, onClose }) => {
                 </MenuItem>
               ))}
             </StyledSelect>
+            <Tooltip title="Emoji picker will only show frequently used emojis">
+              <FormGroup>
+                <StyledFormLabel
+                  sx={{ opacity: userSettings.simpleEmojiPicker ? 1 : 0.8 }}
+                  control={
+                    <Switch
+                      checked={userSettings.simpleEmojiPicker}
+                      onChange={handleSettingChange("simpleEmojiPicker")}
+                    />
+                  }
+                  label="Simple Emoji Picker"
+                />
+              </FormGroup>
+            </Tooltip>
           </FormControl>
+          <Tooltip title="This will delete data about frequently used emojis">
+            <Button
+              color="error"
+              onClick={() => {
+                localStorage.removeItem("epr_suggested");
+                toast.success((t) => (
+                  <div onClick={() => toast.dismiss(t.id)}>Deleted emoji data.</div>
+                ));
+              }}
+            >
+              <DeleteRounded /> Clear Emoji Data
+            </Button>
+          </Tooltip>
         </FormGroup>
 
         {/* Switch components to control different app settings */}
@@ -290,6 +320,7 @@ export const SettingsDialog: React.FC<SettingsProps> = ({ open, onClose }) => {
             label="Move Done Tasks To Bottom"
           />
         </FormGroup>
+
         {settings[0].enableReadAloud && (
           <FormGroup>
             <FormControl>

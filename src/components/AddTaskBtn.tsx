@@ -60,10 +60,10 @@ const AddButton = styled(Button)<{ animate?: boolean; glow: boolean }>`
     backdrop-filter: blur(6px);
   }
 
-  ${({ animate }) =>
+  ${({ animate, theme }) =>
     animate &&
     css`
-      animation: ${pulseAnimation} 1.2s infinite;
+      animation: ${pulseAnimation(theme.primary)} 1.2s infinite;
     `}
 
   @media (max-width: 1024px) {

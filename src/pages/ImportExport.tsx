@@ -54,7 +54,7 @@ const ImportExport = () => {
   };
 
   const handleExport = () => {
-    const tasksToExport = user.tasks.filter((task: Task) => selectedTasks.includes(task.id));
+    const tasksToExport = user.tasks.filter((task) => selectedTasks.includes(task.id));
     exportTasksToJson(tasksToExport);
     toast(
       (t) => (

@@ -399,6 +399,25 @@ export const Tasks: React.FC = () => {
               ))}
             </CategoriesListContainer>
           )}
+        {/* <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            background: getFontColor(theme.secondary) + "32",
+            padding: "6px 0",
+            borderRadius: "16px",
+          }}
+        >
+          <div style={{ margin: "0 20px" }}>
+            <h3>Your Tasks</h3>
+          </div>
+          <div style={{ margin: "0 20px" }}>
+            <IconButton sx={{ color: getFontColor(theme.secondary) }}>
+              <SortRounded />
+            </IconButton>
+          </div>
+        </div> */}
         {multipleSelectedTasks.length > 0 && (
           <SelectedTasksContainer>
             <div>

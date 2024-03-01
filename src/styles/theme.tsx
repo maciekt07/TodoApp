@@ -6,7 +6,7 @@ export const ColorPalette = {
   fontLight: "#f0f0f0",
   purple: "#b624ff",
   red: "#ff3131",
-};
+} as const;
 
 const commonComponentProps: Theme["components"] = {
   MuiTooltip: {
@@ -43,19 +43,19 @@ const commonComponentProps: Theme["components"] = {
       },
     },
   },
+  MuiInput: {
+    defaultProps: {
+      style: {
+        color: "black",
+      },
+    },
+  },
 };
 
 export const createCustomTheme = (primaryColor: string, backgroundColor = "#232e58"): Theme => {
   return createTheme({
     components: {
       ...commonComponentProps,
-      MuiInput: {
-        defaultProps: {
-          style: {
-            color: "black",
-          },
-        },
-      },
     },
     palette: {
       primary: {
@@ -71,14 +71,7 @@ export const createCustomTheme = (primaryColor: string, backgroundColor = "#232e
   });
 };
 
-export type AppTheme =
-  | "system"
-  | "purple"
-  | "light purple"
-  | "blue"
-  | "pink"
-  | "ultra pink"
-  | "giga blue";
+export type AppTheme = "system" | "purple" | "light purple" | "blue" | "pink" | "ultra pink";
 /**
  * ### To add a new theme:
  * - Update the AppTheme interface with the new theme name.

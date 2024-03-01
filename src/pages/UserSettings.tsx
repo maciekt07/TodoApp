@@ -11,12 +11,10 @@ import {
   TextField,
   Tooltip,
 } from "@mui/material";
-
 import { useContext, useEffect, useState } from "react";
 import styled from "@emotion/styled";
 import {
   AddAPhotoRounded,
-  CheckCircleRounded,
   CheckRounded,
   Delete,
   Logout,
@@ -180,7 +178,7 @@ const UserSettings = () => {
           justifyContent="left"
           alignItems="center"
           gap={1}
-          sx={{ background: "#d9d9d9", padding: "10px", borderRadius: "32px" }}
+          sx={{ background: "#d9d9d9", padding: "10px", borderRadius: "32px", overflowY: "auto" }}
         >
           <Grid item>
             <Tooltip title={`System (${systemTheme})`}>
@@ -194,27 +192,14 @@ const UserSettings = () => {
                   }));
                 }}
               >
-                <Badge
-                  badgeContent={
-                    user.theme === "system" ? (
-                      <CheckRounded
-                        sx={{
-                          fontSize: "18px",
-                          color: "white",
-                          background: "#141414",
-                          borderRadius: "100px",
-                        }}
-                      />
-                    ) : undefined
-                  }
-                >
+                <Badge badgeContent={user.theme === "system" ? <CheckIcon /> : undefined}>
                   <PersonalVideoRounded sx={{ color: "white" }} />
                 </Badge>
               </ColorElement>
             </Tooltip>
           </Grid>
           {Themes.map((theme) => (
-            <Grid item key={theme.name}>
+            <Grid key={theme.name}>
               <Tooltip title={theme.name[0].toUpperCase() + theme.name.replace(theme.name[0], "")}>
                 <ColorElement
                   clr={theme.MuiTheme.palette.primary.main}
@@ -228,9 +213,9 @@ const UserSettings = () => {
                     }));
                   }}
                 >
-                  {theme.name === user.theme && (
-                    <CheckIcon clr={getFontColor(theme.MuiTheme.palette.secondary.main)} />
-                  )}
+                  <Badge badgeContent={user.theme === theme.name ? <CheckIcon /> : undefined}>
+                    <div style={{ width: "24px", height: "24px" }} />
+                  </Badge>
                 </ColorElement>
               </Tooltip>
             </Grid>
@@ -356,13 +341,12 @@ const Container = styled.div`
   transform: translate(-50%, -50%);
 `;
 
-const CheckIcon = styled(CheckCircleRounded)<{ clr: string }>`
-  color: ${({ clr }) => clr};
-  font-size: 36px;
-  /* backdrop-filter: blur(20px);
+const CheckIcon = styled(CheckRounded)`
+  font-size: 18px;
+  padding: 2px;
+  color: white;
+  background: #141414;
   border-radius: 100px;
-  transform: rotate(3deg);
-  padding: 6px; */
 `;
 
 const StyledInput = styled(TextField)`

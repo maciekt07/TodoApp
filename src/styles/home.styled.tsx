@@ -1,8 +1,7 @@
 import styled from "@emotion/styled";
-import { fadeIn, fadeInLeft } from "./globalStyles";
-import { Box, CircularProgress } from "@mui/material";
+import { fadeIn, fadeInLeft, progressPulse } from "./keyframes.styled";
+import { Box, CircularProgress, css } from "@mui/material";
 import { ColorPalette } from ".";
-import { keyframes } from "@emotion/css";
 
 export const GreetingHeader = styled.div`
   display: flex;
@@ -72,18 +71,6 @@ export const TaskCompletionText = styled.p`
   font-size: 16px;
 `;
 
-const pulse = (clr: string) => keyframes`
-  0% {
-    filter: none;
-  }
-  50% {
-    filter: drop-shadow(0 0 10px ${clr + "78"});
-  }
-  100% {
-    filter: none;
-  }
-`;
-
 export const ProgressPercentageContainer = styled(Box)<{ glow: boolean }>`
   top: 0;
   left: 0;
@@ -99,7 +86,11 @@ export const ProgressPercentageContainer = styled(Box)<{ glow: boolean }>`
   border: 1px solid #44479cb7;
   box-shadow: 0 0 18px -2px #090b2287;
   animation: ${({ theme, glow }) =>
-    glow ? `${pulse(theme.primary)} 4s infinite ease-in` : "none"};
+    glow
+      ? css`
+          ${progressPulse(theme.primary)} 4s infinite ease-in
+        `
+      : "none"};
 `;
 
 export const StyledProgress = styled(CircularProgress)<{ glow: boolean }>`

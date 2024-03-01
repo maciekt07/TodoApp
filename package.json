@@ -12,31 +12,31 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@emotion/css": "^11.11.0",
-    "@emotion/react": "^11.11.0",
+    "@emotion/css": "^11.11.2",
+    "@emotion/react": "^11.11.3",
     "@emotion/styled": "^11.11.0",
-    "@mui/icons-material": "^5.11.16",
-    "@mui/material": "^5.13.0",
-    "emoji-picker-react": "^4.4.9",
+    "@mui/icons-material": "^5.15.11",
+    "@mui/material": "^5.15.11",
+    "emoji-picker-react": "^4.8.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "react-fast-marquee": "^1.6.2",
+    "react-fast-marquee": "^1.6.4",
     "react-hot-toast": "^2.4.1",
     "react-qr-code": "^2.0.12",
-    "react-router-dom": "^6.11.1",
+    "react-router-dom": "^6.22.1",
     "react-spring-bottom-sheet": "^3.4.1"
   },
   "devDependencies": {
-    "@types/react": "^18.0.28",
-    "@types/react-dom": "^18.0.11",
-    "@typescript-eslint/eslint-plugin": "^5.57.1",
-    "@typescript-eslint/parser": "^5.57.1",
-    "@vitejs/plugin-react": "^4.0.0",
-    "eslint": "^8.38.0",
+    "@types/react": "^18.2.58",
+    "@types/react-dom": "^18.2.19",
+    "@typescript-eslint/eslint-plugin": "^7.0.2",
+    "@typescript-eslint/parser": "^7.0.2",
+    "@vitejs/plugin-react": "^4.2.1",
+    "eslint": "^8.57.0",
     "eslint-plugin-react-hooks": "^4.6.0",
-    "eslint-plugin-react-refresh": "^0.3.4",
-    "typescript": "^5.0.2",
-    "vite": "^4.3.2",
-    "vite-plugin-pwa": "^0.15.1"
+    "eslint-plugin-react-refresh": "^0.4.5",
+    "typescript": "^5.3.3",
+    "vite": "^5.1.4",
+    "vite-plugin-pwa": "^0.19.0"
   }
 }

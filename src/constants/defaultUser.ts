@@ -17,6 +17,7 @@ export const defaultUser: User = {
       enableCategories: true,
       doneToBottom: false,
       enableGlow: true,
+      simpleEmojiPicker: false,
       enableReadAloud: "speechSynthesis" in window,
       voice: "Google UK English Male",
       voiceVolume: 0.6,

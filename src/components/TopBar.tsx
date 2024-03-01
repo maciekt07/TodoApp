@@ -10,7 +10,8 @@ interface TopBarProps {
 
 export const TopBar: React.FC<TopBarProps> = ({ title }) => {
   const n = useNavigate();
-  const handleBackClick = () => n("/");
+  const handleBackClick = () => n(-1);
+
   return (
     <Container>
       <BackBtn size="large" onClick={handleBackClick}>

@@ -1,6 +1,8 @@
 import type { EmojiStyle } from "emoji-picker-react";
 import type { AppTheme } from "../styles/theme";
 
+// export type UUID = ReturnType<typeof crypto.randomUUID>;
+
 /**
  * Represents a user in the application.
  */
@@ -60,6 +62,7 @@ export interface AppSettings {
   enableCategories: boolean;
   doneToBottom: boolean;
   enableGlow: boolean;
+  simpleEmojiPicker: boolean;
   enableReadAloud: boolean;
   voice: string;
   voiceVolume: number;
