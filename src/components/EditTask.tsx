@@ -16,7 +16,7 @@ import { ColorPalette, DialogBtn } from "../styles";
 import { CategorySelect, ColorPicker, CustomEmojiPicker } from ".";
 import toast from "react-hot-toast";
 import { UserContext } from "../contexts/UserContext";
-import { CancelRounded, EditCalendarRounded } from "@mui/icons-material";
+import { CancelRounded, EditCalendarRounded, SaveRounded } from "@mui/icons-material";
 import { timeAgo } from "../utils";
 
 interface EditTaskProps {
@@ -264,8 +264,7 @@ export const EditTask = ({ open, task, onClose, onSave }: EditTaskProps) => {
             JSON.stringify(editedTask) === JSON.stringify(task)
           }
         >
-          {/* <SaveRounded /> &nbsp;  */}
-          Save
+          <SaveRounded /> &nbsp; Save
         </DialogBtn>
       </DialogActions>
     </Dialog>

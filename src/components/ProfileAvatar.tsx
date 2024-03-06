@@ -226,13 +226,15 @@ export const ProfileAvatar = () => {
         >
           <BugReportRounded /> &nbsp; Report Issue{" "}
           {Boolean(issuesCount || issuesCount === 0) && (
-            <MenuLabel clr={issuesCount && issuesCount > 0 ? ColorPalette.red : "#3bb61c"}>
-              <span style={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
-                <AdjustRounded style={{ fontSize: "18px" }} />
-                &nbsp;
-                {issuesCount}
-              </span>
-            </MenuLabel>
+            <Tooltip title={`${issuesCount} open issues`}>
+              <MenuLabel clr={issuesCount && issuesCount > 0 ? ColorPalette.red : "#3bb61c"}>
+                <span style={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
+                  <AdjustRounded style={{ fontSize: "18px" }} />
+                  &nbsp;
+                  {issuesCount}
+                </span>
+              </MenuLabel>
+            </Tooltip>
           )}
         </StyledMenuItem>
         <StyledMenuItem onClick={handleLogoutConfirmationOpen} sx={{ color: "#ff4040 !important" }}>
@@ -292,7 +294,7 @@ export const ProfileAvatar = () => {
           <CreditsContainer translate="no">
             <span style={{ display: "flex", alignItems: "center" }}>
               Made with &nbsp;
-              <Favorite sx={{ fontSize: "16px" }} />
+              <Favorite sx={{ fontSize: "14px" }} />
             </span>
             <span style={{ marginLeft: "6px", marginRight: "4px" }}>by</span>
 
@@ -385,9 +387,17 @@ const StyledMenuItem = styled(MenuItem)`
 
   align-items: center;
   gap: 6px;
-
+  & svg {
+    transition: 0.4s transform;
+  }
   &:hover {
     background-color: #f0f0f0;
+    & svg[data-testid="GitHubIcon"] {
+      transform: rotate3d(0, 1, 0, ${2 * Math.PI}rad);
+    }
+    & svg[data-testid="SettingsRoundedIcon"] {
+      transform: rotate(180deg);
+    }
   }
 `;
 const DialogBtn = styled(Button)`

@@ -1,4 +1,4 @@
-import type { Category, Task } from "../types/user";
+import type { Category, Task, UUID } from "../types/user";
 import { ReactNode, useContext, useEffect, useState } from "react";
 import { calculateDateDifference, formatDate, getFontColor, iOS } from "../utils";
 import {
@@ -64,25 +64,25 @@ export const Tasks: React.FC = () => {
   const { user, setUser } = useContext(UserContext);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
-  const [selectedTaskId, setSelectedTaskId] = useState<number | null>(null);
+  const [selectedTaskId, setSelectedTaskId] = useState<UUID | null>(null);
   const [search, setSearch] = useStorageState<string>("", "search", "sessionStorage");
-  const [expandedTasks, setExpandedTasks] = useState<Set<number>>(new Set()); //FIXME: use storage state for set
+  const [expandedTasks, setExpandedTasks] = useState<Set<UUID>>(new Set()); //FIXME: use storage state for set
   const [deleteDialogOpen, setDeleteDialogOpen] = useState<boolean>(false);
   const [editModalOpen, setEditModalOpen] = useState<boolean>(false);
-  const [multipleSelectedTasks, setMultipleSelectedTasks] = useStorageState<number[]>(
+  const [multipleSelectedTasks, setMultipleSelectedTasks] = useStorageState<UUID[]>(
     [],
     "selectedTasks",
     "sessionStorage"
   );
   const [deleteSelectedOpen, setDeleteSelectedOpen] = useState<boolean>(false);
   const [categories, setCategories] = useState<Category[] | undefined>(undefined);
-  const [selectedCatId, setSelectedCatId] = useStorageState<number | undefined>(
+  const [selectedCatId, setSelectedCatId] = useStorageState<UUID | undefined>(
     undefined,
     "selectedCategory",
     "sessionStorage"
   );
   const [categoryCounts, setCategoryCounts] = useState<{
-    [categoryId: number]: number;
+    [categoryId: UUID]: number;
   }>({});
 
   const isMobile = useResponsiveDisplay();
@@ -96,13 +96,24 @@ export const Tasks: React.FC = () => {
 
   const selectedTask = user.tasks.find((task) => task.id === selectedTaskId) || ({} as Task);
 
+  // const scrollToRefs = useRef<{ [key: string]: HTMLDivElement | null }>({});
+
   // Handler for clicking the more options button in a task
-  const handleClick = (event: React.MouseEvent<HTMLButtonElement>, taskId: number) => {
+  const handleClick = (event: React.MouseEvent<HTMLButtonElement>, taskId: UUID) => {
     setAnchorEl(event.currentTarget);
     setSelectedTaskId(taskId);
+
     if (!isMobile && !expandedTasks.has(taskId)) {
       toggleShowMore(taskId);
     }
+    // const element = scrollToRefs.current[taskId.toString()];
+    // if (element) {
+    //   element.scrollIntoView({
+    //     behavior: "smooth",
+    //     block: "center",
+    //     inline: "center",
+    //   });
+    // }
   };
 
   const handleCloseMoreMenu = () => {
@@ -114,40 +125,27 @@ export const Tasks: React.FC = () => {
   };
 
   const reorderTasks = (tasks: Task[]): Task[] => {
-    // Reorders tasks by moving pinned tasks to the top
+    // Separate tasks into pinned and unpinned
     let pinnedTasks = tasks.filter((task) => task.pinned);
     let unpinnedTasks = tasks.filter((task) => !task.pinned);
 
     // Filter tasks based on the selected category
     if (selectedCatId !== undefined) {
-      unpinnedTasks = unpinnedTasks.filter((task) => {
-        if (task.category) {
-          return task.category.some((category) => category.id === selectedCatId);
-        }
-        return false;
-      });
-      pinnedTasks = pinnedTasks.filter((task) => {
-        if (task.category) {
-          return task.category.some((category) => category.id === selectedCatId);
-        }
-        return false;
-      });
+      const categoryFilter = (task: Task) =>
+        task.category?.some((category) => category.id === selectedCatId) ?? false;
+      unpinnedTasks = unpinnedTasks.filter(categoryFilter);
+      pinnedTasks = pinnedTasks.filter(categoryFilter);
     }
 
     // Filter tasks based on the search input
     const searchLower = search.toLowerCase();
-    unpinnedTasks = unpinnedTasks.filter(
-      (task) =>
-        task.name.toLowerCase().includes(searchLower) ||
-        (task.description && task.description.toLowerCase().includes(searchLower))
-    );
-    pinnedTasks = pinnedTasks.filter(
-      (task) =>
-        task.name.toLowerCase().includes(searchLower) ||
-        (task.description && task.description.toLowerCase().includes(searchLower))
-    );
+    const searchFilter = (task: Task) =>
+      task.name.toLowerCase().includes(searchLower) ||
+      (task.description && task.description.toLowerCase().includes(searchLower));
+    unpinnedTasks = unpinnedTasks.filter(searchFilter);
+    pinnedTasks = pinnedTasks.filter(searchFilter);
 
-    // move done tasks to bottom
+    // Move done tasks to bottom if the setting is enabled
     if (user.settings[0]?.doneToBottom) {
       const doneTasks = unpinnedTasks.filter((task) => task.done);
       const notDoneTasks = unpinnedTasks.filter((task) => !task.done);
@@ -187,7 +185,7 @@ export const Tasks: React.FC = () => {
     setDeleteDialogOpen(false);
   };
 
-  const handleSelectTask = (taskId: number) => {
+  const handleSelectTask = (taskId: UUID) => {
     setAnchorEl(null);
     setMultipleSelectedTasks((prevSelectedTaskIds) => {
       if (prevSelectedTaskIds.includes(taskId)) {
@@ -232,7 +230,7 @@ export const Tasks: React.FC = () => {
     });
 
     // Calculate category counts
-    const counts: { [categoryId: number]: number } = {};
+    const counts: { [categoryId: UUID]: number } = {};
     uniqueCategories.forEach((category) => {
       const categoryTasks = tasks.filter((task) =>
         task.category?.some((cat) => cat.id === category.id)
@@ -251,7 +249,7 @@ export const Tasks: React.FC = () => {
     setCategoryCounts(counts);
   }, [user.tasks, search]);
 
-  const toggleShowMore = (taskId: number) => {
+  const toggleShowMore = (taskId: UUID) => {
     setExpandedTasks((prevExpandedTasks) => {
       const newSet = new Set(prevExpandedTasks);
       newSet.has(taskId) ? newSet.delete(taskId) : newSet.add(taskId);
@@ -374,7 +372,7 @@ export const Tasks: React.FC = () => {
                           marginLeft: "4px",
                         }}
                       >
-                        ({categoryCounts[cat.id] || 0})
+                        ({categoryCounts[cat.id] || crypto.randomUUID()})
                       </span>
                     </div>
                   }
@@ -475,6 +473,7 @@ export const Tasks: React.FC = () => {
         {user.tasks.length !== 0 ? (
           reorderTasks(user.tasks).map((task) => (
             <TaskContainer
+              // ref={(ref) => (scrollToRefs.current[task.id.toString()] = ref)}
               key={task.id}
               id={task.id.toString()}
               backgroundColor={task.color}

@@ -1,5 +1,5 @@
 import styled from "@emotion/styled";
-import { Category } from "../types/user";
+import { Category, UUID } from "../types/user";
 import {
   Box,
   Button,
@@ -44,7 +44,7 @@ export const CategorySelect: React.FC<CategorySelectProps> = ({
   const n = useNavigate();
 
   const handleCategoryChange = (event: SelectChangeEvent<unknown>): void => {
-    const selectedCategoryIds = event.target.value as number[];
+    const selectedCategoryIds = event.target.value as UUID[];
     if (selectedCategoryIds.length > MAX_CATEGORIES) {
       toast.error(
         (t) => (
@@ -114,7 +114,8 @@ export const CategorySelect: React.FC<CategorySelectProps> = ({
               maxHeight: 450,
               zIndex: 999999,
               padding: "0px 8px",
-              background: "white",
+              // background: "#ffffffd8",
+              // backdropFilter: "blur(8px)",
             },
           },
         }}
@@ -203,7 +204,7 @@ const CategoriesMenu = styled(MenuItem)<{ clr: string; disable?: boolean }>`
 
   &:focus-visible {
     border-color: ${({ theme }) => theme.primary} !important;
-    color: ${ColorPalette.fontDark} !important;
+    /* color: ${ColorPalette.fontDark} !important; */
   }
 
   &.Mui-selected {
@@ -226,7 +227,7 @@ const HeaderMenuItem = styled(MenuItem)`
   font-weight: 500;
   position: sticky !important;
   top: 0;
-  background: white;
+  background: transparent;
   z-index: 99;
   pointer-events: none;
 `;

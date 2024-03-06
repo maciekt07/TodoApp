@@ -52,7 +52,7 @@ function App() {
               <div onClick={() => toast.dismiss(t.id)}>
                 Added new property to user object{" "}
                 <i>
-                  {key}: {userObject[key]}
+                  {key}: {userObject[key].toString()}
                 </i>
               </div>
             ),
@@ -70,10 +70,7 @@ function App() {
     // Update user with default values for all properties, including nested ones
     setUser((prevUser) => {
       // Make sure not to update if user hasn't changed
-      if (
-        JSON.stringify(prevUser) !==
-        JSON.stringify(updateNestedProperties({ ...prevUser }, defaultUser))
-      ) {
+      if (JSON.stringify(prevUser) !== JSON.stringify(updateNestedProperties({ ...prevUser }, defaultUser))) {
         return updateNestedProperties({ ...prevUser }, defaultUser);
       }
       return prevUser;

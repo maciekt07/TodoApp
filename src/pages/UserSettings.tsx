@@ -19,6 +19,7 @@ import {
   Delete,
   Logout,
   PersonalVideoRounded,
+  SaveRounded,
   Settings,
   TodayRounded,
 } from "@mui/icons-material";
@@ -134,13 +135,6 @@ const UserSettings = () => {
             <Avatar
               onClick={handleOpenImageDialog}
               src={(profilePicture as string) || undefined}
-              onError={() => {
-                setUser((prevUser) => ({
-                  ...prevUser,
-                  profilePicture: null,
-                }));
-                throw new Error("Error in profile picture URL");
-              }}
               sx={{
                 width: "96px",
                 height: "96px",
@@ -297,7 +291,7 @@ const UserSettings = () => {
             }
             onClick={handleSaveImage}
           >
-            Save
+            <SaveRounded /> &nbsp; Save
           </DialogBtn>
         </DialogActions>
       </Dialog>

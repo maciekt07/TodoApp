@@ -80,11 +80,11 @@ export type AppTheme = "system" | "purple" | "light purple" | "blue" | "pink" | 
  */
 export const Themes: { name: Exclude<AppTheme, "system">; MuiTheme: Theme }[] = [
   {
-    name: "purple",
+    name: "purple", // system dark
     MuiTheme: createCustomTheme(ColorPalette.purple),
   },
   {
-    name: "light purple",
+    name: "light purple", // system light
     MuiTheme: createCustomTheme(ColorPalette.purple, "#edeef6"),
   },
   {

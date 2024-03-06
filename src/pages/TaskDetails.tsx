@@ -51,7 +51,10 @@ const TaskDetails = () => {
                 )}
               </TableData>
             </TableRow>
-
+            <TableRow>
+              <TableHeader>ID:</TableHeader>
+              <TableData>{task?.id}</TableData>
+            </TableRow>
             <TableRow>
               <TableHeader>Description:</TableHeader>
               <TableData>{task?.description}</TableData>

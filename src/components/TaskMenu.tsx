@@ -1,6 +1,7 @@
 import {
   Cancel,
   ContentCopy,
+  ContentCopyRounded,
   DeleteRounded,
   Done,
   EditRounded,
@@ -43,18 +44,18 @@ import { useContext, useState } from "react";
 import toast from "react-hot-toast";
 import { UserContext } from "../contexts/UserContext";
 import QRCode from "react-qr-code";
-import { Task } from "../types/user";
+import { Task, UUID } from "../types/user";
 import { calculateDateDifference, formatDate } from "../utils";
 import Marquee from "react-fast-marquee";
 
 interface TaskMenuProps {
-  selectedTaskId: number | null;
-  selectedTasks: number[];
+  selectedTaskId: UUID | null;
+  selectedTasks: UUID[];
   setEditModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
   anchorEl: null | HTMLElement;
   handleDeleteTask: () => void;
   handleCloseMoreMenu: () => void;
-  handleSelectTask: (taskId: number) => void;
+  handleSelectTask: (taskId: UUID) => void;
 }
 
 export const TaskMenu: React.FC<TaskMenuProps> = ({
@@ -78,32 +79,38 @@ export const TaskMenu: React.FC<TaskMenuProps> = ({
     const taskId = selectedTask?.id.toString().replace(".", "");
     n(`/task/${taskId}`);
   };
-  //TODO: add bitly api
-  const generateShareableLink = (taskId: number | null, userName: string): string => {
+
+  const generateShareableLink = (taskId: UUID | null, userName: string): string => {
     const task = tasks.find((task) => task.id === taskId);
+
+    // This removes id property from link as a new identifier is generated on the share page.
+    interface TaskToShare extends Omit<Task, "id"> {
+      id: undefined;
+    }
+
     if (task) {
-      const encodedTask = encodeURIComponent(JSON.stringify(task));
+      const taskToShare: TaskToShare = {
+        ...task,
+        sharedBy: undefined,
+        id: undefined,
+        category: user.settings[0].enableCategories ? task.category : undefined,
+      };
+      const encodedTask = encodeURIComponent(JSON.stringify(taskToShare));
       const encodedUserName = encodeURIComponent(userName);
       return `${window.location.href}share?task=${encodedTask}&userName=${encodedUserName}`;
     }
     return "";
   };
 
-  const handleCopyToClipboard = () => {
+  const handleCopyToClipboard = async () => {
     const linkToCopy = generateShareableLink(selectedTaskId, name || "User");
-
-    navigator.clipboard
-      .writeText(linkToCopy)
-      .then(() => {
-        toast.success((t) => (
-          <div onClick={() => toast.dismiss(t.id)}>Copied link to clipboard</div>
-        ));
-      })
-
-      .catch((error) => {
-        console.error("Error copying link to clipboard:", error);
-        toast.error("Error copying link to clipboard");
-      });
+    try {
+      await navigator.clipboard.writeText(linkToCopy);
+      toast.success((t) => <div onClick={() => toast.dismiss(t.id)}>Copied link to clipboard</div>);
+    } catch (error) {
+      console.error("Error copying link to clipboard:", error);
+      toast.error("Error copying link to clipboard");
+    }
   };
 
   const handleShare = () => {
@@ -115,12 +122,8 @@ export const TaskMenu: React.FC<TaskMenuProps> = ({
           text: `Check out this task: ${tasks.find((task) => task.id === selectedTaskId)?.name}`,
           url: linkToShare,
         })
-        .then(() => {
-          console.log("Link shared successfully");
-        })
         .catch((error) => {
           console.error("Error sharing link:", error);
-          // toast.error("Error sharing link");
         });
     }
   };
@@ -184,7 +187,7 @@ export const TaskMenu: React.FC<TaskMenuProps> = ({
         // Create a duplicated task with a new ID and current date
         const duplicatedTask: Task = {
           ...selectedTask,
-          id: new Date().getTime() + Math.floor(Math.random() * 1000),
+          id: crypto.randomUUID(),
           date: new Date(),
           lastSave: undefined,
         };
@@ -355,7 +358,7 @@ export const TaskMenu: React.FC<TaskMenuProps> = ({
       </StyledMenuItem>
 
       {selectedTasks.length === 0 && (
-        <StyledMenuItem onClick={() => handleSelectTask(selectedTaskId || 0)}>
+        <StyledMenuItem onClick={() => handleSelectTask(selectedTaskId || crypto.randomUUID())}>
           <RadioButtonChecked /> &nbsp; Select
         </StyledMenuItem>
       )}
@@ -481,15 +484,20 @@ export const TaskMenu: React.FC<TaskMenuProps> = ({
               label="Shareable Link"
               InputProps={{
                 readOnly: true,
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <LinkRounded sx={{ ml: "8px" }} />
+                  </InputAdornment>
+                ),
                 endAdornment: (
                   <InputAdornment position="end">
                     <Button
                       onClick={() => {
                         handleCopyToClipboard();
                       }}
-                      sx={{ p: "12px 20px", borderRadius: "14px" }}
+                      sx={{ p: "12px", borderRadius: "14px", mr: "4px" }}
                     >
-                      <ContentCopy /> &nbsp; Copy
+                      <ContentCopyRounded /> &nbsp; Copy
                     </Button>
                   </InputAdornment>
                 ),
@@ -509,7 +517,7 @@ export const TaskMenu: React.FC<TaskMenuProps> = ({
                 marginTop: "22px",
               }}
             >
-              <QRCode value={generateShareableLink(selectedTaskId, name || "User")} size={384} />
+              <QRCode value={generateShareableLink(selectedTaskId, name || "User")} size={400} />
             </Box>
           </CustomTabPanel>
         </DialogContent>
@@ -587,6 +595,7 @@ const ShareField = styled(TextField)`
   margin-top: 22px;
   .MuiOutlinedInput-root {
     border-radius: 14px;
+    padding: 2px;
     transition: 0.3s all;
   }
 `;
