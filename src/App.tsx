@@ -70,7 +70,10 @@ function App() {
     // Update user with default values for all properties, including nested ones
     setUser((prevUser) => {
       // Make sure not to update if user hasn't changed
-      if (JSON.stringify(prevUser) !== JSON.stringify(updateNestedProperties({ ...prevUser }, defaultUser))) {
+      if (
+        JSON.stringify(prevUser) !==
+        JSON.stringify(updateNestedProperties({ ...prevUser }, defaultUser))
+      ) {
         return updateNestedProperties({ ...prevUser }, defaultUser);
       }
       return prevUser;

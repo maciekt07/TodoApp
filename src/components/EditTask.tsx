@@ -273,23 +273,13 @@ export const EditTask = ({ open, task, onClose, onSave }: EditTaskProps) => {
 
 const StyledInput = styled(TextField)`
   margin: 14px 0;
-
   & .MuiInputBase-root {
     border-radius: 16px;
   }
-
-  /* & .MuiFormHelperText-root {
-    opacity: 0.9;
-  } */
 `;
 StyledInput.defaultProps = {
   fullWidth: true,
 };
-// const Label = styled(Typography)`
-//   margin-left: 8px;
-//   font-weight: 500;
-//   font-size: 16px;
-// `;
 
 const LastEdit = styled.span`
   display: flex;

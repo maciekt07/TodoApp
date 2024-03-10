@@ -63,7 +63,7 @@ const AddButton = styled(Button)<{ animate?: boolean; glow: boolean }>`
   ${({ animate, theme }) =>
     animate &&
     css`
-      animation: ${pulseAnimation(theme.primary)} 1.2s infinite;
+      animation: ${pulseAnimation(theme.primary, 14)} 1.2s infinite;
     `}
 
   @media (max-width: 1024px) {

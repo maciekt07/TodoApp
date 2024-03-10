@@ -14,7 +14,7 @@ import {
   TextField,
   Tooltip,
 } from "@mui/material";
-import { Delete, Edit, SaveRounded } from "@mui/icons-material";
+import { Delete, Edit, SaveRounded, DeleteRounded } from "@mui/icons-material";
 import { CATEGORY_NAME_MAX_LENGTH } from "../constants";
 import { getFontColor } from "../utils";
 import { ColorPalette, DialogBtn, fadeIn } from "../styles";
@@ -339,7 +339,7 @@ const Categories = () => {
               }}
               color="error"
             >
-              Delete
+              <DeleteRounded /> &nbsp; Delete
             </DialogBtn>
           </DialogActions>
         </Dialog>

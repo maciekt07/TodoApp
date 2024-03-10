@@ -19,6 +19,7 @@ import {
   BugReportRounded,
   CategoryRounded,
   Favorite,
+  FiberManualRecord,
   GetAppRounded,
   GitHub,
   Logout,
@@ -31,11 +32,12 @@ import { defaultUser } from "../constants/defaultUser";
 import { SettingsDialog } from ".";
 import toast from "react-hot-toast";
 import logo from "../assets/logo256.png";
-import { ColorPalette } from "../styles";
+import { ColorPalette, pulseAnimation, ring } from "../styles";
 import { UserContext } from "../contexts/UserContext";
 import { iOS } from "../utils/iOS";
 import { fetchGitHubInfo } from "../services/githubApi";
 import { timeAgo } from "../utils";
+import bmcLogo from "../assets/bmc-logo.svg";
 
 export const ProfileAvatar = () => {
   const { user, setUser } = useContext(UserContext);
@@ -54,6 +56,7 @@ export const ProfileAvatar = () => {
     const fetchRepoInfo = async () => {
       try {
         const { repoData, branchData } = await fetchGitHubInfo();
+
         setStars(repoData.stargazers_count);
         setLastUpdate(branchData.commit.commit.committer.date);
         setIssuesCount(repoData.open_issues_count);
@@ -61,6 +64,12 @@ export const ProfileAvatar = () => {
         console.error(error);
       }
     };
+    // const myPromise = fetchGitHubInfo();
+    // toast.promise(myPromise, {
+    //   loading: "Loading",
+    //   success: "Got the data",
+    //   error: "Error when fetching",
+    // });
     fetchRepoInfo();
   }, []);
 
@@ -160,11 +169,13 @@ export const ProfileAvatar = () => {
         >
           <TaskAltRounded /> &nbsp; Tasks
           {user.tasks.filter((task) => !task.done).length > 0 && (
-            <MenuLabel>
-              {user.tasks.filter((task) => !task.done).length > 99
-                ? "99+"
-                : user.tasks.filter((task) => !task.done).length}
-            </MenuLabel>
+            <Tooltip title={`${user.tasks.filter((task) => !task.done).length} tasks to do`}>
+              <MenuLabel>
+                {user.tasks.filter((task) => !task.done).length > 99
+                  ? "99+"
+                  : user.tasks.filter((task) => !task.done).length}
+              </MenuLabel>
+            </Tooltip>
           )}
         </StyledMenuItem>
         <StyledMenuItem
@@ -211,12 +222,14 @@ export const ProfileAvatar = () => {
         >
           <GitHub /> &nbsp; Github{" "}
           {stars && (
-            <MenuLabel clr="#ff9d00">
-              <span style={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
-                <StarRounded style={{ fontSize: "18px" }} />
-                &nbsp;{stars}
-              </span>
-            </MenuLabel>
+            <Tooltip title={`${stars} stars on Github`}>
+              <MenuLabel clr="#ff9d00">
+                <span style={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
+                  <StarRounded style={{ fontSize: "18px" }} />
+                  &nbsp;{stars}
+                </span>
+              </MenuLabel>
+            </Tooltip>
           )}
         </StyledMenuItem>
         <StyledMenuItem
@@ -236,6 +249,15 @@ export const ProfileAvatar = () => {
               </MenuLabel>
             </Tooltip>
           )}
+        </StyledMenuItem>
+        <StyledMenuItem
+          className="bmcMenu"
+          // sx={{ color: "#e5ac00 !important" }}
+          onClick={() => {
+            window.open("https://www.buymeacoffee.com/maciekt07");
+          }}
+        >
+          <BmcIcon className="bmc-icon" src={bmcLogo} /> &nbsp; Buy me a coffee{" "}
         </StyledMenuItem>
         <StyledMenuItem onClick={handleLogoutConfirmationOpen} sx={{ color: "#ff4040 !important" }}>
           <Logout /> &nbsp; Logout
@@ -266,6 +288,19 @@ export const ProfileAvatar = () => {
             }}
           >
             <SettingsRounded /> &nbsp; Settings
+            {user.settings[0] === defaultUser.settings[0] && (
+              <SettingsMenuLabel>
+                <div
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                  }}
+                >
+                  <FiberManualRecord style={{ fontSize: "16px" }} />
+                </div>
+              </SettingsMenuLabel>
+            )}
           </StyledMenuItem>
           <Divider sx={{ margin: "0 8px" }} />
           <StyledMenuItem
@@ -384,22 +419,31 @@ const StyledMenuItem = styled(MenuItem)`
   display: flex;
   font-weight: 500;
   color: #101727;
-
   align-items: center;
   gap: 6px;
-  & svg {
+
+  & svg,
+  .bmc-icon {
     transition: 0.4s transform;
   }
+
   &:hover {
     background-color: #f0f0f0;
     & svg[data-testid="GitHubIcon"] {
-      transform: rotate3d(0, 1, 0, ${2 * Math.PI}rad);
+      transform: rotateY(${2 * Math.PI}rad);
     }
     & svg[data-testid="SettingsRoundedIcon"] {
       transform: rotate(180deg);
     }
+    & svg[data-testid="BugReportRoundedIcon"] {
+      transform: rotate(45deg) scale(0.9) translateY(-20%);
+    }
+    & .bmc-icon {
+      animation: ${ring} 2.5s ease-in alternate;
+    }
   }
 `;
+
 const DialogBtn = styled(Button)`
   padding: 8px 12px;
   border-radius: 12px;
@@ -415,8 +459,12 @@ const MenuLabel = styled.span<{ clr?: string }>`
   padding: 2px 12px;
   border-radius: 32px;
   font-size: 14px;
-  /* width: 40px;
-  text-align: center; */
+`;
+
+const SettingsMenuLabel = styled(MenuLabel)`
+  animation: ${({ theme }) => pulseAnimation(theme.primary, 6)} 1.2s infinite;
+  padding: 6px;
+  margin-right: 4px;
 `;
 
 const LogoContainer = styled.div`
@@ -428,6 +476,12 @@ const LogoContainer = styled.div`
   cursor: pointer;
 `;
 
+const BmcIcon = styled.img`
+  width: 1em;
+  height: 1em;
+  font-size: 1.5rem;
+`;
+
 const Logo = styled.img`
   width: 52px;
   margin-left: 18px;
@@ -437,7 +491,6 @@ const CreditsContainer = styled.div`
   font-size: 12px;
   margin: 0;
   color: #101727c0;
-
   text-align: center;
   display: flex;
   align-items: center;

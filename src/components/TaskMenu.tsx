@@ -4,6 +4,7 @@ import {
   ContentCopyRounded,
   DeleteRounded,
   Done,
+  DownloadRounded,
   EditRounded,
   IosShare,
   LaunchRounded,
@@ -45,7 +46,7 @@ import toast from "react-hot-toast";
 import { UserContext } from "../contexts/UserContext";
 import QRCode from "react-qr-code";
 import { Task, UUID } from "../types/user";
-import { calculateDateDifference, formatDate } from "../utils";
+import { calculateDateDifference, saveQRCode } from "../utils";
 import Marquee from "react-fast-marquee";
 
 interface TaskMenuProps {
@@ -205,13 +206,23 @@ export const TaskMenu: React.FC<TaskMenuProps> = ({
   const handleReadAloud = () => {
     const selectedTask = tasks.find((task) => task.id === selectedTaskId);
     const voices = window.speechSynthesis.getVoices();
+    const voice = voices.find((voice) => voice.name === settings[0].voice);
     const voiceName = voices.find((voice) => voice.name === settings[0].voice);
     const voiceVolume = settings[0].voiceVolume;
     const taskName = selectedTask?.name || "";
     const taskDescription = selectedTask?.description || "";
-    const taskDate = formatDate(new Date(selectedTask?.date || ""));
+    // Read task date in voice language
+    const taskDate = new Intl.DateTimeFormat(voice ? voice.lang : navigator.language, {
+      dateStyle: "full",
+      timeStyle: "short",
+    }).format(new Date(selectedTask?.date || ""));
+    console.log(taskDate);
     const taskDeadline = selectedTask?.deadline
-      ? ". Task Deadline: " + calculateDateDifference(new Date(selectedTask.deadline) || "")
+      ? ". Task Deadline: " +
+        calculateDateDifference(
+          new Date(selectedTask.deadline) || "",
+          voice ? voice.lang : navigator.language // Read task deadline in voice language
+        )
       : "";
 
     const textToRead = `${taskName}. ${taskDescription}. Date: ${taskDate}${taskDeadline}`;
@@ -513,11 +524,26 @@ export const TaskMenu: React.FC<TaskMenuProps> = ({
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
-                background: "#fff",
                 marginTop: "22px",
               }}
             >
-              <QRCode value={generateShareableLink(selectedTaskId, name || "User")} size={400} />
+              <QRCode
+                id="QRCode"
+                value={generateShareableLink(selectedTaskId, name || "User")}
+                size={400}
+              />
+            </Box>
+            <Box
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                marginTop: "16px",
+              }}
+            >
+              <Button onClick={() => saveQRCode(tasks, selectedTaskId)}>
+                <DownloadRounded /> &nbsp; Download QR Code
+              </Button>
             </Box>
           </CustomTabPanel>
         </DialogContent>

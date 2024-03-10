@@ -5,6 +5,7 @@ import {
   CancelRounded,
   Close,
   Delete,
+  DeleteRounded,
   DoneAll,
   DoneRounded,
   Link,
@@ -295,6 +296,7 @@ export const Tasks: React.FC = () => {
           icon: <RingAlarm animate sx={{ color: ColorPalette.red }} />,
           style: {
             borderColor: ColorPalette.red,
+            boxShadow: user.settings[0].enableGlow ? `0 0 18px -8px ${ColorPalette.red}` : "none",
           },
         }
       );
@@ -397,25 +399,6 @@ export const Tasks: React.FC = () => {
               ))}
             </CategoriesListContainer>
           )}
-        {/* <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
-            background: getFontColor(theme.secondary) + "32",
-            padding: "6px 0",
-            borderRadius: "16px",
-          }}
-        >
-          <div style={{ margin: "0 20px" }}>
-            <h3>Your Tasks</h3>
-          </div>
-          <div style={{ margin: "0 20px" }}>
-            <IconButton sx={{ color: getFontColor(theme.secondary) }}>
-              <SortRounded />
-            </IconButton>
-          </div>
-        </div> */}
         {multipleSelectedTasks.length > 0 && (
           <SelectedTasksContainer>
             <div>
@@ -657,7 +640,7 @@ export const Tasks: React.FC = () => {
       <Dialog open={deleteDialogOpen} onClose={cancelDeleteTask}>
         <DialogTitle>Are you sure you want to delete the task?</DialogTitle>
         <DialogContent>
-          {selectedTask.emoji !== undefined && (
+          {selectedTask !== undefined && (
             <>
               {selectedTask.emoji && (
                 <p
@@ -694,7 +677,7 @@ export const Tasks: React.FC = () => {
             Cancel
           </DialogBtn>
           <DialogBtn onClick={confirmDeleteTask} color="error">
-            Delete
+            <DeleteRounded /> &nbsp; Delete
           </DialogBtn>
         </DialogActions>
       </Dialog>
