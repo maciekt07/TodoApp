@@ -1,6 +1,6 @@
 import { useContext, useEffect, useState } from "react";
 import { ColorPicker, CustomEmojiPicker, TopBar } from "../components";
-import { Category } from "../types/user";
+import { Category, UUID } from "../types/user";
 import { useNavigate } from "react-router-dom";
 import { Emoji } from "emoji-picker-react";
 import styled from "@emotion/styled";
@@ -14,7 +14,7 @@ import {
   TextField,
   Tooltip,
 } from "@mui/material";
-import { Delete, Edit } from "@mui/icons-material";
+import { Delete, Edit, SaveRounded, DeleteRounded } from "@mui/icons-material";
 import { CATEGORY_NAME_MAX_LENGTH } from "../constants";
 import { getFontColor } from "../utils";
 import { ColorPalette, DialogBtn, fadeIn } from "../styles";
@@ -34,7 +34,7 @@ const Categories = () => {
   const [color, setColor] = useStorageState<string>(theme.primary, "catColor", "sessionStorage");
 
   const [openDeleteDialog, setOpenDeleteDialog] = useState<boolean>(false);
-  const [selectedCategoryId, setSelectedCategoryId] = useState<number>(0);
+  const [selectedCategoryId, setSelectedCategoryId] = useState<UUID>(crypto.randomUUID());
 
   const [openEditDialog, setOpenEditDialog] = useState<boolean>(false);
   const [editName, setEditName] = useState<string>("");
@@ -62,7 +62,7 @@ const Categories = () => {
     setEditNameError("");
   }, [selectedCategoryId]);
 
-  const handleDelete = (categoryId: number) => {
+  const handleDelete = (categoryId: UUID) => {
     if (categoryId) {
       const categoryName =
         user.categories.find((category) => category.id === categoryId)?.name || "";
@@ -115,7 +115,7 @@ const Categories = () => {
         return;
       }
       const newCategory: Category = {
-        id: new Date().getTime() + Math.floor(Math.random() * 1000),
+        id: crypto.randomUUID(),
         name,
         emoji: emoji !== "" && emoji !== null ? emoji : undefined,
         color,
@@ -139,7 +139,7 @@ const Categories = () => {
   };
 
   const handleEditDimiss = () => {
-    setSelectedCategoryId(0);
+    // setSelectedCategoryId();
     setOpenEditDialog(false);
     setEditColor(ColorPalette.purple);
     setEditName("");
@@ -339,7 +339,7 @@ const Categories = () => {
               }}
               color="error"
             >
-              Delete
+              <DeleteRounded /> &nbsp; Delete
             </DialogBtn>
           </DialogActions>
         </Dialog>
@@ -401,7 +401,7 @@ const Categories = () => {
           <DialogActions>
             <DialogBtn onClick={handleEditDimiss}>Cancel</DialogBtn>
             <DialogBtn onClick={handleEditCategory} disabled={editNameError !== ""}>
-              Save
+              <SaveRounded /> &nbsp; Save
             </DialogBtn>
           </DialogActions>
         </Dialog>

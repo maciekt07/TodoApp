@@ -83,7 +83,7 @@ const AddTask = () => {
       }
 
       const newTask: Task = {
-        id: new Date().getTime() + Math.floor(Math.random() * 1000),
+        id: crypto.randomUUID(),
         done: false,
         pinned: false,
         name,

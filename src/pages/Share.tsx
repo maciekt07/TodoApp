@@ -1,20 +1,36 @@
-import { Dialog, DialogActions, DialogContent, DialogTitle } from "@mui/material";
-import { DialogBtn } from "../styles";
+import { Dialog, DialogActions, DialogContent, DialogTitle, Tooltip } from "@mui/material";
+import {
+  DialogBtn,
+  EmojiContainer,
+  Pinned,
+  RingAlarm,
+  TaskContainer,
+  TaskDate,
+  TaskDescription,
+  TaskHeader,
+  TaskInfo,
+  TaskName,
+  TimeLeft,
+} from "../styles";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useContext, useEffect, useState } from "react";
-import { Task } from "../types/user";
+import type { Task } from "../types/user";
 import toast from "react-hot-toast";
-import { calculateDateDifference, getFontColor } from "../utils";
-import { Emoji } from "emoji-picker-react";
+import { calculateDateDifference, formatDate, getFontColor, iOS } from "../utils";
+import { Emoji, EmojiStyle } from "emoji-picker-react";
 import { UserContext } from "../contexts/UserContext";
-import { PushPinRounded, TodayRounded } from "@mui/icons-material";
+import {
+  AddTaskRounded,
+  DoNotDisturbAltRounded,
+  DoneRounded,
+  PushPinRounded,
+} from "@mui/icons-material";
 import { USER_NAME_MAX_LENGTH } from "../constants";
 import { CategoryBadge } from "../components";
 
 //FIXME: make everything type-safe
 const SharePage = () => {
   const { user, setUser } = useContext(UserContext);
-  const { emojisStyle } = user;
   const n = useNavigate();
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
@@ -31,8 +47,10 @@ const SharePage = () => {
     if (taskParam) {
       try {
         const decodedTask = decodeURIComponent(taskParam);
-        const task = JSON.parse(decodedTask) as Task;
-
+        const task: Task = {
+          ...(JSON.parse(decodedTask) as Task),
+          id: crypto.randomUUID(),
+        };
         if (!isHexColor(task.color)) {
           setError(true);
           setErrorDetails("Invalid task color format.");
@@ -98,7 +116,7 @@ const SharePage = () => {
           ...prevUser.tasks.filter(Boolean),
           {
             ...taskData,
-            id: new Date().getTime() + Math.floor(Math.random() * 1000),
+            id: crypto.randomUUID(),
             sharedBy: userName,
           },
         ],
@@ -120,7 +138,7 @@ const SharePage = () => {
         PaperProps={{
           style: {
             borderRadius: "24px",
-            padding: "12px",
+            padding: " 10px 6px",
             width: "100% !important",
           },
         }}
@@ -129,40 +147,73 @@ const SharePage = () => {
           <>
             <DialogTitle>Recieved Task</DialogTitle>
             <DialogContent>
-              <p>
+              <p style={{ fontSize: "16px", marginLeft: "6px" }}>
                 <b translate="no">{userName}</b> shared you a task.
               </p>
-              <div
-                style={{
-                  background: taskData.color,
-                  color: getFontColor(taskData.color || ""),
-                  padding: "12px 24px",
-                  borderRadius: "22px",
-                  width: "300px",
-                  borderLeft: taskData.done ? "6px solid #40da25" : "none",
-                }}
+              <TaskContainer
+                done={taskData.done}
+                backgroundColor={taskData.color}
+                style={{ maxWidth: "600px", opacity: 1, padding: "16px 22px" }}
               >
-                <h3
-                  translate="no"
-                  style={{ display: "flex", alignItems: "center", gap: "6px", margin: "12px 0" }}
-                >
-                  {taskData.pinned && <PushPinRounded />}
-                  {taskData?.emoji && <Emoji unified={taskData.emoji} emojiStyle={emojisStyle} />}
-                  {taskData.name}
-                </h3>
-                <p translate="no">{taskData.description}</p>
-                {taskData.deadline && (
-                  <p translate="no">
-                    <b translate="yes" style={{ display: "inline-block" }}>
-                      <TodayRounded sx={{ verticalAlign: "middle" }} /> Deadline:
-                    </b>{" "}
-                    {new Date(taskData.deadline).toLocaleDateString()} {" • "}
-                    {new Date(taskData.deadline).toLocaleTimeString()} {" • "}{" "}
-                    {calculateDateDifference(new Date(taskData.deadline))}
-                  </p>
-                )}
-
-                {taskData.category && (
+                {taskData.emoji || taskData.done ? (
+                  <EmojiContainer clr={getFontColor(taskData.color)}>
+                    {taskData.done ? (
+                      <DoneRounded fontSize="large" />
+                    ) : user.emojisStyle === EmojiStyle.NATIVE ? (
+                      <div>
+                        <Emoji
+                          size={iOS ? 48 : 36}
+                          unified={taskData.emoji || ""}
+                          emojiStyle={EmojiStyle.NATIVE}
+                        />
+                      </div>
+                    ) : (
+                      <Emoji
+                        size={48}
+                        unified={taskData.emoji || ""}
+                        emojiStyle={user.emojisStyle}
+                      />
+                    )}
+                  </EmojiContainer>
+                ) : null}
+                <TaskInfo translate="no" style={{ marginRight: "14px" }}>
+                  {taskData.pinned && (
+                    <Pinned translate="yes">
+                      <PushPinRounded fontSize="small" /> &nbsp; Pinned
+                    </Pinned>
+                  )}
+                  <TaskHeader style={{ gap: "6px" }}>
+                    <TaskName done={taskData.done}>{taskData.name}</TaskName>
+                    <Tooltip
+                      title={new Intl.DateTimeFormat(navigator.language, {
+                        dateStyle: "full",
+                        timeStyle: "medium",
+                      }).format(new Date(taskData.date))}
+                    >
+                      <TaskDate>{formatDate(new Date(taskData.date))}</TaskDate>
+                    </Tooltip>
+                  </TaskHeader>
+                  <TaskDescription done={taskData.done}>{taskData.description}</TaskDescription>
+                  {taskData.deadline && (
+                    <TimeLeft done={taskData.done}>
+                      <RingAlarm
+                        fontSize="small"
+                        animate={new Date() > new Date(taskData.deadline) && !taskData.done}
+                        sx={{
+                          color: `${getFontColor(taskData.color)} !important`,
+                        }}
+                      />
+                      &nbsp;Deadline:&nbsp;
+                      {new Date(taskData.deadline).toLocaleDateString()} {" • "}
+                      {new Date(taskData.deadline).toLocaleTimeString()}
+                      {!taskData.done && (
+                        <>
+                          {" • "}
+                          {calculateDateDifference(new Date(taskData.deadline))}
+                        </>
+                      )}
+                    </TimeLeft>
+                  )}
                   <div
                     style={{
                       display: "flex",
@@ -170,21 +221,25 @@ const SharePage = () => {
                       gap: "4px 6px",
                       justifyContent: "left",
                       alignItems: "center",
-                      marginBottom: "12px",
                     }}
                   >
-                    {taskData.category.map((cat) => (
-                      <div key={cat.id}>
-                        <CategoryBadge category={cat} borderclr={getFontColor(taskData.color)} />
-                      </div>
-                    ))}
+                    {taskData.category &&
+                      // user.settings[0].enableCategories &&
+                      taskData.category.map((category) => (
+                        <div key={category.id}>
+                          <CategoryBadge
+                            category={category}
+                            borderclr={getFontColor(taskData.color)}
+                          />
+                        </div>
+                      ))}
                   </div>
-                )}
-              </div>
+                </TaskInfo>
+              </TaskContainer>
             </DialogContent>
             <DialogActions>
               <DialogBtn color="error" onClick={() => n("/")}>
-                Decline
+                <DoNotDisturbAltRounded /> &nbsp; Decline
               </DialogBtn>
               <DialogBtn
                 onClick={() => {
@@ -192,7 +247,7 @@ const SharePage = () => {
                   n("/");
                 }}
               >
-                Add Task
+                <AddTaskRounded /> &nbsp; Add Task
               </DialogBtn>
             </DialogActions>
           </>

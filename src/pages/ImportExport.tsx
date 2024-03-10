@@ -2,7 +2,7 @@ import { useContext, useEffect, useRef, useState } from "react";
 import Button from "@mui/material/Button";
 import Checkbox from "@mui/material/Checkbox";
 import { TopBar } from "../components";
-import { Category, Task } from "../types/user";
+import { Category, Task, UUID } from "../types/user";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 import styled from "@emotion/styled";
@@ -22,15 +22,13 @@ import { useCtrlS } from "../hooks/useCtrlS";
 
 const ImportExport = () => {
   const { user, setUser } = useContext(UserContext);
-  const [selectedTasks, setSelectedTasks] = useStorageState<number[]>(
+  const [selectedTasks, setSelectedTasks] = useStorageState<UUID[]>(
     [],
     "tasksToExport",
     "sessionStorage"
   ); // Array of selected task IDs
   const [isDragging, setIsDragging] = useState<boolean>(false);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
-
-  console.log(fileInputRef.current?.textContent);
 
   useCtrlS();
 
@@ -45,7 +43,7 @@ const ImportExport = () => {
     }
   }, [user.createdAt]);
 
-  const handleTaskClick = (taskId: number) => {
+  const handleTaskClick = (taskId: UUID) => {
     setSelectedTasks((prevSelectedTasks) =>
       prevSelectedTasks.includes(taskId)
         ? prevSelectedTasks.filter((id) => id !== taskId)
@@ -144,6 +142,7 @@ const ImportExport = () => {
           const maxFileSize = 50_000;
           if (file.size > maxFileSize) {
             toast.error(`File size is too large (${file.size}/${maxFileSize})`);
+            return;
           }
 
           // Update user.categories if imported categories don't exist
@@ -270,7 +269,7 @@ const ImportExport = () => {
 
   return (
     <>
-      <TopBar title="Import/Export" />
+      <TopBar title="Transfer Tasks" />
       <h2
         style={{
           textAlign: "center",

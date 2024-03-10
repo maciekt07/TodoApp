@@ -17,7 +17,7 @@ interface ErrorBoundaryState {
 }
 
 /**
- * ErrorBoundary component that catches and displays errors within its children.
+ * ErrorBoundary component that catches and displays errors.
  */
 
 export class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoundaryState> {

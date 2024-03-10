@@ -52,7 +52,7 @@ function App() {
               <div onClick={() => toast.dismiss(t.id)}>
                 Added new property to user object{" "}
                 <i>
-                  {key}: {userObject[key]}
+                  {key}: {userObject[key].toString()}
                 </i>
               </div>
             ),

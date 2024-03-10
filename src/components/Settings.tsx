@@ -264,7 +264,7 @@ export const SettingsDialog: React.FC<SettingsProps> = ({ open, onClose }) => {
                 ));
               }}
             >
-              <DeleteRounded /> Clear Emoji Data
+              <DeleteRounded /> &nbsp; Clear Emoji Data
             </Button>
           </Tooltip>
         </FormGroup>

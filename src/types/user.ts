@@ -1,7 +1,10 @@
 import type { EmojiStyle } from "emoji-picker-react";
 import type { AppTheme } from "../styles/theme";
 
-// export type UUID = ReturnType<typeof crypto.randomUUID>;
+/**
+ * Represents a universally unique identifier.
+ */
+export type UUID = ReturnType<typeof crypto.randomUUID>;
 
 /**
  * Represents a user in the application.
@@ -22,7 +25,7 @@ export interface User {
  * Represents a task in the application.
  */
 export interface Task {
-  id: number;
+  id: UUID;
   done: boolean;
   pinned: boolean;
   name: string;
@@ -49,7 +52,7 @@ export interface Task {
  * Represents a category in the application.
  */
 export interface Category {
-  id: number;
+  id: UUID;
   name: string;
   emoji?: string;
   color: string;
