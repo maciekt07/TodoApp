@@ -54,11 +54,6 @@ export const TaskInfo = styled.div`
 export const TaskHeader = styled.div`
   display: flex;
   align-items: center;
-
-  /* @media (max-width: 600px) {
-    flex-direction: column;
-    align-items: flex-start;
-  } */
 `;
 
 export const TaskName = styled.h3<{ done: boolean }>`
@@ -76,12 +71,6 @@ export const TaskDate = styled.p`
   font-size: 14px;
   font-style: italic;
   font-weight: 300;
-
-  /* @media (max-width: 600px) {
-      margin-left: 0;
-      margin-top: 4px;
-      text-align: left;
-    } */
 `;
 
 export const TaskDescription = styled.p<{ done: boolean }>`
@@ -89,8 +78,6 @@ export const TaskDescription = styled.p<{ done: boolean }>`
   font-size: 18px;
   text-decoration: ${({ done }) => (done ? "line-through" : "none")};
   word-break: break-word;
-  /* white-space: pre-line;
-  line-height: 1em; */
 `;
 
 export const ShowMoreBtn = styled(Button)<{ clr: string }>`
