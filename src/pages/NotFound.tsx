@@ -2,9 +2,9 @@ import styled from "@emotion/styled";
 import { ArrowBackIosNew } from "@mui/icons-material";
 import { Button } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-import { ColorPalette, PathName } from "../styles";
+import { PathName } from "../styles";
 import { ReactNode, useEffect } from "react";
-import TaskNotFound from "../assets/TaskNotFound.png";
+import { TaskIcon } from "../components";
 
 interface NotFoundProps {
   message?: string | ReactNode;
@@ -20,7 +20,8 @@ const NotFound: React.FC<NotFoundProps> = ({ message }) => {
   return (
     <Container>
       <ErrorCode>404</ErrorCode>
-      <NotFoundImg src={TaskNotFound} />
+      {/* <NotFoundImg src={TaskNotFound} /> */}
+      <TaskIcon scale={0.9} />
       <Description>
         {message || (
           <div>
@@ -40,7 +41,6 @@ const NotFound: React.FC<NotFoundProps> = ({ message }) => {
     </Container>
   );
 };
-
 export default NotFound;
 
 const Container = styled.div`
@@ -55,8 +55,9 @@ const Container = styled.div`
 
 const ErrorCode = styled.h1`
   font-size: 128px;
-  color: ${ColorPalette.purple};
-  text-shadow: 0 0 32px #b624ffa9;
+  color: ${({ theme }) => theme.primary};
+  text-shadow: 0 0 32px ${({ theme }) => theme.primary + "a9"};
+  margin: 48px 0;
 `;
 
 const Description = styled.p`
@@ -72,8 +73,8 @@ const BackButton = styled(Button)`
   margin: 16px;
 `;
 
-const NotFoundImg = styled.img`
-  width: 350px;
-  margin-left: 32px;
-  filter: drop-shadow(0px 0px 128px ${ColorPalette.purple});
-`;
+// const NotFoundImg = styled.img`
+//   width: 350px;
+//   margin-left: 32px;
+//   filter: drop-shadow(0px 0px 128px ${ColorPalette.purple});
+// `;

@@ -1,9 +1,8 @@
-import type { Task, UUID } from "../types/user";
 /**
  *  Function to handle downloading QR code as PNG image
  */
-export const saveQRCode = (tasks: Task[], selectedTaskId: UUID | null) => {
-  const svgElement = document.getElementById("QRCode") as SVGElement | null;
+export const saveQRCode = (taskName: string) => {
+  const svgElement = document.getElementById("QRCodeShare") as SVGElement | null;
   if (!svgElement) {
     console.error("QR Code not found.");
     return;
@@ -19,7 +18,6 @@ export const saveQRCode = (tasks: Task[], selectedTaskId: UUID | null) => {
 
   const img = new Image();
   img.onload = () => {
-    const taskName = tasks.find((task) => task.id === selectedTaskId)?.name || "";
     const canvasWidth = img.width + 20;
     const canvasHeight = img.height + 70;
 

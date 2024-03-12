@@ -47,19 +47,6 @@ export const CustomEmojiPicker = ({ emoji, setEmoji, color, width, theme }: Emoj
   //   { names: ["Crying Cat", "cat", "cry"], imgUrl: cryingCat, id: "cryingcat" },
   // ];
 
-  //FIXME: this causes performance issues
-  // add user pfp as emoji
-  // if (user.profilePicture) {
-  //   const userEmoji: CustomEmoji = {
-  //     names: [user.name ? user.name : "User", "Avatar", "Profile"],
-  //     imgUrl: user.profilePicture as string,
-  //     id: "userPfp",
-  //   };
-
-  //   // Insert the user emoji at index 2
-  //   customEmojis.splice(3, 0, userEmoji);
-  // }
-
   interface EmojiItem {
     unified: string;
     original: string;

@@ -1,7 +1,8 @@
 import styled from "@emotion/styled";
-import { fadeIn, fadeInLeft, progressPulse } from "./keyframes.styled";
-import { Box, CircularProgress, css } from "@mui/material";
+import { fadeIn, fadeInLeft, progressPulse, pulseAnimation } from "./keyframes.styled";
+import { Box, Button, CircularProgress, css } from "@mui/material";
 import { ColorPalette } from ".";
+import { getFontColor } from "../utils";
 
 export const GreetingHeader = styled.div`
   display: flex;
@@ -97,6 +98,40 @@ export const StyledProgress = styled(CircularProgress)<{ glow: boolean }>`
   z-index: 1;
   margin: 2px;
   filter: ${({ glow, theme }) => (glow ? `drop-shadow(0 0 6px ${theme.primary}c8)` : "none")};
+`;
+
+export const AddButton = styled(Button)<{ animate?: boolean; glow: boolean }>`
+  cursor: pointer;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: fixed;
+  bottom: 24px;
+  width: 72px;
+  height: 72px;
+  border-radius: 100%;
+  background-color: ${({ theme }) => theme.primary};
+  color: ${({ theme }) => getFontColor(theme.primary)};
+  right: 16vw;
+  box-shadow: ${({ glow, theme }) => (glow ? `0px 0px 32px -8px ${theme}` : "none")};
+  transition: background-color 0.3s, backdrop-filter 0.3s, box-shadow 0.3s;
+
+  &:hover {
+    box-shadow: none;
+    background-color: ${({ theme }) => theme.primary};
+    backdrop-filter: blur(6px);
+  }
+
+  ${({ animate, theme }) =>
+    animate &&
+    css`
+      animation: ${pulseAnimation(theme.primary, 14)} 1.2s infinite;
+    `}
+
+  @media (max-width: 1024px) {
+    right: 24px;
+  }
 `;
 
 export const Offline = styled.div`

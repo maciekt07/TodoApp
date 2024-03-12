@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import {
   Avatar,
   Button,
@@ -39,7 +39,7 @@ import { fetchGitHubInfo } from "../services/githubApi";
 import { timeAgo } from "../utils";
 import bmcLogo from "../assets/bmc-logo.svg";
 
-export const ProfileAvatar = () => {
+export const ProfileSidebar = () => {
   const { user, setUser } = useContext(UserContext);
   const n = useNavigate();
 
@@ -64,12 +64,6 @@ export const ProfileAvatar = () => {
         console.error(error);
       }
     };
-    // const myPromise = fetchGitHubInfo();
-    // toast.promise(myPromise, {
-    //   loading: "Loading",
-    //   success: "Got the data",
-    //   error: "Error when fetching",
-    // });
     fetchRepoInfo();
   }, []);
 
@@ -205,6 +199,7 @@ export const ProfileAvatar = () => {
         >
           <GetAppRounded /> &nbsp; Import/Export
         </StyledMenuItem>
+
         {/* <StyledMenuItem
           onClick={() => {
             n("/user");
@@ -259,6 +254,7 @@ export const ProfileAvatar = () => {
         >
           <BmcIcon className="bmc-icon" src={bmcLogo} /> &nbsp; Buy me a coffee{" "}
         </StyledMenuItem>
+        <Divider sx={{ margin: "0 8px" }} />
         <StyledMenuItem onClick={handleLogoutConfirmationOpen} sx={{ color: "#ff4040 !important" }}>
           <Logout /> &nbsp; Logout
         </StyledMenuItem>
@@ -288,19 +284,7 @@ export const ProfileAvatar = () => {
             }}
           >
             <SettingsRounded /> &nbsp; Settings
-            {user.settings[0] === defaultUser.settings[0] && (
-              <SettingsMenuLabel>
-                <div
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                  }}
-                >
-                  <FiberManualRecord style={{ fontSize: "16px" }} />
-                </div>
-              </SettingsMenuLabel>
-            )}
+            {user.settings[0] === defaultUser.settings[0] && <PulseMenuLabel />}
           </StyledMenuItem>
           <Divider sx={{ margin: "0 8px" }} />
           <StyledMenuItem
@@ -314,7 +298,6 @@ export const ProfileAvatar = () => {
               alignItems: "center",
               gap: "10px",
               background: "#d7d7d7",
-              // marginBottom: "12px",
             }}
           >
             <Avatar
@@ -323,7 +306,10 @@ export const ProfileAvatar = () => {
             >
               {user.name ? user.name[0].toUpperCase() : undefined}
             </Avatar>
-            <h4 style={{ margin: 0, fontWeight: 600 }}> {user.name || "User"}</h4>
+            <h4 style={{ margin: 0, fontWeight: 600 }}> {user.name || "User"}</h4>{" "}
+            {(user.name === null || user.name === "") && user.profilePicture === null && (
+              <PulseMenuLabel />
+            )}
           </StyledMenuItem>
           <Divider sx={{ margin: "0 8px" }} />
           <CreditsContainer translate="no">
@@ -332,33 +318,22 @@ export const ProfileAvatar = () => {
               <Favorite sx={{ fontSize: "14px" }} />
             </span>
             <span style={{ marginLeft: "6px", marginRight: "4px" }}>by</span>
-
             <a
               style={{ textDecoration: "none", color: "inherit" }}
               href="https://github.com/maciekt07"
             >
-              {/* <Chip
-                avatar={
-                  <Avatar
-                    sx={{ opacity: "1 !important" }}
-                    src="https://avatars.githubusercontent.com/u/85953204?v=4"
-                  />
-                }
-                label="maciekt07"
-                sx={{ fontWeight: "bold", opacity: "1 !important" }}
-              /> */}
               maciekt07
             </a>
-
-            <br />
           </CreditsContainer>
           <CreditsContainer>
             {lastUpdate && (
               <Tooltip title={timeAgo(new Date(lastUpdate))}>
-                <span style={{ margin: 0 }}>
-                  Last Update: {new Date(lastUpdate).toLocaleDateString()}
-                  {" • "}
-                  {new Date(lastUpdate).toLocaleTimeString()}
+                <span>
+                  Last update:{" "}
+                  {new Intl.DateTimeFormat(navigator.language, {
+                    dateStyle: "long",
+                    timeStyle: "medium",
+                  }).format(new Date(lastUpdate || ""))}
                 </span>
               </Tooltip>
             )}
@@ -402,11 +377,16 @@ const StyledSwipeableDrawer = styled(SwipeableDrawer)`
     background: #f9fafc;
     z-index: 999;
 
-    @media (max-width: 1024px) {
-      min-width: 270px;
+    @media (min-width: 1920px) {
+      min-width: 320px;
     }
+
+    @media (max-width: 1024px) {
+      min-width: 280px;
+    }
+
     @media (max-width: 600px) {
-      min-width: 55vw;
+      min-width: 56vw;
     }
   }
 `;
@@ -461,11 +441,25 @@ const MenuLabel = styled.span<{ clr?: string }>`
   font-size: 14px;
 `;
 
-const SettingsMenuLabel = styled(MenuLabel)`
+const PulseMenuLabel = styled(MenuLabel)`
   animation: ${({ theme }) => pulseAnimation(theme.primary, 6)} 1.2s infinite;
   padding: 6px;
   margin-right: 4px;
 `;
+
+PulseMenuLabel.defaultProps = {
+  children: (
+    <div
+      style={{
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+      }}
+    >
+      <FiberManualRecord style={{ fontSize: "16px" }} />
+    </div>
+  ),
+};
 
 const LogoContainer = styled.div`
   display: flex;

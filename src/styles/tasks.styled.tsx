@@ -22,7 +22,7 @@ export const TaskContainer = styled.div<TaskComponentProps>`
   color: ${({ backgroundColor }) => getFontColor(backgroundColor)};
   border-left: ${({ done }) => (done ? "8px solid #00ff1ee3" : "1px solid transparent")};
   box-shadow: ${(props) =>
-    props.glow && !props.blur ? `0 0 128px -28px ${props.backgroundColor}` : "none"};
+    props.glow && !props.blur ? `0 0 128px -20px ${props.backgroundColor}` : "none"};
   padding: 16px 16px 16px 16px;
   border-radius: 24px;
   animation: ${fadeIn} 0.5s ease-in;

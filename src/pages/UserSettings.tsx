@@ -162,7 +162,6 @@ const UserSettings = () => {
             &nbsp;Registered {timeAgo(createdAt)}
           </CreatedAtDate>
         </Tooltip>
-
         <Grid
           container
           maxWidth="300px"
@@ -215,20 +214,24 @@ const UserSettings = () => {
             </Grid>
           ))}
         </Grid>
-
         <StyledInput
           label={name === null ? "Add Name" : "Change Name"}
           value={userName}
           onChange={(e) => setUserName(e.target.value)}
           onKeyDown={(e) => e.key === "Enter" && handleSaveName()}
-          error={userName.length > USER_NAME_MAX_LENGTH}
+          error={userName.length > USER_NAME_MAX_LENGTH || (userName === name && name !== "")}
           helperText={
             userName.length > USER_NAME_MAX_LENGTH
-              ? `Name is too long maximum ${USER_NAME_MAX_LENGTH} characters`
+              ? `Name exceeds ${USER_NAME_MAX_LENGTH} characters`
+              : userName.length > 0 && userName !== name
+              ? `${userName.length}/${USER_NAME_MAX_LENGTH}`
+              : userName === name && name !== ""
+              ? "New username matches old one."
               : ""
           }
           autoComplete="nickname"
         />
+
         <SaveBtn
           onClick={handleSaveName}
           disabled={userName.length > USER_NAME_MAX_LENGTH || userName === name}

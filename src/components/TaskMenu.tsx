@@ -48,6 +48,7 @@ import QRCode from "react-qr-code";
 import { Task, UUID } from "../types/user";
 import { calculateDateDifference, saveQRCode } from "../utils";
 import Marquee from "react-fast-marquee";
+import { TaskIcon } from ".";
 
 interface TaskMenuProps {
   selectedTaskId: UUID | null;
@@ -155,7 +156,11 @@ export const TaskMenu: React.FC<TaskMenuProps> = ({
             </div>
           ),
           {
-            icon: <Emoji unified="1f60e" emojiStyle={emojisStyle} />,
+            icon: (
+              <div style={{ margin: "-6px 4px -6px -6px" }}>
+                <TaskIcon variant="success" scale={0.18} />
+              </div>
+            ),
           }
         );
       }
@@ -528,7 +533,7 @@ export const TaskMenu: React.FC<TaskMenuProps> = ({
               }}
             >
               <QRCode
-                id="QRCode"
+                id="QRCodeShare"
                 value={generateShareableLink(selectedTaskId, name || "User")}
                 size={400}
               />
@@ -541,7 +546,11 @@ export const TaskMenu: React.FC<TaskMenuProps> = ({
                 marginTop: "16px",
               }}
             >
-              <Button onClick={() => saveQRCode(tasks, selectedTaskId)}>
+              <Button
+                onClick={() =>
+                  saveQRCode(tasks.find((task) => task.id === selectedTaskId)?.name || "")
+                }
+              >
                 <DownloadRounded /> &nbsp; Download QR Code
               </Button>
             </Box>

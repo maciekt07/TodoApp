@@ -24,7 +24,7 @@ import {
   Tooltip,
 } from "@mui/material";
 import { Emoji, EmojiStyle } from "emoji-picker-react";
-import { CategoryBadge, EditTask, TaskMenu } from ".";
+import { CategoryBadge, EditTask, TaskIcon, TaskMenu } from ".";
 import {
   CategoriesListContainer,
   ColorPalette,
@@ -599,7 +599,7 @@ export const Tasks: React.FC = () => {
           <div
             style={{
               textAlign: "center",
-              fontSize: "18px",
+              fontSize: "20px",
               opacity: 0.9,
               marginTop: "18px",
             }}
@@ -607,6 +607,9 @@ export const Tasks: React.FC = () => {
             <b>No tasks found</b>
             <br />
             Try searching with different keywords.
+            <div style={{ marginTop: "14px" }}>
+              <TaskIcon scale={0.8} />
+            </div>
           </div>
         )}
         <EditTask

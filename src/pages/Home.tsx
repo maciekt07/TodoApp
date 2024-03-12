@@ -1,6 +1,7 @@
 import { useState, useEffect, ReactNode, useContext, useMemo } from "react";
-import { AddTaskBtn, Tasks } from "../components";
+import { Tasks } from "../components";
 import {
+  AddButton,
   GreetingHeader,
   GreetingText,
   Offline,
@@ -15,10 +16,12 @@ import {
 
 import { displayGreeting, getRandomGreeting, getTaskCompletionText } from "../utils";
 import { Emoji } from "emoji-picker-react";
-import { Box, Typography } from "@mui/material";
+import { Box, Tooltip, Typography } from "@mui/material";
 import { useOnlineStatus } from "../hooks/useOnlineStatus";
-import { TodayRounded, WifiOff } from "@mui/icons-material";
+import { AddRounded, TodayRounded, WifiOff } from "@mui/icons-material";
 import { UserContext } from "../contexts/UserContext";
+import { useResponsiveDisplay } from "../hooks/useResponsiveDisplay";
+import { useNavigate } from "react-router-dom";
 
 const Home = () => {
   const { user } = useContext(UserContext);
@@ -37,6 +40,8 @@ const Home = () => {
   );
 
   const isOnline = useOnlineStatus();
+  const n = useNavigate();
+  const isMobile = useResponsiveDisplay();
 
   useEffect(() => {
     setRandomGreeting(getRandomGreeting());
@@ -162,7 +167,18 @@ const Home = () => {
 
       <Tasks />
 
-      <AddTaskBtn animate={tasks.length === 0} />
+      {!isMobile && (
+        <Tooltip title={tasks.length > 0 ? "Add New Task" : "Add Task"} placement="left">
+          <AddButton
+            animate={tasks.length === 0}
+            glow={settings[0].enableGlow}
+            onClick={() => n("add")}
+            aria-label="Add Task"
+          >
+            <AddRounded style={{ fontSize: "44px" }} />
+          </AddButton>
+        </Tooltip>
+      )}
     </>
   );
 };

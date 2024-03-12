@@ -29,7 +29,7 @@ export const PROFILE_PICTURE_MAX_LENGTH = 255;
 export const CATEGORY_NAME_MAX_LENGTH = 20;
 
 /**
- * Maximum number of categories a user can have.
+ * Maximum number of categories can be assigned to one task
  */
 export const MAX_CATEGORIES = 3;
 
