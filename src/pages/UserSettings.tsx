@@ -124,7 +124,7 @@ const UserSettings = () => {
                 onClick={handleOpenImageDialog}
                 sx={{
                   background: "#9c9c9c81",
-                  backdropFilter: "blur(6px)",
+                  backdropFilter: "blur(10px)",
                   cursor: "pointer",
                 }}
               >
@@ -214,7 +214,8 @@ const UserSettings = () => {
             </Grid>
           ))}
         </Grid>
-        <StyledInput
+        <TextField
+          sx={{ width: "300px" }}
           label={name === null ? "Add Name" : "Change Name"}
           value={userName}
           onChange={(e) => setUserName(e.target.value)}
@@ -251,10 +252,10 @@ const UserSettings = () => {
       <Dialog open={openChangeImage} onClose={handleCloseImageDialog}>
         <DialogTitle>Change Profile Picture</DialogTitle>
         <DialogContent>
-          <StyledInput
+          <TextField
             autoFocus
             label="Link to profile picture"
-            sx={{ margin: "8px 0" }}
+            sx={{ my: "8px", width: "300px" }}
             value={profilePictureURL}
             onChange={(e) => {
               setProfilePictureURL(e.target.value);
@@ -346,14 +347,9 @@ const CheckIcon = styled(CheckRounded)`
   border-radius: 100px;
 `;
 
-const StyledInput = styled(TextField)`
-  & .MuiInputBase-root {
-    border-radius: 16px;
-    width: 300px;
-  }
-`;
 const SaveBtn = styled(Button)`
   width: 300px;
+  font-weight: 600;
   border: none;
   background: ${({ theme }) => theme.primary};
   color: ${({ theme }) => getFontColor(theme.primary)};

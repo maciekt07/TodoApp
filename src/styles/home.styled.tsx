@@ -1,7 +1,6 @@
 import styled from "@emotion/styled";
 import { fadeIn, fadeInLeft, progressPulse, pulseAnimation } from "./keyframes.styled";
 import { Box, Button, CircularProgress, css } from "@mui/material";
-import { ColorPalette } from ".";
 import { getFontColor } from "../utils";
 
 export const GreetingHeader = styled.div`
@@ -35,8 +34,6 @@ export const TasksCountContainer = styled.div`
 `;
 
 export const TasksCount = styled.div<{ glow: boolean }>`
-  /* border: 3px solid ${ColorPalette.purple}; */
-  /* box-shadow: ${(props) => (props.glow ? "0 0 48px -8px #b624ff9d" : "none")}; */
   color: white;
   background: #090b2258;
   transition: 0.3s all;

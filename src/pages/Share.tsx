@@ -86,7 +86,7 @@ const SharePage = () => {
 
   useEffect(() => {
     document.title = `Todo App - Recieved Task ${taskData ? "(" + taskData.name + ")" : ""}`;
-  }, [[], taskData]);
+  }, [taskData]);
 
   const handleAddTask = () => {
     if (taskData) {

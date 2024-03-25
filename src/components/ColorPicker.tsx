@@ -86,7 +86,7 @@ export const ColorPicker: React.FC<ColorPickerProps> = ({
       setSelectedColor(theme.primary);
       console.error("Invalid hex color " + color);
     }
-  }, [color, handleColorChange]);
+  }, [color, handleColorChange, theme.primary]);
 
   const handleAccordionChange = (
     _event: React.SyntheticEvent<Element, Event>,

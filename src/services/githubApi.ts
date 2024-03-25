@@ -1,10 +1,28 @@
-interface GitHubRepoInfo {
+interface GitHubInfo {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   [key: string]: any;
 }
 
+interface GitHubCommitInfo extends GitHubInfo {
+  name: string;
+  commit: {
+    commit: {
+      committer: {
+        date: string;
+      };
+    };
+  };
+}
+
+interface GitHubRepoResponse extends GitHubInfo {
+  stargazers_count: number;
+  open_issues_count: number;
+  forks: number;
+}
+
 export const fetchGitHubInfo = async (): Promise<{
-  repoData: GitHubRepoInfo;
-  branchData: GitHubRepoInfo;
+  repoData: GitHubRepoResponse;
+  branchData: GitHubCommitInfo;
 }> => {
   const username = "maciekt07";
   const repo = "TodoApp";
@@ -21,12 +39,15 @@ export const fetchGitHubInfo = async (): Promise<{
         branchResponse.json(),
       ]);
 
-      return { repoData, branchData };
+      return {
+        repoData: repoData as GitHubRepoResponse,
+        branchData: branchData as GitHubCommitInfo,
+      };
     } else {
-      throw new Error("Failed to fetch repository information");
+      throw new Error("Failed to fetch repository or branch information");
     }
   } catch (error) {
     console.error(error);
-    return { repoData: {}, branchData: {} };
+    return { repoData: {} as GitHubRepoResponse, branchData: {} as GitHubCommitInfo };
   }
 };

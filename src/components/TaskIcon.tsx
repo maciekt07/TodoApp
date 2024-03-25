@@ -100,6 +100,7 @@ export const TaskIcon = ({ scale = 1, variant = "error" }: NotFoundIconProps) =>
         rx="66.093"
         fill={theme.primary}
       />
+
       {variant === "add"
         ? AddIcon
         : variant === "error"

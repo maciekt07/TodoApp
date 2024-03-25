@@ -20,7 +20,6 @@ const NotFound: React.FC<NotFoundProps> = ({ message }) => {
   return (
     <Container>
       <ErrorCode>404</ErrorCode>
-      {/* <NotFoundImg src={TaskNotFound} /> */}
       <TaskIcon scale={0.9} />
       <Description>
         {message || (
@@ -72,9 +71,3 @@ const BackButton = styled(Button)`
   border-radius: 16px;
   margin: 16px;
 `;
-
-// const NotFoundImg = styled.img`
-//   width: 350px;
-//   margin-left: 32px;
-//   filter: drop-shadow(0px 0px 128px ${ColorPalette.purple});
-// `;

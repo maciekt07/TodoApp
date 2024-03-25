@@ -1,5 +1,5 @@
 import type { Category, Task, UUID } from "../types/user";
-import { ReactNode, useContext, useEffect, useState } from "react";
+import { ReactNode, useCallback, useContext, useEffect, useMemo, useState } from "react";
 import { calculateDateDifference, formatDate, getFontColor, iOS } from "../utils";
 import {
   CancelRounded,
@@ -90,10 +90,14 @@ export const Tasks: React.FC = () => {
   const theme = useTheme();
   useCtrlS();
 
-  const listFormat = new Intl.ListFormat("en-US", {
-    style: "long",
-    type: "conjunction",
-  });
+  const listFormat = useMemo(
+    () =>
+      new Intl.ListFormat("en-US", {
+        style: "long",
+        type: "conjunction",
+      }),
+    []
+  );
 
   const selectedTask = user.tasks.find((task) => task.id === selectedTaskId) || ({} as Task);
 
@@ -125,36 +129,39 @@ export const Tasks: React.FC = () => {
     }
   };
 
-  const reorderTasks = (tasks: Task[]): Task[] => {
-    // Separate tasks into pinned and unpinned
-    let pinnedTasks = tasks.filter((task) => task.pinned);
-    let unpinnedTasks = tasks.filter((task) => !task.pinned);
+  const reorderTasks = useCallback(
+    (tasks: Task[]): Task[] => {
+      // Separate tasks into pinned and unpinned
+      let pinnedTasks = tasks.filter((task) => task.pinned);
+      let unpinnedTasks = tasks.filter((task) => !task.pinned);
 
-    // Filter tasks based on the selected category
-    if (selectedCatId !== undefined) {
-      const categoryFilter = (task: Task) =>
-        task.category?.some((category) => category.id === selectedCatId) ?? false;
-      unpinnedTasks = unpinnedTasks.filter(categoryFilter);
-      pinnedTasks = pinnedTasks.filter(categoryFilter);
-    }
+      // Filter tasks based on the selected category
+      if (selectedCatId !== undefined) {
+        const categoryFilter = (task: Task) =>
+          task.category?.some((category) => category.id === selectedCatId) ?? false;
+        unpinnedTasks = unpinnedTasks.filter(categoryFilter);
+        pinnedTasks = pinnedTasks.filter(categoryFilter);
+      }
 
-    // Filter tasks based on the search input
-    const searchLower = search.toLowerCase();
-    const searchFilter = (task: Task) =>
-      task.name.toLowerCase().includes(searchLower) ||
-      (task.description && task.description.toLowerCase().includes(searchLower));
-    unpinnedTasks = unpinnedTasks.filter(searchFilter);
-    pinnedTasks = pinnedTasks.filter(searchFilter);
+      // Filter tasks based on the search input
+      const searchLower = search.toLowerCase();
+      const searchFilter = (task: Task) =>
+        task.name.toLowerCase().includes(searchLower) ||
+        (task.description && task.description.toLowerCase().includes(searchLower));
+      unpinnedTasks = unpinnedTasks.filter(searchFilter);
+      pinnedTasks = pinnedTasks.filter(searchFilter);
 
-    // Move done tasks to bottom if the setting is enabled
-    if (user.settings[0]?.doneToBottom) {
-      const doneTasks = unpinnedTasks.filter((task) => task.done);
-      const notDoneTasks = unpinnedTasks.filter((task) => !task.done);
-      return [...pinnedTasks, ...notDoneTasks, ...doneTasks];
-    }
+      // Move done tasks to bottom if the setting is enabled
+      if (user.settings[0]?.doneToBottom) {
+        const doneTasks = unpinnedTasks.filter((task) => task.done);
+        const notDoneTasks = unpinnedTasks.filter((task) => !task.done);
+        return [...pinnedTasks, ...notDoneTasks, ...doneTasks];
+      }
 
-    return [...pinnedTasks, ...unpinnedTasks];
-  };
+      return [...pinnedTasks, ...unpinnedTasks];
+    },
+    [search, selectedCatId, user.settings]
+  );
 
   const handleDeleteTask = () => {
     // Opens the delete task dialog
@@ -248,7 +255,7 @@ export const Tasks: React.FC = () => {
 
     setCategories(uniqueCategories);
     setCategoryCounts(counts);
-  }, [user.tasks, search]);
+  }, [user.tasks, search, reorderTasks]);
 
   const toggleShowMore = (taskId: UUID) => {
     setExpandedTasks((prevExpandedTasks) => {
@@ -272,40 +279,43 @@ export const Tasks: React.FC = () => {
       )
     );
   };
-  const checkOverdueTasks = (tasks: Task[]) => {
-    const overdueTasks = tasks.filter((task) => {
-      return task.deadline && new Date() > new Date(task.deadline) && !task.done;
-    });
+  const checkOverdueTasks = useCallback(
+    (tasks: Task[]) => {
+      const overdueTasks = tasks.filter((task) => {
+        return task.deadline && new Date() > new Date(task.deadline) && !task.done;
+      });
 
-    if (overdueTasks.length > 0) {
-      const taskNames = overdueTasks.map((task) => task.name);
+      if (overdueTasks.length > 0) {
+        const taskNames = overdueTasks.map((task) => task.name);
 
-      toast.error(
-        (t) => (
-          <div
-            translate="no"
-            onClick={() => toast.dismiss(t.id)}
-            style={{ wordBreak: "break-word" }}
-          >
-            <b translate="yes">Overdue task{overdueTasks.length > 1 && "s"}: </b>
-            {listFormat.format(taskNames)}
-          </div>
-        ),
-        {
-          duration: 3400,
-          icon: <RingAlarm animate sx={{ color: ColorPalette.red }} />,
-          style: {
-            borderColor: ColorPalette.red,
-            boxShadow: user.settings[0].enableGlow ? `0 0 18px -8px ${ColorPalette.red}` : "none",
-          },
-        }
-      );
-    }
-  };
+        toast.error(
+          (t) => (
+            <div
+              translate="no"
+              onClick={() => toast.dismiss(t.id)}
+              style={{ wordBreak: "break-word" }}
+            >
+              <b translate="yes">Overdue task{overdueTasks.length > 1 && "s"}: </b>
+              {listFormat.format(taskNames)}
+            </div>
+          ),
+          {
+            duration: 3400,
+            icon: <RingAlarm animate sx={{ color: ColorPalette.red }} />,
+            style: {
+              borderColor: ColorPalette.red,
+              boxShadow: user.settings[0].enableGlow ? `0 0 18px -8px ${ColorPalette.red}` : "none",
+            },
+          }
+        );
+      }
+    },
+    [listFormat, user.settings]
+  );
 
   useEffect(() => {
     checkOverdueTasks(user.tasks);
-  }, []);
+  }, [checkOverdueTasks, user.tasks]);
 
   return (
     <>

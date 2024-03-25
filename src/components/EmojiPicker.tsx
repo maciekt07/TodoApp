@@ -17,6 +17,8 @@ import { iOS } from "../utils/iOS";
 
 interface EmojiPickerProps {
   emoji?: string;
+  //FIXME:
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   setEmoji: Dispatch<SetStateAction<any>>;
   //TODO:
   // onEmojiChange: (emojiData: EmojiClickData) => void;
@@ -72,7 +74,7 @@ export const CustomEmojiPicker = ({ emoji, setEmoji, color, width, theme }: Emoj
   // When the currentEmoji state changes, update the parent component's emoji state
   useEffect(() => {
     setEmoji(currentEmoji);
-  }, [currentEmoji]);
+  }, [currentEmoji, setEmoji]);
 
   // When the emoji prop changes to an empty string, set the currentEmoji state to undefined
   useEffect(() => {

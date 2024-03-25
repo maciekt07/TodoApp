@@ -259,6 +259,7 @@ export const TaskMenu: React.FC<TaskMenuProps> = ({
 
     const SpeechToastId = toast(
       () => {
+        // eslint-disable-next-line react-hooks/rules-of-hooks
         const [isPlaying, setIsPlaying] = useState<boolean>(true);
         return (
           <div

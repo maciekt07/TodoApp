@@ -56,7 +56,6 @@ export const ProfileSidebar = () => {
     const fetchRepoInfo = async () => {
       try {
         const { repoData, branchData } = await fetchGitHubInfo();
-
         setStars(repoData.stargazers_count);
         setLastUpdate(branchData.commit.commit.committer.date);
         setIssuesCount(repoData.open_issues_count);
@@ -94,7 +93,7 @@ export const ProfileSidebar = () => {
 
   return (
     <Container>
-      <Tooltip title={user.name || "User"} translate="no">
+      <Tooltip title={<div translate="no">{user.name || "User"}</div>}>
         <IconButton
           id="basic-button"
           aria-controls={open ? "basic-menu" : undefined}
@@ -307,9 +306,9 @@ export const ProfileSidebar = () => {
               {user.name ? user.name[0].toUpperCase() : undefined}
             </Avatar>
             <h4 style={{ margin: 0, fontWeight: 600 }}> {user.name || "User"}</h4>{" "}
-            {(user.name === null || user.name === "") && user.profilePicture === null && (
-              <PulseMenuLabel />
-            )}
+            {(user.name === null || user.name === "") &&
+              user.profilePicture === null &&
+              user.theme! == defaultUser.theme && <PulseMenuLabel />}
           </StyledMenuItem>
           <Divider sx={{ margin: "0 8px" }} />
           <CreditsContainer translate="no">
@@ -333,7 +332,7 @@ export const ProfileSidebar = () => {
                   {new Intl.DateTimeFormat(navigator.language, {
                     dateStyle: "long",
                     timeStyle: "medium",
-                  }).format(new Date(lastUpdate || ""))}
+                  }).format(new Date(lastUpdate))}
                 </span>
               </Tooltip>
             )}

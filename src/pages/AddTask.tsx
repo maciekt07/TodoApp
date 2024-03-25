@@ -48,7 +48,7 @@ const AddTask = () => {
     } else {
       setDescriptionError("");
     }
-  }, []);
+  }, [description.length, name.length]);
 
   const handleNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const newName = event.target.value;
@@ -122,7 +122,7 @@ const AddTask = () => {
           emoji={typeof emoji === "string" ? emoji : undefined}
           setEmoji={setEmoji}
           color={color}
-          theme={getFontColor(theme.secondary) === ColorPalette.fontDark ? "dark" : "light"}
+          theme={getFontColor(theme.secondary) === ColorPalette.fontDark ? "light" : "dark"}
         />
         <StyledInput
           label="Task Name"

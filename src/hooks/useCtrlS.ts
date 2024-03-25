@@ -9,22 +9,23 @@ import { UserContext } from "../contexts/UserContext";
 export const useCtrlS = (): void => {
   const { user } = useContext(UserContext);
   const { tasks } = user;
-  // Check if the key combination is Ctrl + S
-  const handleKeyDown = (e: KeyboardEvent) => {
-    if ((e.key === "s" || e.key === "S") && (e.ctrlKey || e.metaKey)) {
-      // Prevent the default browser save dialog
-      e.preventDefault();
-      const userConfirmed = window.confirm("Do you want to save all tasks to JSON?");
-      if (userConfirmed) {
-        exportTasksToJson(tasks);
-      }
-    }
-  };
+
   useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      // Check if the key combination is Ctrl + S
+      if ((e.key === "s" || e.key === "S") && (e.ctrlKey || e.metaKey)) {
+        e.preventDefault();
+        const userConfirmed = window.confirm("Do you want to save all tasks to JSON?");
+        if (userConfirmed) {
+          exportTasksToJson(tasks);
+        }
+      }
+    };
+
     document.addEventListener("keydown", handleKeyDown);
-    // Remove the event listener when the component unmounts
+
     return () => {
       document.removeEventListener("keydown", handleKeyDown);
     };
-  }, [handleKeyDown]);
+  }, [tasks]);
 };

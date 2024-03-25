@@ -43,15 +43,25 @@ const commonComponentProps: Theme["components"] = {
       },
     },
   },
-  MuiInput: {
+  MuiAvatar: {
     defaultProps: {
       style: {
-        color: "black",
+        fontWeight: 500,
+      },
+    },
+  },
+  MuiTextField: {
+    styleOverrides: {
+      root: {
+        "& .MuiInputBase-root": {
+          borderRadius: "16px",
+        },
       },
     },
   },
 };
 
+// eslint-disable-next-line react-refresh/only-export-components
 export const createCustomTheme = (primaryColor: string, backgroundColor = "#232e58"): Theme => {
   return createTheme({
     components: {
@@ -71,32 +81,52 @@ export const createCustomTheme = (primaryColor: string, backgroundColor = "#232e
   });
 };
 
-export type AppTheme = "system" | "purple" | "light purple" | "blue" | "pink" | "ultra pink";
-/**
- * ### To add a new theme:
- * - Update the AppTheme interface with the new theme name.
- * - Create a new Mui theme using `createCustomTheme()`.
- * - Add the new theme to the `Themes` object with its `name` and `MuiTheme`.
- */
-export const Themes: { name: Exclude<AppTheme, "system">; MuiTheme: Theme }[] = [
-  {
-    name: "purple", // system dark
-    MuiTheme: createCustomTheme(ColorPalette.purple),
+export type AppTheme = string;
+
+type ThemeConfig = {
+  [key: string]: {
+    primaryColor: string;
+    secondaryColor?: string;
+  };
+};
+
+const themeConfig: ThemeConfig = {
+  purple: {
+    primaryColor: ColorPalette.purple,
   },
-  {
-    name: "light purple", // system light
-    MuiTheme: createCustomTheme(ColorPalette.purple, "#edeef6"),
+  "light purple": {
+    primaryColor: ColorPalette.purple,
+    secondaryColor: "#edeef6",
   },
-  {
-    name: "blue",
-    MuiTheme: createCustomTheme("#2a93d5"),
+  blue: {
+    primaryColor: "#2a93d5",
   },
-  {
-    name: "pink",
-    MuiTheme: createCustomTheme("#e5369a"),
+  pink: {
+    primaryColor: "#e5369a",
   },
-  {
-    name: "ultra pink",
-    MuiTheme: createCustomTheme("#ff0090", "#ff94d1"),
+  "ultra pink": {
+    primaryColor: "#ff0090",
+    secondaryColor: "#ff94d1",
   },
-];
+
+  "dark orange": {
+    primaryColor: "#FF5631",
+    secondaryColor: "#0D0D0D",
+  },
+  "light orange": {
+    primaryColor: "#F26E56",
+    secondaryColor: "#F6F6F6",
+  },
+  Cheesecake: {
+    primaryColor: "#E14C94",
+    secondaryColor: "#FDF0D5",
+  },
+  // Add new themes here
+};
+
+export const Themes: { name: AppTheme; MuiTheme: Theme }[] = Object.entries(themeConfig).map(
+  ([name, config]) => ({
+    name: name as AppTheme,
+    MuiTheme: createCustomTheme(config.primaryColor, config.secondaryColor),
+  })
+);

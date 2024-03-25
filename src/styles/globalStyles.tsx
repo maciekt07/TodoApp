@@ -128,16 +128,17 @@ export const GlobalStyles = () => {
           --epr-search-border-color: ${theme.primary};
           border-radius: 20px !important;
           padding: 8px !important;
-          & .epr-category-nav > button.epr-cat-btn {
+          /* & .epr-category-nav > button.epr-cat-btn {
             filter: hue-rotate(75deg);
-          }
+          } */
         }
         .epr-reactions {
           background: ${getFontColor(theme.secondary)} !important;
         }
         .epr-body,
         .MuiDialogContent-root,
-        .MuiDrawer-paper {
+        .MuiDrawer-paper,
+        textarea {
           ::-webkit-scrollbar {
             width: 8px;
             border-radius: 4px;

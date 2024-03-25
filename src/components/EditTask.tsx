@@ -108,7 +108,7 @@ export const EditTask = ({ open, task, onClose, onSave }: EditTaskProps) => {
     return () => {
       window.removeEventListener("beforeunload", handleBeforeUnload);
     };
-  }, [editedTask, task]);
+  }, [editedTask, open, task]);
 
   return (
     <Dialog
@@ -152,7 +152,7 @@ export const EditTask = ({ open, task, onClose, onSave }: EditTaskProps) => {
           emoji={editedTask?.emoji || undefined}
           setEmoji={setEmoji}
           color={editedTask?.color}
-          width="400px"
+          width="350px"
         />
         <StyledInput
           label="Name"

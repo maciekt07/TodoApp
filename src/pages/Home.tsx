@@ -105,7 +105,11 @@ const Home = () => {
     <>
       <GreetingHeader>
         <Emoji unified="1f44b" emojiStyle={emojisStyle} /> &nbsp; {displayGreeting()}
-        {name && <span translate="no">, {name}</span>}
+        {name && (
+          <span translate="no">
+            , <span>{name}</span>
+          </span>
+        )}
       </GreetingHeader>
       <GreetingText key={greetingKey}>{renderGreetingWithEmojis(randomGreeting)}</GreetingText>
       {!isOnline && (
