@@ -1,29 +1,6 @@
-interface GitHubInfo {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  [key: string]: any;
-}
+import type { GitHubBranchResponse, GitHubInfoResponse, GitHubRepoResponse } from "../types/github";
 
-interface GitHubCommitInfo extends GitHubInfo {
-  name: string;
-  commit: {
-    commit: {
-      committer: {
-        date: string;
-      };
-    };
-  };
-}
-
-interface GitHubRepoResponse extends GitHubInfo {
-  stargazers_count: number;
-  open_issues_count: number;
-  forks: number;
-}
-
-export const fetchGitHubInfo = async (): Promise<{
-  repoData: GitHubRepoResponse;
-  branchData: GitHubCommitInfo;
-}> => {
+export const fetchGitHubInfo = async (): Promise<GitHubInfoResponse> => {
   const username = "maciekt07";
   const repo = "TodoApp";
   const branch = "main";
@@ -35,19 +12,19 @@ export const fetchGitHubInfo = async (): Promise<{
 
     if (repoResponse.ok && branchResponse.ok) {
       const [repoData, branchData] = await Promise.all([
-        repoResponse.json(),
-        branchResponse.json(),
+        repoResponse.json() as Promise<GitHubRepoResponse>,
+        branchResponse.json() as Promise<GitHubBranchResponse>,
       ]);
 
       return {
-        repoData: repoData as GitHubRepoResponse,
-        branchData: branchData as GitHubCommitInfo,
+        repoData,
+        branchData,
       };
     } else {
       throw new Error("Failed to fetch repository or branch information");
     }
   } catch (error) {
     console.error(error);
-    return { repoData: {} as GitHubRepoResponse, branchData: {} as GitHubCommitInfo };
+    return { repoData: {} as GitHubRepoResponse, branchData: {} as GitHubBranchResponse };
   }
 };

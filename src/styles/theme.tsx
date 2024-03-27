@@ -91,29 +91,29 @@ type ThemeConfig = {
 };
 
 const themeConfig: ThemeConfig = {
-  purple: {
+  Purple: {
     primaryColor: ColorPalette.purple,
   },
-  "light purple": {
+  "Light Purple": {
     primaryColor: ColorPalette.purple,
     secondaryColor: "#edeef6",
   },
-  blue: {
+  Blue: {
     primaryColor: "#2a93d5",
   },
-  pink: {
+  Pink: {
     primaryColor: "#e5369a",
   },
-  "ultra pink": {
+  "Ultra Pink": {
     primaryColor: "#ff0090",
     secondaryColor: "#ff94d1",
   },
 
-  "dark orange": {
+  "Dark Orange": {
     primaryColor: "#FF5631",
     secondaryColor: "#0D0D0D",
   },
-  "light orange": {
+  "Light Orange": {
     primaryColor: "#F26E56",
     secondaryColor: "#F6F6F6",
   },

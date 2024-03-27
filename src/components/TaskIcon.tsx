@@ -13,7 +13,17 @@ export const TaskIcon = ({ scale = 1, variant = "error" }: NotFoundIconProps) =>
   const theme = useTheme();
   const { user } = useContext(UserContext);
   const { settings } = user;
-
+  const renderIcon = () => {
+    if (variant === "add") {
+      return AddIcon;
+    } else if (variant === "error") {
+      return ErrorIcon;
+    } else if (variant === "success") {
+      return SuccessIcon;
+    } else {
+      return null;
+    }
+  };
   const AddIcon = (
     <>
       <rect
@@ -100,15 +110,7 @@ export const TaskIcon = ({ scale = 1, variant = "error" }: NotFoundIconProps) =>
         rx="66.093"
         fill={theme.primary}
       />
-
-      {variant === "add"
-        ? AddIcon
-        : variant === "error"
-        ? ErrorIcon
-        : variant === "success"
-        ? SuccessIcon
-        : null}
-
+      {renderIcon()}
       <rect x="77.5581" y="36.9307" width="106.558" height="56.6512" rx="18" fill={theme.primary} />
     </svg>
   );

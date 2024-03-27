@@ -315,7 +315,8 @@ export const Tasks: React.FC = () => {
 
   useEffect(() => {
     checkOverdueTasks(user.tasks);
-  }, [checkOverdueTasks, user.tasks]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <>
