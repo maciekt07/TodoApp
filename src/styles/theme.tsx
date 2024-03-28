@@ -6,6 +6,7 @@ export const ColorPalette = {
   fontLight: "#f0f0f0",
   purple: "#b624ff",
   red: "#ff3131",
+  orange: "#ff9318",
 } as const;
 
 const commonComponentProps: Theme["components"] = {
@@ -74,6 +75,9 @@ export const createCustomTheme = (primaryColor: string, backgroundColor = "#232e
       secondary: {
         main: backgroundColor,
       },
+      warning: {
+        main: ColorPalette.orange,
+      },
       error: {
         main: ColorPalette.red,
       },
@@ -84,7 +88,7 @@ export const createCustomTheme = (primaryColor: string, backgroundColor = "#232e
 export type AppTheme = string;
 
 type ThemeConfig = {
-  [key: string]: {
+  [key: AppTheme]: {
     primaryColor: string;
     secondaryColor?: string;
   };
@@ -92,9 +96,11 @@ type ThemeConfig = {
 
 const themeConfig: ThemeConfig = {
   Purple: {
+    // Default dark theme
     primaryColor: ColorPalette.purple,
   },
   "Light Purple": {
+    // Default light theme
     primaryColor: ColorPalette.purple,
     secondaryColor: "#edeef6",
   },
@@ -120,6 +126,10 @@ const themeConfig: ThemeConfig = {
   Cheesecake: {
     primaryColor: "#E14C94",
     secondaryColor: "#FDF0D5",
+  },
+  Aurora: {
+    primaryColor: "#00e952",
+    secondaryColor: "#011926",
   },
   // Add new themes here
 };

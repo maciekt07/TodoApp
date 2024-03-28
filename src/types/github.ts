@@ -103,7 +103,7 @@ export interface GitHubBranchResponse {
   protection_url: string;
 }
 
-export interface Owner {
+interface Owner {
   login: string;
   id: number;
   node_id: string;
@@ -123,11 +123,11 @@ export interface Owner {
   type: string;
   site_admin: boolean;
 }
-export interface Tree {
+interface Tree {
   sha: string;
   url: string;
 }
-export interface License {
+interface License {
   key: string;
   name: string;
   spdx_id: string;
@@ -135,7 +135,7 @@ export interface License {
   node_id: string;
 }
 
-export interface Commit extends Tree {
+interface Commit extends Tree {
   node_id: string;
   commit: Commit2;
   html_url: string;
@@ -145,7 +145,7 @@ export interface Commit extends Tree {
   parents: Parent[];
 }
 
-export interface Commit2 {
+interface Commit2 {
   author: Author;
   committer: Author;
   message: string;
@@ -155,34 +155,34 @@ export interface Commit2 {
   verification: Verification;
 }
 
-export interface Author {
+interface Author {
   name: string;
   email: string;
   date: string;
 }
 
-export interface Verification {
+interface Verification {
   verified: boolean;
   reason: string;
   signature: unknown;
   payload: unknown;
 }
 
-export interface Parent extends Tree {
+interface Parent extends Tree {
   html_url: string;
 }
 
-export interface Links {
+interface Links {
   self: string;
   html: string;
 }
 
-export interface Protection {
+interface Protection {
   enabled: boolean;
   required_status_checks: RequiredStatusChecks;
 }
 
-export interface RequiredStatusChecks {
+interface RequiredStatusChecks {
   enforcement_level: string;
   contexts: unknown[];
   checks: unknown[];

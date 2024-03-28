@@ -1,5 +1,6 @@
 import { Global, css, useTheme } from "@emotion/react";
 import { getFontColor } from "../utils";
+import { ColorPalette } from ".";
 
 export const GlobalStyles = () => {
   const theme = useTheme();
@@ -20,7 +21,9 @@ export const GlobalStyles = () => {
           font-family: "Poppins", sans-serif;
           line-height: 1.5;
           font-weight: 400;
-          color-scheme: light;
+          color-scheme: ${getFontColor(theme.secondary) === ColorPalette.fontDark
+            ? "light"
+            : "dark"};
           color: ${getFontColor(theme.secondary)};
           font-synthesis: none;
           text-rendering: optimizeLegibility;
@@ -93,32 +96,11 @@ export const GlobalStyles = () => {
         }
 
         pre {
-          background-color: black;
+          background-color: #000000d7;
           color: white;
           padding: 16px;
-          border-radius: 16px;
+          border-radius: 18px;
           overflow-x: auto;
-          border: 2px solid #40404062;
-          ::-webkit-scrollbar {
-            width: 8px;
-            height: 8px;
-
-            background-color: #232e58;
-          }
-
-          ::-webkit-scrollbar-thumb {
-            background-color: #6d2aff;
-            border-radius: 64px;
-          }
-
-          ::-webkit-scrollbar-thumb:hover {
-            background-color: #8750ff;
-          }
-
-          ::-webkit-scrollbar-track {
-            border-radius: 64px;
-            background-color: #232e58;
-          }
         }
 
         .EmojiPickerReact {
@@ -205,6 +187,11 @@ export const GlobalStyles = () => {
         .MuiTabs-indicator {
           border-radius: 24px !important;
           height: 3px !important;
+        }
+        .MuiAccordion-root {
+          &::before {
+            display: none;
+          }
         }
       `}
     />

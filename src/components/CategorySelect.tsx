@@ -122,7 +122,17 @@ export const CategorySelect: React.FC<CategorySelectProps> = ({
       >
         <HeaderMenuItem disabled>
           <div style={{ display: "flex", flexDirection: "column", gap: "2px" }}>
-            <b>Select Categories (max {MAX_CATEGORIES})</b>
+            <b>
+              Select Categories{" "}
+              <span
+                style={{
+                  transition: ".3s color",
+                  color: selectedCats.length >= MAX_CATEGORIES ? "#f34141" : "currentcolor",
+                }}
+              >
+                (max {MAX_CATEGORIES})
+              </span>
+            </b>
             {selectedCats.length > 0 && (
               <SelectedNames>
                 Selected{" "}
@@ -173,11 +183,11 @@ export const CategorySelect: React.FC<CategorySelectProps> = ({
 
 const StyledSelect = styled(Select)<{ width?: CSSProperties["width"] }>`
   margin: 12px 0;
-  border-radius: 16px;
+  border-radius: 16px !important;
   transition: 0.3s all;
   width: ${({ width }) => width || "100%"};
   color: white;
-  background: #ffffff1c;
+  background: #ffffff18;
   z-index: 999;
 `;
 
@@ -187,7 +197,7 @@ const CategoriesMenu = styled(MenuItem)<{ clr: string; disable?: boolean }>`
   margin: 8px;
   display: flex;
   gap: 4px;
-  font-weight: 500;
+  font-weight: 600;
   transition: 0.2s all;
   color: ${(props) => getFontColor(props.clr || ColorPalette.fontLight)};
   background: ${({ clr }) => clr};
@@ -214,7 +224,7 @@ const CategoriesMenu = styled(MenuItem)<{ clr: string; disable?: boolean }>`
     display: flex;
     justify-content: left;
     align-items: center;
-    font-weight: bold;
+    font-weight: 800;
     &:hover {
       background: ${({ clr }) => clr};
       opacity: 0.7;
@@ -227,7 +237,8 @@ const HeaderMenuItem = styled(MenuItem)`
   font-weight: 500;
   position: sticky !important;
   top: 0;
-  background: transparent;
+  background: #ffffffce;
+  backdrop-filter: blur(6px);
   z-index: 99;
   pointer-events: none;
 `;
@@ -241,6 +252,8 @@ const SelectedNames = styled.span`
 
 const NoCategories = styled(MenuItem)`
   opacity: 1 !important;
+  font-size: 16px;
+  font-weight: 600;
   display: flex;
   justify-content: center;
   align-items: center;

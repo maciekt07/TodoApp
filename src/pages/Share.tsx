@@ -27,6 +27,7 @@ import {
 } from "@mui/icons-material";
 import { USER_NAME_MAX_LENGTH } from "../constants";
 import { CategoryBadge } from "../components";
+import Home from "./Home";
 
 //FIXME: make everything type-safe
 const SharePage = () => {
@@ -133,6 +134,7 @@ const SharePage = () => {
 
   return (
     <div>
+      <Home />
       <Dialog
         open
         PaperProps={{

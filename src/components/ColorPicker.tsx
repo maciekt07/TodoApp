@@ -166,7 +166,7 @@ export const ColorPicker: React.FC<ColorPickerProps> = ({
 };
 
 const StyledAccordion = styled(Accordion)`
-  background: #ffffff1c;
+  background: #ffffff18;
   border-radius: 16px !important;
   border: 1px solid #0000003a;
   box-shadow: none;

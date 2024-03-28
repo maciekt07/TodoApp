@@ -1,11 +1,19 @@
 import React, { ErrorInfo } from "react";
 import { StyledLink } from "../styles";
 import { Emoji } from "emoji-picker-react";
-import { Button } from "@mui/material";
-import { exportTasksToJson } from "../utils";
-import { Delete, FileDownload } from "@mui/icons-material";
+import { Accordion, AccordionDetails, AccordionSummary, Button, Typography } from "@mui/material";
+import { exportTasksToJson, getFontColor } from "../utils";
+import {
+  DeleteForeverRounded,
+  DescriptionRounded,
+  ErrorOutlineRounded,
+  ExpandMoreRounded,
+  FileDownload,
+} from "@mui/icons-material";
 import toast from "react-hot-toast";
 import { UserContext } from "../contexts/UserContext";
+import styled from "@emotion/styled";
+import { TaskIcon } from ".";
 
 interface ErrorBoundaryProps {
   children: React.ReactNode;
@@ -45,17 +53,25 @@ export class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoun
   render() {
     if (this.state.hasError) {
       const { user } = this.context;
+
       return (
         <div>
-          <h1
+          <ErrorHeader>
+            <span>Oops! An error occurred.&nbsp;</span>
+            <span>
+              <Emoji size={38} unified="1f644" />
+            </span>
+          </ErrorHeader>
+          <div
             style={{
-              color: "#ff3131",
+              display: "flex",
               alignItems: "center",
+              justifyContent: "center",
+              margin: "8px",
             }}
           >
-            <span>Oops! An error occurred.&nbsp;</span>
-            <Emoji size={32} unified="1f644" />
-          </h1>
+            <TaskIcon scale={0.6} variant="error" />
+          </div>
           <h2>
             To fix it, try clearing your local files (cookies and cache) and then refresh the page.
             If the problem persists, please report the issue via{" "}
@@ -64,40 +80,44 @@ export class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoun
             </StyledLink>
             .
           </h2>
-          <div
-            style={{
-              margin: "16px 0",
+          <Button
+            size="large"
+            variant="outlined"
+            color="warning"
+            sx={{ p: "10px 20px", borderRadius: "12px" }}
+            onClick={() => {
+              localStorage.clear();
+              sessionStorage.clear();
+              location.reload();
             }}
           >
-            <Button
-              size="large"
-              variant="outlined"
-              sx={{ p: "10px 20px", borderRadius: "12px" }}
-              onClick={() => {
-                localStorage.clear();
-                location.reload();
-              }}
-            >
-              <Delete /> &nbsp; Auto Clear
-            </Button>
-          </div>
+            <DeleteForeverRounded /> &nbsp; Auto Clear
+          </Button>
+
           <h3>
-            <span style={{ color: "#ff3131" }}>ERROR:</span> [{this.state.error?.name}]{" "}
-            {this.state.error?.message}
+            <span style={{ color: "#ff3131", display: "inline-block" }}>
+              <ErrorOutlineRounded sx={{ verticalAlign: "middle", mb: "4px" }} /> ERROR:
+            </span>{" "}
+            [{this.state.error?.name}] {this.state.error?.message}
           </h3>
-          <details
-            style={{
-              border: "2px solid #ffffff2e",
-              padding: "8px",
-              borderRadius: "8px",
-              background: "#ffffff15",
-            }}
-          >
-            <summary>Error stack</summary>
-            <div style={{ opacity: 0.8, fontSize: "12px" }}>
-              {this.state.error?.stack?.replace(this.state.error?.message, "")}
-            </div>
-          </details>
+
+          <ErrorAccordion disableGutters>
+            <AccordionSummary expandIcon={<ErrorExpandIcon />}>
+              <Typography
+                fontWeight={700}
+                fontSize={18}
+                sx={{ display: "flex", alignItems: "center", gap: "6px" }}
+              >
+                <DescriptionRounded /> Error stack
+              </Typography>
+            </AccordionSummary>
+            <AccordionDetails>
+              <div style={{ opacity: 0.8, fontSize: "12px" }}>
+                {this.state.error?.stack?.replace(this.state.error?.message, "")}
+              </div>
+            </AccordionDetails>
+          </ErrorAccordion>
+
           <pre>
             <Button
               variant="outlined"
@@ -119,3 +139,38 @@ export class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoun
     return this.props.children;
   }
 }
+// eslint-disable-next-line react-refresh/only-export-components
+const ErrorHeader = styled.h1`
+  margin-top: 32px;
+  margin-bottom: 32px;
+  font-size: 36px;
+  color: #ff3131;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  @media (max-width: 768px) {
+    text-align: left;
+    justify-content: left;
+    font-size: 30px;
+    margin-top: 0;
+    margin-bottom: 0;
+  }
+`;
+
+// eslint-disable-next-line react-refresh/only-export-components
+const ErrorAccordion = styled(Accordion)`
+  /* border: ${({ theme }) => `2px solid ${getFontColor(theme.secondary)}2e`}; */
+  color: ${({ theme }) => getFontColor(theme.secondary)};
+  border-radius: 14px !important;
+  background: ${({ theme }) => getFontColor(theme.secondary) + "18"};
+  box-shadow: none;
+  padding: 4px;
+  margin-bottom: 18px;
+`;
+
+// eslint-disable-next-line react-refresh/only-export-components
+const ErrorExpandIcon = styled(ExpandMoreRounded)`
+  color: ${({ theme }) => getFontColor(theme.secondary)};
+  font-size: 32px;
+`;
