@@ -20,7 +20,7 @@ export const defaultUser: User = {
       simpleEmojiPicker: false,
       enableReadAloud: "speechSynthesis" in window,
       voice: "Google UK English Male",
-      appBadge: "setAppBadge" in navigator,
+      appBadge: false,
       voiceVolume: 0.6,
     },
   ],
