@@ -67,6 +67,7 @@ export interface AppSettings {
   enableGlow: boolean;
   simpleEmojiPicker: boolean;
   enableReadAloud: boolean;
+  appBadge: boolean;
   voice: string;
   voiceVolume: number;
 }

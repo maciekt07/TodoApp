@@ -75,51 +75,50 @@ function App() {
     });
   }, [setUser]);
 
-  async function getNotificationPermission() {
-    const state = await Notification.requestPermission();
-    if (state !== "granted") {
-      return false;
-    }
-    return true;
-  }
-
+  // This useEffect displays an native application badge count (for PWA) based on the number of tasks that are not done.
+  // https://developer.mozilla.org/en-US/docs/Web/API/Badging_API
   useEffect(() => {
-    const x = async () => {
-      if (!(await getNotificationPermission())) {
-        return alert("This demo requires the Notification permission to be granted.");
+    // clear the app badge
+    const clearBadge = () => navigator.clearAppBadge && navigator.clearAppBadge();
+
+    // Function to display the application badge
+    const displayAppBadge = async () => {
+      if (user.settings[0].appBadge === true) {
+        // Request permission for notifications
+        const permission = await Notification.requestPermission();
+
+        if (permission === "granted") {
+          // Calculate the number of incomplete tasks
+          const incompleteTasksCount = user.tasks.filter((task) => !task.done).length;
+
+          if (navigator.setAppBadge) {
+            // Update the app badge count if the value is a valid number
+            if (!isNaN(incompleteTasksCount)) {
+              navigator.setAppBadge(incompleteTasksCount);
+            }
+          }
+        } else {
+          clearBadge();
+
+          setUser((prevUser) => ({
+            ...prevUser,
+            settings: [
+              {
+                ...prevUser.settings[0],
+                appBadge: false,
+              },
+            ],
+          }));
+        }
+      } else {
+        clearBadge();
       }
-      const val = 3;
-      if (isNaN(val)) {
-        setBadge();
-        return;
-      }
-      setBadge(val);
     };
-
-    if ("setExperimentalAppBadge" in navigator) {
-      alert("v2");
-    }
-
-    // Check if the previous API surface is supported.
-    if ("ExperimentalBadge" in window) {
-      alert("v1");
-    }
-
-    // Check if the previous API surface is supported.
+    // Check if the browser supports setting the app badge
     if ("setAppBadge" in navigator) {
-      alert("v3");
-      x();
+      displayAppBadge();
     }
-  }, [user.emojisStyle]);
-
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  function setBadge(...args: any[]) {
-    if (navigator.setAppBadge) {
-      console.log(args);
-
-      navigator.setAppBadge(...args);
-    }
-  }
+  }, [setUser, user.settings, user.tasks]);
 
   const getMuiTheme = useCallback(() => {
     if (systemTheme === "unknown") {
