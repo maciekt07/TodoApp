@@ -44,6 +44,12 @@ export default defineConfig({
             type: "image/png",
           },
           {
+            src: "logoMaskable.png",
+            sizes: "256x256",
+            type: "image/png",
+            purpose: "maskable",
+          },
+          {
             src: "logo512.png",
             sizes: "512x512",
             type: "image/png",
