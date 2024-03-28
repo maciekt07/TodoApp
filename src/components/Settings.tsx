@@ -91,8 +91,12 @@ export const SettingsDialog: React.FC<SettingsProps> = ({ open, onClose }) => {
     // console.log(availableVoices);
   };
   // Function to request notification permission
-  const getNotificationPermission = async (): Promise<NotificationPermission> => {
-    return await Notification.requestPermission();
+  const getNotificationPermission = async () => {
+    const state = await Notification.requestPermission();
+    if (state !== "granted") {
+      return false;
+    }
+    return true;
   };
 
   // Handler for updating individual setting options
@@ -104,18 +108,15 @@ export const SettingsDialog: React.FC<SettingsProps> = ({ open, onClose }) => {
 
       if (name === "appBadge" && event.target.checked === true) {
         // Function to check permission for displaying notifications
-        const checkPermission = async () => {
-          const permission = await getNotificationPermission();
-          if (permission !== "granted") {
-            toast.error((t) => (
-              <div onClick={() => toast.dismiss(t.id)}>
-                Notification permissions are required to show the app badge. Please enable
-                notifications in your website settings.
-              </div>
-            ));
-          }
-        };
-        checkPermission();
+
+        if (!getNotificationPermission()) {
+          toast.error((t) => (
+            <div onClick={() => toast.dismiss(t.id)}>
+              Notification permissions are required to show the app badge. Please enable
+              notifications in your website settings.
+            </div>
+          ));
+        }
       }
 
       const updatedSettings = {
