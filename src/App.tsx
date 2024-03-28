@@ -81,7 +81,9 @@ function App() {
     }
     return true;
   };
+
   // This useEffect displays an native application badge count (for PWA) based on the number of tasks that are not done.
+  //FIXME: doesn't work on iOS
   // https://developer.mozilla.org/en-US/docs/Web/API/Badging_API
   useEffect(() => {
     // clear the app badge
@@ -107,15 +109,15 @@ function App() {
         } else {
           clearBadge();
 
-          setUser((prevUser) => ({
-            ...prevUser,
-            settings: [
-              {
-                ...prevUser.settings[0],
-                appBadge: false,
-              },
-            ],
-          }));
+          // setUser((prevUser) => ({
+          //   ...prevUser,
+          //   settings: [
+          //     {
+          //       ...prevUser.settings[0],
+          //       appBadge: false,
+          //     },
+          //   ],
+          // }));
         }
       } else {
         clearBadge();
