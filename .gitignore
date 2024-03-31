@@ -10,8 +10,10 @@ lerna-debug.log*
 node_modules
 dist
 dist-ssr
-dev-dist
 *.local
+
+# Local PWA dist folder
+dev-dist
 
 # Editor directories and files
 .vscode/*

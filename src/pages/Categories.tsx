@@ -44,7 +44,7 @@ const Categories = () => {
   const [color, setColor] = useStorageState<string>(theme.primary, "catColor", "sessionStorage");
 
   const [openDeleteDialog, setOpenDeleteDialog] = useState<boolean>(false);
-  const [selectedCategoryId, setSelectedCategoryId] = useState<UUID>(crypto.randomUUID());
+  const [selectedCategoryId, setSelectedCategoryId] = useState<UUID | undefined>();
 
   const [openEditDialog, setOpenEditDialog] = useState<boolean>(false);
   const [editName, setEditName] = useState<string>("");
@@ -72,7 +72,7 @@ const Categories = () => {
     setEditNameError("");
   }, [selectedCategoryId, user.categories]);
 
-  const handleDelete = (categoryId: UUID) => {
+  const handleDelete = (categoryId: UUID | undefined) => {
     if (categoryId) {
       const categoryName =
         user.categories.find((category) => category.id === categoryId)?.name || "";
@@ -149,7 +149,7 @@ const Categories = () => {
   };
 
   const handleEditDimiss = () => {
-    setSelectedCategoryId(crypto.randomUUID());
+    setSelectedCategoryId(undefined);
     setOpenEditDialog(false);
     setEditColor(ColorPalette.purple);
     setEditName("");

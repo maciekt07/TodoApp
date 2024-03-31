@@ -66,7 +66,11 @@ export const SettingsDialog: React.FC<SettingsProps> = ({ open, onClose }) => {
   ];
 
   const getFlagEmoji = (countryCode: string): string =>
-    String.fromCodePoint(...[...countryCode.toUpperCase()].map((x) => 0x1f1a5 + x.charCodeAt(0)));
+    typeof countryCode === "string"
+      ? String.fromCodePoint(
+          ...[...countryCode.toUpperCase()].map((x) => 0x1f1a5 + x.charCodeAt(0))
+        )
+      : "";
 
   const getAvailableVoices = (): SpeechSynthesisVoice[] => {
     const voices = window.speechSynthesis.getVoices();
@@ -96,6 +100,7 @@ export const SettingsDialog: React.FC<SettingsProps> = ({ open, onClose }) => {
     (name: keyof AppSettings) => (event: React.ChangeEvent<HTMLInputElement>) => {
       // cancel read aloud
       name === "enableReadAloud" && window.speechSynthesis.cancel();
+      name === "appBadge" && navigator.clearAppBadge && navigator.clearAppBadge();
       const updatedSettings = {
         ...userSettings,
         [name]: event.target.checked,
@@ -172,9 +177,20 @@ export const SettingsDialog: React.FC<SettingsProps> = ({ open, onClose }) => {
     setVoiceVolume(newVoiceVolume);
   };
   const getLanguageRegion = (lang: string) => {
+    if (!lang) {
+      // If lang is undefined or falsy, return an empty string
+      return "";
+    }
+
     const langParts = lang.split("-");
     if (langParts.length > 1) {
-      return new Intl.DisplayNames([lang], { type: "region" }).of(langParts[1]);
+      try {
+        return new Intl.DisplayNames([lang], { type: "region" }).of(langParts[1]);
+      } catch (error) {
+        console.error("Error:", error);
+        // Return the language itself if there's an error
+        return lang;
+      }
     } else {
       // If region is not specified, return the language itself
       return lang;
@@ -308,27 +324,31 @@ export const SettingsDialog: React.FC<SettingsProps> = ({ open, onClose }) => {
             label="Enable Read Aloud"
           />
         </FormGroup>
-        <Tooltip
-          title={
-            "setAppBadge" in navigator
-              ? "This will show number of not done tasks in app icon if PWA is installed."
-              : "App Badge is not supported"
-          }
-        >
-          <FormGroup>
-            <StyledFormLabel
-              sx={{ opacity: userSettings.appBadge ? 1 : 0.8 }}
-              control={
-                <Switch
-                  checked={"setAppBadge" in navigator && userSettings.appBadge ? true : false}
-                  onChange={handleSettingChange("appBadge")}
-                  disabled={"setAppBadge" in navigator ? false : true}
-                />
+
+        {"clearAppBadge" in navigator &&
+          window.matchMedia("(display-mode: standalone)").matches && (
+            <Tooltip
+              title={
+                "setAppBadge" in navigator
+                  ? "This will show number of not done tasks in app icon if PWA is installed."
+                  : "App Badge is not supported"
               }
-              label="Enable App Badge"
-            />
-          </FormGroup>
-        </Tooltip>
+            >
+              <FormGroup>
+                <StyledFormLabel
+                  sx={{ opacity: userSettings.appBadge ? 1 : 0.8 }}
+                  control={
+                    <Switch
+                      checked={"setAppBadge" in navigator && userSettings.appBadge ? true : false}
+                      onChange={handleSettingChange("appBadge")}
+                      disabled={"setAppBadge" in navigator ? false : true}
+                    />
+                  }
+                  label="Enable App Badge"
+                />
+              </FormGroup>
+            </Tooltip>
+          )}
         <FormGroup>
           <StyledFormLabel
             sx={{ opacity: userSettings.doneToBottom ? 1 : 0.8 }}
@@ -354,7 +374,9 @@ export const SettingsDialog: React.FC<SettingsProps> = ({ open, onClose }) => {
                     onChange={() => setShowLocalVoices((prev) => !prev)}
                   />
                 }
-                label={`Local language voices only (${getLanguageRegion(navigator.language)})`}
+                label={`Local language voices only (${
+                  getLanguageRegion(navigator.language) || "?"
+                })`}
               />
               {filteredVoices.length !== 0 ? (
                 <StyledSelect
@@ -388,15 +410,17 @@ export const SettingsDialog: React.FC<SettingsProps> = ({ open, onClose }) => {
                       {!/Windows NT 10/.test(navigator.userAgent) ? (
                         <Chip
                           sx={{ fontWeight: 500, padding: "4px" }}
-                          label={getLanguageRegion(voice.lang)}
+                          label={getLanguageRegion(voice.lang || "")}
                           icon={
                             <span style={{ fontSize: "16px" }}>
-                              {getFlagEmoji(voice.lang.split("-")[1])}
+                              {getFlagEmoji(voice.lang.split("-")[1] || "")}
                             </span>
                           }
                         />
                       ) : (
-                        <span style={{ fontWeight: 500 }}>{getLanguageRegion(voice.lang)}</span>
+                        <span style={{ fontWeight: 500 }}>
+                          {getLanguageRegion(voice.lang || "")}
+                        </span>
                       )}
                       {voice.default && !iOS && (
                         <span style={{ fontWeight: 600 }}>&nbsp;Default</span>

@@ -87,7 +87,7 @@ function App() {
   // https://developer.mozilla.org/en-US/docs/Web/API/Badging_API
   useEffect(() => {
     // clear the app badge
-    const clearBadge = () => navigator.clearAppBadge && navigator.clearAppBadge();
+
     const setBadge = (...args: number[]) => {
       if (navigator.setAppBadge) {
         navigator.setAppBadge(...args);
@@ -106,11 +106,9 @@ function App() {
           if (!isNaN(incompleteTasksCount)) {
             setBadge(incompleteTasksCount);
           }
-        } else {
-          clearBadge();
         }
       } else {
-        clearBadge();
+        navigator.clearAppBadge && navigator.clearAppBadge();
       }
     };
     // Check if the browser supports setting the app badge

@@ -22,6 +22,7 @@ import {
   FiberManualRecord,
   GetAppRounded,
   GitHub,
+  InstallDesktop,
   Logout,
   SettingsRounded,
   StarRounded,
@@ -91,6 +92,45 @@ export const ProfileSidebar = () => {
     toast.success("You have been successfully logged out");
   };
 
+  interface BeforeInstallPromptEvent extends Event {
+    readonly platforms: ReadonlyArray<string>;
+    readonly userChoice: Promise<{
+      outcome: "accepted" | "dismissed";
+      platform: string;
+    }>;
+    prompt(): Promise<void>;
+  }
+
+  const [supportsPWA, setSupportsPWA] = useState<boolean>(false);
+  const [deferredPrompt, setDeferredPrompt] = useState<BeforeInstallPromptEvent | null>(null);
+  const [isAppInstalled, setIsAppInstalled] = useState<boolean>(false);
+
+  useEffect(() => {
+    const beforeInstallPromptHandler = (e: Event) => {
+      e.preventDefault();
+      setSupportsPWA(true);
+      setDeferredPrompt(e as BeforeInstallPromptEvent);
+    };
+
+    const detectAppInstallation = () => {
+      window.matchMedia("(display-mode: standalone)").addEventListener("change", (e) => {
+        setIsAppInstalled((e as MediaQueryListEvent).matches);
+      });
+    };
+
+    window.addEventListener("beforeinstallprompt", beforeInstallPromptHandler);
+    detectAppInstallation();
+
+    return () => {
+      window.removeEventListener("beforeinstallprompt", beforeInstallPromptHandler);
+    };
+  }, []);
+
+  const installPWA = () => {
+    if (deferredPrompt) {
+      deferredPrompt.prompt();
+    }
+  };
   return (
     <Container>
       <Tooltip title={<div translate="no">{user.name || "User"}</div>}>
@@ -130,14 +170,10 @@ export const ProfileSidebar = () => {
         disableBackdropTransition={!iOS}
         disableDiscovery={iOS}
         id="basic-menu"
-        // anchorEl={anchorEl}
         anchor="right"
         open={open}
         onOpen={() => console.log("")}
         onClose={handleClose}
-        // MenuListProps={{
-        //   "aria-labelledby": "basic-button",
-        // }}
       >
         <LogoContainer
           translate="no"
@@ -171,6 +207,7 @@ export const ProfileSidebar = () => {
             </Tooltip>
           )}
         </StyledMenuItem>
+
         <StyledMenuItem
           onClick={() => {
             n("/add");
@@ -190,6 +227,7 @@ export const ProfileSidebar = () => {
             <CategoryRounded /> &nbsp; Categories
           </StyledMenuItem>
         )}
+
         <StyledMenuItem
           onClick={() => {
             n("/import-export");
@@ -199,15 +237,7 @@ export const ProfileSidebar = () => {
           <GetAppRounded /> &nbsp; Import/Export
         </StyledMenuItem>
 
-        {/* <StyledMenuItem
-          onClick={() => {
-            n("/user");
-            handleClose();
-          }}
-        >
-          <PersonRounded /> &nbsp; Profile
-        </StyledMenuItem> */}
-        <Divider sx={{ margin: "0 8px" }} />
+        <StyledDivider />
         <StyledMenuItem
           translate="no"
           onClick={() => {
@@ -226,6 +256,7 @@ export const ProfileSidebar = () => {
             </Tooltip>
           )}
         </StyledMenuItem>
+
         <StyledMenuItem
           onClick={() => {
             window.open("https://github.com/maciekt07/TodoApp/issues/new");
@@ -244,16 +275,24 @@ export const ProfileSidebar = () => {
             </Tooltip>
           )}
         </StyledMenuItem>
+
         <StyledMenuItem
           className="bmcMenu"
-          // sx={{ color: "#e5ac00 !important" }}
           onClick={() => {
             window.open("https://www.buymeacoffee.com/maciekt07");
           }}
         >
           <BmcIcon className="bmc-icon" src={bmcLogo} /> &nbsp; Buy me a coffee{" "}
         </StyledMenuItem>
-        <Divider sx={{ margin: "0 8px" }} />
+
+        <StyledDivider />
+
+        {supportsPWA && !isAppInstalled && (
+          <StyledMenuItem onClick={installPWA}>
+            <InstallDesktop /> &nbsp; Install App
+          </StyledMenuItem>
+        )}
+
         <StyledMenuItem onClick={handleLogoutConfirmationOpen} sx={{ color: "#ff4040 !important" }}>
           <Logout /> &nbsp; Logout
         </StyledMenuItem>
@@ -261,8 +300,11 @@ export const ProfileSidebar = () => {
         <div
           style={{
             marginTop: "auto",
-            // marginLeft: "18px",
-            marginBottom: iOS ? "38px" : "18px",
+            marginBottom:
+              window.matchMedia("(display-mode: standalone)").matches &&
+              /Mobi/.test(navigator.userAgent)
+                ? "38px"
+                : "16px",
             display: "flex",
             flexDirection: "column",
             gap: "8px",
@@ -285,7 +327,7 @@ export const ProfileSidebar = () => {
             <SettingsRounded /> &nbsp; Settings
             {user.settings[0] === defaultUser.settings[0] && <PulseMenuLabel />}
           </StyledMenuItem>
-          <Divider sx={{ margin: "0 8px" }} />
+          <StyledDivider />
           <StyledMenuItem
             translate="no"
             onClick={() => {
@@ -310,7 +352,7 @@ export const ProfileSidebar = () => {
               user.profilePicture === null &&
               user.theme! == defaultUser.theme && <PulseMenuLabel />}
           </StyledMenuItem>
-          <Divider sx={{ margin: "0 8px" }} />
+          <StyledDivider />
           <CreditsContainer translate="no">
             <span style={{ display: "flex", alignItems: "center" }}>
               Made with &nbsp;
@@ -438,6 +480,10 @@ const MenuLabel = styled.span<{ clr?: string }>`
   padding: 2px 12px;
   border-radius: 32px;
   font-size: 14px;
+`;
+
+const StyledDivider = styled(Divider)`
+  margin: 0 8px;
 `;
 
 const PulseMenuLabel = styled(MenuLabel)`

@@ -10,7 +10,7 @@ import {
   SelectChangeEvent,
 } from "@mui/material";
 import { ColorPalette } from "../styles";
-import { Emoji } from "emoji-picker-react";
+import { Emoji, EmojiStyle } from "emoji-picker-react";
 import { getFontColor } from "../utils";
 import { CSSProperties, useContext, useState } from "react";
 import { MAX_CATEGORIES } from "../constants";
@@ -114,8 +114,6 @@ export const CategorySelect: React.FC<CategorySelectProps> = ({
               maxHeight: 450,
               zIndex: 999999,
               padding: "0px 8px",
-              // background: "#ffffffd8",
-              // backdropFilter: "blur(8px)",
             },
           },
         }}
@@ -158,8 +156,14 @@ export const CategorySelect: React.FC<CategorySelectProps> = ({
                 !selectedCats.some((cat) => cat.id === category.id)
               }
             >
-              {selectedCats.some((cat) => cat.id === category.id) && <RadioButtonChecked />}{" "}
-              {category.emoji && <Emoji unified={category.emoji} emojiStyle={emojisStyle} />}
+              {selectedCats.some((cat) => cat.id === category.id) && <RadioButtonChecked />}
+              {category.emoji && emojisStyle === EmojiStyle.NATIVE ? (
+                <div>
+                  <Emoji unified={category.emoji} emojiStyle={EmojiStyle.NATIVE} size={26} />
+                </div>
+              ) : (
+                category.emoji && <Emoji unified={category.emoji} emojiStyle={emojisStyle} />
+              )}
               &nbsp;
               {category.name}
             </CategoriesMenu>
@@ -201,7 +205,6 @@ const CategoriesMenu = styled(MenuItem)<{ clr: string; disable?: boolean }>`
   transition: 0.2s all;
   color: ${(props) => getFontColor(props.clr || ColorPalette.fontLight)};
   background: ${({ clr }) => clr};
-  /* border: 4px solid transparent; */
   opacity: ${({ disable }) => (disable ? ".6" : "none")};
   &:hover {
     background: ${({ clr }) => clr};
@@ -214,13 +217,11 @@ const CategoriesMenu = styled(MenuItem)<{ clr: string; disable?: boolean }>`
 
   &:focus-visible {
     border-color: ${({ theme }) => theme.primary} !important;
-    /* color: ${ColorPalette.fontDark} !important; */
   }
 
   &.Mui-selected {
     background: ${({ clr }) => clr};
     color: ${(props) => getFontColor(props.clr || ColorPalette.fontLight)};
-    /* border: 4px solid #38b71f; */
     display: flex;
     justify-content: left;
     align-items: center;

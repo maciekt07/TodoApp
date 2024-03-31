@@ -16,7 +16,7 @@ export const CategoryElementsContainer = styled.div`
   flex-direction: column;
   align-items: center;
   max-height: 350px;
-  background: #ffffff15;
+  background: ${({ theme }) => getFontColor(theme.secondary)}1a;
   overflow-y: auto;
   padding: 24px 18px;
   border-radius: 18px 0 0 18px;
