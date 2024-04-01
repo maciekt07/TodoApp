@@ -1,10 +1,30 @@
-import { CSSProperties, useCallback, useEffect, useState } from "react";
-import { ColorElement, ColorPalette } from "../styles";
+import { CSSProperties, useCallback, useContext, useEffect, useRef, useState } from "react";
+import { ColorElement, ColorPalette, DialogBtn } from "../styles";
 import styled from "@emotion/styled";
-import { Casino, Colorize, Done, ExpandMoreRounded } from "@mui/icons-material";
+import {
+  AddRounded,
+  ColorizeRounded,
+  Done,
+  ExpandMoreRounded,
+  InfoRounded,
+} from "@mui/icons-material";
 import { getFontColor } from "../utils";
-import { Accordion, AccordionDetails, AccordionSummary, Grid, Tooltip } from "@mui/material";
+import {
+  Accordion,
+  AccordionDetails,
+  AccordionSummary,
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  Grid,
+  Popover,
+  Tooltip,
+} from "@mui/material";
 import { useTheme } from "@emotion/react";
+import { UserContext } from "../contexts/UserContext";
+import toast from "react-hot-toast";
 
 interface ColorPickerProps {
   color: string;
@@ -13,8 +33,6 @@ interface ColorPickerProps {
   fontColor?: CSSProperties["color"];
   label?: string;
 }
-
-// TODO: redesign color picker component
 
 /**
  * Custom Color Picker component for selecting colors.
@@ -27,34 +45,20 @@ export const ColorPicker: React.FC<ColorPickerProps> = ({
   fontColor,
   label,
 }) => {
+  const { user, setUser } = useContext(UserContext);
   const [selectedColor, setSelectedColor] = useState<string>(color);
   const [accordionExpanded, setAccordionExpanded] = useState<boolean>(false);
+
+  const [popoverOpen, setPopoverOpen] = useState<boolean[]>(
+    Array(user.colorList.length).fill(false)
+  );
+  const [openAddDialog, setOpenAddDialog] = useState<boolean>(false);
+  const [addColorVal, setAddColorVal] = useState<string>("#000000");
+  const colorElementRefs = useRef<Array<HTMLElement | null>>([]);
 
   const theme = useTheme();
 
   const isHexColor = (value: string): boolean => /^#[0-9A-Fa-f]{6}$/.test(value);
-
-  // Predefined color options
-  const colors: string[] = [
-    theme.primary,
-    "#FF69B4",
-    "#FB34FF",
-    "#FF22B4",
-    "#c6a7ff",
-    "#7ACCFA",
-    "#4A9DFF",
-    "#5061FF",
-    "#50B5CB",
-    "#3DFF7F",
-    "#3AE836",
-    "#B7FF42",
-    "#FFEA28",
-    "#F9BE26",
-    "#FF9518",
-    "#ffc3a0",
-    "#FF5018",
-    "#FF2F2F",
-  ];
 
   useEffect(() => {
     // Update the selected color when the color prop changes
@@ -68,16 +72,6 @@ export const ColorPicker: React.FC<ColorPickerProps> = ({
     },
     [onColorChange]
   );
-
-  const handlePickerChange = (e: React.ChangeEvent<HTMLInputElement>) =>
-    handleColorChange(e.target.value as string);
-
-  // Handle selecting a random color
-  const handleRandomColor = () => {
-    let randomColor = Math.floor(Math.random() * 16777215).toString(16);
-    randomColor = "#" + ("000000" + randomColor).slice(-6);
-    handleColorChange(randomColor);
-  };
 
   // Check if the current color is a valid hex color and update it if not
   useEffect(() => {
@@ -93,8 +87,46 @@ export const ColorPicker: React.FC<ColorPickerProps> = ({
     isExpanded: boolean
   ) => setAccordionExpanded(isExpanded);
 
+  const togglePopover = (index: number) => {
+    const newPopoverOpen = [...popoverOpen];
+    newPopoverOpen[index] = !newPopoverOpen[index];
+    setPopoverOpen(newPopoverOpen);
+  };
+
+  const handleAddDialogClose = () => {
+    setOpenAddDialog(false);
+    setAddColorVal("#000000");
+  };
+
+  const handlePickerChange = (e: React.ChangeEvent<HTMLInputElement>) =>
+    setAddColorVal(e.target.value as string);
+
+  const handleAddColor = () => {
+    if (!user.colorList.includes(addColorVal)) {
+      setUser({ ...user, colorList: [...user.colorList, addColorVal] });
+      toast.success((t) => (
+        <div onClick={() => toast.dismiss(t.id)}>
+          Added {addColorVal.toUpperCase()} to your color list.
+        </div>
+      ));
+      handleAddDialogClose();
+    } else {
+      toast.error((t) => (
+        <div onClick={() => toast.dismiss(t.id)}>Color is already in color list.</div>
+      ));
+    }
+  };
+
+  const handleDeleteColor = () => {
+    setPopoverOpen(Array(user.colorList.length).fill(false));
+    setUser({
+      ...user,
+      colorList: user.colorList.filter((listColor) => listColor !== color),
+    });
+  };
+
   return (
-    <div>
+    <>
       <StyledAccordion
         onChange={handleAccordionChange}
         sx={{
@@ -123,45 +155,123 @@ export const ColorPicker: React.FC<ColorPickerProps> = ({
             }}
           >
             <Grid container spacing={1} maxWidth={width || 400} m={1}>
-              {colors.map((color) => (
+              {[theme.primary, ...user.colorList].map((color, index) => (
                 <Grid item key={color}>
                   <ColorElement
+                    ref={(element) => (colorElementRefs.current[index] = element)}
+                    id={`color-element-${index}`}
                     clr={color}
                     aria-label={`Select color - ${color}`}
                     onClick={() => {
                       handleColorChange(color);
+                      if (selectedColor === color && color !== theme.primary) {
+                        togglePopover(index);
+                      }
                     }}
                   >
                     {color === selectedColor && <Done />}
                   </ColorElement>
+
+                  <Popover
+                    open={popoverOpen[index]}
+                    onClose={() => togglePopover(index)}
+                    anchorEl={colorElementRefs.current[index]}
+                    anchorOrigin={{
+                      vertical: "top",
+                      horizontal: "center",
+                    }}
+                    transformOrigin={{
+                      vertical: "top",
+                      horizontal: "center",
+                    }}
+                    slotProps={{
+                      paper: {
+                        sx: {
+                          background: "transparent",
+                          boxShadow: "none",
+                        },
+                      },
+                    }}
+                  >
+                    <div>
+                      <DeleteColorBtn onClick={handleDeleteColor}>Delete</DeleteColorBtn>
+                    </div>
+                  </Popover>
                 </Grid>
               ))}
-              <Tooltip title="Set custom color">
+              <Tooltip title="Add new color">
                 <Grid item>
-                  <ColorPickerContainer>
-                    <ColorElement clr={selectedColor}>
-                      <StyledColorPicker
-                        type="color"
-                        value={selectedColor}
-                        onChange={handlePickerChange}
-                      />
-                      <ColorizeIcon clr={selectedColor} />
-                    </ColorElement>
-                  </ColorPickerContainer>
-                </Grid>
-              </Tooltip>
-              <Tooltip title="Random color">
-                <Grid item>
-                  <ColorElement clr="#1a81ff" onClick={handleRandomColor}>
-                    <Casino />
+                  <ColorElement
+                    clr="transparent"
+                    style={{ border: "2px solid", color: fontColor || ColorPalette.fontLight }}
+                    onClick={() => setOpenAddDialog(true)}
+                  >
+                    <AddRounded style={{ fontSize: "38px" }} />
                   </ColorElement>
                 </Grid>
               </Tooltip>
             </Grid>
           </div>
+          <StyledInfo clr={fontColor || ColorPalette.fontLight}>
+            <InfoRounded fontSize="small" /> Double tap to remove color from list
+          </StyledInfo>
         </AccordionDetails>
       </StyledAccordion>
-    </div>
+      <Dialog open={openAddDialog} onClose={handleAddDialogClose}>
+        <DialogTitle>Add new color</DialogTitle>
+        <DialogContent>
+          <ColorPreview maxWidth={500} clr={addColorVal}>
+            {addColorVal.toUpperCase()}
+          </ColorPreview>
+          <div
+            style={{
+              position: "relative",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              marginTop: "18px",
+            }}
+          >
+            <Button
+              variant="outlined"
+              fullWidth
+              onClick={() => {
+                document.getElementById("colorInput")?.click();
+              }}
+            >
+              <ColorizeRounded /> &nbsp; Choose color
+            </Button>
+            <input
+              id="colorInput"
+              type="color"
+              value={addColorVal}
+              onChange={handlePickerChange}
+              style={{
+                position: "absolute",
+                top: "100%",
+                left: "32px",
+                zIndex: 999,
+                opacity: 0,
+              }}
+            />
+          </div>
+        </DialogContent>
+        <DialogActions>
+          <DialogBtn onClick={handleAddDialogClose}>Cancel</DialogBtn>
+          <DialogBtn
+            onClick={() => {
+              onColorChange(addColorVal);
+              handleAddDialogClose();
+            }}
+          >
+            <ColorizeRounded /> &nbsp; Set
+          </DialogBtn>
+          <DialogBtn onClick={handleAddColor}>
+            <AddRounded /> &nbsp; Add
+          </DialogBtn>
+        </DialogActions>
+      </Dialog>
+    </>
   );
 };
 
@@ -196,36 +306,28 @@ const ColorPreview = styled(Grid)<{ clr: string }>`
   border: 2px solid #ffffffab;
 `;
 
-const ColorPickerContainer = styled.div`
+const DeleteColorBtn = styled.button`
+  border: none;
+  outline: none;
+  background-color: #141431dd;
+  color: #ff4e4e;
+  font-weight: 500;
+  padding: 4px 8px;
+  cursor: pointer;
+  border-radius: 10px;
+  backdrop-filter: blur(6px);
+  @media (max-width: 768px) {
+    padding: 6px 10px;
+  }
+`;
+
+const StyledInfo = styled.span<{ clr: string }>`
+  color: ${({ clr }) => clr};
+  opacity: 0.8;
   display: flex;
   align-items: center;
-`;
-
-const StyledColorPicker = styled.input`
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  appearance: none;
-  height: 54px;
-  width: 54px;
-  display: flex;
-
-  background-color: transparent;
-  border: none;
-  cursor: pointer;
-
-  &::-webkit-color-swatch {
-    border-radius: 18px;
-    border: none;
-  }
-  &::-moz-color-swatch {
-    border-radius: 18px;
-    border: none;
-  }
-`;
-
-const ColorizeIcon = styled(Colorize)<{ clr: string }>`
-  color: ${({ clr }) => getFontColor(clr)};
-  position: absolute;
-  cursor: pointer;
-  pointer-events: none;
+  gap: 4px;
+  margin-top: 8px;
+  margin-left: 4px;
+  font-size: 14px;
 `;

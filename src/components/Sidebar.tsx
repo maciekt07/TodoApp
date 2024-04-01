@@ -22,7 +22,8 @@ import {
   FiberManualRecord,
   GetAppRounded,
   GitHub,
-  InstallDesktop,
+  InstallDesktopRounded,
+  InstallMobileRounded,
   Logout,
   SettingsRounded,
   StarRounded,
@@ -289,7 +290,12 @@ export const ProfileSidebar = () => {
 
         {supportsPWA && !isAppInstalled && (
           <StyledMenuItem onClick={installPWA}>
-            <InstallDesktop /> &nbsp; Install App
+            {/Android/.test(navigator.userAgent) ? (
+              <InstallMobileRounded />
+            ) : (
+              <InstallDesktopRounded />
+            )}
+            &nbsp; Install App
           </StyledMenuItem>
         )}
 

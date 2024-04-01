@@ -32,6 +32,15 @@ function App() {
         if (key === "categories") {
           return;
         }
+
+        if (
+          key === "colorList" &&
+          user.colorList &&
+          !defaultUser.colorList.every((element, index) => element === user.colorList[index])
+        ) {
+          return;
+        }
+
         const userValue = userObject[key];
         const defaultValue = defaultObject[key];
 
@@ -73,21 +82,11 @@ function App() {
       }
       return prevUser;
     });
-  }, [setUser]);
-
-  const getNotificationPermission = async () => {
-    const state = await Notification.requestPermission();
-    if (state !== "granted") {
-      return false;
-    }
-    return true;
-  };
+  }, [setUser, user.colorList]);
 
   // This useEffect displays an native application badge count (for PWA) based on the number of tasks that are not done.
   // https://developer.mozilla.org/en-US/docs/Web/API/Badging_API
   useEffect(() => {
-    // clear the app badge
-
     const setBadge = (...args: number[]) => {
       if (navigator.setAppBadge) {
         navigator.setAppBadge(...args);
@@ -98,7 +97,7 @@ function App() {
       if (user.settings[0].appBadge === true) {
         // Request permission for notifications
 
-        if (await getNotificationPermission()) {
+        if ((await Notification.requestPermission()) === "granted") {
           // Calculate the number of incomplete tasks
           const incompleteTasksCount = user.tasks.filter((task) => !task.done).length;
 

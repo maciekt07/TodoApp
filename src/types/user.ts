@@ -16,7 +16,7 @@ export interface User {
   emojisStyle: EmojiStyle;
   tasks: Task[];
   categories: Category[];
-  // colors: string[];
+  colorList: string[];
   settings: AppSettings[];
   theme: AppTheme;
 }
