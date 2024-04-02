@@ -13,7 +13,6 @@ import {
   Accordion,
   AccordionDetails,
   AccordionSummary,
-  Button,
   Dialog,
   DialogActions,
   DialogContent,
@@ -220,40 +219,20 @@ export const ColorPicker: React.FC<ColorPickerProps> = ({
       <Dialog open={openAddDialog} onClose={handleAddDialogClose}>
         <DialogTitle>Add new color</DialogTitle>
         <DialogContent>
-          <ColorPreview maxWidth={500} clr={addColorVal}>
-            {addColorVal.toUpperCase()}
-          </ColorPreview>
           <div
             style={{
-              position: "relative",
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
-              marginTop: "18px",
+              margin: "4px 0",
+              fontWeight: 600,
             }}
           >
-            <Button
-              variant="outlined"
-              fullWidth
-              onClick={() => {
-                document.getElementById("colorInput")?.click();
-              }}
-            >
-              <ColorizeRounded /> &nbsp; Choose color
-            </Button>
-            <input
-              id="colorInput"
-              type="color"
-              value={addColorVal}
-              onChange={handlePickerChange}
-              style={{
-                position: "absolute",
-                top: "100%",
-                left: "32px",
-                zIndex: 999,
-                opacity: 0,
-              }}
-            />
+            {addColorVal.toUpperCase()}
+          </div>
+          <div style={{ position: "relative" }}>
+            <StyledColorPicker type="color" value={addColorVal} onChange={handlePickerChange} />
+            <PickerLabel clr={getFontColor(addColorVal)}>Choose color</PickerLabel>
           </div>
         </DialogContent>
         <DialogActions>
@@ -318,6 +297,7 @@ const DeleteColorBtn = styled.button`
   backdrop-filter: blur(6px);
   @media (max-width: 768px) {
     padding: 6px 10px;
+    font-size: 15px;
   }
 `;
 
@@ -330,4 +310,36 @@ const StyledInfo = styled.span<{ clr: string }>`
   margin-top: 8px;
   margin-left: 4px;
   font-size: 14px;
+`;
+
+const PickerLabel = styled.p<{ clr: string }>`
+  position: absolute;
+  color: ${({ clr }) => clr};
+  pointer-events: none;
+  top: 0;
+  left: 50%;
+  transform: translate(-50%, 0%);
+  font-weight: 600;
+`;
+
+const StyledColorPicker = styled.input`
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  height: 54px;
+  width: 100%;
+  display: flex;
+
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+
+  &::-webkit-color-swatch {
+    border-radius: 18px;
+    border: none;
+  }
+  &::-moz-color-swatch {
+    border-radius: 18px;
+    border: none;
+  }
 `;
