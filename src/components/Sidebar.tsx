@@ -235,7 +235,7 @@ export const ProfileSidebar = () => {
             handleClose();
           }}
         >
-          <GetAppRounded /> &nbsp; Import/Export
+          <GetAppRounded /> &nbsp; Transfer
         </StyledMenuItem>
 
         <StyledDivider />

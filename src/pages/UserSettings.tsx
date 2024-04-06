@@ -63,6 +63,19 @@ const UserSettings = () => {
         </div>
       ));
 
+      // showToast(
+      //   <div>
+      //     Changed user name
+      //     {userName && (
+      //       <>
+      //         {" "}
+      //         to <b>{userName}</b>
+      //       </>
+      //     )}
+      //     .
+      //   </div>
+      // );
+
       setUserName("");
     }
   };
@@ -176,7 +189,8 @@ const UserSettings = () => {
           <Grid item>
             <Tooltip title={`System (${systemTheme})`}>
               <ColorElement
-                clr="#3d3e59"
+                clr={systemTheme === "dark" ? "#3d3e59" : "#ffffff"}
+                style={{ transition: ".3s background" }}
                 size="40px"
                 onClick={() => {
                   setUser((prevUser) => ({
@@ -186,7 +200,9 @@ const UserSettings = () => {
                 }}
               >
                 <Badge badgeContent={user.theme === "system" ? <CheckIcon /> : undefined}>
-                  <PersonalVideoRounded sx={{ color: "white" }} />
+                  <PersonalVideoRounded
+                    sx={{ color: systemTheme === "dark" ? "white" : "black" }}
+                  />
                 </Badge>
               </ColorElement>
             </Tooltip>

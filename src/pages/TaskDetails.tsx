@@ -31,6 +31,11 @@ const TaskDetails = () => {
     );
   }
 
+  const dateFormatter = new Intl.DateTimeFormat(navigator.language, {
+    dateStyle: "full",
+    timeStyle: "short",
+  });
+
   return (
     <>
       <TopBar title="Task Details" />
@@ -67,18 +72,18 @@ const TaskDetails = () => {
             </TableRow>
             <TableRow>
               <TableHeader>Created:</TableHeader>
-              <TableData>{new Date(task?.date || "").toLocaleString()}</TableData>
+              <TableData>{dateFormatter.format(new Date(task.date))}</TableData>
             </TableRow>
             {task?.lastSave && (
               <TableRow>
                 <TableHeader>Last edited:</TableHeader>
-                <TableData>{new Date(task?.lastSave || "").toLocaleString()}</TableData>
+                <TableData>{dateFormatter.format(new Date(task.lastSave))}</TableData>
               </TableRow>
             )}
             {task?.deadline && (
               <TableRow>
                 <TableHeader>Task deadline:</TableHeader>
-                <TableData>{new Date(task?.deadline || "").toLocaleString()}</TableData>
+                <TableData>{dateFormatter.format(new Date(task.deadline))}</TableData>
               </TableRow>
             )}
             <TableRow>

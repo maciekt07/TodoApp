@@ -19,7 +19,7 @@ export const calculateDateDifference = (
   const userLocale = lang;
 
   if (targetDate < currentDate) {
-    return `Not completed on time (${timeAgo(targetDate)})`;
+    return `Not completed on time (${timeAgo(targetDate, userLocale)})`;
   } else if (targetDate.toDateString() === currentDate.toDateString()) {
     return new Intl.RelativeTimeFormat(userLocale, { numeric: "auto" }).format(
       differenceHours > 0 ? differenceHours : differenceMinutes,

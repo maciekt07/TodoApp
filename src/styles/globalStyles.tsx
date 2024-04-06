@@ -178,9 +178,6 @@ export const GlobalStyles = () => {
             display: none;
           }
         }
-        .MuiCheckbox-colorPrimary {
-          color: #ffffffc8 !important;
-        }
         .MuiCircularProgress-circle {
           stroke-linecap: round !important;
         }

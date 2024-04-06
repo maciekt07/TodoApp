@@ -29,7 +29,7 @@ interface EmojiPickerProps {
 
 export const CustomEmojiPicker = ({ emoji, setEmoji, color, width, theme }: EmojiPickerProps) => {
   const { user, setUser } = useContext(UserContext);
-  const { emojisStyle } = user;
+  const { emojisStyle, settings } = user;
   const [showEmojiPicker, setShowEmojiPicker] = useState<boolean>(false);
   const [currentEmoji, setCurrentEmoji] = useState<string | null>(emoji || null);
 
@@ -208,7 +208,7 @@ export const CustomEmojiPicker = ({ emoji, setEmoji, color, width, theme }: Emoj
               width={width || "350px"}
               height="500px"
               reactionsDefaultOpen={
-                user.settings[0].simpleEmojiPicker && getFrequentlyUsedEmojis().length !== 0
+                settings[0].simpleEmojiPicker && getFrequentlyUsedEmojis().length !== 0
               }
               reactions={getFrequentlyUsedEmojis()}
               emojiStyle={emojisStyle}

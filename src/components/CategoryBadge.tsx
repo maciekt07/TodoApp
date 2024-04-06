@@ -4,7 +4,7 @@ import { fadeIn } from "../styles";
 import { Emoji, EmojiStyle } from "emoji-picker-react";
 import { useContext } from "react";
 import { UserContext } from "../contexts/UserContext";
-import { Category } from "../types/user";
+import type { Category } from "../types/user";
 
 interface CategoryBadgeProps extends ChipProps, StyledBadgeProps {
   category: Category;

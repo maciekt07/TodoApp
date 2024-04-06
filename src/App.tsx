@@ -1,6 +1,6 @@
 import { useStorageState } from "./hooks/useStorageState";
 import { defaultUser } from "./constants/defaultUser";
-import { User } from "./types/user";
+import type { User } from "./types/user";
 import { ColorPalette, GlobalStyles, Themes } from "./styles";
 import { ThemeProvider } from "@mui/material";
 import { useCallback, useEffect } from "react";

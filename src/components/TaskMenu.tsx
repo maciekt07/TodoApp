@@ -1,5 +1,6 @@
 import {
   Cancel,
+  Close,
   ContentCopy,
   ContentCopyRounded,
   DeleteRounded,
@@ -95,7 +96,7 @@ export const TaskMenu: React.FC<TaskMenuProps> = ({
         ...task,
         sharedBy: undefined,
         id: undefined,
-        category: user.settings[0].enableCategories ? task.category : undefined,
+        category: settings[0].enableCategories ? task.category : undefined,
       };
       const encodedTask = encodeURIComponent(JSON.stringify(taskToShare));
       const encodedUserName = encodeURIComponent(userName);
@@ -104,7 +105,7 @@ export const TaskMenu: React.FC<TaskMenuProps> = ({
     return "";
   };
 
-  const handleCopyToClipboard = async () => {
+  const handleCopyToClipboard = async (): Promise<void> => {
     const linkToCopy = generateShareableLink(selectedTaskId, name || "User");
     try {
       await navigator.clipboard.writeText(linkToCopy);
@@ -221,7 +222,7 @@ export const TaskMenu: React.FC<TaskMenuProps> = ({
       dateStyle: "full",
       timeStyle: "short",
     }).format(new Date(selectedTask?.date || ""));
-    console.log(taskDate);
+
     const taskDeadline = selectedTask?.deadline
       ? ". Task Deadline: " +
         calculateDateDifference(
@@ -268,7 +269,6 @@ export const TaskMenu: React.FC<TaskMenuProps> = ({
               alignItems: "center",
               justifyContent: "center",
               flexDirection: "column",
-              touchAction: "none",
             }}
           >
             <span
@@ -359,7 +359,8 @@ export const TaskMenu: React.FC<TaskMenuProps> = ({
           handleMarkAsDone();
         }}
       >
-        <Done /> &nbsp;{" "}
+        {tasks.find((task) => task.id === selectedTaskId)?.done ? <Close /> : <Done />}
+        &nbsp;{" "}
         {tasks.find((task) => task.id === selectedTaskId)?.done
           ? "Mark as not done"
           : "Mark as done"}

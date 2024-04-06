@@ -4,7 +4,7 @@
  * @param {Date} date - The date to be converted.
  * @returns {string} A string representing the relative time using `Intl` format (e.g., "2 days ago").
  */
-export const timeAgo = (date: Date): string => {
+export const timeAgo = (date: Date, lang = navigator.language || "en-US"): string => {
   // Get the current date and time
   const now = new Date();
   date = new Date(date);
@@ -12,7 +12,7 @@ export const timeAgo = (date: Date): string => {
   const diffInSeconds = Math.floor((now.getTime() - date.getTime()) / 1000);
 
   // Create an Intl.RelativeTimeFormat instance with the user's language
-  const rtf = new Intl.RelativeTimeFormat(navigator.language, { numeric: "auto" });
+  const rtf = new Intl.RelativeTimeFormat(lang, { numeric: "auto" });
 
   // Determine the appropriate unit and format the result
   if (diffInSeconds < 60) {

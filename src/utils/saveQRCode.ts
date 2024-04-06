@@ -2,6 +2,7 @@
  *  Function to handle downloading QR code as PNG image
  */
 export const saveQRCode = (taskName: string) => {
+  taskName = taskName.length > 32 ? taskName.substring(0, 32) + "..." : taskName;
   const svgElement = document.getElementById("QRCodeShare") as SVGElement | null;
   if (!svgElement) {
     console.error("QR Code not found.");

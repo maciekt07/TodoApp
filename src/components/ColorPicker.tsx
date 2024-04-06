@@ -45,12 +45,11 @@ export const ColorPicker: React.FC<ColorPickerProps> = ({
   label,
 }) => {
   const { user, setUser } = useContext(UserContext);
+  const { colorList } = user;
   const [selectedColor, setSelectedColor] = useState<string>(color);
   const [accordionExpanded, setAccordionExpanded] = useState<boolean>(false);
 
-  const [popoverOpen, setPopoverOpen] = useState<boolean[]>(
-    Array(user.colorList.length).fill(false)
-  );
+  const [popoverOpen, setPopoverOpen] = useState<boolean[]>(Array(colorList.length).fill(false));
   const [openAddDialog, setOpenAddDialog] = useState<boolean>(false);
   const [addColorVal, setAddColorVal] = useState<string>("#000000");
   const colorElementRefs = useRef<Array<HTMLElement | null>>([]);
@@ -101,8 +100,8 @@ export const ColorPicker: React.FC<ColorPickerProps> = ({
     setAddColorVal(e.target.value as string);
 
   const handleAddColor = () => {
-    if (!user.colorList.includes(addColorVal)) {
-      setUser({ ...user, colorList: [...user.colorList, addColorVal] });
+    if (!colorList.includes(addColorVal)) {
+      setUser({ ...user, colorList: [...colorList, addColorVal] });
       toast.success((t) => (
         <div onClick={() => toast.dismiss(t.id)}>
           Added {addColorVal.toUpperCase()} to your color list.
@@ -117,10 +116,10 @@ export const ColorPicker: React.FC<ColorPickerProps> = ({
   };
 
   const handleDeleteColor = () => {
-    setPopoverOpen(Array(user.colorList.length).fill(false));
+    setPopoverOpen(Array(colorList.length).fill(false));
     setUser({
       ...user,
-      colorList: user.colorList.filter((listColor) => listColor !== color),
+      colorList: colorList.filter((listColor) => listColor !== color),
     });
   };
 
@@ -154,7 +153,7 @@ export const ColorPicker: React.FC<ColorPickerProps> = ({
             }}
           >
             <Grid container spacing={1} maxWidth={width || 400} m={1}>
-              {[theme.primary, ...user.colorList].map((color, index) => (
+              {[theme.primary, ...colorList].map((color, index) => (
                 <Grid item key={color}>
                   <ColorElement
                     ref={(element) => (colorElementRefs.current[index] = element)}

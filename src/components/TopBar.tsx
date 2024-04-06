@@ -16,7 +16,7 @@ export const TopBar = ({ title }: TopBarProps) => {
   const n = useNavigate();
   return (
     <Container>
-      <BackBtn size="large" onClick={() => n(-1)} onDoubleClick={() => n("/")}>
+      <BackBtn size="large" onClick={() => n("/")}>
         <ArrowIcon />
       </BackBtn>
       <Title>{title}</Title>

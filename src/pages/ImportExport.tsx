@@ -7,7 +7,13 @@ import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 import styled from "@emotion/styled";
 import { Emoji } from "emoji-picker-react";
-import { FileDownload, FileUpload, Info, Link } from "@mui/icons-material";
+import {
+  FileDownload,
+  FileUpload,
+  Info,
+  IntegrationInstructionsRounded,
+  Link,
+} from "@mui/icons-material";
 import { exportTasksToJson, getFontColor } from "../utils";
 import { IconButton, Tooltip } from "@mui/material";
 import {
@@ -44,11 +50,13 @@ const ImportExport = () => {
   }, [user.createdAt]);
 
   const handleTaskClick = (taskId: UUID) => {
-    setSelectedTasks((prevSelectedTasks) =>
-      prevSelectedTasks.includes(taskId)
-        ? prevSelectedTasks.filter((id) => id !== taskId)
-        : [...prevSelectedTasks, taskId]
-    );
+    setSelectedTasks((prevSelectedTasks) => {
+      if (prevSelectedTasks.includes(taskId)) {
+        return prevSelectedTasks.filter((id) => id !== taskId);
+      } else {
+        return [...prevSelectedTasks, taskId];
+      }
+    });
   };
 
   const handleExport = () => {
@@ -101,8 +109,11 @@ const ImportExport = () => {
             return;
           }
 
-          // Check if any imported task property exceeds the maximum length
+          /**
+           * TODO: write separate util function to check if task is not invalid
+           */
 
+          // Check if any imported task property exceeds the maximum length
           const invalidTasks = importedTasks.filter((task) => {
             const isInvalid =
               (task.name && task.name.length > TASK_NAME_MAX_LENGTH) ||
@@ -229,7 +240,7 @@ const ImportExport = () => {
     }
   };
 
-  const handleImportFromLink = async () => {
+  const handleImportFromLink = async (): Promise<void> => {
     try {
       const text = await navigator.clipboard.readText();
       if (text.startsWith(`${location.protocol}//${location.hostname}`)) {
@@ -242,6 +253,16 @@ const ImportExport = () => {
           </div>
         ));
       }
+    } catch (err) {
+      console.error("Failed to read clipboard contents: ", err);
+    }
+  };
+
+  const handleImportFromClipboard = async (): Promise<void> => {
+    try {
+      const text = await navigator.clipboard.readText();
+      const file = new File([text], "Clipboard", { type: "text/json" });
+      handleImport(file);
     } catch (err) {
       console.error("Failed to read clipboard contents: ", err);
     }
@@ -296,7 +317,7 @@ const ImportExport = () => {
               selected={selectedTasks.includes(task.id)}
               translate="no"
             >
-              <Checkbox size="medium" checked={selectedTasks.includes(task.id)} />
+              <Checkbox color="primary" size="medium" checked={selectedTasks.includes(task.id)} />
               <Typography
                 variant="body1"
                 component="span"
@@ -322,20 +343,27 @@ const ImportExport = () => {
           gap: "24px",
         }}
       >
-        <StyledButton
-          onClick={handleExport}
-          disabled={selectedTasks.length === 0}
-          variant="outlined"
+        <Tooltip
+          title={
+            selectedTasks.length > 0
+              ? `Selected tasks: ${new Intl.ListFormat("en", {
+                  style: "long",
+                  type: "conjunction",
+                }).format(
+                  selectedTasks.map((taskId) => {
+                    const selectedTask = user.tasks.find((task) => task.id === taskId);
+                    return selectedTask ? selectedTask.name : "";
+                  })
+                )}`
+              : "No tasks selected"
+          }
         >
-          <FileDownload /> &nbsp; Export Selected to JSON{" "}
-          {selectedTasks.length > 0 && `[${selectedTasks.length}]`}
-        </StyledButton>
-
-        <StyledButton
-          onClick={handleExportAll}
-          disabled={user.tasks.length === 0}
-          variant="outlined"
-        >
+          <StyledButton onClick={handleExport} disabled={selectedTasks.length === 0}>
+            <FileDownload /> &nbsp; Export Selected to JSON{" "}
+            {selectedTasks.length > 0 && `[${selectedTasks.length}]`}
+          </StyledButton>
+        </Tooltip>
+        <StyledButton onClick={handleExportAll} disabled={user.tasks.length === 0}>
           <FileDownload /> &nbsp; Export All Tasks to JSON
         </StyledButton>
 
@@ -350,9 +378,7 @@ const ImportExport = () => {
               isDragging={isDragging}
             >
               <FileUpload fontSize="large" color="primary" />
-              <p style={{ fontWeight: 500, fontSize: "16px", margin: 0 }}>
-                Drop JSON file here to import tasks{" "}
-              </p>
+              <div>Drop JSON file here to import tasks </div>
             </DropZone>
           </div>
         )}
@@ -378,8 +404,13 @@ const ImportExport = () => {
             <FileUpload /> &nbsp; Select JSON File
           </Button>
         </label>
+
+        <StyledButton onClick={handleImportFromClipboard}>
+          <IntegrationInstructionsRounded /> &nbsp; Import JSON from clipboard
+        </StyledButton>
+
         {/* Solution for PWA on iOS: */}
-        <StyledButton variant="outlined" onClick={handleImportFromLink}>
+        <StyledButton onClick={handleImportFromLink}>
           <Link /> &nbsp; Import From Link
         </StyledButton>
       </Box>
@@ -396,13 +427,15 @@ const TaskContainer = styled(Box)<{ backgroundclr: string; selected: boolean }>`
   margin: 8px;
   padding: 10px 4px;
   border-radius: 16px;
-  background: #19172b94;
-  color: white;
-  border: 2px solid ${(props) => props.backgroundclr};
-  box-shadow: ${(props) => props.selected && `0 0 8px 1px ${props.backgroundclr}`};
+  background: ${({ theme }) => getFontColor(theme.secondary)}28;
+  border: 2px solid ${({ backgroundclr }) => backgroundclr};
+  box-shadow: ${({ selected, backgroundclr }) => selected && `0 0 8px 1px ${backgroundclr}`};
   transition: 0.3s all;
   width: 300px;
   cursor: "pointer";
+  & span {
+    font-weight: ${({ selected }) => (selected ? 600 : 500)}!important;
+  }
 `;
 
 const ListContent = styled.div`
@@ -444,21 +477,21 @@ const Container = styled(Box)`
   ::-webkit-scrollbar {
     width: 8px;
     border-radius: 4px;
-    background-color: #ffffff15;
+    background-color: ${({ theme }) => getFontColor(theme.secondary)}15;
   }
 
   ::-webkit-scrollbar-thumb {
-    background-color: #ffffff30;
+    background-color: ${({ theme }) => getFontColor(theme.secondary)}30;
     border-radius: 4px;
   }
 
   ::-webkit-scrollbar-thumb:hover {
-    background-color: #ffffff50;
+    background-color: ${({ theme }) => getFontColor(theme.secondary)}50;
   }
 
   ::-webkit-scrollbar-track {
     border-radius: 4px;
-    background-color: #ffffff15;
+    background-color: ${({ theme }) => getFontColor(theme.secondary)}15;
   }
 `;
 
@@ -472,3 +505,6 @@ const StyledButton = styled(Button)`
     border-color: ${({ theme }) => getFontColor(theme.secondary) + "82"};
   }
 `;
+StyledButton.defaultProps = {
+  variant: "outlined",
+};

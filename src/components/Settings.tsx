@@ -99,8 +99,14 @@ export const SettingsDialog: React.FC<SettingsProps> = ({ open, onClose }) => {
   const handleSettingChange =
     (name: keyof AppSettings) => (event: React.ChangeEvent<HTMLInputElement>) => {
       // cancel read aloud
-      name === "enableReadAloud" && window.speechSynthesis.cancel();
-      name === "appBadge" && navigator.clearAppBadge && navigator.clearAppBadge();
+      if (name === "enableReadAloud") {
+        window.speechSynthesis.cancel();
+      }
+
+      if (name === "appBadge" && navigator.clearAppBadge && !event.target.checked) {
+        navigator.clearAppBadge();
+      }
+
       const updatedSettings = {
         ...userSettings,
         [name]: event.target.checked,

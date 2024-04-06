@@ -199,6 +199,7 @@ export const EditTask = ({ open, task, onClose, onSave }: EditTaskProps) => {
           defaultValue=""
           InputLabelProps={{ shrink: true }}
           sx={{
+            colorScheme: "light",
             " & .MuiInputBase-root": {
               transition: ".3s all",
             },

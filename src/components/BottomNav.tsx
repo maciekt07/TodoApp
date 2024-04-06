@@ -90,9 +90,7 @@ export const BottomNav = (): JSX.Element | null => {
           icon={
             <Badge
               color="primary"
-              badgeContent={
-                value !== 0 ? user.tasks.filter((task) => !task.done).length : undefined
-              }
+              badgeContent={value !== 0 ? tasks.filter((task) => !task.done).length : undefined}
               max={99}
             >
               <TaskAlt sx={{ fontSize: smallIconSize }} />

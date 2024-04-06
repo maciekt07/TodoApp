@@ -411,7 +411,6 @@ const Categories = () => {
               />
             </div>
           </DialogContent>
-
           <DialogActions>
             <DialogBtn onClick={handleEditDimiss}>Cancel</DialogBtn>
             <DialogBtn
