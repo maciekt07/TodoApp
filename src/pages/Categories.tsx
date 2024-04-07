@@ -14,7 +14,7 @@ import {
 } from "@mui/material";
 import { Delete, Edit, SaveRounded, DeleteRounded } from "@mui/icons-material";
 import { CATEGORY_NAME_MAX_LENGTH } from "../constants";
-import { getFontColor } from "../utils";
+import { getFontColor, showToast } from "../utils";
 import {
   ActionButton,
   AddCategoryButton,
@@ -28,7 +28,6 @@ import {
   EditNameInput,
   CategoryInput,
 } from "../styles";
-import toast from "react-hot-toast";
 import NotFound from "./NotFound";
 import { UserContext } from "../contexts/UserContext";
 import { useStorageState } from "../hooks/useStorageState";
@@ -91,11 +90,12 @@ const Categories = () => {
         categories: updatedCategories,
         tasks: updatedTasks,
       });
-      toast.success((t) => (
-        <div onClick={() => toast.dismiss(t.id)}>
+
+      showToast(
+        <div>
           Deleted category - <b>{categoryName}.</b>
         </div>
-      ));
+      );
     }
   };
 
@@ -130,11 +130,13 @@ const Categories = () => {
         emoji: emoji !== "" && emoji !== null ? emoji : undefined,
         color,
       };
-      toast.success((t) => (
-        <div onClick={() => toast.dismiss(t.id)}>
+
+      showToast(
+        <div>
           Added category - <b>{newCategory.name}</b>
         </div>
-      ));
+      );
+
       setUser((prevUser) => ({
         ...prevUser,
         categories: [...prevUser.categories, newCategory],
@@ -144,7 +146,7 @@ const Categories = () => {
       setColor(ColorPalette.purple);
       setEmoji("");
     } else {
-      toast.error((t) => <div onClick={() => toast.dismiss(t.id)}>Category name is required.</div>);
+      showToast("Category name is required.", { type: "error" });
     }
   };
 
@@ -195,11 +197,12 @@ const Categories = () => {
         tasks: updatedTasks,
       });
 
-      toast.success((t) => (
-        <div onClick={() => toast.dismiss(t.id)}>
+      showToast(
+        <div>
           Updated category - <b>{editName}</b>
         </div>
-      ));
+      );
+
       setOpenEditDialog(false);
     }
   };

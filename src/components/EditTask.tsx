@@ -14,10 +14,9 @@ import styled from "@emotion/styled";
 import { DESCRIPTION_MAX_LENGTH, TASK_NAME_MAX_LENGTH } from "../constants";
 import { ColorPalette, DialogBtn } from "../styles";
 import { CategorySelect, ColorPicker, CustomEmojiPicker } from ".";
-import toast from "react-hot-toast";
 import { UserContext } from "../contexts/UserContext";
 import { CancelRounded, EditCalendarRounded, SaveRounded } from "@mui/icons-material";
-import { timeAgo } from "../utils";
+import { showToast, timeAgo } from "../utils";
 
 interface EditTaskProps {
   open: boolean;
@@ -73,11 +72,11 @@ export const EditTask = ({ open, task, onClose, onSave }: EditTaskProps) => {
     document.body.style.overflow = "auto";
     if (editedTask && !nameError && !descriptionError) {
       onSave(editedTask);
-      toast.success((t) => (
-        <div onClick={() => toast.dismiss(t.id)}>
+      showToast(
+        <div>
           Task <b>{editedTask.name}</b> updated.
         </div>
-      ));
+      );
     }
   };
 

@@ -8,7 +8,7 @@ import {
   ExpandMoreRounded,
   InfoRounded,
 } from "@mui/icons-material";
-import { getFontColor } from "../utils";
+import { getFontColor, showToast } from "../utils";
 import {
   Accordion,
   AccordionDetails,
@@ -23,7 +23,6 @@ import {
 } from "@mui/material";
 import { useTheme } from "@emotion/react";
 import { UserContext } from "../contexts/UserContext";
-import toast from "react-hot-toast";
 
 interface ColorPickerProps {
   color: string;
@@ -102,16 +101,16 @@ export const ColorPicker: React.FC<ColorPickerProps> = ({
   const handleAddColor = () => {
     if (!colorList.includes(addColorVal)) {
       setUser({ ...user, colorList: [...colorList, addColorVal] });
-      toast.success((t) => (
-        <div onClick={() => toast.dismiss(t.id)}>
-          Added {addColorVal.toUpperCase()} to your color list.
+
+      showToast(
+        <div>
+          Added <b>{addColorVal.toUpperCase()}</b> to your color list.
         </div>
-      ));
+      );
+
       handleAddDialogClose();
     } else {
-      toast.error((t) => (
-        <div onClick={() => toast.dismiss(t.id)}>Color is already in color list.</div>
-      ));
+      showToast("Color is already in color list.", { type: "error" });
     }
   };
 

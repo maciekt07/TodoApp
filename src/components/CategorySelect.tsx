@@ -11,10 +11,9 @@ import {
 } from "@mui/material";
 import { ColorPalette } from "../styles";
 import { Emoji, EmojiStyle } from "emoji-picker-react";
-import { getFontColor } from "../utils";
+import { getFontColor, showToast } from "../utils";
 import { CSSProperties, useContext, useState } from "react";
 import { MAX_CATEGORIES } from "../constants";
-import toast from "react-hot-toast";
 import { UserContext } from "../contexts/UserContext";
 import { ExpandMoreRounded, RadioButtonChecked } from "@mui/icons-material";
 import { CategoryBadge } from ".";
@@ -46,16 +45,11 @@ export const CategorySelect: React.FC<CategorySelectProps> = ({
   const handleCategoryChange = (event: SelectChangeEvent<unknown>): void => {
     const selectedCategoryIds = event.target.value as UUID[];
     if (selectedCategoryIds.length > MAX_CATEGORIES) {
-      toast.error(
-        (t) => (
-          <div onClick={() => toast.dismiss(t.id)}>
-            You cannot add more than {MAX_CATEGORIES} categories
-          </div>
-        ),
-        {
-          position: "top-center",
-        }
-      );
+      showToast(`You cannot add more than ${MAX_CATEGORIES} categories`, {
+        type: "error",
+        position: "top-center",
+      });
+
       return;
     }
     const selectedCategories = categories.filter((cat) => selectedCategoryIds.includes(cat.id));

@@ -47,7 +47,7 @@ import toast from "react-hot-toast";
 import { UserContext } from "../contexts/UserContext";
 import QRCode from "react-qr-code";
 import { Task, UUID } from "../types/user";
-import { calculateDateDifference, saveQRCode } from "../utils";
+import { calculateDateDifference, saveQRCode, showToast } from "../utils";
 import Marquee from "react-fast-marquee";
 import { TaskIcon } from ".";
 
@@ -109,10 +109,10 @@ export const TaskMenu: React.FC<TaskMenuProps> = ({
     const linkToCopy = generateShareableLink(selectedTaskId, name || "User");
     try {
       await navigator.clipboard.writeText(linkToCopy);
-      toast.success((t) => <div onClick={() => toast.dismiss(t.id)}>Copied link to clipboard</div>);
+      showToast("Copied link to clipboard.");
     } catch (error) {
       console.error("Error copying link to clipboard:", error);
-      toast.error("Error copying link to clipboard");
+      showToast("Error copying link to clipboard", { type: "error" });
     }
   };
 
@@ -148,14 +148,12 @@ export const TaskMenu: React.FC<TaskMenuProps> = ({
       const allTasksDone = updatedTasks.every((task) => task.done);
 
       if (allTasksDone) {
-        toast.success(
-          (t) => (
-            <div onClick={() => toast.dismiss(t.id)}>
-              <b>All tasks done</b>
-              <br />
-              <span>You've checked off all your todos. Well done!</span>
-            </div>
-          ),
+        showToast(
+          <div>
+            <b>All tasks done</b>
+            <br />
+            <span>You've checked off all your todos. Well done!</span>
+          </div>,
           {
             icon: (
               <div style={{ margin: "-6px 4px -6px -6px" }}>
@@ -345,7 +343,6 @@ export const TaskMenu: React.FC<TaskMenuProps> = ({
       // Hide the toast when speech ends
       toast.dismiss(SpeechToastId);
     };
-    console.log(utterThis);
     if (voiceVolume > 0) {
       window.speechSynthesis.speak(utterThis);
     }
@@ -488,7 +485,8 @@ export const TaskMenu: React.FC<TaskMenuProps> = ({
         <DialogTitle>Share Task</DialogTitle>
         <DialogContent>
           <span>
-            Share Task: <b>{tasks.find((task) => task.id === selectedTaskId)?.name}</b>
+            Share Task:{" "}
+            <b translate="no">{tasks.find((task) => task.id === selectedTaskId)?.name}</b>
           </span>
           <Tabs value={shareTabVal} onChange={handleTabChange} sx={{ m: "8px 0" }}>
             <StyledTab label="Link" icon={<LinkRounded />} />

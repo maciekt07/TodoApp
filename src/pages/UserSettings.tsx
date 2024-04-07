@@ -27,9 +27,8 @@ import { PROFILE_PICTURE_MAX_LENGTH, USER_NAME_MAX_LENGTH } from "../constants";
 import { SettingsDialog, TopBar } from "../components";
 import { ColorElement, ColorPalette, DialogBtn, Themes } from "../styles";
 import { defaultUser } from "../constants/defaultUser";
-import toast from "react-hot-toast";
 import { UserContext } from "../contexts/UserContext";
-import { timeAgo, getFontColor } from "../utils";
+import { timeAgo, getFontColor, showToast } from "../utils";
 import { useSystemTheme } from "../hooks/useSystemTheme";
 
 const UserSettings = () => {
@@ -48,10 +47,11 @@ const UserSettings = () => {
   }, [name]);
 
   const handleSaveName = () => {
-    if (userName.length <= USER_NAME_MAX_LENGTH) {
+    if (userName.length <= USER_NAME_MAX_LENGTH && userName !== name) {
       setUser({ ...user, name: userName });
-      toast.success((t) => (
-        <div onClick={() => toast.dismiss(t.id)}>
+
+      showToast(
+        <div>
           Changed user name
           {userName && (
             <>
@@ -61,20 +61,7 @@ const UserSettings = () => {
           )}
           .
         </div>
-      ));
-
-      // showToast(
-      //   <div>
-      //     Changed user name
-      //     {userName && (
-      //       <>
-      //         {" "}
-      //         to <b>{userName}</b>
-      //       </>
-      //     )}
-      //     .
-      //   </div>
-      // );
+      );
 
       setUserName("");
     }
@@ -93,9 +80,7 @@ const UserSettings = () => {
   const handleLogout = () => {
     setUser(defaultUser);
     handleLogoutConfirmationClose();
-    toast.success((t) => (
-      <div onClick={() => toast.dismiss(t.id)}>You have been successfully logged out</div>
-    ));
+    showToast("You have been successfully logged out");
   };
 
   const handleSaveImage = () => {
@@ -108,8 +93,7 @@ const UserSettings = () => {
         ...prevUser,
         profilePicture: profilePictureURL,
       }));
-
-      toast.success((t) => <div onClick={() => toast.dismiss(t.id)}>Changed profile picture.</div>);
+      showToast("Changed profile picture.");
     }
   };
 
@@ -290,9 +274,7 @@ const UserSettings = () => {
           <Button
             onClick={() => {
               handleCloseImageDialog();
-              toast.success((t) => (
-                <div onClick={() => toast.dismiss(t.id)}>Deleted profile image.</div>
-              ));
+              showToast("Deleted profile image.");
               setUser({ ...user, profilePicture: null });
             }}
             color="error"

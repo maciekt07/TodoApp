@@ -14,7 +14,7 @@ import {
   IntegrationInstructionsRounded,
   Link,
 } from "@mui/icons-material";
-import { exportTasksToJson, getFontColor } from "../utils";
+import { exportTasksToJson, getFontColor, showToast } from "../utils";
 import { IconButton, Tooltip } from "@mui/material";
 import {
   CATEGORY_NAME_MAX_LENGTH,
@@ -91,13 +91,24 @@ const ImportExport = () => {
 
   const handleExportAll = () => {
     exportTasksToJson(user.tasks);
-    toast.success(`Exported all tasks (${user.tasks.length})`);
+    showToast(`Exported all tasks (${user.tasks.length})`);
   };
 
   const handleImport = (taskFile: File) => {
     const file = taskFile;
 
     if (file) {
+      if (file.type !== "application/json") {
+        showToast(
+          <div>
+            Incorrect file type{file.type !== "" && <span> {file.type}</span>}. Please select a JSON
+            file.
+          </div>,
+          { type: "error" }
+        );
+        return;
+      }
+
       const reader = new FileReader();
 
       reader.onload = (e: ProgressEvent<FileReader>) => {
@@ -105,7 +116,7 @@ const ImportExport = () => {
           const importedTasks = JSON.parse(e.target?.result as string) as Task[];
 
           if (!Array.isArray(importedTasks)) {
-            toast.error("Imported file has an invalid structure.");
+            showToast("Imported file has an invalid structure.", { type: "error" });
             return;
           }
 
@@ -129,7 +140,10 @@ const ImportExport = () => {
             console.error(
               `These tasks cannot be imported due to exceeding maximum character lengths: ${invalidTaskNames}`
             );
-            toast.error(`Some tasks cannot be imported due to exceeding maximum character lengths`);
+            showToast(
+              `These tasks cannot be imported due to exceeding maximum character lengths: ${invalidTaskNames}`,
+              { type: "error" }
+            );
             return;
           }
 
@@ -146,15 +160,18 @@ const ImportExport = () => {
           });
 
           if (hasInvalidColors) {
-            toast.error("Imported file contains tasks with invalid color formats.");
+            showToast("Imported file contains tasks with invalid color formats.", {
+              type: "error",
+            });
             return;
           }
 
           const maxFileSize = 50_000;
           if (file.size > maxFileSize) {
-            toast.error(`File size is too large (${file.size}/${maxFileSize})`);
+            showToast(`File size is too large (${file.size}/${maxFileSize})`, { type: "error" });
             return;
           }
+          console.log(file.text);
 
           // Update user.categories if imported categories don't exist
           const updatedCategories = user.categories.slice(); // Create a copy of the existing categories
@@ -195,6 +212,7 @@ const ImportExport = () => {
 
           // Display the alert with the list of imported task names
           console.log(`Imported Tasks: ${importedTaskNames}`);
+
           toast((t) => (
             <div>
               Tasks Successfully Imported from <br />
@@ -220,15 +238,17 @@ const ImportExport = () => {
               </Button>
             </div>
           ));
+
           if (fileInputRef.current) {
             fileInputRef.current.value = "";
           }
         } catch (error) {
           console.error(`Error parsing the imported file ${file.name}:`, error);
-          toast.error(
+          showToast(
             <div style={{ wordBreak: "break-all" }}>
               Error parsing the imported file: <br /> <i>{file.name}</i>
-            </div>
+            </div>,
+            { type: "error" }
           );
           if (fileInputRef.current) {
             fileInputRef.current.value = "";
@@ -246,12 +266,13 @@ const ImportExport = () => {
       if (text.startsWith(`${location.protocol}//${location.hostname}`)) {
         window.open(text, "_self");
       } else {
-        toast.error((t) => (
-          <div onClick={() => toast.dismiss(t.id)}>
+        showToast(
+          <div>
             Failed to import task from the provided link. Please ensure that the link is copied
             correctly.
-          </div>
-        ));
+          </div>,
+          { type: "error" }
+        );
       }
     } catch (err) {
       console.error("Failed to read clipboard contents: ", err);
@@ -261,7 +282,7 @@ const ImportExport = () => {
   const handleImportFromClipboard = async (): Promise<void> => {
     try {
       const text = await navigator.clipboard.readText();
-      const file = new File([text], "Clipboard", { type: "text/json" });
+      const file = new File([text], "Clipboard", { type: "application/json" });
       handleImport(file);
     } catch (err) {
       console.error("Failed to read clipboard contents: ", err);
@@ -279,8 +300,20 @@ const ImportExport = () => {
     setIsDragging(false);
 
     const file = e.dataTransfer.files[0];
-    handleImport(file);
     console.log(file);
+    if (file.size === 0 || file.type === "") {
+      showToast(
+        <div>
+          Unknown file type{" "}
+          <i translate="no" style={{ wordBreak: "break-all" }}>
+            {file.name}
+          </i>
+        </div>,
+        { type: "error" }
+      );
+      return;
+    }
+    handleImport(file);
   };
 
   const handleSelectChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -427,7 +460,7 @@ const TaskContainer = styled(Box)<{ backgroundclr: string; selected: boolean }>`
   margin: 8px;
   padding: 10px 4px;
   border-radius: 16px;
-  background: ${({ theme }) => getFontColor(theme.secondary)}28;
+  background: ${({ theme }) => getFontColor(theme.secondary)}15;
   border: 2px solid ${({ backgroundclr }) => backgroundclr};
   box-shadow: ${({ selected, backgroundclr }) => selected && `0 0 8px 1px ${backgroundclr}`};
   transition: 0.3s all;
@@ -458,6 +491,9 @@ const DropZone = styled.div<{ isDragging: boolean }>`
   max-width: 300px;
   box-shadow: ${({ isDragging, theme }) => isDragging && `0 0 32px 0px ${theme.primary}`};
   transition: 0.3s all;
+  & div {
+    font-weight: 500;
+  }
 `;
 
 const InfoIcon = styled(Info)`

@@ -35,7 +35,7 @@ import {
 import { defaultUser } from "../constants/defaultUser";
 import { UserContext } from "../contexts/UserContext";
 import { iOS } from "../utils/iOS";
-import toast from "react-hot-toast";
+import { showToast } from "../utils";
 
 interface SettingsProps {
   open: boolean;
@@ -281,9 +281,7 @@ export const SettingsDialog: React.FC<SettingsProps> = ({ open, onClose }) => {
               color="error"
               onClick={() => {
                 localStorage.removeItem("epr_suggested");
-                toast.success((t) => (
-                  <div onClick={() => toast.dismiss(t.id)}>Deleted emoji data.</div>
-                ));
+                showToast("Deleted emoji data.");
               }}
             >
               <DeleteRounded /> &nbsp; Clear Emoji Data

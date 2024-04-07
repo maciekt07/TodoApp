@@ -7,12 +7,13 @@ import { useCallback, useEffect } from "react";
 import { ErrorBoundary } from "./components";
 import MainLayout from "./layouts/MainLayout";
 import AppRouter from "./router";
-import toast, { Toaster } from "react-hot-toast";
+import { Toaster } from "react-hot-toast";
 import { useResponsiveDisplay } from "./hooks/useResponsiveDisplay";
 import { UserContext } from "./contexts/UserContext";
 import { DataObjectRounded } from "@mui/icons-material";
 import { ThemeProvider as EmotionTheme } from "@emotion/react";
 import { useSystemTheme } from "./hooks/useSystemTheme";
+import { getFontColor, showToast } from "./utils";
 
 function App() {
   const [user, setUser] = useStorageState<User>(defaultUser, "user");
@@ -51,15 +52,13 @@ function App() {
           // Update only if the property is missing in user
           userObject[key] = defaultValue;
           // Notify users about update
-          toast.success(
-            (t) => (
-              <div onClick={() => toast.dismiss(t.id)}>
-                Added new property to user object{" "}
-                <i>
-                  {key}: {userObject[key].toString()}
-                </i>
-              </div>
-            ),
+          showToast(
+            <div>
+              Added new property to user object{" "}
+              <i>
+                {key}: {userObject[key].toString()}
+              </i>
+            </div>,
             {
               duration: 6000,
               icon: <DataObjectRounded />,
@@ -169,7 +168,7 @@ function App() {
             success: {
               iconTheme: {
                 primary: getPrimaryColor(),
-                secondary: "white",
+                secondary: getFontColor(getPrimaryColor()),
               },
             },
             error: {

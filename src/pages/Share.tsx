@@ -15,8 +15,7 @@ import {
 import { useLocation, useNavigate } from "react-router-dom";
 import { useContext, useEffect, useState } from "react";
 import type { Task } from "../types/user";
-import toast from "react-hot-toast";
-import { calculateDateDifference, formatDate, getFontColor, iOS } from "../utils";
+import { calculateDateDifference, formatDate, getFontColor, iOS, showToast } from "../utils";
 import { Emoji, EmojiStyle } from "emoji-picker-react";
 import { UserContext } from "../contexts/UserContext";
 import {
@@ -124,11 +123,11 @@ const SharePage = () => {
       }));
 
       n("/");
-      toast.success((t) => (
-        <div onClick={() => toast.dismiss(t.id)}>
-          Added shared task - <b>{taskData.name}</b>
+      showToast(
+        <div>
+          Added shared task - <b translate="no">{taskData.name}</b>
         </div>
-      ));
+      );
     }
   };
 

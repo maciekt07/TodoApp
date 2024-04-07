@@ -2,7 +2,7 @@ import React, { ErrorInfo } from "react";
 import { StyledLink } from "../styles";
 import { Emoji } from "emoji-picker-react";
 import { Accordion, AccordionDetails, AccordionSummary, Button, Typography } from "@mui/material";
-import { exportTasksToJson, getFontColor } from "../utils";
+import { exportTasksToJson, getFontColor, showToast } from "../utils";
 import {
   DeleteForeverRounded,
   DescriptionRounded,
@@ -10,7 +10,6 @@ import {
   ExpandMoreRounded,
   FileDownload,
 } from "@mui/icons-material";
-import toast from "react-hot-toast";
 import { UserContext } from "../contexts/UserContext";
 import styled from "@emotion/styled";
 import { TaskIcon } from ".";
@@ -124,7 +123,7 @@ export class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoun
               sx={{ m: "14px 6px", p: "12px 20px", borderRadius: "14px" }}
               onClick={() => {
                 exportTasksToJson(user.tasks);
-                toast.success(`Exported all tasks (${user.tasks.length})`);
+                showToast(`Exported all tasks (${user.tasks.length})`);
               }}
             >
               <FileDownload /> &nbsp; Export Tasks To JSON

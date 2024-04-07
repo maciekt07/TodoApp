@@ -32,13 +32,12 @@ import {
 import { useNavigate } from "react-router-dom";
 import { defaultUser } from "../constants/defaultUser";
 import { SettingsDialog } from ".";
-import toast from "react-hot-toast";
 import logo from "../assets/logo256.png";
 import { ColorPalette, pulseAnimation, ring } from "../styles";
 import { UserContext } from "../contexts/UserContext";
 import { iOS } from "../utils/iOS";
 import { fetchGitHubInfo } from "../services/githubApi";
-import { timeAgo } from "../utils";
+import { showToast, timeAgo } from "../utils";
 import bmcLogo from "../assets/bmc-logo.svg";
 
 export const ProfileSidebar = () => {
@@ -90,7 +89,7 @@ export const ProfileSidebar = () => {
   const handleLogout = () => {
     setUser(defaultUser);
     handleLogoutConfirmationClose();
-    toast.success("You have been successfully logged out");
+    showToast("You have been successfully logged out");
   };
 
   interface BeforeInstallPromptEvent extends Event {
@@ -115,7 +114,7 @@ export const ProfileSidebar = () => {
 
     const detectAppInstallation = () => {
       window.matchMedia("(display-mode: standalone)").addEventListener("change", (e) => {
-        setIsAppInstalled((e as MediaQueryListEvent).matches);
+        setIsAppInstalled(e.matches);
       });
     };
 
@@ -130,8 +129,14 @@ export const ProfileSidebar = () => {
   const installPWA = () => {
     if (deferredPrompt) {
       deferredPrompt.prompt();
+      deferredPrompt.userChoice.then((choiceResult) => {
+        if (choiceResult.outcome === "accepted") {
+          showToast("App installed successfully!");
+        }
+      });
     }
   };
+
   return (
     <Container>
       <Tooltip title={<div translate="no">{user.name || "User"}</div>}>
@@ -152,7 +157,7 @@ export const ProfileSidebar = () => {
                 profilePicture: null,
               }));
 
-              toast.error("Error in profile picture URL");
+              showToast("Error in profile picture URL", { type: "error" });
               throw new Error("Error in profile picture URL");
             }}
             sx={{

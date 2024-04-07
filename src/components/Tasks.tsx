@@ -1,6 +1,6 @@
 import type { Category, Task, UUID } from "../types/user";
 import { ReactNode, useCallback, useContext, useEffect, useMemo, useState } from "react";
-import { calculateDateDifference, formatDate, getFontColor, iOS } from "../utils";
+import { calculateDateDifference, formatDate, getFontColor, iOS, showToast } from "../utils";
 import {
   CancelRounded,
   Close,
@@ -49,7 +49,6 @@ import {
   TasksContainer,
   TimeLeft,
 } from "../styles";
-import toast from "react-hot-toast";
 import { useResponsiveDisplay } from "../hooks/useResponsiveDisplay";
 import { UserContext } from "../contexts/UserContext";
 import { useStorageState } from "../hooks/useStorageState";
@@ -181,11 +180,11 @@ export const Tasks: React.FC = () => {
       }));
 
       setDeleteDialogOpen(false);
-      toast.success((t) => (
-        <div onClick={() => toast.dismiss(t.id)}>
+      showToast(
+        <div>
           Deleted Task - <b>{user.tasks.find((task) => task.id === selectedTaskId)?.name}</b>
         </div>
-      ));
+      );
     }
   };
   const cancelDeleteTask = () => {
@@ -288,18 +287,14 @@ export const Tasks: React.FC = () => {
       if (overdueTasks.length > 0) {
         const taskNames = overdueTasks.map((task) => task.name);
 
-        toast.error(
-          (t) => (
-            <div
-              translate="no"
-              onClick={() => toast.dismiss(t.id)}
-              style={{ wordBreak: "break-word" }}
-            >
-              <b translate="yes">Overdue task{overdueTasks.length > 1 && "s"}: </b>
-              {listFormat.format(taskNames)}
-            </div>
-          ),
+        showToast(
+          <div translate="no" style={{ wordBreak: "break-word" }}>
+            <b translate="yes">Overdue task{overdueTasks.length > 1 && "s"}: </b>
+            {listFormat.format(taskNames)}
+          </div>,
           {
+            type: "error",
+            disableVibrate: true,
             duration: 3400,
             icon: <RingAlarm animate sx={{ color: ColorPalette.red }} />,
             style: {
