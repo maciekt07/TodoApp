@@ -19,6 +19,8 @@ import {
   RecordVoiceOverRounded,
 } from "@mui/icons-material";
 import {
+  Alert,
+  AlertTitle,
   Box,
   Button,
   Dialog,
@@ -39,17 +41,17 @@ import { BottomSheet } from "react-spring-bottom-sheet";
 import { Emoji, EmojiStyle } from "emoji-picker-react";
 import styled from "@emotion/styled";
 import "react-spring-bottom-sheet/dist/style.css";
-import { useResponsiveDisplay } from "../hooks/useResponsiveDisplay";
-import { ColorPalette, DialogBtn } from "../styles";
+import { useResponsiveDisplay } from "../../hooks/useResponsiveDisplay";
+import { ColorPalette, DialogBtn } from "../../styles";
 import { useNavigate } from "react-router-dom";
 import { useContext, useState } from "react";
 import toast from "react-hot-toast";
-import { UserContext } from "../contexts/UserContext";
+import { UserContext } from "../../contexts/UserContext";
 import QRCode from "react-qr-code";
-import { Task, UUID } from "../types/user";
-import { calculateDateDifference, saveQRCode, showToast } from "../utils";
+import { Task, UUID } from "../../types/user";
+import { calculateDateDifference, saveQRCode, showToast } from "../../utils";
 import Marquee from "react-fast-marquee";
-import { TaskIcon } from ".";
+import { TaskIcon } from "..";
 
 interface TaskMenuProps {
   selectedTaskId: UUID | null;
@@ -214,7 +216,8 @@ export const TaskMenu: React.FC<TaskMenuProps> = ({
     const voiceName = voices.find((voice) => voice.name === settings[0].voice);
     const voiceVolume = settings[0].voiceVolume;
     const taskName = selectedTask?.name || "";
-    const taskDescription = selectedTask?.description || "";
+    const taskDescription =
+      selectedTask?.description?.replace(/((?:https?):\/\/[^\s/$.?#].[^\s]*)/gi, "[link]") || "";
     // Read task date in voice language
     const taskDate = new Intl.DateTimeFormat(voice ? voice.lang : navigator.language, {
       dateStyle: "full",
@@ -543,10 +546,10 @@ export const TaskMenu: React.FC<TaskMenuProps> = ({
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
-                marginTop: "16px",
               }}
             >
               <Button
+                variant="outlined"
                 onClick={() =>
                   saveQRCode(tasks.find((task) => task.id === selectedTaskId)?.name || "")
                 }
@@ -555,6 +558,15 @@ export const TaskMenu: React.FC<TaskMenuProps> = ({
               </Button>
             </Box>
           </CustomTabPanel>
+          <Alert severity="info" sx={{ mt: "20px" }}>
+            <AlertTitle>Share Your Task</AlertTitle>
+            Share your task with others using the link or QR code. Copy the link to share manually
+            or use the share button to send it via other apps. You can also download the QR code for
+            easy access.
+          </Alert>
+          {/* <Alert severity="warning" style={{ borderRadius: "0 0 12px 12px" }}>
+            Anyone with access to this link will be able to view your name and task details.
+          </Alert> */}
         </DialogContent>
         <DialogActions>
           <DialogBtn onClick={() => setShowShareDialog(false)}>Close</DialogBtn>

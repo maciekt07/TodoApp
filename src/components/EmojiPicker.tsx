@@ -190,13 +190,14 @@ export const CustomEmojiPicker = ({ emoji, setEmoji, color, width, theme }: Emoj
                 Emojis may not load correctly when offline. Try switching to the native emoji style.
                 <br />
                 <Button
+                  variant="outlined"
                   onClick={() => {
                     setUser((prevUser) => ({
                       ...prevUser,
                       emojisStyle: EmojiStyle.NATIVE,
                     }));
                   }}
-                  sx={{ borderRadius: "12px", p: "10px 20px" }}
+                  sx={{ borderRadius: "12px", p: "10px 20px", mt: "12px" }}
                 >
                   Change Style
                 </Button>

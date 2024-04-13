@@ -51,6 +51,13 @@ const commonComponentProps: Theme["components"] = {
       },
     },
   },
+  MuiAlert: {
+    styleOverrides: {
+      root: {
+        borderRadius: "16px",
+      },
+    },
+  },
   MuiTextField: {
     styleOverrides: {
       root: {
@@ -62,7 +69,6 @@ const commonComponentProps: Theme["components"] = {
   },
 };
 
-// eslint-disable-next-line react-refresh/only-export-components
 export const createCustomTheme = (primaryColor: string, backgroundColor = "#232e58"): Theme => {
   return createTheme({
     components: {

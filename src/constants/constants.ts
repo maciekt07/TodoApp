@@ -37,3 +37,5 @@ export const MAX_CATEGORIES = 3;
  * Maximum number of tasks a user can have.
  */
 // export const MAX_TASKS: number = 200;
+
+export const URL_REGEX = /((?:https?):\/\/[^\s/$.?#].[^\s]*)/gi;

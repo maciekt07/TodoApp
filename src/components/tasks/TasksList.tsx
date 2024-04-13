@@ -1,6 +1,6 @@
-import type { Category, Task, UUID } from "../types/user";
+import type { Category, Task, UUID } from "../../types/user";
 import { ReactNode, useCallback, useContext, useEffect, useMemo, useState } from "react";
-import { calculateDateDifference, formatDate, getFontColor, iOS, showToast } from "../utils";
+import { calculateDateDifference, formatDate, getFontColor, iOS, showToast } from "../../utils";
 import {
   CancelRounded,
   Close,
@@ -8,6 +8,7 @@ import {
   DeleteRounded,
   DoneAll,
   DoneRounded,
+  ImageRounded,
   Link,
   MoreVert,
   PushPinRounded,
@@ -24,10 +25,11 @@ import {
   Tooltip,
 } from "@mui/material";
 import { Emoji, EmojiStyle } from "emoji-picker-react";
-import { CategoryBadge, EditTask, TaskIcon, TaskMenu } from ".";
+import { CategoryBadge, EditTask, TaskIcon, TaskMenu } from "..";
 import {
   CategoriesListContainer,
   ColorPalette,
+  DescriptionLink,
   DialogBtn,
   EmojiContainer,
   HighlightedText,
@@ -48,19 +50,19 @@ import {
   TaskName,
   TasksContainer,
   TimeLeft,
-} from "../styles";
-import { useResponsiveDisplay } from "../hooks/useResponsiveDisplay";
-import { UserContext } from "../contexts/UserContext";
-import { useStorageState } from "../hooks/useStorageState";
-import { DESCRIPTION_SHORT_LENGTH } from "../constants";
-import { useCtrlS } from "../hooks/useCtrlS";
+} from "../../styles";
+import { useResponsiveDisplay } from "../../hooks/useResponsiveDisplay";
+import { UserContext } from "../../contexts/UserContext";
+import { useStorageState } from "../../hooks/useStorageState";
+import { DESCRIPTION_SHORT_LENGTH } from "../../constants";
+import { useCtrlS } from "../../hooks/useCtrlS";
 import { useTheme } from "@emotion/react";
 
 /**
  * Component to display a list of tasks.
  */
 
-export const Tasks: React.FC = () => {
+export const TasksList: React.FC = () => {
   const { user, setUser } = useContext(UserContext);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
@@ -264,7 +266,7 @@ export const Tasks: React.FC = () => {
     });
   };
 
-  const highlightMatchingText = (text: string, search: string): ReactNode => {
+  const highlightMatchingText = (text: string): ReactNode => {
     if (!search) {
       return text;
     }
@@ -312,6 +314,60 @@ export const Tasks: React.FC = () => {
     checkOverdueTasks(user.tasks);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  // Renders the task description with optional hyperlink parsing and text highlighting.
+  const renderTaskDescription = (task: Task): JSX.Element | null => {
+    if (!task || !task.description) {
+      return null;
+    }
+
+    const { description, color, id } = task;
+    const isExpanded = expandedTasks.has(id);
+    const URL_REGEX = /((?:https?):\/\/[^\s/$.?#].[^\s]*)/gi;
+
+    const highlightedDescription = isExpanded
+      ? description
+      : description.slice(0, DESCRIPTION_SHORT_LENGTH);
+
+    const parts = highlightedDescription.split(URL_REGEX);
+
+    const descriptionWithLinks = parts.map((part, index) => {
+      if (index % 2 === 0) {
+        return highlightMatchingText(part);
+      } else {
+        const url = new URL(part);
+        const domain = url.hostname;
+        let icon = null;
+        // if (domain === "github.com") {
+        //   icon = <GitHub sx={iconStyle} />;
+        // } else
+        if (part.match(/\.(jpeg|jpg|gif|png)$/) != null) {
+          icon = <ImageRounded />;
+        } else {
+          icon = <Link />;
+        }
+
+        return (
+          <Tooltip title={part} key={index}>
+            <DescriptionLink clr={color} onClick={() => window.open(part)}>
+              <span
+                style={{
+                  wordBreak: "break-all",
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "4px",
+                }}
+              >
+                {icon} {highlightMatchingText(domain)}
+              </span>
+            </DescriptionLink>
+          </Tooltip>
+        );
+      }
+    });
+
+    return <div>{descriptionWithLinks}</div>;
+  };
 
   return (
     <>
@@ -514,7 +570,7 @@ export const Tasks: React.FC = () => {
                   </Pinned>
                 )}
                 <TaskHeader>
-                  <TaskName done={task.done}>{highlightMatchingText(task.name, search)}</TaskName>
+                  <TaskName done={task.done}>{highlightMatchingText(task.name)}</TaskName>
                   <Tooltip
                     title={new Intl.DateTimeFormat(navigator.language, {
                       dateStyle: "full",
@@ -524,13 +580,9 @@ export const Tasks: React.FC = () => {
                     <TaskDate>{formatDate(new Date(task.date))}</TaskDate>
                   </Tooltip>
                 </TaskHeader>
+
                 <TaskDescription done={task.done}>
-                  {highlightMatchingText(
-                    expandedTasks.has(task.id) || !task.description
-                      ? task.description || ""
-                      : task.description?.slice(0, DESCRIPTION_SHORT_LENGTH) || "",
-                    search
-                  )}
+                  {renderTaskDescription(task)}{" "}
                   {(!open || task.id !== selectedTaskId || isMobile) &&
                     task.description &&
                     task.description.length > DESCRIPTION_SHORT_LENGTH && (

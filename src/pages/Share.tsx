@@ -1,5 +1,14 @@
-import { Dialog, DialogActions, DialogContent, DialogTitle, Tooltip } from "@mui/material";
 import {
+  Alert,
+  AlertTitle,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  Tooltip,
+} from "@mui/material";
+import {
+  DescriptionLink,
   DialogBtn,
   EmojiContainer,
   Pinned,
@@ -22,9 +31,10 @@ import {
   AddTaskRounded,
   DoNotDisturbAltRounded,
   DoneRounded,
+  LinkOff,
   PushPinRounded,
 } from "@mui/icons-material";
-import { USER_NAME_MAX_LENGTH } from "../constants";
+import { URL_REGEX, USER_NAME_MAX_LENGTH } from "../constants";
 import { CategoryBadge } from "../components";
 import Home from "./Home";
 
@@ -126,9 +136,52 @@ const SharePage = () => {
       showToast(
         <div>
           Added shared task - <b translate="no">{taskData.name}</b>
-        </div>
+        </div>,
+        {
+          icon: <AddTaskRounded />,
+        }
       );
     }
+  };
+
+  // Renders the task description with optional hyperlink parsing and text highlighting.
+  const renderTaskDescription = (task: Task): JSX.Element | null => {
+    if (!task || !task.description) {
+      return null;
+    }
+
+    const { description, color } = task;
+
+    const parts = description.split(URL_REGEX);
+
+    const descriptionWithLinks = parts.map((part, index) => {
+      if (index % 2 === 0) {
+        return part;
+      } else {
+        // Store link part in state
+        const url = new URL(part);
+        const domain = url.hostname;
+
+        return (
+          <Tooltip title={part} key={index}>
+            <DescriptionLink clr={color} disabled>
+              <span
+                style={{
+                  wordBreak: "break-all",
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "2px",
+                }}
+              >
+                <LinkOff sx={{ verticalAlign: "middle" }} /> {domain}
+              </span>
+            </DescriptionLink>
+          </Tooltip>
+        );
+      }
+    });
+
+    return <div>{descriptionWithLinks}</div>;
   };
 
   return (
@@ -194,7 +247,9 @@ const SharePage = () => {
                       <TaskDate>{formatDate(new Date(taskData.date))}</TaskDate>
                     </Tooltip>
                   </TaskHeader>
-                  <TaskDescription done={taskData.done}>{taskData.description}</TaskDescription>
+                  <TaskDescription done={taskData.done}>
+                    {renderTaskDescription(taskData)}
+                  </TaskDescription>
                   {taskData.deadline && (
                     <TimeLeft done={taskData.done}>
                       <RingAlarm
@@ -237,6 +292,26 @@ const SharePage = () => {
                   </div>
                 </TaskInfo>
               </TaskContainer>
+              {taskData && taskData.description && taskData.description.match(URL_REGEX) ? (
+                <Alert sx={{ mt: "20px" }} severity="warning">
+                  <AlertTitle>This task contains the following links:</AlertTitle>{" "}
+                  {(() => {
+                    const links = taskData.description.match(URL_REGEX)?.map((link) => link);
+                    if (links) {
+                      const listFormatter = new Intl.ListFormat("en-US", {
+                        style: "long",
+                        type: "conjunction",
+                      });
+                      return (
+                        <span style={{ wordBreak: "break-all" }}>
+                          {listFormatter.format(links)}
+                        </span>
+                      );
+                    }
+                    return null;
+                  })()}
+                </Alert>
+              ) : null}
             </DialogContent>
             <DialogActions>
               <DialogBtn color="error" onClick={() => n("/")}>

@@ -1,5 +1,5 @@
 import { useState, useEffect, ReactNode, useContext, useMemo } from "react";
-import { Tasks } from "../components";
+import { TasksList } from "../components";
 import {
   AddButton,
   GreetingHeader,
@@ -169,7 +169,7 @@ const Home = () => {
         </TasksCountContainer>
       )}
 
-      <Tasks />
+      <TasksList />
 
       {!isMobile && (
         <Tooltip title={tasks.length > 0 ? "Add New Task" : "Add Task"} placement="left">

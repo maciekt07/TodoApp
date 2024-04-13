@@ -1,8 +1,8 @@
-import { ColorPalette } from ".";
-import { fadeIn, ring, scale } from "./keyframes.styled";
+import { ColorPalette } from "../../styles";
+import { fadeIn, ring, scale } from "../../styles/keyframes.styled";
 import styled from "@emotion/styled";
 import { Button, Checkbox, TextField, css } from "@mui/material";
-import { getFontColor } from "../utils";
+import { getFontColor } from "../../utils";
 import { Alarm, RadioButtonChecked, RadioButtonUnchecked } from "@mui/icons-material";
 
 interface TaskComponentProps {
@@ -222,6 +222,27 @@ export const HighlightedText = styled.span`
   font-weight: bold;
   border: 1px solid #ffffff5f;
   transition: 0.3s all;
+`;
+
+// sx={{
+//   m: 0,
+//   color: getFontColor(color),
+//   p: "0 2px",
+//   display: "inline-block",
+//   background: `${getFontColor(color)}1e`,
+// }}
+
+export const DescriptionLink = styled(Button)<{ clr: string }>`
+  margin: 0;
+  color: ${({ clr }) => getFontColor(clr)};
+  padding: 0 4px;
+  display: inline-block;
+  background: ${({ clr }) => getFontColor(clr)}28;
+  text-transform: lowercase;
+  border-radius: 6px;
+  &:hover {
+    background: ${({ clr }) => getFontColor(clr)}19;
+  }
 `;
 
 export const SearchInput = styled(TextField)`

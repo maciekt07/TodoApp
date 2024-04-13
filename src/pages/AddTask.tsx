@@ -2,7 +2,7 @@ import { Category, Task } from "../types/user";
 import { useState, useEffect, useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { AddTaskButton, ColorPalette, Container, StyledInput } from "../styles";
-import { CancelRounded, Edit } from "@mui/icons-material";
+import { AddTaskRounded, CancelRounded, Edit } from "@mui/icons-material";
 import { Button, IconButton, InputAdornment, Tooltip } from "@mui/material";
 import { DESCRIPTION_MAX_LENGTH, TASK_NAME_MAX_LENGTH } from "../constants";
 import { CategorySelect, ColorPicker, TopBar, CustomEmojiPicker } from "../components";
@@ -76,54 +76,51 @@ const AddTask = () => {
   };
 
   const handleAddTask = () => {
-    if (name !== "") {
-      if (name.length > TASK_NAME_MAX_LENGTH || description.length > DESCRIPTION_MAX_LENGTH) {
-        return; // Do not add the task if the name or description exceeds the maximum length
-      }
-
-      const newTask: Task = {
-        id: crypto.randomUUID(),
-        done: false,
-        pinned: false,
-        name,
-        description: description !== "" ? description : undefined,
-        emoji: emoji ? emoji : undefined,
-        color,
-        date: new Date(),
-        deadline: deadline !== "" ? new Date(deadline) : undefined,
-        category: selectedCategories ? selectedCategories : [],
-      };
-
-      setUser((prevUser) => ({
-        ...prevUser,
-        tasks: [...prevUser.tasks, newTask],
-      }));
-
-      n("/");
-
-      showToast(
-        <div>
-          Added task - <b>{newTask.name}</b>
-        </div>
-      );
-
-      const itemsToRemove = ["name", "color", "description", "emoji", "deadline", "categories"];
-      itemsToRemove.map((item) => sessionStorage.removeItem(item));
-    } else {
+    if (name === "") {
       showToast("Task name is required.", { type: "error" });
+      return;
     }
+
+    if (nameError !== "" || descriptionError !== "") {
+      return; // Do not add the task if the name or description exceeds the maximum length
+    }
+
+    const newTask: Task = {
+      id: crypto.randomUUID(),
+      done: false,
+      pinned: false,
+      name,
+      description: description !== "" ? description : undefined,
+      emoji: emoji ? emoji : undefined,
+      color,
+      date: new Date(),
+      deadline: deadline !== "" ? new Date(deadline) : undefined,
+      category: selectedCategories ? selectedCategories : [],
+    };
+
+    setUser((prevUser) => ({
+      ...prevUser,
+      tasks: [...prevUser.tasks, newTask],
+    }));
+
+    n("/");
+
+    showToast(
+      <div>
+        Added task - <b>{newTask.name}</b>
+      </div>,
+      {
+        icon: <AddTaskRounded />,
+      }
+    );
+
+    const itemsToRemove = ["name", "color", "description", "emoji", "deadline", "categories"];
+    itemsToRemove.map((item) => sessionStorage.removeItem(item));
   };
 
   return (
     <>
       <TopBar title="Add New Task" />
-      <button
-        onClick={() => {
-          showToast("xddd", { type: "loading" });
-        }}
-      >
-        xddd
-      </button>
       <Container>
         <CustomEmojiPicker
           emoji={typeof emoji === "string" ? emoji : undefined}

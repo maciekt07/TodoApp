@@ -8,7 +8,7 @@ export default defineConfig({
     react(),
     VitePWA({
       devOptions: {
-        enabled: true,
+        enabled: false,
         type: "module",
       },
       // cache all the imports

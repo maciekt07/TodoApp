@@ -1,4 +1,5 @@
 import type { GitHubBranchResponse, GitHubInfoResponse, GitHubRepoResponse } from "../types/github";
+import { showToast } from "../utils";
 
 export const fetchGitHubInfo = async (): Promise<GitHubInfoResponse> => {
   const username = "maciekt07";
@@ -15,7 +16,6 @@ export const fetchGitHubInfo = async (): Promise<GitHubInfoResponse> => {
         repoResponse.json() as Promise<GitHubRepoResponse>,
         branchResponse.json() as Promise<GitHubBranchResponse>,
       ]);
-
       return {
         repoData,
         branchData,
@@ -25,6 +25,7 @@ export const fetchGitHubInfo = async (): Promise<GitHubInfoResponse> => {
     }
   } catch (error) {
     console.error(error);
+    showToast("Failed to fetch github api.", { type: "error" });
     return { repoData: {} as GitHubRepoResponse, branchData: {} as GitHubBranchResponse };
   }
 };
