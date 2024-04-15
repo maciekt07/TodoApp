@@ -8,12 +8,14 @@ import {
   DeleteRounded,
   DoneAll,
   DoneRounded,
+  GitHub,
   ImageRounded,
   Link,
   MoreVert,
   PushPinRounded,
   RadioButtonChecked,
   Search,
+  YouTube,
 } from "@mui/icons-material";
 import {
   Dialog,
@@ -28,9 +30,7 @@ import { Emoji, EmojiStyle } from "emoji-picker-react";
 import { CategoryBadge, EditTask, TaskIcon, TaskMenu } from "..";
 import {
   CategoriesListContainer,
-  ColorPalette,
   DescriptionLink,
-  DialogBtn,
   EmojiContainer,
   HighlightedText,
   NoTasks,
@@ -50,11 +50,12 @@ import {
   TaskName,
   TasksContainer,
   TimeLeft,
-} from "../../styles";
+} from "./tasks.styled";
+import { ColorPalette, DialogBtn } from "../../styles";
 import { useResponsiveDisplay } from "../../hooks/useResponsiveDisplay";
 import { UserContext } from "../../contexts/UserContext";
 import { useStorageState } from "../../hooks/useStorageState";
-import { DESCRIPTION_SHORT_LENGTH } from "../../constants";
+import { DESCRIPTION_SHORT_LENGTH, URL_REGEX } from "../../constants";
 import { useCtrlS } from "../../hooks/useCtrlS";
 import { useTheme } from "@emotion/react";
 
@@ -102,8 +103,6 @@ export const TasksList: React.FC = () => {
 
   const selectedTask = user.tasks.find((task) => task.id === selectedTaskId) || ({} as Task);
 
-  // const scrollToRefs = useRef<{ [key: string]: HTMLDivElement | null }>({});
-
   // Handler for clicking the more options button in a task
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>, taskId: UUID) => {
     setAnchorEl(event.currentTarget);
@@ -112,14 +111,6 @@ export const TasksList: React.FC = () => {
     if (!isMobile && !expandedTasks.has(taskId)) {
       toggleShowMore(taskId);
     }
-    // const element = scrollToRefs.current[taskId.toString()];
-    // if (element) {
-    //   element.scrollIntoView({
-    //     behavior: "smooth",
-    //     block: "center",
-    //     inline: "center",
-    //   });
-    // }
   };
 
   const handleCloseMoreMenu = () => {
@@ -323,8 +314,6 @@ export const TasksList: React.FC = () => {
 
     const { description, color, id } = task;
     const isExpanded = expandedTasks.has(id);
-    const URL_REGEX = /((?:https?):\/\/[^\s/$.?#].[^\s]*)/gi;
-
     const highlightedDescription = isExpanded
       ? description
       : description.slice(0, DESCRIPTION_SHORT_LENGTH);
@@ -336,13 +325,14 @@ export const TasksList: React.FC = () => {
         return highlightMatchingText(part);
       } else {
         const url = new URL(part);
-        const domain = url.hostname;
+        const domain = url.hostname.replace("www.", "");
         let icon = null;
-        // if (domain === "github.com") {
-        //   icon = <GitHub sx={iconStyle} />;
-        // } else
         if (part.match(/\.(jpeg|jpg|gif|png)$/) != null) {
           icon = <ImageRounded />;
+        } else if (domain === "youtube.com") {
+          icon = <YouTube />;
+        } else if (domain === "github.com") {
+          icon = <GitHub sx={{ fontSize: "20px" }} />;
         } else {
           icon = <Link />;
         }
@@ -477,7 +467,7 @@ export const TasksList: React.FC = () => {
               </span>
             </div>
             {/* TODO: add more features */}
-            <div style={{ display: "flex", alignItems: "center", gap: "4px" }}>
+            <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
               <Tooltip title="Mark selected as done">
                 <IconButton
                   sx={{ color: getFontColor(theme.secondary) }}
@@ -585,7 +575,7 @@ export const TasksList: React.FC = () => {
                   {renderTaskDescription(task)}{" "}
                   {(!open || task.id !== selectedTaskId || isMobile) &&
                     task.description &&
-                    task.description.length > DESCRIPTION_SHORT_LENGTH && (
+                    task.description.replace(URL_REGEX, "").length > DESCRIPTION_SHORT_LENGTH && (
                       <ShowMoreBtn onClick={() => toggleShowMore(task.id)} clr={task.color}>
                         {expandedTasks.has(task.id) ? "Show less" : "Show more"}
                       </ShowMoreBtn>

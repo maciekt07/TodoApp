@@ -6,7 +6,7 @@ export const TASK_NAME_MAX_LENGTH = 40;
 /**
  * Maximum length allowed for task descriptions.
  */
-export const DESCRIPTION_MAX_LENGTH = 300;
+export const DESCRIPTION_MAX_LENGTH = 350;
 
 /**
  * Shorter length for displaying descriptions with a "Show More" button.
@@ -38,4 +38,7 @@ export const MAX_CATEGORIES = 3;
  */
 // export const MAX_TASKS: number = 200;
 
+/**
+ * Regular expression to match URLs in a string
+ */
 export const URL_REGEX = /((?:https?):\/\/[^\s/$.?#].[^\s]*)/gi;

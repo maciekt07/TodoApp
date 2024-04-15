@@ -1,9 +1,17 @@
 import React, { ErrorInfo } from "react";
 import { StyledLink } from "../styles";
 import { Emoji } from "emoji-picker-react";
-import { Accordion, AccordionDetails, AccordionSummary, Button, Typography } from "@mui/material";
+import {
+  Accordion,
+  AccordionDetails,
+  AccordionSummary,
+  Alert,
+  Button,
+  Typography,
+} from "@mui/material";
 import { exportTasksToJson, getFontColor, showToast } from "../utils";
 import {
+  DataObjectRounded,
   DeleteForeverRounded,
   DescriptionRounded,
   ErrorOutlineRounded,
@@ -27,7 +35,7 @@ interface ErrorBoundaryState {
  * ErrorBoundary component that catches and displays errors.
  */
 
-export class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoundaryState> {
+class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoundaryState> {
   static contextType = UserContext;
   declare context: React.ContextType<typeof UserContext>;
   constructor(props: ErrorBoundaryProps) {
@@ -49,9 +57,16 @@ export class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoun
     console.error("Error Info:", errorInfo);
   }
 
+  handleClearData = () => {
+    localStorage.clear();
+    sessionStorage.clear();
+    location.reload();
+  };
+
   render() {
     if (this.state.hasError) {
       const { user } = this.context;
+      const { tasks } = user;
 
       return (
         <div>
@@ -61,34 +76,26 @@ export class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoun
               <Emoji size={38} unified="1f644" />
             </span>
           </ErrorHeader>
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              margin: "8px",
-            }}
-          >
+          <ErrorIconContainer>
             <TaskIcon scale={0.6} variant="error" />
-          </div>
+          </ErrorIconContainer>
           <h2>
             To fix it, try clearing your local files (cookies and cache) and then refresh the page.
             If the problem persists, please report the issue via{" "}
-            <StyledLink href="https://github.com/maciekt07/TodoApp/issues">
+            <StyledLink translate="no" href="https://github.com/maciekt07/TodoApp/issues">
               Github Issues
             </StyledLink>
             .
           </h2>
+          <Alert severity="error" variant="filled" sx={{ mt: "-8px", mb: "18px" }}>
+            By cleaning app data, you will lose all of your tasks.
+          </Alert>
           <Button
             size="large"
             variant="outlined"
             color="warning"
             sx={{ p: "10px 20px", borderRadius: "12px" }}
-            onClick={() => {
-              localStorage.clear();
-              sessionStorage.clear();
-              location.reload();
-            }}
+            onClick={this.handleClearData}
           >
             <DeleteForeverRounded /> &nbsp; Auto Clear
           </Button>
@@ -111,25 +118,28 @@ export class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoun
               </Typography>
             </AccordionSummary>
             <AccordionDetails>
-              <div style={{ opacity: 0.8, fontSize: "12px" }}>
+              <div translate="no" style={{ opacity: 0.8, fontSize: "12px" }}>
                 {this.state.error?.stack?.replace(this.state.error?.message, "")}
               </div>
             </AccordionDetails>
           </ErrorAccordion>
 
           <pre>
+            <UserDataLabel>
+              <DataObjectRounded /> &nbsp; User Data
+            </UserDataLabel>
             <Button
               variant="outlined"
-              sx={{ m: "14px 6px", p: "12px 20px", borderRadius: "14px" }}
+              sx={{ ml: "6px", my: "18px", p: "12px 20px", borderRadius: "14px" }}
               onClick={() => {
-                exportTasksToJson(user.tasks);
-                showToast(`Exported all tasks (${user.tasks.length})`);
+                exportTasksToJson(tasks);
+                showToast(`Exported all tasks (${tasks.length})`);
               }}
             >
               <FileDownload /> &nbsp; Export Tasks To JSON
             </Button>
             <br />
-            <code>{JSON.stringify(user, null, 4)}</code>
+            <code translate="no">{JSON.stringify(user, null, 4)}</code>
           </pre>
         </div>
       );
@@ -138,7 +148,14 @@ export class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoun
     return this.props.children;
   }
 }
-// eslint-disable-next-line react-refresh/only-export-components
+
+const ErrorIconContainer = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 8px;
+`;
+
 const ErrorHeader = styled.h1`
   margin-top: 32px;
   margin-bottom: 32px;
@@ -157,19 +174,27 @@ const ErrorHeader = styled.h1`
   }
 `;
 
-// eslint-disable-next-line react-refresh/only-export-components
 const ErrorAccordion = styled(Accordion)`
-  /* border: ${({ theme }) => `2px solid ${getFontColor(theme.secondary)}2e`}; */
   color: ${({ theme }) => getFontColor(theme.secondary)};
   border-radius: 14px !important;
-  background: ${({ theme }) => getFontColor(theme.secondary) + "18"};
+  background: ${({ theme }) => getFontColor(theme.secondary)}18;
   box-shadow: none;
   padding: 4px;
   margin-bottom: 18px;
 `;
 
-// eslint-disable-next-line react-refresh/only-export-components
 const ErrorExpandIcon = styled(ExpandMoreRounded)`
   color: ${({ theme }) => getFontColor(theme.secondary)};
   font-size: 32px;
 `;
+
+const UserDataLabel = styled.p`
+  font-size: 18px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 8px 0;
+`;
+
+export default ErrorBoundary;

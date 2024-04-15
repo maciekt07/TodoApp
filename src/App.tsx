@@ -4,7 +4,7 @@ import type { User } from "./types/user";
 import { ColorPalette, GlobalStyles, Themes } from "./styles";
 import { ThemeProvider } from "@mui/material";
 import { useCallback, useEffect } from "react";
-import { ErrorBoundary } from "./components";
+import ErrorBoundary from "./components/ErrorBoundary";
 import MainLayout from "./layouts/MainLayout";
 import AppRouter from "./router";
 import { Toaster } from "react-hot-toast";

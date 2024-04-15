@@ -8,6 +8,7 @@ import {
   DialogTitle,
   Grid,
   IconButton,
+  InputAdornment,
   TextField,
   Tooltip,
 } from "@mui/material";
@@ -17,6 +18,7 @@ import {
   AddAPhotoRounded,
   CheckRounded,
   Delete,
+  LinkRounded,
   Logout,
   PersonalVideoRounded,
   SaveRounded,
@@ -255,6 +257,7 @@ const UserSettings = () => {
           <TextField
             autoFocus
             label="Link to profile picture"
+            placeholder="Enter link to profile picture..."
             sx={{ my: "8px", width: "300px" }}
             value={profilePictureURL}
             onChange={(e) => {
@@ -269,20 +272,30 @@ const UserSettings = () => {
             }
             autoComplete="url"
             type="url"
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">
+                  <LinkRounded />
+                </InputAdornment>
+              ),
+            }}
           />
           <br />
-          <Button
-            onClick={() => {
-              handleCloseImageDialog();
-              showToast("Deleted profile image.");
-              setUser({ ...user, profilePicture: null });
-            }}
-            color="error"
-            variant="outlined"
-            sx={{ margin: "16px 0", p: "12px 20px", borderRadius: "14px" }}
-          >
-            <Delete /> &nbsp; Delete Image
-          </Button>
+          {profilePicture !== null && (
+            <Button
+              fullWidth
+              onClick={() => {
+                handleCloseImageDialog();
+                showToast("Deleted profile image.");
+                setUser({ ...user, profilePicture: null });
+              }}
+              color="error"
+              variant="outlined"
+              sx={{ margin: "16px 0", p: "12px 20px", borderRadius: "14px" }}
+            >
+              <Delete /> &nbsp; Delete Image
+            </Button>
+          )}
         </DialogContent>
         <DialogActions>
           <DialogBtn onClick={handleCloseImageDialog}>Cancel</DialogBtn>

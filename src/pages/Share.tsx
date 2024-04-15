@@ -9,7 +9,6 @@ import {
 } from "@mui/material";
 import {
   DescriptionLink,
-  DialogBtn,
   EmojiContainer,
   Pinned,
   RingAlarm,
@@ -20,7 +19,8 @@ import {
   TaskInfo,
   TaskName,
   TimeLeft,
-} from "../styles";
+} from "../components/tasks/tasks.styled";
+import { DialogBtn } from "../styles";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useContext, useEffect, useState } from "react";
 import type { Task } from "../types/user";

@@ -14,6 +14,7 @@ import { ColorPalette, fadeIn } from "../styles";
 import { UserContext } from "../contexts/UserContext";
 import { useOnlineStatus } from "../hooks/useOnlineStatus";
 import { iOS } from "../utils/iOS";
+import { useTheme } from "@emotion/react";
 
 interface EmojiPickerProps {
   emoji?: string;
@@ -34,6 +35,7 @@ export const CustomEmojiPicker = ({ emoji, setEmoji, color, width, theme }: Emoj
   const [currentEmoji, setCurrentEmoji] = useState<string | null>(emoji || null);
 
   const isOnline = useOnlineStatus();
+  const emotionTheme = useTheme();
 
   //FIXME: emojis doesnt load on first load using Emoji component
 
@@ -164,7 +166,7 @@ export const CustomEmojiPicker = ({ emoji, setEmoji, color, width, theme }: Emoj
             sx={{
               width: "96px",
               height: "96px",
-              background: color || ColorPalette.purple,
+              background: color || emotionTheme.primary,
               transition: ".3s all",
               cursor: "pointer",
             }}

@@ -49,7 +49,7 @@ export const defaultUser: User = {
   colorList: [
     "#FF69B4",
     "#FF22B4",
-    "#c6a7ff",
+    "#C6A7FF",
     "#7ACCFA",
     "#4A9DFF",
     "#5061FF",

@@ -99,19 +99,23 @@ export const ColorPicker: React.FC<ColorPickerProps> = ({
     setAddColorVal(e.target.value as string);
 
   const handleAddColor = () => {
-    if (!colorList.includes(addColorVal)) {
-      setUser({ ...user, colorList: [...colorList, addColorVal] });
-
-      showToast(
-        <div>
-          Added <b>{addColorVal.toUpperCase()}</b> to your color list.
-        </div>
-      );
-
-      handleAddDialogClose();
-    } else {
+    if (
+      colorList.some((color) => color.toLowerCase() === addColorVal.toLowerCase()) ||
+      addColorVal.toLowerCase() === theme.primary.toLowerCase()
+    ) {
       showToast("Color is already in color list.", { type: "error" });
+      return;
     }
+
+    setUser({ ...user, colorList: [...colorList, addColorVal.toUpperCase()] });
+
+    showToast(
+      <div>
+        Added <b>{addColorVal.toUpperCase()}</b> to your color list.
+      </div>
+    );
+
+    handleAddDialogClose();
   };
 
   const handleDeleteColor = () => {

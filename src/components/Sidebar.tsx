@@ -133,6 +133,9 @@ export const ProfileSidebar = () => {
         if (choiceResult.outcome === "accepted") {
           showToast("App installed successfully!");
         }
+        if (choiceResult.outcome === "dismissed") {
+          showToast("Installation dismissed.", { type: "error" });
+        }
       });
     }
   };

@@ -143,7 +143,7 @@ const Categories = () => {
       }));
 
       setName("");
-      setColor(ColorPalette.purple);
+      setColor(theme.primary);
       setEmoji("");
     } else {
       showToast("Category name is required.", { type: "error" });
@@ -153,7 +153,7 @@ const Categories = () => {
   const handleEditDimiss = () => {
     setSelectedCategoryId(undefined);
     setOpenEditDialog(false);
-    setEditColor(ColorPalette.purple);
+    setEditColor(theme.primary);
     setEditName("");
     setEditEmoji(undefined);
   };

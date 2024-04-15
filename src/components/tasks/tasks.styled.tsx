@@ -17,7 +17,7 @@ export const TaskContainer = styled.div<TaskComponentProps>`
   align-items: center;
   margin-top: 12px;
   transition: 0.3s all;
-  background-color: ${({ backgroundColor }) => backgroundColor};
+  background-color: ${({ backgroundColor, done }) => `${backgroundColor}${done ? "cc" : ""}`};
   opacity: ${({ done }) => (done ? 0.8 : 1)};
   color: ${({ backgroundColor }) => getFontColor(backgroundColor)};
   border-left: ${({ done }) => (done ? "8px solid #00ff1ee3" : "1px solid transparent")};
@@ -71,6 +71,7 @@ export const TaskDate = styled.p`
   font-size: 14px;
   font-style: italic;
   font-weight: 300;
+  backdrop-filter: none !important;
 `;
 
 export const TaskDescription = styled.p<{ done: boolean }>`
@@ -147,6 +148,10 @@ export const SelectedTasksContainer = styled.div`
   background: ${({ theme }) => getFontColor(theme.secondary)}29;
   padding: 16px 20px;
   border-radius: 18px;
+  position: sticky;
+  top: 64px;
+  z-index: 1;
+  backdrop-filter: blur(24px);
 `;
 
 export const StyledRadio = styled(Checkbox)<{ clr: string }>`

@@ -548,14 +548,14 @@ export const TaskMenu: React.FC<TaskMenuProps> = ({
                 justifyContent: "center",
               }}
             >
-              <Button
+              <DownloadQrCodeBtn
                 variant="outlined"
                 onClick={() =>
                   saveQRCode(tasks.find((task) => task.id === selectedTaskId)?.name || "")
                 }
               >
                 <DownloadRounded /> &nbsp; Download QR Code
-              </Button>
+              </DownloadQrCodeBtn>
             </Box>
           </CustomTabPanel>
           <Alert severity="info" sx={{ mt: "20px" }}>
@@ -564,7 +564,7 @@ export const TaskMenu: React.FC<TaskMenuProps> = ({
             or use the share button to send it via other apps. You can also download the QR code for
             easy access.
           </Alert>
-          {/* <Alert severity="warning" style={{ borderRadius: "0 0 12px 12px" }}>
+          {/* <Alert severity="warning" sx={{ mt: "8px" }}>
             Anyone with access to this link will be able to view your name and task details.
           </Alert> */}
         </DialogContent>
@@ -647,6 +647,16 @@ const ShareField = styled(TextField)`
   }
 `;
 
+const DownloadQrCodeBtn = styled(Button)`
+  padding: 12px 24px;
+  border-radius: 14px;
+  margin-top: 16px;
+  @media (max-width: 520px) {
+    margin-top: -2px;
+  }
+`;
+// p: "12px 24px",
+// borderRadius: "14px",
 const StyledTab = styled(Tab)`
   border-radius: 12px 12px 0 0;
   width: 50%;

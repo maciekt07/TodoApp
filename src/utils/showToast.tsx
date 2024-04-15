@@ -18,6 +18,7 @@ export const showToast = (
   message: string | ReactNode,
   { type, disableClickDismiss, disableVibrate, ...toastOptions }: ToastProps = {} as ToastProps
 ): void => {
+  // Selects the appropriate toast function based on the specified type or defaults to success.
   const toastFunction = {
     error: toast.error,
     success: toast.success,
@@ -25,16 +26,22 @@ export const showToast = (
     blank: toast,
     custom: toast.custom,
   }[type || "success"];
-  // Vibrate
+  // Vibrates the device based on the toast type, unless disabled or not supported.
   if (!disableVibrate && "vibrate" in navigator) {
-    type === "error" ? navigator.vibrate([100, 50, 100]) : navigator.vibrate([100]);
+    const vibrationPattern = type === "error" ? [100, 50, 100] : [100];
+    try {
+      navigator.vibrate(vibrationPattern);
+    } catch (err) {
+      console.log(err);
+    }
   }
+  // Display the toast notification.
   toastFunction(
     (t: Toast) => (
       <div onClick={!disableClickDismiss ? () => toast.dismiss(t.id) : undefined}>{message}</div>
     ),
     {
-      ...toastOptions,
+      ...toastOptions, // Passes any additional toast options.
     }
   );
 };
