@@ -13,7 +13,7 @@ import { ColorPalette } from "../styles";
 import { Emoji, EmojiStyle } from "emoji-picker-react";
 import { getFontColor, showToast } from "../utils";
 import { CSSProperties, useContext, useState } from "react";
-import { MAX_CATEGORIES } from "../constants";
+import { MAX_CATEGORIES_IN_TASK } from "../constants";
 import { UserContext } from "../contexts/UserContext";
 import { ExpandMoreRounded, RadioButtonChecked } from "@mui/icons-material";
 import { CategoryBadge } from ".";
@@ -21,7 +21,7 @@ import { useNavigate } from "react-router-dom";
 
 interface CategorySelectProps {
   selectedCategories: Category[];
-  setSelectedCategories: React.Dispatch<React.SetStateAction<Category[]>>;
+  onCategoryChange?: (categories: Category[]) => void;
   width?: CSSProperties["width"];
   fontColor?: CSSProperties["color"];
 }
@@ -31,7 +31,7 @@ interface CategorySelectProps {
  */
 export const CategorySelect: React.FC<CategorySelectProps> = ({
   selectedCategories,
-  setSelectedCategories,
+  onCategoryChange,
   width,
   fontColor,
 }) => {
@@ -44,8 +44,8 @@ export const CategorySelect: React.FC<CategorySelectProps> = ({
 
   const handleCategoryChange = (event: SelectChangeEvent<unknown>): void => {
     const selectedCategoryIds = event.target.value as UUID[];
-    if (selectedCategoryIds.length > MAX_CATEGORIES) {
-      showToast(`You cannot add more than ${MAX_CATEGORIES} categories`, {
+    if (selectedCategoryIds.length > MAX_CATEGORIES_IN_TASK) {
+      showToast(`You cannot add more than ${MAX_CATEGORIES_IN_TASK} categories`, {
         type: "error",
         position: "top-center",
       });
@@ -53,8 +53,8 @@ export const CategorySelect: React.FC<CategorySelectProps> = ({
       return;
     }
     const selectedCategories = categories.filter((cat) => selectedCategoryIds.includes(cat.id));
-    setSelectedCategories(selectedCategories);
     setSelectedCats(selectedCategories);
+    onCategoryChange && onCategoryChange(selectedCategories);
   };
 
   return (
@@ -119,10 +119,10 @@ export const CategorySelect: React.FC<CategorySelectProps> = ({
               <span
                 style={{
                   transition: ".3s color",
-                  color: selectedCats.length >= MAX_CATEGORIES ? "#f34141" : "currentcolor",
+                  color: selectedCats.length >= MAX_CATEGORIES_IN_TASK ? "#f34141" : "currentcolor",
                 }}
               >
-                (max {MAX_CATEGORIES})
+                (max {MAX_CATEGORIES_IN_TASK})
               </span>
             </b>
             {selectedCats.length > 0 && (
@@ -146,7 +146,7 @@ export const CategorySelect: React.FC<CategorySelectProps> = ({
               clr={category.color}
               translate="no"
               disable={
-                selectedCats.length >= MAX_CATEGORIES &&
+                selectedCats.length >= MAX_CATEGORIES_IN_TASK &&
                 !selectedCats.some((cat) => cat.id === category.id)
               }
             >

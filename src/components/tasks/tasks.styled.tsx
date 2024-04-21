@@ -35,7 +35,7 @@ export const EmojiContainer = styled.span<{ clr: string }>`
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: ${(props) => (props.clr === ColorPalette.fontDark ? "#4b4b4b6e" : "#dddddd9d")};
+  background-color: ${({ clr }) => (clr === ColorPalette.fontDark ? "#4b4b4b6e" : "#dddddd9d")};
   font-size: 32px;
   padding: 14px;
   width: 42px;
@@ -119,17 +119,14 @@ export const TasksContainer = styled.main`
   gap: 6px;
 `;
 
-export const TimeLeft = styled.span<{ timeUp?: boolean; done: boolean }>`
-  color: ${(props) => props.timeUp && !props.done && "#ff2a23d5"};
-  text-shadow: ${(props) => (props.timeUp && !props.done ? "0 0 8px #ff2a23d5" : "none")};
-  text-decoration: ${(props) => (props.done ? "line-through" : "none")};
+export const TimeLeft = styled.span<{ done: boolean }>`
+  text-decoration: ${({ done }) => (done ? "line-through" : "none")};
   transition: 0.3s all;
   font-size: 14px;
   margin: 4px 0;
   font-weight: 500;
   font-style: italic;
   display: flex;
-  opacity: ${(props) => (props.timeUp ? 1 : 0.9)};
 `;
 
 export const Pinned = styled.div`
@@ -229,24 +226,23 @@ export const HighlightedText = styled.span`
   transition: 0.3s all;
 `;
 
-// sx={{
-//   m: 0,
-//   color: getFontColor(color),
-//   p: "0 2px",
-//   display: "inline-block",
-//   background: `${getFontColor(color)}1e`,
-// }}
-
 export const DescriptionLink = styled(Button)<{ clr: string }>`
   margin: 0;
   color: ${({ clr }) => getFontColor(clr)};
   padding: 0 4px;
   display: inline-block;
   background: ${({ clr }) => getFontColor(clr)}28;
-  text-transform: lowercase;
+  backdrop-filter: none !important;
+  text-transform: none !important;
   border-radius: 6px;
   &:hover {
     background: ${({ clr }) => getFontColor(clr)}19;
+  }
+  & div {
+    word-break: break-all;
+    display: flex;
+    align-items: center;
+    gap: 4px;
   }
 `;
 
@@ -256,14 +252,22 @@ export const SearchInput = styled(TextField)`
   transition: 0.3s all;
   width: 100%;
   & .MuiOutlinedInput-notchedOutline {
-    border: 2px solid ${({ theme }) => theme.primary} !important;
+    border: 1px solid
+      ${({ theme }) =>
+        getFontColor(theme.secondary) === ColorPalette.fontLight
+          ? "#44479cb7"
+          : theme.primary} !important;
   }
   & .MuiOutlinedInput-root {
     padding: 2px 16px;
     border-radius: 16px;
     transition: 0.3s all;
-    background: #090b2258;
-    color: white;
+    background: ${({ theme }) =>
+      getFontColor(theme.secondary) === ColorPalette.fontLight ? "#090b2258" : "#ffffff51"};
+    color: ${({ theme }) => getFontColor(theme.secondary)};
+    & .MuiSvgIcon-root {
+      color: ${({ theme }) => getFontColor(theme.secondary)};
+    }
   }
 `;
 

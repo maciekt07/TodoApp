@@ -31,7 +31,12 @@ export const CATEGORY_NAME_MAX_LENGTH = 20;
 /**
  * Maximum number of categories can be assigned to one task
  */
-export const MAX_CATEGORIES = 3;
+export const MAX_CATEGORIES_IN_TASK = 3;
+
+/**
+ * Maximum number of colors in color picker list a user can have.
+ */
+export const MAX_COLORS_IN_LIST = 32;
 
 /**
  * Maximum number of tasks a user can have.

@@ -23,6 +23,7 @@ import {
 } from "@mui/material";
 import { useTheme } from "@emotion/react";
 import { UserContext } from "../contexts/UserContext";
+import { MAX_COLORS_IN_LIST } from "../constants";
 
 interface ColorPickerProps {
   color: string;
@@ -99,6 +100,13 @@ export const ColorPicker: React.FC<ColorPickerProps> = ({
     setAddColorVal(e.target.value as string);
 
   const handleAddColor = () => {
+    if (user.colorList.length >= MAX_COLORS_IN_LIST) {
+      showToast(`You cannot add more than ${MAX_COLORS_IN_LIST} colors to color list.`, {
+        type: "error",
+      });
+      return;
+    }
+
     if (
       colorList.some((color) => color.toLowerCase() === addColorVal.toLowerCase()) ||
       addColorVal.toLowerCase() === theme.primary.toLowerCase()

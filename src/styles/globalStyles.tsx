@@ -115,8 +115,16 @@ export const GlobalStyles = () => {
           } */
         }
         .epr-reactions {
-          background: ${getFontColor(theme.secondary)} !important;
+          background: ${getFontColor(theme.secondary) === ColorPalette.fontDark
+            ? ColorPalette.fontLight
+            : ColorPalette.fontDark} !important;
         }
+
+        .epr-emoji-category-label {
+          backdrop-filter: blur(3px);
+          -webkit-backdrop-filter: blur(3px);
+        }
+
         .epr-body,
         .MuiDialogContent-root,
         .MuiDrawer-paper,

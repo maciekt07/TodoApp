@@ -227,7 +227,7 @@ export const EditTask = ({ open, task, onClose, onSave }: EditTaskProps) => {
           <CategorySelect
             fontColor={ColorPalette.fontDark}
             selectedCategories={selectedCategories}
-            setSelectedCategories={setSelectedCategories}
+            onCategoryChange={(categories) => setSelectedCategories(categories)}
           />
         )}
         <div

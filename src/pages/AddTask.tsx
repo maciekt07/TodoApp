@@ -197,7 +197,7 @@ const AddTask = () => {
             <br />
             <CategorySelect
               selectedCategories={selectedCategories}
-              setSelectedCategories={setSelectedCategories}
+              onCategoryChange={(categories) => setSelectedCategories(categories)}
               width="400px"
               fontColor={getFontColor(theme.secondary)}
             />

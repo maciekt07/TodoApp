@@ -14,6 +14,7 @@ interface ToastProps extends ToastOptions {
  * @param toastOptions - Additional options to configure the toast notification.
  * @returns {void}
  */
+
 export const showToast = (
   message: string | ReactNode,
   { type, disableClickDismiss, disableVibrate, ...toastOptions }: ToastProps = {} as ToastProps

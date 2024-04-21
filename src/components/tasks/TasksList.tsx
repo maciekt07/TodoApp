@@ -11,10 +11,13 @@ import {
   GitHub,
   ImageRounded,
   Link,
+  LinkedIn,
   MoreVert,
   PushPinRounded,
   RadioButtonChecked,
+  Reddit,
   Search,
+  X,
   YouTube,
 } from "@mui/icons-material";
 import {
@@ -69,7 +72,7 @@ export const TasksList: React.FC = () => {
   const open = Boolean(anchorEl);
   const [selectedTaskId, setSelectedTaskId] = useState<UUID | null>(null);
   const [search, setSearch] = useStorageState<string>("", "search", "sessionStorage");
-  const [expandedTasks, setExpandedTasks] = useState<Set<UUID>>(new Set()); //FIXME: use storage state for set
+  const [expandedTasks, setExpandedTasks] = useState<Set<UUID>>(new Set());
   const [deleteDialogOpen, setDeleteDialogOpen] = useState<boolean>(false);
   const [editModalOpen, setEditModalOpen] = useState<boolean>(false);
   const [multipleSelectedTasks, setMultipleSelectedTasks] = useStorageState<UUID[]>(
@@ -271,6 +274,7 @@ export const TasksList: React.FC = () => {
       )
     );
   };
+
   const checkOverdueTasks = useCallback(
     (tasks: Task[]) => {
       const overdueTasks = tasks.filter((task) => {
@@ -306,57 +310,94 @@ export const TasksList: React.FC = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // Renders the task description with optional hyperlink parsing and text highlighting.
+  /**
+   * Function to render task description with links
+   */
   const renderTaskDescription = (task: Task): JSX.Element | null => {
     if (!task || !task.description) {
       return null;
     }
 
     const { description, color, id } = task;
+
+    const hasLinks = description.match(URL_REGEX);
+
     const isExpanded = expandedTasks.has(id);
-    const highlightedDescription = isExpanded
-      ? description
-      : description.slice(0, DESCRIPTION_SHORT_LENGTH);
+    const highlightedDescription =
+      isExpanded || hasLinks ? description : description.slice(0, DESCRIPTION_SHORT_LENGTH);
 
     const parts = highlightedDescription.split(URL_REGEX);
+
+    interface DomainMappings {
+      regex: RegExp;
+      domainName?: string;
+      icon: JSX.Element;
+    }
+
+    const domainMappings: DomainMappings[] = [
+      { regex: /youtube\.com/, domainName: "Youtube", icon: <YouTube /> },
+      {
+        regex: /(twitter\.com|x\.com)/,
+        domainName: "Twitter",
+        icon: <X sx={{ fontSize: "18px" }} />,
+      },
+      { regex: /github\.com/, domainName: "Github", icon: <GitHub sx={{ fontSize: "20px" }} /> },
+      { regex: /reddit\.com/, domainName: "Reddit", icon: <Reddit /> },
+      { regex: /linkedin\.com/, domainName: "LinkedIn", icon: <LinkedIn /> },
+      { regex: /.*/, icon: <Link /> }, // Default icon for other domains
+    ];
 
     const descriptionWithLinks = parts.map((part, index) => {
       if (index % 2 === 0) {
         return highlightMatchingText(part);
       } else {
-        const url = new URL(part);
-        const domain = url.hostname.replace("www.", "");
-        let icon = null;
-        if (part.match(/\.(jpeg|jpg|gif|png)$/) != null) {
+        let domain: string = "";
+        let icon: JSX.Element = <Link />;
+
+        try {
+          const url = new URL(part);
+          domain = url.hostname.replace("www.", "");
+          // Find the matching icon for the domain
+          const mapping = domainMappings.find(({ regex }) => domain.match(regex));
+          icon = mapping ? mapping.icon : <Link />; // Default to Link icon
+          domain =
+            mapping && mapping.domainName ? mapping.domainName : url.hostname.replace("www.", "");
+        } catch (error) {
+          // If URL construction fails, handle gracefully
+          console.error("Invalid URL:", part);
+        }
+
+        // Check if part matches any image file extensions
+        if (part.match(/\.(jpeg|jpg|gif|png|bmp|svg|tif|tiff|webp)$/)) {
           icon = <ImageRounded />;
-        } else if (domain === "youtube.com") {
-          icon = <YouTube />;
-        } else if (domain === "github.com") {
-          icon = <GitHub sx={{ fontSize: "20px" }} />;
-        } else {
-          icon = <Link />;
         }
 
         return (
           <Tooltip title={part} key={index}>
             <DescriptionLink clr={color} onClick={() => window.open(part)}>
-              <span
-                style={{
-                  wordBreak: "break-all",
-                  display: "flex",
-                  alignItems: "center",
-                  gap: "4px",
-                }}
-              >
+              <div>
                 {icon} {highlightMatchingText(domain)}
-              </span>
+              </div>
             </DescriptionLink>
           </Tooltip>
         );
       }
     });
 
-    return <div>{descriptionWithLinks}</div>;
+    return (
+      <div>
+        {descriptionWithLinks}{" "}
+        {(!open || task.id !== selectedTaskId || isMobile) &&
+          task.description &&
+          task.description.length > DESCRIPTION_SHORT_LENGTH &&
+          task.description &&
+          !hasLinks && (
+            <ShowMoreBtn onClick={() => toggleShowMore(task.id)} clr={task.color}>
+              {expandedTasks.has(task.id) ? "Show less" : "Show more"}
+            </ShowMoreBtn>
+          )}
+      </div>
+    );
   };
 
   return (
@@ -571,16 +612,7 @@ export const TasksList: React.FC = () => {
                   </Tooltip>
                 </TaskHeader>
 
-                <TaskDescription done={task.done}>
-                  {renderTaskDescription(task)}{" "}
-                  {(!open || task.id !== selectedTaskId || isMobile) &&
-                    task.description &&
-                    task.description.replace(URL_REGEX, "").length > DESCRIPTION_SHORT_LENGTH && (
-                      <ShowMoreBtn onClick={() => toggleShowMore(task.id)} clr={task.color}>
-                        {expandedTasks.has(task.id) ? "Show less" : "Show more"}
-                      </ShowMoreBtn>
-                    )}
-                </TaskDescription>
+                <TaskDescription done={task.done}>{renderTaskDescription(task)} </TaskDescription>
                 {task.deadline && (
                   <TimeLeft done={task.done}>
                     <RingAlarm
@@ -711,7 +743,7 @@ export const TasksList: React.FC = () => {
               </p>
               {selectedTask.description && (
                 <p>
-                  <b>Task Description:</b> {selectedTask.description}
+                  <b>Task Description:</b> {selectedTask.description.replace(URL_REGEX, "[link]")}
                 </p>
               )}
               {selectedTask.category?.[0]?.name && (

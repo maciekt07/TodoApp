@@ -160,21 +160,12 @@ const SharePage = () => {
       } else {
         // Store link part in state
         const url = new URL(part);
-        const domain = url.hostname;
-
         return (
           <Tooltip title={part} key={index}>
             <DescriptionLink clr={color} disabled>
-              <span
-                style={{
-                  wordBreak: "break-all",
-                  display: "flex",
-                  alignItems: "center",
-                  gap: "2px",
-                }}
-              >
-                <LinkOff sx={{ verticalAlign: "middle" }} /> {domain}
-              </span>
+              <div>
+                <LinkOff sx={{ verticalAlign: "middle" }} /> {url.hostname}
+              </div>
             </DescriptionLink>
           </Tooltip>
         );
