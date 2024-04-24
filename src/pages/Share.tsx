@@ -164,7 +164,7 @@ const SharePage = () => {
           <Tooltip title={part} key={index}>
             <DescriptionLink clr={color} disabled>
               <div>
-                <LinkOff sx={{ verticalAlign: "middle" }} /> {url.hostname}
+                <LinkOff sx={{ fontSize: "24px" }} /> {url.hostname}
               </div>
             </DescriptionLink>
           </Tooltip>

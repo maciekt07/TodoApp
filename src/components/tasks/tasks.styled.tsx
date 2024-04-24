@@ -234,6 +234,8 @@ export const DescriptionLink = styled(Button)<{ clr: string }>`
   background: ${({ clr }) => getFontColor(clr)}28;
   backdrop-filter: none !important;
   text-transform: none !important;
+  min-width: unset !important;
+  user-select: auto !important;
   border-radius: 6px;
   &:hover {
     background: ${({ clr }) => getFontColor(clr)}19;

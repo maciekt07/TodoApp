@@ -19,6 +19,7 @@ import {
   BugReportRounded,
   CategoryRounded,
   Favorite,
+  FavoriteRounded,
   FiberManualRecord,
   GetAppRounded,
   GitHub,
@@ -53,8 +54,10 @@ export const ProfileSidebar = () => {
   const [lastUpdate, setLastUpdate] = useState<string | null>(null);
   const [issuesCount, setIssuesCount] = useState<number | null>(null);
 
+  const [bmcSupporters, setBmcSupporters] = useState<number | null>(null);
+
   useEffect(() => {
-    const fetchRepoInfo = async () => {
+    const fetchRepoInfo: () => Promise<void> = async () => {
       try {
         const { repoData, branchData } = await fetchGitHubInfo();
         setStars(repoData.stargazers_count);
@@ -64,17 +67,42 @@ export const ProfileSidebar = () => {
         console.error(error);
       }
     };
+    // Function to fetch data from the Buy Me a Coffee API
+    const fetchBMC: () => Promise<void> = async () => {
+      // URL of the Buy Me a Coffee API endpoint
+      const url = "https://img.buymeacoffee.com/button-api/?&slug=maciekt07";
+      try {
+        // Fetch data from the provided URL
+        const response = await fetch(url);
+        const html = await response.text();
+        // Parse the HTML response using DOMParser
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(html, "text/html");
+        // Find the element containing the number of supporters
+        const supportersCountElement = doc.querySelector("text[x='226'][text-anchor='middle']");
+        if (supportersCountElement) {
+          const supportersCount = Number(supportersCountElement.textContent);
+          // In case bmc api fails
+          if (supportersCount > 0) {
+            setBmcSupporters(supportersCount);
+          }
+        } else {
+          console.log("Failed to fetch bmc api: Supporters count element not found.");
+        }
+      } catch (error) {
+        console.error("Error fetching webpage:", error);
+      }
+    };
+    fetchBMC();
     fetchRepoInfo();
   }, []);
 
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
-    document.getElementById("root")?.setAttribute("aria-sidebar", "true");
   };
 
   const handleClose = () => {
     setAnchorEl(null);
-    document.getElementById("root")?.removeAttribute("aria-sidebar");
   };
 
   const handleLogoutConfirmationOpen = () => {
@@ -292,6 +320,16 @@ export const ProfileSidebar = () => {
           }}
         >
           <BmcIcon className="bmc-icon" src={bmcLogo} /> &nbsp; Buy me a coffee{" "}
+          {bmcSupporters && (
+            <Tooltip title={`${bmcSupporters} supporters on Buy me a coffee`}>
+              <MenuLabel clr="#f93c58">
+                <span style={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
+                  <FavoriteRounded style={{ fontSize: "16px" }} />
+                  &nbsp;{bmcSupporters}
+                </span>
+              </MenuLabel>
+            </Tooltip>
+          )}
         </StyledMenuItem>
 
         <StyledDivider />
@@ -311,18 +349,11 @@ export const ProfileSidebar = () => {
           <Logout /> &nbsp; Logout
         </StyledMenuItem>
 
-        <div
-          style={{
-            marginTop: "auto",
-            marginBottom:
-              window.matchMedia("(display-mode: standalone)").matches &&
-              /Mobi/.test(navigator.userAgent)
-                ? "38px"
-                : "16px",
-            display: "flex",
-            flexDirection: "column",
-            gap: "8px",
-          }}
+        <ProfileOptionsBottom
+          isMobile={
+            window.matchMedia("(display-mode: standalone)").matches &&
+            /Mobi/.test(navigator.userAgent)
+          }
         >
           <StyledMenuItem
             sx={{
@@ -393,7 +424,7 @@ export const ProfileSidebar = () => {
               </Tooltip>
             )}
           </CreditsContainer>
-        </div>
+        </ProfileOptionsBottom>
       </StyledSwipeableDrawer>
 
       <Dialog open={logoutConfirmationOpen} onClose={handleLogoutConfirmationClose}>
@@ -538,6 +569,14 @@ const BmcIcon = styled.img`
 const Logo = styled.img`
   width: 52px;
   margin-left: 18px;
+`;
+
+const ProfileOptionsBottom = styled.div<{ isMobile: boolean }>`
+  margin-top: auto;
+  margin-bottom: ${({ isMobile }) => (isMobile ? "38px" : "16px")};
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
 `;
 
 const CreditsContainer = styled.div`

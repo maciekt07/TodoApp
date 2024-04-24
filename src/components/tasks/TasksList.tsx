@@ -10,6 +10,7 @@ import {
   DoneRounded,
   GitHub,
   ImageRounded,
+  Language,
   Link,
   LinkedIn,
   MoreVert,
@@ -338,12 +339,13 @@ export const TasksList: React.FC = () => {
       { regex: /youtube\.com/, domainName: "Youtube", icon: <YouTube /> },
       {
         regex: /(twitter\.com|x\.com)/,
-        domainName: "Twitter",
+        domainName: "X",
         icon: <X sx={{ fontSize: "18px" }} />,
       },
       { regex: /github\.com/, domainName: "Github", icon: <GitHub sx={{ fontSize: "20px" }} /> },
       { regex: /reddit\.com/, domainName: "Reddit", icon: <Reddit /> },
       { regex: /linkedin\.com/, domainName: "LinkedIn", icon: <LinkedIn /> },
+      { regex: /localhost/, icon: <Language /> },
       { regex: /.*/, icon: <Link /> }, // Default icon for other domains
     ];
 
@@ -363,7 +365,7 @@ export const TasksList: React.FC = () => {
           domain =
             mapping && mapping.domainName ? mapping.domainName : url.hostname.replace("www.", "");
         } catch (error) {
-          // If URL construction fails, handle gracefully
+          // If URL construction fails
           console.error("Invalid URL:", part);
         }
 
@@ -374,7 +376,12 @@ export const TasksList: React.FC = () => {
 
         return (
           <Tooltip title={part} key={index}>
-            <DescriptionLink clr={color} onClick={() => window.open(part)}>
+            <DescriptionLink
+              role="link"
+              data-href={part}
+              clr={color}
+              onClick={() => window.open(part)}
+            >
               <div>
                 {icon} {highlightMatchingText(domain)}
               </div>
