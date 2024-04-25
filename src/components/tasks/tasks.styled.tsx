@@ -127,6 +127,11 @@ export const TimeLeft = styled.span<{ done: boolean }>`
   font-weight: 500;
   font-style: italic;
   display: flex;
+  backdrop-filter: none !important;
+  // fix for browser translate
+  & font {
+    margin: 0 1px;
+  }
 `;
 
 export const Pinned = styled.div`

@@ -104,7 +104,9 @@ class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoundarySta
             <span style={{ color: "#ff3131", display: "inline-block" }}>
               <ErrorOutlineRounded sx={{ verticalAlign: "middle", mb: "4px" }} /> ERROR:
             </span>{" "}
-            [{this.state.error?.name}] {this.state.error?.message}
+            <span translate="no">
+              [{this.state.error?.name}] {this.state.error?.message}
+            </span>
           </h3>
 
           <ErrorAccordion disableGutters>

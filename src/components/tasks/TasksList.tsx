@@ -621,28 +621,40 @@ export const TasksList: React.FC = () => {
 
                 <TaskDescription done={task.done}>{renderTaskDescription(task)} </TaskDescription>
                 {task.deadline && (
-                  <TimeLeft done={task.done}>
-                    <RingAlarm
-                      fontSize="small"
-                      animate={new Date() > new Date(task.deadline) && !task.done}
-                      sx={{
-                        color: `${getFontColor(task.color)} !important`,
-                      }}
-                    />{" "}
-                    &nbsp;
-                    {new Date(task.deadline).toLocaleDateString()} {" • "}
-                    {new Date(task.deadline).toLocaleTimeString()}
-                    {!task.done && (
-                      <>
-                        {" • "}
-                        {calculateDateDifference(new Date(task.deadline))}
-                      </>
-                    )}
-                  </TimeLeft>
+                  <Tooltip
+                    title={new Intl.DateTimeFormat(navigator.language, {
+                      dateStyle: "full",
+                      timeStyle: "medium",
+                    }).format(new Date(task.deadline))}
+                    placement="bottom-start"
+                  >
+                    <TimeLeft done={task.done} translate="yes">
+                      <RingAlarm
+                        fontSize="small"
+                        animate={new Date() > new Date(task.deadline) && !task.done}
+                        sx={{
+                          color: `${getFontColor(task.color)} !important`,
+                        }}
+                      />{" "}
+                      &nbsp;
+                      {new Date(task.deadline).toLocaleDateString()} {" • "}
+                      {new Date(task.deadline).toLocaleTimeString()}
+                      {!task.done && (
+                        <>
+                          {" • "}
+                          {calculateDateDifference(new Date(task.deadline))}
+                        </>
+                      )}
+                    </TimeLeft>
+                  </Tooltip>
                 )}
                 {task.sharedBy && (
-                  <div style={{ opacity: 0.8, display: "flex", alignItems: "center", gap: "4px" }}>
-                    <Link /> Shared by {task.sharedBy}
+                  <div
+                    translate="yes"
+                    style={{ opacity: 0.8, display: "flex", alignItems: "center", gap: "4px" }}
+                  >
+                    <Link /> Shared by{" "}
+                    <span translate={task.sharedBy === "User" ? "yes" : "no"}>{task.sharedBy}</span>
                   </div>
                 )}
                 <div

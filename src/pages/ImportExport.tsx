@@ -4,17 +4,14 @@ import Checkbox from "@mui/material/Checkbox";
 import { TopBar } from "../components";
 import { Category, Task, UUID } from "../types/user";
 import Typography from "@mui/material/Typography";
-import Box from "@mui/material/Box";
-import styled from "@emotion/styled";
 import { Emoji } from "emoji-picker-react";
 import {
   FileDownload,
   FileUpload,
-  Info,
   IntegrationInstructionsRounded,
   Link,
 } from "@mui/icons-material";
-import { exportTasksToJson, getFontColor, showToast } from "../utils";
+import { exportTasksToJson, showToast } from "../utils";
 import { IconButton, Tooltip } from "@mui/material";
 import {
   CATEGORY_NAME_MAX_LENGTH,
@@ -25,6 +22,16 @@ import toast from "react-hot-toast";
 import { UserContext } from "../contexts/UserContext";
 import { useStorageState } from "../hooks/useStorageState";
 import { useCtrlS } from "../hooks/useCtrlS";
+import {
+  DropZone,
+  InfoIcon,
+  ListContent,
+  ManagementButton,
+  ManagementButtonsContainer,
+  ManagementContainer,
+  ManagementHeader,
+  TaskManagementContainer,
+} from "../styles";
 
 const ImportExport = () => {
   const { user, setUser } = useContext(UserContext);
@@ -324,26 +331,19 @@ const ImportExport = () => {
   return (
     <>
       <TopBar title="Transfer Tasks" />
-      <h2
-        style={{
-          textAlign: "center",
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-        }}
-      >
+      <ManagementHeader>
         Select Tasks To Export&nbsp;
         <Tooltip title="Duplicates will be removed during import">
           <IconButton style={{ color: "#ffffff" }}>
             <InfoIcon />
           </IconButton>
         </Tooltip>
-      </h2>
+      </ManagementHeader>
 
-      <Container>
+      <ManagementContainer>
         {user.tasks.length > 0 ? (
           user.tasks.map((task: Task) => (
-            <TaskContainer
+            <TaskManagementContainer
               key={task.id}
               backgroundclr={task.color}
               onClick={() => handleTaskClick(task.id)}
@@ -359,23 +359,14 @@ const ImportExport = () => {
                 <Emoji size={24} unified={task.emoji || ""} emojiStyle={user.emojisStyle} />{" "}
                 {task.name}
               </Typography>
-            </TaskContainer>
+            </TaskManagementContainer>
           ))
         ) : (
           <h3 style={{ opacity: 0.8, fontStyle: "italic" }}>You don't have any tasks to export</h3>
         )}
-      </Container>
+      </ManagementContainer>
 
-      <Box
-        component="div"
-        sx={{
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          flexDirection: "column",
-          gap: "24px",
-        }}
-      >
+      <ManagementButtonsContainer>
         <Tooltip
           title={
             selectedTasks.length > 0
@@ -388,17 +379,17 @@ const ImportExport = () => {
                     return selectedTask ? selectedTask.name : "";
                   })
                 )}`
-              : "No tasks selected"
+              : undefined
           }
         >
-          <StyledButton onClick={handleExport} disabled={selectedTasks.length === 0}>
+          <ManagementButton onClick={handleExport} disabled={selectedTasks.length === 0}>
             <FileDownload /> &nbsp; Export Selected to JSON{" "}
             {selectedTasks.length > 0 && `[${selectedTasks.length}]`}
-          </StyledButton>
+          </ManagementButton>
         </Tooltip>
-        <StyledButton onClick={handleExportAll} disabled={user.tasks.length === 0}>
+        <ManagementButton onClick={handleExportAll} disabled={user.tasks.length === 0}>
           <FileDownload /> &nbsp; Export All Tasks to JSON
-        </StyledButton>
+        </ManagementButton>
 
         <h2 style={{ textAlign: "center" }}>Import Tasks From JSON</h2>
 
@@ -438,109 +429,17 @@ const ImportExport = () => {
           </Button>
         </label>
 
-        <StyledButton onClick={handleImportFromClipboard}>
+        <ManagementButton onClick={handleImportFromClipboard}>
           <IntegrationInstructionsRounded /> &nbsp; Import JSON from clipboard
-        </StyledButton>
+        </ManagementButton>
 
         {/* Solution for PWA on iOS: */}
-        <StyledButton onClick={handleImportFromLink}>
+        <ManagementButton onClick={handleImportFromLink}>
           <Link /> &nbsp; Import From Link
-        </StyledButton>
-      </Box>
+        </ManagementButton>
+      </ManagementButtonsContainer>
     </>
   );
 };
 
 export default ImportExport;
-
-const TaskContainer = styled(Box)<{ backgroundclr: string; selected: boolean }>`
-  display: flex;
-  align-items: center;
-  justify-content: left;
-  margin: 8px;
-  padding: 10px 4px;
-  border-radius: 16px;
-  background: ${({ theme }) => getFontColor(theme.secondary)}15;
-  border: 2px solid ${({ backgroundclr }) => backgroundclr};
-  box-shadow: ${({ selected, backgroundclr }) => selected && `0 0 8px 1px ${backgroundclr}`};
-  transition: 0.3s all;
-  width: 300px;
-  cursor: "pointer";
-  & span {
-    font-weight: ${({ selected }) => (selected ? 600 : 500)}!important;
-  }
-`;
-
-const ListContent = styled.div`
-  display: flex;
-  justify-content: left;
-  align-items: center;
-  gap: 6px;
-`;
-
-const DropZone = styled.div<{ isDragging: boolean }>`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-  gap: 6px;
-  border: 2px dashed ${({ theme }) => theme.primary};
-  border-radius: 16px;
-  padding: 32px 64px;
-  text-align: center;
-  max-width: 300px;
-  box-shadow: ${({ isDragging, theme }) => isDragging && `0 0 32px 0px ${theme.primary}`};
-  transition: 0.3s all;
-  & div {
-    font-weight: 500;
-  }
-`;
-
-const InfoIcon = styled(Info)`
-  color: ${({ theme }) => getFontColor(theme.secondary)};
-`;
-
-const Container = styled(Box)`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin: 20px;
-  max-height: 350px;
-
-  overflow-y: auto;
-
-  /* Custom Scrollbar Styles */
-  ::-webkit-scrollbar {
-    width: 8px;
-    border-radius: 4px;
-    background-color: ${({ theme }) => getFontColor(theme.secondary)}15;
-  }
-
-  ::-webkit-scrollbar-thumb {
-    background-color: ${({ theme }) => getFontColor(theme.secondary)}30;
-    border-radius: 4px;
-  }
-
-  ::-webkit-scrollbar-thumb:hover {
-    background-color: ${({ theme }) => getFontColor(theme.secondary)}50;
-  }
-
-  ::-webkit-scrollbar-track {
-    border-radius: 4px;
-    background-color: ${({ theme }) => getFontColor(theme.secondary)}15;
-  }
-`;
-
-const StyledButton = styled(Button)`
-  padding: 12px 18px;
-  border-radius: 14px;
-  width: 300px;
-
-  &:disabled {
-    color: ${({ theme }) => getFontColor(theme.secondary) + "82"};
-    border-color: ${({ theme }) => getFontColor(theme.secondary) + "82"};
-  }
-`;
-StyledButton.defaultProps = {
-  variant: "outlined",
-};

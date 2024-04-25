@@ -18,6 +18,7 @@ import {
   AdjustRounded,
   BugReportRounded,
   CategoryRounded,
+  DeleteForeverRounded,
   Favorite,
   FavoriteRounded,
   FiberManualRecord,
@@ -170,7 +171,7 @@ export const ProfileSidebar = () => {
 
   return (
     <Container>
-      <Tooltip title={<div translate="no">{user.name || "User"}</div>}>
+      <Tooltip title={<div translate={user.name ? "no" : "yes"}>{user.name || "User"}</div>}>
         <IconButton
           id="basic-button"
           aria-controls={open ? "basic-menu" : undefined}
@@ -252,6 +253,15 @@ export const ProfileSidebar = () => {
           }}
         >
           <AddRounded /> &nbsp; Add Task
+        </StyledMenuItem>
+
+        <StyledMenuItem
+          onClick={() => {
+            n("/purge");
+            handleClose();
+          }}
+        >
+          <DeleteForeverRounded /> &nbsp; Purge Tasks
         </StyledMenuItem>
 
         {user.settings[0].enableCategories !== undefined && user.settings[0].enableCategories && (
@@ -374,7 +384,7 @@ export const ProfileSidebar = () => {
           </StyledMenuItem>
           <StyledDivider />
           <StyledMenuItem
-            translate="no"
+            translate={user.name ? "no" : "yes"}
             onClick={() => {
               n("/user");
               handleClose();

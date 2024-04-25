@@ -149,7 +149,7 @@ const UserSettings = () => {
             </Avatar>
           </Badge>
         </Tooltip>
-        <UserName translate="no">{name || "User"}</UserName>
+        <UserName translate={name ? "no" : "yes"}>{name || "User"}</UserName>
         <Tooltip
           title={new Intl.DateTimeFormat(navigator.language, {
             dateStyle: "full",
@@ -392,4 +392,8 @@ const CreatedAtDate = styled.span`
   opacity: 0.8;
   margin-top: -5px;
   margin-bottom: 2px;
+  // fix for browser translate
+  & font {
+    margin: 0 1px;
+  }
 `;

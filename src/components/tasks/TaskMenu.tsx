@@ -440,7 +440,7 @@ export const TaskMenu: React.FC<TaskMenuProps> = ({
           snapPoints={({ minHeight, maxHeight }) => [minHeight, maxHeight]}
           expandOnContentDrag
           header={
-            <SheetHeader>
+            <SheetHeader translate="no">
               <Emoji
                 emojiStyle={emojisStyle}
                 size={32}

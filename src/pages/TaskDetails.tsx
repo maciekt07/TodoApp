@@ -40,7 +40,9 @@ const TaskDetails = () => {
     <>
       <TopBar title="Task Details" />
       <Container>
-        <TaskName>Task: {task.name}</TaskName>
+        <TaskName>
+          Task: <span translate="no">{task.name}</span>
+        </TaskName>
         <TaskTable>
           <tbody>
             <TableRow>
