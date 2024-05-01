@@ -26,7 +26,7 @@ export const TaskContainer = styled.div<TaskComponentProps>`
   padding: 16px 16px 16px 16px;
   border-radius: 24px;
   animation: ${fadeIn} 0.5s ease-in;
-  filter: ${({ blur }) => (blur ? "blur(2px) opacity(75%)" : "none")};
+  /* filter: ${({ blur }) => (blur ? "blur(2px) opacity(75%)" : "none")}; */
 `;
 
 export const EmojiContainer = styled.span<{ clr: string }>`
@@ -147,7 +147,8 @@ export const SelectedTasksContainer = styled.div`
   align-items: center;
   justify-content: space-between;
   margin: 8px 0;
-  background: ${({ theme }) => getFontColor(theme.secondary)}29;
+  background: ${({ theme }) =>
+    getFontColor(theme.secondary) === ColorPalette.fontLight ? "#090b2287" : "#ffffff5c"};
   padding: 16px 20px;
   border-radius: 18px;
   position: sticky;
@@ -270,7 +271,7 @@ export const SearchInput = styled(TextField)`
     border-radius: 16px;
     transition: 0.3s all;
     background: ${({ theme }) =>
-      getFontColor(theme.secondary) === ColorPalette.fontLight ? "#090b2258" : "#ffffff51"};
+      getFontColor(theme.secondary) === ColorPalette.fontLight ? "#090b2258" : "#ffffff3e"};
     color: ${({ theme }) => getFontColor(theme.secondary)};
     & .MuiSvgIcon-root {
       color: ${({ theme }) => getFontColor(theme.secondary)};

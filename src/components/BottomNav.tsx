@@ -50,7 +50,7 @@ export const BottomNav = (): JSX.Element | null => {
         case "/add":
           setValue(2);
           break;
-        case "/import-export":
+        case "/transfer":
           setValue(3);
           break;
         case "/user":
@@ -76,7 +76,7 @@ export const BottomNav = (): JSX.Element | null => {
         showLabels
         glow={settings[0].enableGlow}
         value={value}
-        onChange={(_event, newValue) => {
+        onChange={(_event, newValue: number) => {
           window.scrollTo({
             top: 0,
             behavior: "smooth",
@@ -116,7 +116,7 @@ export const BottomNav = (): JSX.Element | null => {
           }
         />
         <NavigationButton
-          onClick={() => n("import-export")}
+          onClick={() => n("transfer")}
           label="Transfer"
           icon={<GetAppRounded sx={{ fontSize: smallIconSize }} />}
         />

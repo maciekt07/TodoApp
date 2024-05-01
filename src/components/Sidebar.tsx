@@ -1,7 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import {
   Avatar,
-  Button,
   Dialog,
   DialogActions,
   DialogContent,
@@ -35,7 +34,7 @@ import { useNavigate } from "react-router-dom";
 import { defaultUser } from "../constants/defaultUser";
 import { SettingsDialog } from ".";
 import logo from "../assets/logo256.png";
-import { ColorPalette, pulseAnimation, ring } from "../styles";
+import { ColorPalette, DialogBtn, pulseAnimation, ring } from "../styles";
 import { UserContext } from "../contexts/UserContext";
 import { iOS } from "../utils/iOS";
 import { fetchGitHubInfo } from "../services/githubApi";
@@ -161,6 +160,18 @@ export const ProfileSidebar = () => {
       deferredPrompt.userChoice.then((choiceResult) => {
         if (choiceResult.outcome === "accepted") {
           showToast("App installed successfully!");
+          if ("setAppBadge" in navigator) {
+            setUser((prevUser) => ({
+              ...prevUser,
+              settings: [
+                {
+                  ...prevUser.settings[0],
+                  appBadge: true,
+                },
+              ],
+            }));
+          }
+          handleClose();
         }
         if (choiceResult.outcome === "dismissed") {
           showToast("Installation dismissed.", { type: "error" });
@@ -173,7 +184,7 @@ export const ProfileSidebar = () => {
     <Container>
       <Tooltip title={<div translate={user.name ? "no" : "yes"}>{user.name || "User"}</div>}>
         <IconButton
-          id="basic-button"
+          aria-label="Sidebar"
           aria-controls={open ? "basic-menu" : undefined}
           aria-haspopup="true"
           aria-expanded={open ? "true" : undefined}
@@ -232,7 +243,6 @@ export const ProfileSidebar = () => {
             n("/");
             handleClose();
           }}
-          sx={{ mt: "16px !important" }}
         >
           <TaskAltRounded /> &nbsp; Tasks
           {user.tasks.filter((task) => !task.done).length > 0 && (
@@ -277,7 +287,7 @@ export const ProfileSidebar = () => {
 
         <StyledMenuItem
           onClick={() => {
-            n("/import-export");
+            n("/transfer");
             handleClose();
           }}
         >
@@ -365,15 +375,7 @@ export const ProfileSidebar = () => {
             /Mobi/.test(navigator.userAgent)
           }
         >
-          <StyledMenuItem
-            sx={{
-              background: "#101727",
-              color: "white !important",
-              mt: "8px !important",
-              "&:hover": {
-                background: "#101727db !important",
-              },
-            }}
+          <SettingsMenuItem
             onClick={() => {
               setOpenSettings(true);
               handleClose();
@@ -381,7 +383,7 @@ export const ProfileSidebar = () => {
           >
             <SettingsRounded /> &nbsp; Settings
             {user.settings[0] === defaultUser.settings[0] && <PulseMenuLabel />}
-          </StyledMenuItem>
+          </SettingsMenuItem>
           <StyledDivider />
           <StyledMenuItem
             translate={user.name ? "no" : "yes"}
@@ -508,9 +510,6 @@ const StyledMenuItem = styled(MenuItem)`
     & svg[data-testid="GitHubIcon"] {
       transform: rotateY(${2 * Math.PI}rad);
     }
-    & svg[data-testid="SettingsRoundedIcon"] {
-      transform: rotate(180deg);
-    }
     & svg[data-testid="BugReportRoundedIcon"] {
       transform: rotate(45deg) scale(0.9) translateY(-20%);
     }
@@ -520,11 +519,16 @@ const StyledMenuItem = styled(MenuItem)`
   }
 `;
 
-const DialogBtn = styled(Button)`
-  padding: 8px 12px;
-  border-radius: 12px;
-  font-size: 16px;
-  margin: 8px;
+const SettingsMenuItem = styled(StyledMenuItem)`
+  background: #101727;
+  color: ${ColorPalette.fontLight} !important;
+  margin-top: 8px !important;
+  &:hover {
+    background: #101727db !important;
+    & svg[data-testid="SettingsRoundedIcon"] {
+      transform: rotate(180deg);
+    }
+  }
 `;
 
 const MenuLabel = styled.span<{ clr?: string }>`
@@ -566,6 +570,7 @@ const LogoContainer = styled.div`
   align-items: center;
   flex-direction: row;
   margin-top: 8px;
+  margin-bottom: 16px;
   gap: 16px;
   cursor: pointer;
 `;
@@ -579,6 +584,7 @@ const BmcIcon = styled.img`
 const Logo = styled.img`
   width: 52px;
   margin-left: 18px;
+  border-radius: 14px;
 `;
 
 const ProfileOptionsBottom = styled.div<{ isMobile: boolean }>`

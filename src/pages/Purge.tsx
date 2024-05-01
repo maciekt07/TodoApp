@@ -96,7 +96,7 @@ const Purge = () => {
   const renderTasks = (tasks: Task[], title: string) => {
     return (
       <>
-        <Divider>{title}</Divider>
+        <Divider sx={{ fontWeight: 500, my: "4px" }}>{title}</Divider>
         {tasks.map((task) => (
           <TaskManagementContainer
             key={task.id}
@@ -141,20 +141,21 @@ const Purge = () => {
           title={
             selectedTasks.length > 0 ? (
               <div>
-                <span>Selected Tasks:</span>
+                <span>Selected Tasks: </span>
                 <span translate="no">{selectedNamesList}</span>
               </div>
             ) : undefined
           }
         >
           <ManagementButton onClick={handlePurgeSelected} disabled={selectedTasks.length === 0}>
-            <DeleteSweepRounded /> &nbsp; Purge Selected
+            <DeleteSweepRounded /> &nbsp; Purge Selected{" "}
+            {selectedTasks.length > 0 && `[${selectedTasks.length}]`}
           </ManagementButton>
         </Tooltip>
         <ManagementButton onClick={handlePurgeDone} disabled={doneTasks.length === 0}>
           <DoneAllRounded /> &nbsp; Purge Done
         </ManagementButton>
-        <ManagementButton color="error" onClick={handlePurgeAll} disabled={doneTasks.length === 0}>
+        <ManagementButton color="error" onClick={handlePurgeAll} disabled={tasks.length === 0}>
           <DeleteForeverRounded /> &nbsp; Purge All Tasks
         </ManagementButton>
       </ManagementButtonsContainer>

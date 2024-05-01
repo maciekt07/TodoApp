@@ -474,7 +474,7 @@ export const TasksList: React.FC = () => {
                           marginLeft: "4px",
                         }}
                       >
-                        ({categoryCounts[cat.id] || crypto.randomUUID()})
+                        ({categoryCounts[cat.id]})
                       </span>
                     </div>
                   }

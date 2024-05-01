@@ -103,17 +103,20 @@ const UserSettings = () => {
     <>
       <TopBar title="User Profile" />
       <Container>
-        <IconButton
-          onClick={() => setOpenSettings(true)}
-          size="large"
-          sx={{
-            position: "absolute",
-            top: "24px",
-            right: "24px",
-          }}
-        >
-          <Settings fontSize="large" />
-        </IconButton>
+        <Tooltip title="App Settings">
+          <IconButton
+            onClick={() => setOpenSettings(true)}
+            aria-label="Settings"
+            size="large"
+            sx={{
+              position: "absolute",
+              top: "24px",
+              right: "24px",
+            }}
+          >
+            <Settings fontSize="large" />
+          </IconButton>
+        </Tooltip>
         <Tooltip title={profilePicture ? "Change profile picture" : "Add profile picture"}>
           <Badge
             overlap="circular"

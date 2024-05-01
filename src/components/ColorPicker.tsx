@@ -51,7 +51,7 @@ export const ColorPicker: React.FC<ColorPickerProps> = ({
 
   const [popoverOpen, setPopoverOpen] = useState<boolean[]>(Array(colorList.length).fill(false));
   const [openAddDialog, setOpenAddDialog] = useState<boolean>(false);
-  const [addColorVal, setAddColorVal] = useState<string>("#000000");
+  const [addColorVal, setAddColorVal] = useState<string>(color);
   const colorElementRefs = useRef<Array<HTMLElement | null>>([]);
 
   const theme = useTheme();
@@ -91,9 +91,14 @@ export const ColorPicker: React.FC<ColorPickerProps> = ({
     setPopoverOpen(newPopoverOpen);
   };
 
+  const handleAddDialogOpen = () => {
+    setOpenAddDialog(true);
+    setAddColorVal(selectedColor);
+  };
+
   const handleAddDialogClose = () => {
     setOpenAddDialog(false);
-    setAddColorVal("#000000");
+    setAddColorVal(selectedColor);
   };
 
   const handlePickerChange = (e: React.ChangeEvent<HTMLInputElement>) =>
@@ -115,14 +120,13 @@ export const ColorPicker: React.FC<ColorPickerProps> = ({
       return;
     }
 
+    handleColorChange(addColorVal.toUpperCase());
     setUser({ ...user, colorList: [...colorList, addColorVal.toUpperCase()] });
-
     showToast(
       <div>
         Added <b>{addColorVal.toUpperCase()}</b> to your color list.
       </div>
     );
-
     handleAddDialogClose();
   };
 
@@ -178,9 +182,8 @@ export const ColorPicker: React.FC<ColorPickerProps> = ({
                       }
                     }}
                   >
-                    {color === selectedColor && <Done />}
+                    {color.toUpperCase() === selectedColor.toUpperCase() && <Done />}
                   </ColorElement>
-
                   <Popover
                     open={popoverOpen[index]}
                     onClose={() => togglePopover(index)}
@@ -213,7 +216,7 @@ export const ColorPicker: React.FC<ColorPickerProps> = ({
                   <ColorElement
                     clr="transparent"
                     style={{ border: "2px solid", color: fontColor || ColorPalette.fontLight }}
-                    onClick={() => setOpenAddDialog(true)}
+                    onClick={handleAddDialogOpen}
                   >
                     <AddRounded style={{ fontSize: "38px" }} />
                   </ColorElement>
@@ -242,7 +245,9 @@ export const ColorPicker: React.FC<ColorPickerProps> = ({
           </div>
           <div style={{ position: "relative" }}>
             <StyledColorPicker type="color" value={addColorVal} onChange={handlePickerChange} />
-            <PickerLabel clr={getFontColor(addColorVal)}>Choose color</PickerLabel>
+            <PickerLabel clr={getFontColor(addColorVal)}>
+              <ColorizeRounded /> Choose color
+            </PickerLabel>
           </div>
         </DialogContent>
         <DialogActions>
@@ -324,6 +329,9 @@ const StyledInfo = styled.span<{ clr: string }>`
 
 const PickerLabel = styled.p<{ clr: string }>`
   position: absolute;
+  display: flex;
+  align-items: center;
+  gap: 8px;
   color: ${({ clr }) => clr};
   pointer-events: none;
   top: 0;

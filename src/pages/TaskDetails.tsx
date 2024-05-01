@@ -106,16 +106,18 @@ const TaskDetails = () => {
                 <TableData>{task.sharedBy}</TableData>
               </TableRow>
             )}
-            <TableRow>
-              <TableHeader>Categories:</TableHeader>
-              <TableData>
-                <CategoryContainer>
-                  {task?.category?.map((category) => (
-                    <CategoryBadge key={category.id} category={category} glow={false} />
-                  ))}
-                </CategoryContainer>
-              </TableData>
-            </TableRow>
+            {task.category && task.category.length > 0 && (
+              <TableRow>
+                <TableHeader>Categories:</TableHeader>
+                <TableData>
+                  <CategoryContainer>
+                    {task?.category?.map((category) => (
+                      <CategoryBadge key={category.id} category={category} glow={false} />
+                    ))}
+                  </CategoryContainer>
+                </TableData>
+              </TableRow>
+            )}
           </tbody>
         </TaskTable>
       </Container>
@@ -137,10 +139,6 @@ const Container = styled.div`
   @media (min-width: 768px) {
     padding: 24px;
     width: 70%;
-  }
-
-  @media (min-width: 1200px) {
-    width: 50%;
   }
 `;
 
@@ -185,7 +183,7 @@ const TableData = styled.td`
   align-items: center;
   gap: 6px;
   font-size: 1em;
-
+  word-break: break-all;
   @media (min-width: 768px) {
     font-size: 1.1em;
   }

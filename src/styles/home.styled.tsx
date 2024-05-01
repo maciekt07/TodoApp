@@ -38,7 +38,7 @@ export const TasksCount = styled.div<{ glow: boolean }>`
   color: ${({ theme }) => getFontColor(theme.secondary)};
   /* background: #090b2258; */
   background: ${({ theme }) =>
-    getFontColor(theme.secondary) === ColorPalette.fontLight ? "#090b2258" : "#ffffff51"};
+    getFontColor(theme.secondary) === ColorPalette.fontLight ? "#090b2258" : "#ffffff3e"};
   transition: 0.3s all;
   display: flex;
   align-items: center;
@@ -85,7 +85,7 @@ export const ProgressPercentageContainer = styled(Box)<{ glow: boolean }>`
   justify-content: center;
   /* background: #090b2287; */
   background: ${({ theme }) =>
-    getFontColor(theme.secondary) === ColorPalette.fontLight ? "#090b2287" : "#ffffff6d"};
+    getFontColor(theme.secondary) === ColorPalette.fontLight ? "#090b2287" : "#ffffff5c"};
 
   border-radius: 100px;
   margin: -5px;

@@ -18,7 +18,7 @@ const AppRouter = (): ReactElement => {
       <Route path="/share" element={<SharePage />} />
       <Route path="/add" element={<AddTask />} />
       <Route path="/user" element={<UserSettings />} />
-      <Route path="/import-export" element={<ImportExport />} />
+      <Route path="/transfer" element={<ImportExport />} />
       <Route path="/categories" element={<Categories />} />
       <Route path="/purge" element={<Purge />} />
       <Route path="*" element={<NotFound />} />
