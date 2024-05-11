@@ -100,7 +100,7 @@ const Purge = () => {
         {tasks.map((task) => (
           <TaskManagementContainer
             key={task.id}
-            backgroundclr={task.color}
+            backgroundClr={task.color}
             onClick={() => handleTaskClick(task.id)}
             selected={selectedTasks.includes(task.id)}
             translate="no"

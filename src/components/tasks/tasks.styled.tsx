@@ -2,7 +2,7 @@ import { ColorPalette } from "../../styles";
 import { fadeIn, ring, scale } from "../../styles/keyframes.styled";
 import styled from "@emotion/styled";
 import { Button, Checkbox, TextField, css } from "@mui/material";
-import { getFontColor } from "../../utils";
+import { getFontColor, iOS } from "../../utils";
 import { Alarm, RadioButtonChecked, RadioButtonUnchecked } from "@mui/icons-material";
 
 interface TaskComponentProps {
@@ -26,7 +26,11 @@ export const TaskContainer = styled.div<TaskComponentProps>`
   padding: 16px 16px 16px 16px;
   border-radius: 24px;
   animation: ${fadeIn} 0.5s ease-in;
-  /* filter: ${({ blur }) => (blur ? "blur(2px) opacity(75%)" : "none")}; */
+  filter: ${({ blur }) => (blur ? "blur(2px) opacity(75%)" : "none")};
+  &::selection {
+    color: ${({ theme, backgroundColor }) =>
+      theme.primary === backgroundColor ? "#ff0000" : theme.primary} !important;
+  }
 `;
 
 export const EmojiContainer = styled.span<{ clr: string }>`
@@ -105,9 +109,6 @@ export const NoTasks = styled.div`
   min-width: 100vw;
   opacity: 0.9;
   font-size: 18px;
-  /* @media (max-width: 1024px) {
-      font-size: 16px;
-    } */
 `;
 
 export const TasksContainer = styled.main`
@@ -152,7 +153,7 @@ export const SelectedTasksContainer = styled.div`
   padding: 16px 20px;
   border-radius: 18px;
   position: sticky;
-  top: 64px;
+  top: ${iOS ? "52" : "60"}px;
   z-index: 1;
   backdrop-filter: blur(24px);
 `;

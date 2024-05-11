@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import {
   Box,
   Button,
@@ -27,6 +27,9 @@ import { useOnlineStatus } from "../hooks/useOnlineStatus";
 import {
   CachedRounded,
   DeleteRounded,
+  ExpandMoreRounded,
+  Google,
+  Microsoft,
   VolumeDown,
   VolumeOff,
   VolumeUp,
@@ -75,11 +78,9 @@ export const SettingsDialog: React.FC<SettingsProps> = ({ open, onClose }) => {
   const getAvailableVoices = (): SpeechSynthesisVoice[] => {
     const voices = window.speechSynthesis.getVoices();
     const voiceInfoArray: SpeechSynthesisVoice[] = [];
-
     for (const voice of voices) {
       voiceInfoArray.push(voice);
     }
-
     return voiceInfoArray;
   };
 
@@ -102,11 +103,9 @@ export const SettingsDialog: React.FC<SettingsProps> = ({ open, onClose }) => {
       if (name === "enableReadAloud") {
         window.speechSynthesis.cancel();
       }
-
       if (name === "appBadge" && navigator.clearAppBadge && !event.target.checked) {
         navigator.clearAppBadge();
       }
-
       const updatedSettings = {
         ...userSettings,
         [name]: event.target.checked,
@@ -164,13 +163,10 @@ export const SettingsDialog: React.FC<SettingsProps> = ({ open, onClose }) => {
   const handleMuteClick = () => {
     // Retrieve the current voice volume from user settings
     const vol = voiceVolume;
-
     // Save the previous voice volume before muting
     setPrevVoiceVol(vol);
-
     const newVoiceVolume =
       vol === 0 ? (prevVoiceVol !== 0 ? prevVoiceVol : defaultUser.settings[0].voiceVolume) : 0;
-
     setUser((prevUser) => ({
       ...prevUser,
       settings: [
@@ -187,7 +183,6 @@ export const SettingsDialog: React.FC<SettingsProps> = ({ open, onClose }) => {
       // If lang is undefined or falsy, return an empty string
       return "";
     }
-
     const langParts = lang.split("-");
     if (langParts.length > 1) {
       try {
@@ -215,7 +210,12 @@ export const SettingsDialog: React.FC<SettingsProps> = ({ open, onClose }) => {
         <FormGroup>
           <FormControl>
             <FormLabel>Emoji Settings</FormLabel>
-            <StyledSelect value={emojisStyle} onChange={handleEmojiStyleChange} translate="no">
+            <StyledSelect
+              value={emojisStyle}
+              onChange={handleEmojiStyleChange}
+              translate="no"
+              IconComponent={ExpandMoreRounded}
+            >
               {/* Show a disabled menu item when offline, indicating that the style can't be changed */}
               {!isOnline && (
                 <MenuItem
@@ -389,6 +389,7 @@ export const SettingsDialog: React.FC<SettingsProps> = ({ open, onClose }) => {
                   variant="outlined"
                   onChange={handleVoiceChange}
                   translate="no"
+                  IconComponent={ExpandMoreRounded}
                   MenuProps={{
                     PaperProps: {
                       style: {
@@ -409,7 +410,10 @@ export const SettingsDialog: React.FC<SettingsProps> = ({ open, onClose }) => {
                         borderRadius: "8px",
                       }}
                     >
-                      {voice.name} &nbsp;
+                      {voice.name.startsWith("Google") && <Google />}
+                      {voice.name.startsWith("Microsoft") && <Microsoft />} &nbsp;{" "}
+                      {/* Remove Google or Microsoft at the beginning and anything within parentheses */}
+                      {voice.name.replace(/^(Google|Microsoft)\s*|\([^()]*\)/gi, "")} &nbsp;
                       {/* windows does not display flag emotes correctly */}
                       {!/Windows NT 10/.test(navigator.userAgent) ? (
                         <Chip

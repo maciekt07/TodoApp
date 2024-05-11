@@ -30,10 +30,11 @@ function App() {
       }
 
       Object.keys(defaultObject).forEach((key) => {
+        // Skip 'categories' key
         if (key === "categories") {
           return;
         }
-
+        // Check if userObject has a different colorList array than defaultObject
         if (
           key === "colorList" &&
           user.colorList &&
@@ -86,27 +87,39 @@ function App() {
   // This useEffect displays an native application badge count (for PWA) based on the number of tasks that are not done.
   // https://developer.mozilla.org/en-US/docs/Web/API/Badging_API
   useEffect(() => {
-    const setBadge = (...args: number[]) => {
-      if (navigator.setAppBadge) {
-        navigator.setAppBadge(...args);
+    const setBadge = async (count: number) => {
+      if ("setAppBadge" in navigator) {
+        try {
+          await navigator.setAppBadge(count);
+        } catch (error) {
+          console.error("Failed to set app badge:", error);
+        }
+      }
+    };
+
+    const clearBadge = async () => {
+      if ("clearAppBadge" in navigator) {
+        try {
+          await navigator.clearAppBadge();
+        } catch (error) {
+          console.error("Failed to clear app badge:", error);
+        }
       }
     };
     // Function to display the application badge
     const displayAppBadge = async () => {
       if (user.settings[0].appBadge === true) {
         // Request permission for notifications
-
         if ((await Notification.requestPermission()) === "granted") {
           // Calculate the number of incomplete tasks
           const incompleteTasksCount = user.tasks.filter((task) => !task.done).length;
-
           // Update the app badge count if the value is a valid number
           if (!isNaN(incompleteTasksCount)) {
             setBadge(incompleteTasksCount);
           }
         }
       } else {
-        navigator.clearAppBadge && navigator.clearAppBadge();
+        clearBadge();
       }
     };
     // Check if the browser supports setting the app badge

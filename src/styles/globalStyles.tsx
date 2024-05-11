@@ -12,7 +12,7 @@ export const GlobalStyles = () => {
           font-family: "Poppins", sans-serif !important;
           -webkit-tap-highlight-color: transparent;
           &::selection {
-            background-color: ${theme.primary};
+            background-color: ${theme.primary + "e1"};
             color: ${getFontColor(theme.primary)};
             text-shadow: 0 0 12px ${getFontColor(theme.primary) + "b9"};
           }
@@ -69,6 +69,7 @@ export const GlobalStyles = () => {
           background: ${theme.secondary};
           background-attachment: fixed;
           background-size: cover;
+          transition: 0.3s background;
           @media (max-width: 1024px) {
             margin: 20px;
           }
@@ -123,6 +124,11 @@ export const GlobalStyles = () => {
         .epr-emoji-category-label {
           backdrop-filter: blur(3px);
           -webkit-backdrop-filter: blur(3px);
+        }
+        .epr-emoji-native {
+          display: flex !important;
+          align-items: center !important;
+          justify-content: center !important;
         }
 
         .epr-body,

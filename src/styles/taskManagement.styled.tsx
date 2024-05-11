@@ -3,7 +3,8 @@ import { Box, Button } from "@mui/material";
 import { getFontColor } from "../utils";
 import { Info } from "@mui/icons-material";
 
-export const TaskManagementContainer = styled(Box)<{ backgroundclr: string; selected: boolean }>`
+//TODO: design this better
+export const TaskManagementContainer = styled(Box)<{ backgroundClr: string; selected: boolean }>`
   display: flex;
   align-items: center;
   justify-content: left;
@@ -11,8 +12,8 @@ export const TaskManagementContainer = styled(Box)<{ backgroundclr: string; sele
   padding: 10px 4px;
   border-radius: 16px;
   background: ${({ theme }) => getFontColor(theme.secondary)}15;
-  border: 2px solid ${({ backgroundclr }) => backgroundclr};
-  box-shadow: ${({ selected, backgroundclr }) => selected && `0 0 8px 1px ${backgroundclr}`};
+  border: 2px solid ${({ backgroundClr }) => backgroundClr};
+  box-shadow: ${({ selected, backgroundClr }) => selected && `0 0 8px 1px ${backgroundClr}`};
   transition: 0.3s all;
   width: 300px;
   cursor: "pointer";

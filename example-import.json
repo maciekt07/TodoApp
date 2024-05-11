@@ -1,6 +1,6 @@
 [
   {
-    "id": 1707953181101,
+    "id": "d25df11a-bee0-4be9-a709-cca1c9e69277",
     "done": false,
     "pinned": true,
     "name": "Website Development",
@@ -10,13 +10,13 @@
     "date": "2024-02-14T23:26:21.095Z",
     "category": [
       {
-        "id": 168712541746303,
+        "id": "955ac505-c9e6-43b4-861e-48cf2a54072d",
         "name": "Coding",
         "emoji": "1f5a5-fe0f",
         "color": "#6d12ff"
       },
       {
-        "id": 2,
+        "id": "55bceb25-03ac-4b30-a25a-45ebbe7338f0",
         "name": "Work",
         "emoji": "1f3e2",
         "color": "#248eff"
@@ -25,18 +25,18 @@
     "deadline": "2024-02-15T15:29"
   },
   {
-    "id": 1707953185952,
+    "id": "a87d987a-b19d-4c31-b46d-1d2a34856bd9",
     "done": true,
     "pinned": false,
     "name": "Workout",
-    "description": "Go to gym",
+    "description": "Go to gym and do a full body workout: https://www.youtube.com/watch?v=rL5FdSd1tQ4&ab_channel=MikeThurston",
     "emoji": "1f3cb-fe0f",
     "color": "#5d30ff",
     "date": "2024-02-14T23:26:25.681Z",
     "deadline": "2024-02-14T07:20",
     "category": [
       {
-        "id": 4,
+        "id": "03d62149-1d59-4868-8ee7-d91670c98e01",
         "name": "Health/Fitness",
         "emoji": "1f4aa",
         "color": "#FF9518"
@@ -45,7 +45,7 @@
     "lastSave": "2024-02-14T23:27:29.510Z"
   },
   {
-    "id": 1707953261297,
+    "id": "a186d31b-a671-4f80-ac3a-684fcc7c52ab",
     "done": false,
     "pinned": false,
     "name": "Design my portfolio",
@@ -55,13 +55,13 @@
     "date": "2024-02-14T23:27:40.633Z",
     "category": [
       {
-        "id": 168712541746303,
+        "id": "bb46c41c-0424-4982-955d-8d1002d3eb47",
         "name": "Coding",
         "emoji": "1f5a5-fe0f",
         "color": "#6d12ff"
       },
       {
-        "id": 2,
+        "id": "840bf799-de08-420c-bd10-09f0ec266ddf",
         "name": "Work",
         "emoji": "1f3e2",
         "color": "#248eff"

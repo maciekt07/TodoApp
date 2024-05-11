@@ -1,6 +1,9 @@
 import type { GitHubBranchResponse, GitHubInfoResponse, GitHubRepoResponse } from "../types/github";
 import { showToast } from "../utils";
-
+/**
+ * Function to fetch GitHub repository and branch information.
+ * @returns {Promise<GitHubInfoResponse>} Promise that resolves to an object containing repository and branch data.
+ */
 export const fetchGitHubInfo = async (): Promise<GitHubInfoResponse> => {
   const username = "maciekt07";
   const repo = "TodoApp";
@@ -25,7 +28,7 @@ export const fetchGitHubInfo = async (): Promise<GitHubInfoResponse> => {
     }
   } catch (error) {
     console.error(error);
-    showToast("Failed to fetch github api.", { type: "error" });
+    showToast("Failed to fetch Github API.", { type: "error" });
     return { repoData: {} as GitHubRepoResponse, branchData: {} as GitHubBranchResponse };
   }
 };

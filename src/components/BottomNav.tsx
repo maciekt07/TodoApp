@@ -137,11 +137,12 @@ const AddIcon = styled(AddRounded)<{ clr: string; animate: boolean }>`
   border-radius: 100px;
   padding: 6px;
   margin: 14px;
+  transition: background 0.3s;
   ${({ animate, theme }) =>
     animate &&
     css`
       animation: ${pulseAnimation(theme.palette.primary.main, 10)} 1.2s infinite;
-    `}
+    `};
 `;
 
 const Container = styled(Box)`
@@ -159,6 +160,7 @@ const StyledBottomNavigation = styled(BottomNavigation)<{ glow: boolean }>`
   backdrop-filter: blur(20px);
   margin: 0px 20px 0px -20px;
   padding: 18px 10px 32px 10px;
+  transition: 0.3s background, color;
 `;
 
 const NavigationButton = styled(BottomNavigationAction)`

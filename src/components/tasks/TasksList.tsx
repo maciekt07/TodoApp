@@ -1,5 +1,5 @@
 import type { Category, Task, UUID } from "../../types/user";
-import { ReactNode, useCallback, useContext, useEffect, useMemo, useState } from "react";
+import { type ReactNode, useCallback, useContext, useEffect, useMemo, useState } from "react";
 import { calculateDateDifference, formatDate, getFontColor, iOS, showToast } from "../../utils";
 import {
   CancelRounded,
@@ -336,7 +336,7 @@ export const TasksList: React.FC = () => {
     }
 
     const domainMappings: DomainMappings[] = [
-      { regex: /youtube\.com/, domainName: "Youtube", icon: <YouTube /> },
+      { regex: /(m\.)?youtu(\.be|be\.com)/, domainName: "Youtube", icon: <YouTube /> },
       {
         regex: /(twitter\.com|x\.com)/,
         domainName: "X",
@@ -438,16 +438,22 @@ export const TasksList: React.FC = () => {
               endAdornment: search ? (
                 <InputAdornment position="end">
                   <IconButton
-                    sx={{
-                      transition: ".3s all",
-                      color:
-                        reorderTasks(user.tasks).length === 0 && user.tasks.length > 0
-                          ? ColorPalette.red
-                          : "white",
-                    }}
+                    color={
+                      reorderTasks(user.tasks).length === 0 && user.tasks.length > 0
+                        ? "error"
+                        : "default"
+                    }
                     onClick={() => setSearch("")}
                   >
-                    <Close />
+                    <Close
+                      sx={{
+                        color:
+                          reorderTasks(user.tasks).length === 0 && user.tasks.length > 0
+                            ? `${ColorPalette.red} !important`
+                            : "white",
+                        transition: ".3s all",
+                      }}
+                    />
                   </IconButton>
                 </InputAdornment>
               ) : undefined,

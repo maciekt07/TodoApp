@@ -16,7 +16,7 @@ export const TopBar = ({ title }: TopBarProps) => {
   const n = useNavigate();
   return (
     <Container>
-      <BackBtn size="large" onClick={() => n("/")}>
+      <BackBtn size="large" aria-label="Back" onClick={() => n("/")}>
         <ArrowIcon />
       </BackBtn>
       <Title>{title}</Title>
@@ -32,7 +32,8 @@ const Container = styled.div`
   z-index: 99;
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
-  background-color: ${({ theme }) => theme.secondary + "c1"};
+  background: ${({ theme }) => theme.secondary + "c1"};
+  transition: background 0.3s, color 0.3s;
   margin-bottom: 48px;
 `;
 

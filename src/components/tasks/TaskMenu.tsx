@@ -118,24 +118,25 @@ export const TaskMenu: React.FC<TaskMenuProps> = ({
     }
   };
 
-  const handleShare = () => {
+  const handleShare = async (): Promise<void> => {
     const linkToShare = generateShareableLink(selectedTaskId, name || "User");
     if (navigator.share) {
-      navigator
-        .share({
+      try {
+        await navigator.share({
           title: "Share Task",
           text: `Check out this task: ${tasks.find((task) => task.id === selectedTaskId)?.name}`,
           url: linkToShare,
-        })
-        .catch((error) => {
-          console.error("Error sharing link:", error);
         });
+      } catch (error) {
+        console.error("Error sharing link:", error);
+      }
     }
   };
 
   const handleMarkAsDone = () => {
     // Toggles the "done" property of the selected task
     if (selectedTaskId) {
+      handleCloseMoreMenu();
       const updatedTasks = tasks.map((task) => {
         if (task.id === selectedTaskId) {
           return { ...task, done: !task.done };
@@ -171,6 +172,7 @@ export const TaskMenu: React.FC<TaskMenuProps> = ({
   const handlePin = () => {
     // Toggles the "pinned" property of the selected task
     if (selectedTaskId) {
+      handleCloseMoreMenu();
       const updatedTasks = tasks.map((task) => {
         if (task.id === selectedTaskId) {
           return { ...task, pinned: !task.pinned };
@@ -185,9 +187,8 @@ export const TaskMenu: React.FC<TaskMenuProps> = ({
   };
 
   const handleDuplicateTask = () => {
+    handleCloseMoreMenu();
     if (selectedTaskId) {
-      // Close the menu
-      handleCloseMoreMenu();
       // Find the selected task
       const selectedTask = tasks.find((task) => task.id === selectedTaskId);
       if (selectedTask) {
@@ -245,6 +246,7 @@ export const TaskMenu: React.FC<TaskMenuProps> = ({
     }
 
     handleCloseMoreMenu();
+
     const pauseSpeech = () => {
       window.speechSynthesis.pause();
     };
@@ -264,26 +266,11 @@ export const TaskMenu: React.FC<TaskMenuProps> = ({
         // eslint-disable-next-line react-hooks/rules-of-hooks
         const [isPlaying, setIsPlaying] = useState<boolean>(true);
         return (
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              flexDirection: "column",
-            }}
-          >
-            <span
-              translate="yes"
-              style={{
-                display: "inline-flex",
-                alignItems: "center",
-                fontWeight: 600,
-                gap: "6px",
-              }}
-            >
+          <ReadAloudContainer>
+            <ReadAloudHeader translate="yes">
               <RecordVoiceOver /> Read aloud: <span translate="no">{selectedTask?.name}</span>
-            </span>
-            <span translate="yes" style={{ marginTop: "10px", fontSize: "16px" }}>
+            </ReadAloudHeader>
+            <span translate="yes" style={{ marginTop: "8px", fontSize: "16px" }}>
               Voice: <span translate="no">{utterThis.voice?.name || "Default"}</span>
             </span>
             <div translate="no">
@@ -291,15 +278,7 @@ export const TaskMenu: React.FC<TaskMenuProps> = ({
                 <p style={{ margin: "6px 0" }}>{utterThis.text} &nbsp;</p>
               </Marquee>
             </div>
-            <div
-              style={{
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-                marginTop: "16px",
-                gap: "8px",
-              }}
-            >
+            <ReadAloudControls>
               {isPlaying ? (
                 <IconButton
                   sx={{ color: "white" }}
@@ -325,8 +304,8 @@ export const TaskMenu: React.FC<TaskMenuProps> = ({
               <IconButton sx={{ color: "white" }} onClick={cancelSpeech}>
                 <Cancel fontSize="large" />
               </IconButton>
-            </div>
-          </div>
+            </ReadAloudControls>
+          </ReadAloudContainer>
         );
       },
       {
@@ -353,24 +332,14 @@ export const TaskMenu: React.FC<TaskMenuProps> = ({
 
   const menuItems: JSX.Element = (
     <div>
-      <StyledMenuItem
-        onClick={() => {
-          handleCloseMoreMenu();
-          handleMarkAsDone();
-        }}
-      >
+      <StyledMenuItem onClick={handleMarkAsDone}>
         {tasks.find((task) => task.id === selectedTaskId)?.done ? <Close /> : <Done />}
         &nbsp;{" "}
         {tasks.find((task) => task.id === selectedTaskId)?.done
           ? "Mark as not done"
           : "Mark as done"}
       </StyledMenuItem>
-      <StyledMenuItem
-        onClick={() => {
-          handleCloseMoreMenu();
-          handlePin();
-        }}
-      >
+      <StyledMenuItem onClick={handlePin}>
         <PushPinRounded sx={{ textDecoration: "line-through" }} />
         &nbsp; {tasks.find((task) => task.id === selectedTaskId)?.pinned ? "Unpin" : "Pin"}
       </StyledMenuItem>
@@ -396,8 +365,8 @@ export const TaskMenu: React.FC<TaskMenuProps> = ({
 
       <StyledMenuItem
         onClick={() => {
-          handleCloseMoreMenu();
           setShowShareDialog(true);
+          handleCloseMoreMenu();
         }}
       >
         <LinkRounded /> &nbsp; Share
@@ -406,8 +375,8 @@ export const TaskMenu: React.FC<TaskMenuProps> = ({
       <Divider />
       <StyledMenuItem
         onClick={() => {
-          handleCloseMoreMenu();
           setEditModalOpen(true);
+          handleCloseMoreMenu();
         }}
       >
         <EditRounded /> &nbsp; Edit
@@ -419,8 +388,8 @@ export const TaskMenu: React.FC<TaskMenuProps> = ({
       <StyledMenuItem
         clr={ColorPalette.red}
         onClick={() => {
-          handleCloseMoreMenu();
           handleDeleteTask();
+          handleCloseMoreMenu();
         }}
       >
         <DeleteRounded /> &nbsp; Delete
@@ -439,6 +408,7 @@ export const TaskMenu: React.FC<TaskMenuProps> = ({
           onDismiss={handleCloseMoreMenu}
           snapPoints={({ minHeight, maxHeight }) => [minHeight, maxHeight]}
           expandOnContentDrag
+          onClick={() => console.log("xd")}
           header={
             <SheetHeader translate="no">
               <Emoji
@@ -583,16 +553,13 @@ interface TabPanelProps {
   index: number;
   value: number;
 }
-function CustomTabPanel(props: TabPanelProps) {
-  const { children, value, index, ...other } = props;
-
+const CustomTabPanel = ({ children, value, index }: TabPanelProps) => {
   return (
     <div
       role="tabpanel"
       hidden={value !== index}
       id={`share-tabpanel-${index}`}
       aria-labelledby={`share-tab-${index}`}
-      {...other}
     >
       {value === index && (
         <Box>
@@ -601,7 +568,7 @@ function CustomTabPanel(props: TabPanelProps) {
       )}
     </div>
   );
-}
+};
 const SheetHeader = styled.h3`
   display: flex;
   justify-content: center;
@@ -638,6 +605,28 @@ const StyledMenuItem = styled(MenuItem)<{ clr?: string }>`
   }
 `;
 
+const ReadAloudContainer = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+`;
+
+const ReadAloudHeader = styled.div`
+  display: inline-flex;
+  align-items: center;
+  font-weight: 600;
+  gap: 6px;
+`;
+
+const ReadAloudControls = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 16px;
+  gap: 8px;
+`;
+
 const ShareField = styled(TextField)`
   margin-top: 22px;
   .MuiOutlinedInput-root {
@@ -655,8 +644,7 @@ const DownloadQrCodeBtn = styled(Button)`
     margin-top: -2px;
   }
 `;
-// p: "12px 24px",
-// borderRadius: "14px",
+
 const StyledTab = styled(Tab)`
   border-radius: 12px 12px 0 0;
   width: 50%;

@@ -37,22 +37,17 @@ export const CategoryBadge: React.FC<CategoryBadgeProps> = ({ category, emojiSiz
               borderRadius: "0px",
             }}
           >
-            {category.emoji &&
-              (emojisStyle === EmojiStyle.NATIVE ? (
-                <div>
-                  <Emoji
-                    size={emojiSizes ? emojiSizes[1] : 18}
-                    unified={category.emoji}
-                    emojiStyle={EmojiStyle.NATIVE}
-                  />
-                </div>
-              ) : (
-                <Emoji
-                  size={emojiSizes ? emojiSizes[0] : 20}
-                  unified={category.emoji}
-                  emojiStyle={emojisStyle}
-                />
-              ))}
+            <Emoji
+              size={
+                emojiSizes
+                  ? emojisStyle !== EmojiStyle.NATIVE
+                    ? emojiSizes[0]
+                    : emojiSizes[1]
+                  : 20
+              }
+              unified={category.emoji}
+              emojiStyle={emojisStyle}
+            />
           </Avatar>
         ) : undefined
       }

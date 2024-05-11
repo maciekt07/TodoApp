@@ -1,5 +1,5 @@
 import styled from "@emotion/styled";
-import { Category, UUID } from "../types/user";
+import type { Category, UUID } from "../types/user";
 import {
   Box,
   Button,
@@ -10,7 +10,7 @@ import {
   SelectChangeEvent,
 } from "@mui/material";
 import { ColorPalette } from "../styles";
-import { Emoji, EmojiStyle } from "emoji-picker-react";
+import { Emoji } from "emoji-picker-react";
 import { getFontColor, showToast } from "../utils";
 import { CSSProperties, useContext, useState } from "react";
 import { MAX_CATEGORIES_IN_TASK } from "../constants";
@@ -151,13 +151,7 @@ export const CategorySelect: React.FC<CategorySelectProps> = ({
               }
             >
               {selectedCats.some((cat) => cat.id === category.id) && <RadioButtonChecked />}
-              {category.emoji && emojisStyle === EmojiStyle.NATIVE ? (
-                <div>
-                  <Emoji unified={category.emoji} emojiStyle={EmojiStyle.NATIVE} size={26} />
-                </div>
-              ) : (
-                category.emoji && <Emoji unified={category.emoji} emojiStyle={emojisStyle} />
-              )}
+              {category.emoji && <Emoji unified={category.emoji} emojiStyle={emojisStyle} />}
               &nbsp;
               {category.name}
             </CategoriesMenu>

@@ -40,6 +40,7 @@ import { iOS } from "../utils/iOS";
 import { fetchGitHubInfo } from "../services/githubApi";
 import { showToast, timeAgo } from "../utils";
 import bmcLogo from "../assets/bmc-logo.svg";
+import { fetchBMCInfo } from "../services/bmcApi";
 
 export const ProfileSidebar = () => {
   const { user, setUser } = useContext(UserContext);
@@ -58,39 +59,20 @@ export const ProfileSidebar = () => {
 
   useEffect(() => {
     const fetchRepoInfo: () => Promise<void> = async () => {
-      try {
-        const { repoData, branchData } = await fetchGitHubInfo();
-        setStars(repoData.stargazers_count);
-        setLastUpdate(branchData.commit.commit.committer.date);
-        setIssuesCount(repoData.open_issues_count);
-      } catch (error) {
-        console.error(error);
-      }
+      const { repoData, branchData } = await fetchGitHubInfo();
+      setStars(repoData.stargazers_count);
+      setLastUpdate(branchData.commit.commit.committer.date);
+      setIssuesCount(repoData.open_issues_count);
     };
-    // Function to fetch data from the Buy Me a Coffee API
+
     const fetchBMC: () => Promise<void> = async () => {
-      // URL of the Buy Me a Coffee API endpoint
-      const url = "https://img.buymeacoffee.com/button-api/?&slug=maciekt07";
-      try {
-        // Fetch data from the provided URL
-        const response = await fetch(url);
-        const html = await response.text();
-        // Parse the HTML response using DOMParser
-        const parser = new DOMParser();
-        const doc = parser.parseFromString(html, "text/html");
-        // Find the element containing the number of supporters
-        const supportersCountElement = doc.querySelector("text[x='226'][text-anchor='middle']");
-        if (supportersCountElement) {
-          const supportersCount = Number(supportersCountElement.textContent);
-          // In case bmc api fails
-          if (supportersCount > 0) {
-            setBmcSupporters(supportersCount);
-          }
-        } else {
-          console.log("Failed to fetch bmc api: Supporters count element not found.");
-        }
-      } catch (error) {
-        console.error("Error fetching webpage:", error);
+      // Fetch data from the Buy Me a Coffee API
+      const { supportersCount } = await fetchBMCInfo();
+      // In case BMC api fails
+      if (supportersCount > 0) {
+        setBmcSupporters(supportersCount);
+      } else {
+        console.error("No BMC supporters found.");
       }
     };
     fetchBMC();
@@ -447,7 +429,7 @@ export const ProfileSidebar = () => {
         <DialogActions>
           <DialogBtn onClick={handleLogoutConfirmationClose}>Cancel</DialogBtn>
           <DialogBtn onClick={handleLogout} color="error">
-            Logout
+            <Logout /> &nbsp; Logout
           </DialogBtn>
         </DialogActions>
       </Dialog>

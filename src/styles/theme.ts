@@ -9,6 +9,8 @@ export const ColorPalette = {
   orange: "#ff9318",
 } as const;
 
+export type AppTheme = string;
+
 type ThemeConfig = {
   [key: AppTheme]: {
     primaryColor: string;
@@ -137,8 +139,6 @@ export const createCustomTheme = (primaryColor: string, backgroundColor = "#232e
     },
   });
 };
-
-export type AppTheme = string;
 
 export const Themes: { name: AppTheme; MuiTheme: Theme }[] = Object.entries(themeConfig).map(
   ([name, config]) => ({

@@ -18,7 +18,6 @@ import {
   DESCRIPTION_MAX_LENGTH,
   TASK_NAME_MAX_LENGTH,
 } from "../constants";
-import toast from "react-hot-toast";
 import { UserContext } from "../contexts/UserContext";
 import { useStorageState } from "../hooks/useStorageState";
 import { useCtrlS } from "../hooks/useCtrlS";
@@ -69,30 +68,21 @@ const ImportExport = () => {
   const handleExport = () => {
     const tasksToExport = user.tasks.filter((task) => selectedTasks.includes(task.id));
     exportTasksToJson(tasksToExport);
-    toast(
-      (t) => (
-        <div>
-          Exported tasks:{" "}
-          <ul>
-            {tasksToExport.map((task) => (
-              <li key={task.id}>
-                <ListContent>
-                  <Emoji unified={task.emoji || ""} size={20} emojiStyle={user.emojisStyle} />
-                  <span>{task.name}</span>
-                </ListContent>
-              </li>
-            ))}
-          </ul>
-          <Button
-            variant="outlined"
-            sx={{ width: "100%", p: "12px 24px", borderRadius: "16px", fontSize: "16px" }}
-            onClick={() => toast.dismiss(t.id)}
-          >
-            Dimiss
-          </Button>
-        </div>
-      )
-      // { icon: <FileDownload /> }
+    showToast(
+      <div>
+        Exported tasks:{" "}
+        <ul>
+          {tasksToExport.map((task) => (
+            <li key={task.id}>
+              <ListContent>
+                <Emoji unified={task.emoji || ""} size={20} emojiStyle={user.emojisStyle} />
+                <span>{task.name}</span>
+              </ListContent>
+            </li>
+          ))}
+        </ul>
+      </div>,
+      { dismissButton: true, type: "blank" }
     );
   };
 
@@ -220,7 +210,7 @@ const ImportExport = () => {
           // Display the alert with the list of imported task names
           console.log(`Imported Tasks: ${importedTaskNames}`);
 
-          toast((t) => (
+          showToast(
             <div>
               Tasks Successfully Imported from <br />
               <i translate="no" style={{ wordBreak: "break-all" }}>
@@ -236,15 +226,9 @@ const ImportExport = () => {
                   </li>
                 ))}
               </ul>
-              <Button
-                variant="outlined"
-                sx={{ width: "100%", p: "12px 24px", borderRadius: "16px", fontSize: "16px" }}
-                onClick={() => toast.dismiss(t.id)}
-              >
-                Dimiss
-              </Button>
-            </div>
-          ));
+            </div>,
+            { dismissButton: true, type: "blank" }
+          );
 
           if (fileInputRef.current) {
             fileInputRef.current.value = "";
@@ -345,7 +329,7 @@ const ImportExport = () => {
           user.tasks.map((task: Task) => (
             <TaskManagementContainer
               key={task.id}
-              backgroundclr={task.color}
+              backgroundClr={task.color}
               onClick={() => handleTaskClick(task.id)}
               selected={selectedTasks.includes(task.id)}
               translate="no"

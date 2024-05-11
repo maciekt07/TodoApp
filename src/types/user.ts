@@ -12,7 +12,7 @@ export type UUID = ReturnType<typeof crypto.randomUUID>;
 export interface User {
   name: string | null;
   createdAt: Date;
-  profilePicture: string | URL | null;
+  profilePicture: string | null;
   emojisStyle: EmojiStyle;
   tasks: Task[];
   categories: Category[];

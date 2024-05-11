@@ -283,6 +283,7 @@ const UserSettings = () => {
               ),
             }}
           />
+
           <br />
           {profilePicture !== null && (
             <Button
@@ -321,7 +322,7 @@ const UserSettings = () => {
         <DialogActions>
           <DialogBtn onClick={handleLogoutConfirmationClose}>Cancel</DialogBtn>
           <DialogBtn onClick={handleLogout} color="error">
-            Logout
+            <Logout /> &nbsp; Logout
           </DialogBtn>
         </DialogActions>
       </Dialog>
@@ -339,7 +340,7 @@ const Container = styled.div`
   box-shadow: 0px 4px 50px rgba(0, 0, 0, 0.25);
   background: #f5f5f5;
   color: ${ColorPalette.fontDark};
-  transition: border 0.3s;
+  transition: border 0.3s, box-shadow 0.3s;
   border: 4px solid ${({ theme }) => theme.primary};
   box-shadow: 0 0 72px -1px ${({ theme }) => theme.primary + "bf"};
   display: flex;
@@ -372,6 +373,7 @@ const SaveBtn = styled(Button)`
   border-radius: 16px;
   cursor: pointer;
   text-transform: capitalize;
+  transition: background 0.3s, color 0.3s;
   &:hover {
     background: ${({ theme }) => theme.primary};
   }
