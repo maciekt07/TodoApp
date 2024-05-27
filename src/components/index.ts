@@ -10,3 +10,4 @@ export { CategorySelect } from "./CategorySelect";
 export { ColorPicker } from "./ColorPicker";
 export { CategoryBadge } from "./CategoryBadge";
 export { TaskIcon } from "./TaskIcon";
+export { Loading } from "./Loading";

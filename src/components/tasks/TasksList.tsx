@@ -1,6 +1,4 @@
-import type { Category, Task, UUID } from "../../types/user";
-import { type ReactNode, useCallback, useContext, useEffect, useMemo, useState } from "react";
-import { calculateDateDifference, formatDate, getFontColor, iOS, showToast } from "../../utils";
+import { useTheme } from "@emotion/react";
 import {
   CancelRounded,
   Close,
@@ -8,18 +6,11 @@ import {
   DeleteRounded,
   DoneAll,
   DoneRounded,
-  GitHub,
-  ImageRounded,
-  Language,
   Link,
-  LinkedIn,
   MoreVert,
   PushPinRounded,
   RadioButtonChecked,
-  Reddit,
   Search,
-  X,
-  YouTube,
 } from "@mui/icons-material";
 import {
   Dialog,
@@ -31,10 +22,25 @@ import {
   Tooltip,
 } from "@mui/material";
 import { Emoji, EmojiStyle } from "emoji-picker-react";
+import { useCallback, useContext, useEffect, useMemo, useState, type ReactNode } from "react";
 import { CategoryBadge, EditTask, TaskIcon, TaskMenu } from "..";
+import { URL_REGEX } from "../../constants";
+import { UserContext } from "../../contexts/UserContext";
+import { useCtrlS } from "../../hooks/useCtrlS";
+import { useResponsiveDisplay } from "../../hooks/useResponsiveDisplay";
+import { useStorageState } from "../../hooks/useStorageState";
+import { ColorPalette, DialogBtn } from "../../styles";
+import type { Category, Task, UUID } from "../../types/user";
+import {
+  calculateDateDifference,
+  formatDate,
+  getFontColor,
+  showToast,
+  systemInfo,
+} from "../../utils";
+import { RenderTaskDescription } from "./RenderTaskDescription";
 import {
   CategoriesListContainer,
-  DescriptionLink,
   EmojiContainer,
   HighlightedText,
   NoTasks,
@@ -42,9 +48,9 @@ import {
   RadioChecked,
   RadioUnchecked,
   RingAlarm,
+  SearchClear,
   SearchInput,
   SelectedTasksContainer,
-  ShowMoreBtn,
   StyledRadio,
   TaskContainer,
   TaskDate,
@@ -55,13 +61,6 @@ import {
   TasksContainer,
   TimeLeft,
 } from "./tasks.styled";
-import { ColorPalette, DialogBtn } from "../../styles";
-import { useResponsiveDisplay } from "../../hooks/useResponsiveDisplay";
-import { UserContext } from "../../contexts/UserContext";
-import { useStorageState } from "../../hooks/useStorageState";
-import { DESCRIPTION_SHORT_LENGTH, URL_REGEX } from "../../constants";
-import { useCtrlS } from "../../hooks/useCtrlS";
-import { useTheme } from "@emotion/react";
 
 /**
  * Component to display a list of tasks.
@@ -179,7 +178,8 @@ export const TasksList: React.FC = () => {
       setDeleteDialogOpen(false);
       showToast(
         <div>
-          Deleted Task - <b>{user.tasks.find((task) => task.id === selectedTaskId)?.name}</b>
+          Deleted Task -{" "}
+          <b translate="no">{user.tasks.find((task) => task.id === selectedTaskId)?.name}</b>
         </div>
       );
     }
@@ -311,102 +311,6 @@ export const TasksList: React.FC = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  /**
-   * Function to render task description with links
-   */
-  const renderTaskDescription = (task: Task): JSX.Element | null => {
-    if (!task || !task.description) {
-      return null;
-    }
-
-    const { description, color, id } = task;
-
-    const hasLinks = description.match(URL_REGEX);
-
-    const isExpanded = expandedTasks.has(id);
-    const highlightedDescription =
-      isExpanded || hasLinks ? description : description.slice(0, DESCRIPTION_SHORT_LENGTH);
-
-    const parts = highlightedDescription.split(URL_REGEX);
-
-    interface DomainMappings {
-      regex: RegExp;
-      domainName?: string;
-      icon: JSX.Element;
-    }
-
-    const domainMappings: DomainMappings[] = [
-      { regex: /(m\.)?youtu(\.be|be\.com)/, domainName: "Youtube", icon: <YouTube /> },
-      {
-        regex: /(twitter\.com|x\.com)/,
-        domainName: "X",
-        icon: <X sx={{ fontSize: "18px" }} />,
-      },
-      { regex: /github\.com/, domainName: "Github", icon: <GitHub sx={{ fontSize: "20px" }} /> },
-      { regex: /reddit\.com/, domainName: "Reddit", icon: <Reddit /> },
-      { regex: /linkedin\.com/, domainName: "LinkedIn", icon: <LinkedIn /> },
-      { regex: /localhost/, icon: <Language /> },
-      { regex: /.*/, icon: <Link /> }, // Default icon for other domains
-    ];
-
-    const descriptionWithLinks = parts.map((part, index) => {
-      if (index % 2 === 0) {
-        return highlightMatchingText(part);
-      } else {
-        let domain: string = "";
-        let icon: JSX.Element = <Link />;
-
-        try {
-          const url = new URL(part);
-          domain = url.hostname.replace("www.", "");
-          // Find the matching icon for the domain
-          const mapping = domainMappings.find(({ regex }) => domain.match(regex));
-          icon = mapping ? mapping.icon : <Link />; // Default to Link icon
-          domain =
-            mapping && mapping.domainName ? mapping.domainName : url.hostname.replace("www.", "");
-        } catch (error) {
-          // If URL construction fails
-          console.error("Invalid URL:", part);
-        }
-
-        // Check if part matches any image file extensions
-        if (part.match(/\.(jpeg|jpg|gif|png|bmp|svg|tif|tiff|webp)$/)) {
-          icon = <ImageRounded />;
-        }
-
-        return (
-          <Tooltip title={part} key={index}>
-            <DescriptionLink
-              role="link"
-              data-href={part}
-              clr={color}
-              onClick={() => window.open(part)}
-            >
-              <div>
-                {icon} {highlightMatchingText(domain)}
-              </div>
-            </DescriptionLink>
-          </Tooltip>
-        );
-      }
-    });
-
-    return (
-      <div>
-        {descriptionWithLinks}{" "}
-        {(!open || task.id !== selectedTaskId || isMobile) &&
-          task.description &&
-          task.description.length > DESCRIPTION_SHORT_LENGTH &&
-          task.description &&
-          !hasLinks && (
-            <ShowMoreBtn onClick={() => toggleShowMore(task.id)} clr={task.color}>
-              {expandedTasks.has(task.id) ? "Show less" : "Show more"}
-            </ShowMoreBtn>
-          )}
-      </div>
-    );
-  };
-
   return (
     <>
       <TaskMenu
@@ -437,7 +341,7 @@ export const TasksList: React.FC = () => {
               ),
               endAdornment: search ? (
                 <InputAdornment position="end">
-                  <IconButton
+                  <SearchClear
                     color={
                       reorderTasks(user.tasks).length === 0 && user.tasks.length > 0
                         ? "error"
@@ -454,7 +358,7 @@ export const TasksList: React.FC = () => {
                         transition: ".3s all",
                       }}
                     />
-                  </IconButton>
+                  </SearchClear>
                 </InputAdornment>
               ) : undefined,
             }}
@@ -508,11 +412,11 @@ export const TasksList: React.FC = () => {
         {multipleSelectedTasks.length > 0 && (
           <SelectedTasksContainer>
             <div>
-              <h3 style={{ margin: 0, display: "flex", alignItems: "center" }}>
+              <h3>
                 <RadioButtonChecked /> &nbsp; Selected {multipleSelectedTasks.length} task
                 {multipleSelectedTasks.length > 1 ? "s" : ""}
               </h3>
-              <span style={{ fontSize: "14px", opacity: 0.8 }}>
+              <span translate="no" style={{ fontSize: "14px", opacity: 0.8 }}>
                 {listFormat.format(
                   multipleSelectedTasks
                     .map((taskId) => user.tasks.find((task) => task.id === taskId)?.name)
@@ -597,7 +501,7 @@ export const TasksList: React.FC = () => {
                   ) : user.emojisStyle === EmojiStyle.NATIVE ? (
                     <div>
                       <Emoji
-                        size={iOS ? 48 : 36}
+                        size={systemInfo.os === "iOS" ? 48 : 36}
                         unified={task.emoji || ""}
                         emojiStyle={EmojiStyle.NATIVE}
                       />
@@ -625,7 +529,15 @@ export const TasksList: React.FC = () => {
                   </Tooltip>
                 </TaskHeader>
 
-                <TaskDescription done={task.done}>{renderTaskDescription(task)} </TaskDescription>
+                <TaskDescription done={task.done}>
+                  <RenderTaskDescription
+                    task={task}
+                    expandedTasks={expandedTasks}
+                    highlightMatchingText={highlightMatchingText}
+                    selectedTaskId={selectedTaskId}
+                    toggleShowMore={toggleShowMore}
+                  />
+                </TaskDescription>
                 {task.deadline && (
                   <Tooltip
                     title={new Intl.DateTimeFormat(navigator.language, {
@@ -764,17 +676,22 @@ export const TasksList: React.FC = () => {
                 </p>
               )}
               <p>
-                <b>Task Name:</b> {selectedTask.name}
+                <b>Task Name:</b> <span translate="no">{selectedTask.name}</span>
               </p>
               {selectedTask.description && (
                 <p>
-                  <b>Task Description:</b> {selectedTask.description.replace(URL_REGEX, "[link]")}
+                  <b>Task Description:</b>{" "}
+                  <span translate="no">
+                    {selectedTask.description.replace(URL_REGEX, "[link]")}
+                  </span>
                 </p>
               )}
               {selectedTask.category?.[0]?.name && (
                 <p>
                   <b>{selectedTask.category.length > 1 ? "Categories" : "Category"}:</b>{" "}
-                  {listFormat.format(selectedTask.category.map((cat) => cat.name))}
+                  <span translate="no">
+                    {listFormat.format(selectedTask.category.map((cat) => cat.name))}
+                  </span>
                 </p>
               )}
             </>
@@ -791,7 +708,7 @@ export const TasksList: React.FC = () => {
       </Dialog>
       <Dialog open={deleteSelectedOpen}>
         <DialogTitle>Are you sure you want to delete selected tasks?</DialogTitle>
-        <DialogContent>
+        <DialogContent translate="no">
           {listFormat.format(
             multipleSelectedTasks
               .map((taskId) => user.tasks.find((task) => task.id === taskId)?.name)

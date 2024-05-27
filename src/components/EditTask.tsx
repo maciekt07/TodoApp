@@ -1,21 +1,21 @@
-import { useState, useEffect, useContext, useMemo } from "react";
+import styled from "@emotion/styled";
+import { CancelRounded, EditCalendarRounded, SaveRounded } from "@mui/icons-material";
 import {
   Dialog,
-  DialogTitle,
-  DialogContent,
   DialogActions,
-  TextField,
-  InputAdornment,
+  DialogContent,
+  DialogTitle,
   IconButton,
+  InputAdornment,
+  TextField,
   Tooltip,
 } from "@mui/material";
-import { Category, Task } from "../types/user";
-import styled from "@emotion/styled";
-import { DESCRIPTION_MAX_LENGTH, TASK_NAME_MAX_LENGTH } from "../constants";
-import { ColorPalette, DialogBtn } from "../styles";
+import { useContext, useEffect, useMemo, useState } from "react";
 import { CategorySelect, ColorPicker, CustomEmojiPicker } from ".";
+import { DESCRIPTION_MAX_LENGTH, TASK_NAME_MAX_LENGTH } from "../constants";
 import { UserContext } from "../contexts/UserContext";
-import { CancelRounded, EditCalendarRounded, SaveRounded } from "@mui/icons-material";
+import { ColorPalette, DialogBtn } from "../styles";
+import { Category, Task } from "../types/user";
 import { showToast, timeAgo } from "../utils";
 
 interface EditTaskProps {
@@ -74,7 +74,7 @@ export const EditTask = ({ open, task, onClose, onSave }: EditTaskProps) => {
       onSave(editedTask);
       showToast(
         <div>
-          Task <b>{editedTask.name}</b> updated.
+          Task <b translate="no">{editedTask.name}</b> updated.
         </div>
       );
     }

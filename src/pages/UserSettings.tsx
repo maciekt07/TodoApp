@@ -58,7 +58,7 @@ const UserSettings = () => {
           {userName && (
             <>
               {" "}
-              to <b>{userName}</b>
+              to <b translate="no">{userName}</b>
             </>
           )}
           .
@@ -137,6 +137,7 @@ const UserSettings = () => {
             <Avatar
               onClick={handleOpenImageDialog}
               src={(profilePicture as string) || undefined}
+              translate="no"
               sx={{
                 width: "96px",
                 height: "96px",

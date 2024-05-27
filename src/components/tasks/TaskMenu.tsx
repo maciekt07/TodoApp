@@ -1,3 +1,4 @@
+import styled from "@emotion/styled";
 import {
   Cancel,
   Close,
@@ -37,21 +38,20 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import { BottomSheet } from "react-spring-bottom-sheet";
 import { Emoji, EmojiStyle } from "emoji-picker-react";
-import styled from "@emotion/styled";
+import { useContext, useState } from "react";
+import Marquee from "react-fast-marquee";
+import toast from "react-hot-toast";
+import QRCode from "react-qr-code";
+import { useNavigate } from "react-router-dom";
+import { BottomSheet } from "react-spring-bottom-sheet";
 import "react-spring-bottom-sheet/dist/style.css";
+import { TaskIcon } from "..";
+import { UserContext } from "../../contexts/UserContext";
 import { useResponsiveDisplay } from "../../hooks/useResponsiveDisplay";
 import { ColorPalette, DialogBtn } from "../../styles";
-import { useNavigate } from "react-router-dom";
-import { useContext, useState } from "react";
-import toast from "react-hot-toast";
-import { UserContext } from "../../contexts/UserContext";
-import QRCode from "react-qr-code";
 import { Task, UUID } from "../../types/user";
 import { calculateDateDifference, saveQRCode, showToast } from "../../utils";
-import Marquee from "react-fast-marquee";
-import { TaskIcon } from "..";
 
 interface TaskMenuProps {
   selectedTaskId: UUID | null;
@@ -300,7 +300,6 @@ export const TaskMenu: React.FC<TaskMenuProps> = ({
                   <PlayArrow fontSize="large" />
                 </IconButton>
               )}
-
               <IconButton sx={{ color: "white" }} onClick={cancelSpeech}>
                 <Cancel fontSize="large" />
               </IconButton>

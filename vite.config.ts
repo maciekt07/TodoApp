@@ -2,7 +2,6 @@ import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 import { VitePWA } from "vite-plugin-pwa";
 
-// https://vitejs.dev/config/
 export default defineConfig({
   plugins: [
     react(),
@@ -11,12 +10,49 @@ export default defineConfig({
         enabled: true,
         type: "module",
       },
-      // cache all the imports
       registerType: "autoUpdate",
       workbox: {
-        globPatterns: ["**/*"],
+        // Use runtime caching for dynamic imports
+        runtimeCaching: [
+          {
+            urlPattern: ({ request }) =>
+              request.destination === "script" ||
+              request.destination === "style" ||
+              request.destination === "worker",
+            handler: "CacheFirst",
+            options: {
+              cacheName: "dynamic-resources",
+              expiration: {
+                maxEntries: 50,
+                maxAgeSeconds: 30 * 24 * 60 * 60,
+              },
+            },
+          },
+          {
+            urlPattern: ({ request }) => request.mode === "navigate",
+            handler: "NetworkFirst",
+            options: {
+              cacheName: "documents",
+              networkTimeoutSeconds: 10,
+              expiration: {
+                maxEntries: 50,
+                maxAgeSeconds: 30 * 24 * 60 * 60,
+              },
+            },
+          },
+          {
+            urlPattern: ({ request }) => request.destination === "image",
+            handler: "CacheFirst",
+            options: {
+              cacheName: "images",
+              expiration: {
+                maxEntries: 50,
+                maxAgeSeconds: 30 * 24 * 60 * 60,
+              },
+            },
+          },
+        ],
       },
-      // cache all the static assets in the public folder
       includeAssets: ["**/*"],
       manifest: {
         theme_color: "#7764E8",
@@ -50,7 +86,7 @@ export default defineConfig({
             type: "image/png",
           },
           {
-            src: "logoMaskable.png",
+            src: "pwa/logoMaskable.png",
             sizes: "256x256",
             type: "image/png",
             purpose: "maskable",
@@ -63,7 +99,7 @@ export default defineConfig({
             url: "/add",
             icons: [
               {
-                src: "add.png",
+                src: "pwa/add.png",
                 sizes: "192x192",
                 type: "image/png",
               },
@@ -75,7 +111,7 @@ export default defineConfig({
             url: "/categories",
             icons: [
               {
-                src: "categories.png",
+                src: "pwa/categories.png",
                 sizes: "192x192",
                 type: "image/png",
               },
@@ -87,7 +123,7 @@ export default defineConfig({
             url: "/transfer",
             icons: [
               {
-                src: "transfer.png",
+                src: "pwa/transfer.png",
                 sizes: "192x192",
                 type: "image/png",
               },
@@ -99,7 +135,7 @@ export default defineConfig({
             url: "/purge",
             icons: [
               {
-                src: "purge.png",
+                src: "pwa/purge.png",
                 sizes: "192x192",
                 type: "image/png",
               },
@@ -111,7 +147,7 @@ export default defineConfig({
             url: "/user",
             icons: [
               {
-                src: "profile.png",
+                src: "pwa/profile.png",
                 sizes: "192x192",
                 type: "image/png",
               },
@@ -120,22 +156,22 @@ export default defineConfig({
         ],
         screenshots: [
           {
-            src: "wideScreenshot1.png",
+            src: "pwa/wideScreenshot1.png",
             sizes: "1460x959",
             form_factor: "wide",
           },
           {
-            src: "wideScreenshot2.png",
+            src: "pwa/wideScreenshot2.png",
             sizes: "1460x959",
             form_factor: "wide",
           },
           {
-            src: "narrowScreenshot1.png",
+            src: "pwa/narrowScreenshot1.png",
             sizes: "1170x2532",
             form_factor: "narrow",
           },
           {
-            src: "narrowScreenshot2.png",
+            src: "pwa/narrowScreenshot2.png",
             sizes: "1170x2532",
             form_factor: "narrow",
           },

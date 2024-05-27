@@ -1,4 +1,15 @@
-import { useContext, useEffect, useState } from "react";
+import styled from "@emotion/styled";
+import {
+  CachedRounded,
+  DeleteRounded,
+  ExpandMoreRounded,
+  Google,
+  Microsoft,
+  VolumeDown,
+  VolumeOff,
+  VolumeUp,
+  WifiOffRounded,
+} from "@mui/icons-material";
 import {
   Box,
   Button,
@@ -19,26 +30,14 @@ import {
   Switch,
   Tooltip,
 } from "@mui/material";
-import type { AppSettings } from "../types/user";
-import { DialogBtn } from "../styles";
-import styled from "@emotion/styled";
 import { Emoji, EmojiStyle } from "emoji-picker-react";
-import { useOnlineStatus } from "../hooks/useOnlineStatus";
-import {
-  CachedRounded,
-  DeleteRounded,
-  ExpandMoreRounded,
-  Google,
-  Microsoft,
-  VolumeDown,
-  VolumeOff,
-  VolumeUp,
-  WifiOffRounded,
-} from "@mui/icons-material";
+import { useContext, useEffect, useState } from "react";
 import { defaultUser } from "../constants/defaultUser";
 import { UserContext } from "../contexts/UserContext";
-import { iOS } from "../utils/iOS";
-import { showToast } from "../utils";
+import { useOnlineStatus } from "../hooks/useOnlineStatus";
+import { DialogBtn } from "../styles";
+import type { AppSettings } from "../types/user";
+import { showToast, systemInfo } from "../utils";
 
 interface SettingsProps {
   open: boolean;
@@ -93,22 +92,22 @@ export const SettingsDialog: React.FC<SettingsProps> = ({ open, onClose }) => {
   window.speechSynthesis.onvoiceschanged = () => {
     const availableVoices = getAvailableVoices();
     setAvailableVoices(availableVoices ?? []);
-    // console.log(availableVoices);
   };
 
   // Handler for updating individual setting options
   const handleSettingChange =
     (name: keyof AppSettings) => (event: React.ChangeEvent<HTMLInputElement>) => {
+      const isChecked = event.target.checked;
       // cancel read aloud
       if (name === "enableReadAloud") {
         window.speechSynthesis.cancel();
       }
-      if (name === "appBadge" && navigator.clearAppBadge && !event.target.checked) {
+      if (name === "appBadge" && navigator.clearAppBadge && !isChecked) {
         navigator.clearAppBadge();
       }
       const updatedSettings = {
         ...userSettings,
-        [name]: event.target.checked,
+        [name]: isChecked,
       };
       setUserSettings(updatedSettings);
       setUser((prevUser) => ({
@@ -430,7 +429,7 @@ export const SettingsDialog: React.FC<SettingsProps> = ({ open, onClose }) => {
                           {getLanguageRegion(voice.lang || "")}
                         </span>
                       )}
-                      {voice.default && !iOS && (
+                      {voice.default && systemInfo.os !== "iOS" && (
                         <span style={{ fontWeight: 600 }}>&nbsp;Default</span>
                       )}
                     </MenuItem>

@@ -111,6 +111,7 @@ export const StyledProgress = styled(CircularProgress)<{ glow: boolean }>`
   z-index: 1;
   margin: 2px;
   filter: ${({ glow, theme }) => (glow ? `drop-shadow(0 0 6px ${theme.primary}c8)` : "none")};
+  transition: 0.3s filter;
 `;
 
 export const AddButton = styled(Button)<{ animate?: boolean; glow: boolean }>`

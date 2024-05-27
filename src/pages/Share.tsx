@@ -24,7 +24,7 @@ import { DialogBtn } from "../styles";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useContext, useEffect, useState } from "react";
 import type { Task } from "../types/user";
-import { calculateDateDifference, formatDate, getFontColor, iOS, showToast } from "../utils";
+import { calculateDateDifference, formatDate, getFontColor, showToast, systemInfo } from "../utils";
 import { Emoji, EmojiStyle } from "emoji-picker-react";
 import { UserContext } from "../contexts/UserContext";
 import {
@@ -88,7 +88,6 @@ const SharePage = () => {
       if (decodedUserName.length > USER_NAME_MAX_LENGTH) {
         setError(true);
         setErrorDetails("User name is too long.");
-        console.log("User name is too long");
       }
       setUserName(decodedUserName);
     }
@@ -207,7 +206,7 @@ const SharePage = () => {
                     ) : user.emojisStyle === EmojiStyle.NATIVE ? (
                       <div>
                         <Emoji
-                          size={iOS ? 48 : 36}
+                          size={systemInfo.os === "iOS" ? 48 : 36}
                           unified={taskData.emoji || ""}
                           emojiStyle={EmojiStyle.NATIVE}
                         />

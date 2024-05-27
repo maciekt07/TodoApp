@@ -1,16 +1,3 @@
-import React, { useContext, useEffect, useState } from "react";
-import {
-  Avatar,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
-  Divider,
-  IconButton,
-  MenuItem,
-  SwipeableDrawer,
-  Tooltip,
-} from "@mui/material";
 import styled from "@emotion/styled";
 import {
   AddRounded,
@@ -30,17 +17,29 @@ import {
   StarRounded,
   TaskAltRounded,
 } from "@mui/icons-material";
+import {
+  Avatar,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  Divider,
+  IconButton,
+  MenuItem,
+  SwipeableDrawer,
+  Tooltip,
+} from "@mui/material";
+import React, { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { defaultUser } from "../constants/defaultUser";
 import { SettingsDialog } from ".";
-import logo from "../assets/logo256.png";
-import { ColorPalette, DialogBtn, pulseAnimation, ring } from "../styles";
-import { UserContext } from "../contexts/UserContext";
-import { iOS } from "../utils/iOS";
-import { fetchGitHubInfo } from "../services/githubApi";
-import { showToast, timeAgo } from "../utils";
 import bmcLogo from "../assets/bmc-logo.svg";
+import logo from "../assets/logo256.png";
+import { defaultUser } from "../constants/defaultUser";
+import { UserContext } from "../contexts/UserContext";
 import { fetchBMCInfo } from "../services/bmcApi";
+import { fetchGitHubInfo } from "../services/githubApi";
+import { ColorPalette, DialogBtn, pulseAnimation, ring } from "../styles";
+import { showToast, systemInfo, timeAgo } from "../utils";
 
 export const ProfileSidebar = () => {
   const { user, setUser } = useContext(UserContext);
@@ -176,6 +175,7 @@ export const ProfileSidebar = () => {
           <Avatar
             src={(user.profilePicture as string) || undefined}
             alt={user.name || "User"}
+            translate="no"
             onError={() => {
               setUser((prevUser) => ({
                 ...prevUser,
@@ -198,12 +198,12 @@ export const ProfileSidebar = () => {
         </IconButton>
       </Tooltip>
       <StyledSwipeableDrawer
-        disableBackdropTransition={!iOS}
-        disableDiscovery={iOS}
+        disableBackdropTransition={systemInfo.os !== "iOS"}
+        disableDiscovery={systemInfo.os === "iOS"}
         id="basic-menu"
         anchor="right"
         open={open}
-        onOpen={() => console.log("")}
+        onOpen={(e) => e.preventDefault()}
         onClose={handleClose}
       >
         <LogoContainer
@@ -338,11 +338,7 @@ export const ProfileSidebar = () => {
 
         {supportsPWA && !isAppInstalled && (
           <StyledMenuItem onClick={installPWA}>
-            {/Android/.test(navigator.userAgent) ? (
-              <InstallMobileRounded />
-            ) : (
-              <InstallDesktopRounded />
-            )}
+            {systemInfo.os === "Android" ? <InstallMobileRounded /> : <InstallDesktopRounded />}
             &nbsp; Install App
           </StyledMenuItem>
         )}
@@ -565,6 +561,7 @@ const BmcIcon = styled.img`
 
 const Logo = styled.img`
   width: 52px;
+  height: 52px;
   margin-left: 18px;
   border-radius: 14px;
 `;

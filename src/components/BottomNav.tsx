@@ -14,11 +14,11 @@ import {
   styled,
   useTheme,
 } from "@mui/material";
-import { pulseAnimation, slideInBottom } from "../styles";
 import { useContext, useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { useResponsiveDisplay } from "../hooks/useResponsiveDisplay";
 import { UserContext } from "../contexts/UserContext";
+import { useResponsiveDisplay } from "../hooks/useResponsiveDisplay";
+import { pulseAnimation, slideInBottom } from "../styles";
 import { getFontColor } from "../utils";
 
 /**

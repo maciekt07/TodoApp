@@ -1,9 +1,9 @@
+import styled from "@emotion/styled";
+import { Alarm, RadioButtonChecked, RadioButtonUnchecked } from "@mui/icons-material";
+import { Button, Checkbox, IconButton, TextField, css } from "@mui/material";
 import { ColorPalette } from "../../styles";
 import { fadeIn, ring, scale } from "../../styles/keyframes.styled";
-import styled from "@emotion/styled";
-import { Button, Checkbox, TextField, css } from "@mui/material";
-import { getFontColor, iOS } from "../../utils";
-import { Alarm, RadioButtonChecked, RadioButtonUnchecked } from "@mui/icons-material";
+import { getFontColor, systemInfo } from "../../utils";
 
 interface TaskComponentProps {
   backgroundColor: string;
@@ -15,21 +15,27 @@ interface TaskComponentProps {
 export const TaskContainer = styled.div<TaskComponentProps>`
   display: flex;
   align-items: center;
-  margin-top: 12px;
-  transition: 0.3s all;
+  margin-top: 14px;
+  transition: 0.3s all !important;
   background-color: ${({ backgroundColor, done }) => `${backgroundColor}${done ? "cc" : ""}`};
   opacity: ${({ done }) => (done ? 0.8 : 1)};
   color: ${({ backgroundColor }) => getFontColor(backgroundColor)};
   border-left: ${({ done }) => (done ? "8px solid #00ff1ee3" : "1px solid transparent")};
   box-shadow: ${(props) =>
     props.glow && !props.blur ? `0 0 128px -20px ${props.backgroundColor}` : "none"};
-  padding: 16px 16px 16px 16px;
-  border-radius: 24px;
+  padding: 16px 16px 16px 20px;
+  border-radius: 28px;
   animation: ${fadeIn} 0.5s ease-in;
   filter: ${({ blur }) => (blur ? "blur(2px) opacity(75%)" : "none")};
+  text-shadow: ${({ backgroundColor, glow, done }) =>
+    glow && !done ? `0 0 4px ${getFontColor(backgroundColor)}78` : "none"};
   &::selection {
     color: ${({ theme, backgroundColor }) =>
       theme.primary === backgroundColor ? "#ff0000" : theme.primary} !important;
+  }
+  @media (max-width: 768px) {
+    padding: 14px 14px 14px 18px;
+    margin-top: 12px;
   }
 `;
 
@@ -153,9 +159,17 @@ export const SelectedTasksContainer = styled.div`
   padding: 16px 20px;
   border-radius: 18px;
   position: sticky;
-  top: ${iOS ? "52" : "60"}px;
+  top: ${systemInfo.os === "iOS" ? "52" : "60"}px;
   z-index: 1;
   backdrop-filter: blur(24px);
+  & h3 {
+    margin: 0;
+    display: flex;
+    align-items: center;
+  }
+  & font {
+    margin: 0 1px;
+  }
 `;
 
 export const StyledRadio = styled(Checkbox)<{ clr: string }>`
@@ -255,6 +269,29 @@ export const DescriptionLink = styled(Button)<{ clr: string }>`
   }
 `;
 
+export const YouTubeThumbnail = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 6px;
+  & img {
+    width: 300px;
+    height: 160px;
+    border-radius: 12px;
+    margin-bottom: 6px;
+    object-fit: cover;
+    object-position: 100%;
+    opacity: 0.9;
+  }
+  @media (max-width: 768px) {
+    & img {
+      width: 150px;
+      height: 80px;
+    }
+    justify-content: left;
+  }
+`;
+
 export const SearchInput = styled(TextField)`
   margin: 8px 0 0 0;
   border-radius: 16px;
@@ -278,6 +315,11 @@ export const SearchInput = styled(TextField)`
       color: ${({ theme }) => getFontColor(theme.secondary)};
     }
   }
+`;
+
+export const SearchClear = styled(IconButton)`
+  animation: ${scale} 0.3s ease;
+  transition: 0.3s all;
 `;
 
 const ringAnimation = "2s 0.5s ease-in-out infinite";

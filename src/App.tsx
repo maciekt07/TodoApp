@@ -56,7 +56,7 @@ function App() {
           showToast(
             <div>
               Added new property to user object{" "}
-              <i>
+              <i translate="no">
                 {key}: {userObject[key].toString()}
               </i>
             </div>,

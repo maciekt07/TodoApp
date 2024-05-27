@@ -105,7 +105,7 @@ export const ColorPicker: React.FC<ColorPickerProps> = ({
     setAddColorVal(e.target.value as string);
 
   const handleAddColor = () => {
-    if (user.colorList.length >= MAX_COLORS_IN_LIST) {
+    if (colorList.length >= MAX_COLORS_IN_LIST) {
       showToast(`You cannot add more than ${MAX_COLORS_IN_LIST} colors to color list.`, {
         type: "error",
       });
@@ -185,7 +185,7 @@ export const ColorPicker: React.FC<ColorPickerProps> = ({
                     {color.toUpperCase() === selectedColor.toUpperCase() && <Done />}
                   </ColorElement>
                   <Popover
-                    open={popoverOpen[index]}
+                    open={popoverOpen[index] === true}
                     onClose={() => togglePopover(index)}
                     anchorEl={colorElementRefs.current[index]}
                     anchorOrigin={{

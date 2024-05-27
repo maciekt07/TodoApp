@@ -1,21 +1,24 @@
-import { useState, useEffect, Dispatch, SetStateAction, CSSProperties, useContext } from "react";
+import { useTheme } from "@emotion/react";
 import styled from "@emotion/styled";
-import { Avatar, Badge, Button } from "@mui/material";
 import { AddReaction, Edit, RemoveCircleOutline } from "@mui/icons-material";
-import EmojiPicker, {
-  Emoji,
-  EmojiClickData,
-  EmojiStyle,
-  SuggestionMode,
-  Theme,
-} from "emoji-picker-react";
-import { getFontColor } from "../utils";
-import { ColorPalette, fadeIn } from "../styles";
+import { Avatar, Badge, Button } from "@mui/material";
+import { Emoji, EmojiClickData, EmojiStyle, SuggestionMode, Theme } from "emoji-picker-react";
+import {
+  CSSProperties,
+  Dispatch,
+  SetStateAction,
+  Suspense,
+  lazy,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
 import { UserContext } from "../contexts/UserContext";
 import { useOnlineStatus } from "../hooks/useOnlineStatus";
-import { iOS } from "../utils/iOS";
-import { useTheme } from "@emotion/react";
+import { ColorPalette, fadeIn } from "../styles";
+import { getFontColor, systemInfo } from "../utils";
 
+const EmojiPicker = lazy(() => import("emoji-picker-react"));
 interface EmojiPickerProps {
   emoji?: string;
   //FIXME:
@@ -111,7 +114,11 @@ export const CustomEmojiPicker = ({ emoji, setEmoji, color, width, theme }: Emoj
       // const emojiSize = user.emojisStyle === EmojiStyle.NATIVE ? 48 : 64;
 
       const emojiSize =
-        emojisStyle === EmojiStyle.NATIVE && iOS ? 64 : emojisStyle === EmojiStyle.NATIVE ? 48 : 64;
+        emojisStyle === EmojiStyle.NATIVE && systemInfo.os === "iOS"
+          ? 64
+          : emojisStyle === EmojiStyle.NATIVE
+          ? 48
+          : 64;
 
       return (
         <EmojiElement key={currentEmoji}>
@@ -206,27 +213,35 @@ export const CustomEmojiPicker = ({ emoji, setEmoji, color, width, theme }: Emoj
               </span>
             </div>
           )}
+
           <EmojiPickerContainer>
-            <EmojiPicker
-              width={width || "350px"}
-              height="500px"
-              reactionsDefaultOpen={
-                settings[0].simpleEmojiPicker && getFrequentlyUsedEmojis().length !== 0
+            <Suspense
+              fallback={
+                <PickerLoader pickerTheme={theme} width={width}>
+                  {/* <CircularProgress size={80} thickness={4} /> */}
+                </PickerLoader>
               }
-              reactions={getFrequentlyUsedEmojis()}
-              emojiStyle={emojisStyle}
-              // customEmojis={customEmojis}
-              theme={theme === "dark" ? Theme.DARK : Theme.LIGHT}
-              suggestedEmojisMode={SuggestionMode.FREQUENT}
-              autoFocusSearch={false}
-              lazyLoadEmojis
-              onEmojiClick={handleEmojiClick}
-              searchPlaceHolder="Search emoji"
-              previewConfig={{
-                defaultEmoji: "1f4dd",
-                defaultCaption: "Choose the perfect emoji for your task",
-              }}
-            />
+            >
+              <EmojiPicker
+                width={width || "350px"}
+                height="500px"
+                reactionsDefaultOpen={
+                  settings[0].simpleEmojiPicker && getFrequentlyUsedEmojis().length !== 0
+                }
+                reactions={getFrequentlyUsedEmojis()}
+                emojiStyle={emojisStyle}
+                // customEmojis={customEmojis}
+                theme={theme === "dark" ? Theme.DARK : Theme.LIGHT}
+                suggestedEmojisMode={SuggestionMode.FREQUENT}
+                autoFocusSearch={false}
+                onEmojiClick={handleEmojiClick}
+                searchPlaceHolder="Search emoji"
+                previewConfig={{
+                  defaultEmoji: "1f4dd",
+                  defaultCaption: "Choose the perfect emoji for your task",
+                }}
+              />
+            </Suspense>
           </EmojiPickerContainer>
           {currentEmoji && (
             <div
@@ -266,6 +281,21 @@ const EmojiPickerContainer = styled.div`
   align-items: center;
   margin: 24px;
   animation: ${fadeIn} 0.4s ease-in;
+`;
+
+const PickerLoader = styled.div<{
+  pickerTheme: "light" | "dark" | undefined;
+  width: CSSProperties["width"] | undefined;
+}>`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: ${({ width }) => width || "350px"};
+  height: 500px;
+  padding: 8px;
+  border-radius: 20px;
+  background: ${({ pickerTheme }) => (pickerTheme === "dark" ? "#222222" : "#ffffff")};
+  border: ${({ pickerTheme }) => `1px solid ${pickerTheme === "dark" ? "#151617" : "#e7e7e7"}`};
 `;
 
 const EmojiElement = styled.div`

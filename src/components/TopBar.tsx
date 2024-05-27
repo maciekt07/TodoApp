@@ -1,8 +1,8 @@
 import styled from "@emotion/styled";
 import { ArrowBackIosNewRounded } from "@mui/icons-material";
+import { IconButton } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { getFontColor } from "../utils";
-import { IconButton } from "@mui/material";
 
 interface TopBarProps {
   title: string;

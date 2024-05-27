@@ -1,10 +1,10 @@
 import { Avatar, Chip, ChipProps, styled } from "@mui/material";
-import { getFontColor } from "../utils";
-import { fadeIn } from "../styles";
 import { Emoji, EmojiStyle } from "emoji-picker-react";
 import { useContext } from "react";
 import { UserContext } from "../contexts/UserContext";
+import { fadeIn } from "../styles";
 import type { Category } from "../types/user";
+import { getFontColor } from "../utils";
 
 interface CategoryBadgeProps extends ChipProps, StyledBadgeProps {
   category: Category;

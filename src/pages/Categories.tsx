@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from "react";
+import { lazy, useContext, useEffect, useState } from "react";
 import { ColorPicker, CustomEmojiPicker, TopBar } from "../components";
 import { Category, UUID } from "../types/user";
 import { useNavigate } from "react-router-dom";
@@ -28,10 +28,11 @@ import {
   EditNameInput,
   CategoryInput,
 } from "../styles";
-import NotFound from "./NotFound";
 import { UserContext } from "../contexts/UserContext";
 import { useStorageState } from "../hooks/useStorageState";
 import { useTheme } from "@emotion/react";
+
+const NotFound = lazy(() => import("./NotFound"));
 
 const Categories = () => {
   const { user, setUser } = useContext(UserContext);
@@ -93,7 +94,7 @@ const Categories = () => {
 
       showToast(
         <div>
-          Deleted category - <b>{categoryName}.</b>
+          Deleted category - <b translate="no">{categoryName}.</b>
         </div>
       );
     }
@@ -133,7 +134,7 @@ const Categories = () => {
 
       showToast(
         <div>
-          Added category - <b>{newCategory.name}</b>
+          Added category - <b translate="no">{newCategory.name}</b>
         </div>
       );
 
@@ -199,7 +200,7 @@ const Categories = () => {
 
       showToast(
         <div>
-          Updated category - <b>{editName}</b>
+          Updated category - <b translate="no">{editName}</b>
         </div>
       );
 

@@ -1,28 +1,33 @@
+import { ReactElement, Suspense, lazy } from "react";
 import { Route, Routes } from "react-router-dom";
-import { ReactElement } from "react";
-import UserSettings from "./pages/UserSettings";
-import Categories from "./pages/Categories";
-import NotFound from "./pages/NotFound";
-import AddTask from "./pages/AddTask";
-import ImportExport from "./pages/ImportExport";
-import Home from "./pages/Home";
-import TaskDetails from "./pages/TaskDetails";
-import SharePage from "./pages/Share";
-import Purge from "./pages/Purge";
+import { Loading } from "./components";
+
+const Home = lazy(() => import("./pages/Home"));
+const TaskDetails = lazy(() => import("./pages/TaskDetails"));
+const SharePage = lazy(() => import("./pages/Share"));
+const AddTask = lazy(() => import("./pages/AddTask"));
+const UserSettings = lazy(() => import("./pages/UserSettings"));
+const ImportExport = lazy(() => import("./pages/ImportExport"));
+const Categories = lazy(() => import("./pages/Categories"));
+const Purge = lazy(() => import("./pages/Purge"));
+const NotFound = lazy(() => import("./pages/NotFound"));
 
 const AppRouter = (): ReactElement => {
   return (
-    <Routes>
-      <Route path="/" element={<Home />} />
-      <Route path="/task/:id" element={<TaskDetails />} />
-      <Route path="/share" element={<SharePage />} />
-      <Route path="/add" element={<AddTask />} />
-      <Route path="/user" element={<UserSettings />} />
-      <Route path="/transfer" element={<ImportExport />} />
-      <Route path="/categories" element={<Categories />} />
-      <Route path="/purge" element={<Purge />} />
-      <Route path="*" element={<NotFound />} />
-    </Routes>
+    <Suspense fallback={<Loading />}>
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/task/:id" element={<TaskDetails />} />
+        <Route path="/share" element={<SharePage />} />
+        <Route path="/add" element={<AddTask />} />
+        <Route path="/user" element={<UserSettings />} />
+        <Route path="/transfer" element={<ImportExport />} />
+        <Route path="/categories" element={<Categories />} />
+        <Route path="/purge" element={<Purge />} />
+        <Route path="/loading" element={<Loading />} />
+        <Route path="*" element={<NotFound />} />
+      </Routes>
+    </Suspense>
   );
 };
 

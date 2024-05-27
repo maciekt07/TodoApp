@@ -1,15 +1,4 @@
-import React, { ErrorInfo } from "react";
-import { StyledLink } from "../styles";
-import { Emoji } from "emoji-picker-react";
-import {
-  Accordion,
-  AccordionDetails,
-  AccordionSummary,
-  Alert,
-  Button,
-  Typography,
-} from "@mui/material";
-import { exportTasksToJson, getFontColor, showToast } from "../utils";
+import styled from "@emotion/styled";
 import {
   DataObjectRounded,
   DeleteForeverRounded,
@@ -18,9 +7,20 @@ import {
   ExpandMoreRounded,
   FileDownload,
 } from "@mui/icons-material";
-import { UserContext } from "../contexts/UserContext";
-import styled from "@emotion/styled";
+import {
+  Accordion,
+  AccordionDetails,
+  AccordionSummary,
+  Alert,
+  Button,
+  Typography,
+} from "@mui/material";
+import { Emoji } from "emoji-picker-react";
+import React, { ErrorInfo } from "react";
 import { TaskIcon } from ".";
+import { UserContext } from "../contexts/UserContext";
+import { StyledLink } from "../styles";
+import { exportTasksToJson, getFontColor, showToast } from "../utils";
 
 interface ErrorBoundaryProps {
   children: React.ReactNode;
@@ -69,7 +69,7 @@ class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoundarySta
       const { tasks } = user;
 
       return (
-        <div>
+        <Container>
           <ErrorHeader>
             <span>Oops! An error occurred.&nbsp;</span>
             <span>
@@ -143,13 +143,20 @@ class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoundarySta
             <br />
             <code translate="no">{JSON.stringify(user, null, 4)}</code>
           </pre>
-        </div>
+        </Container>
       );
     }
 
     return this.props.children;
   }
 }
+
+const Container = styled.div`
+  margin: 0 8vw;
+  @media (max-width: 768px) {
+    margin: 0;
+  }
+`;
 
 const ErrorIconContainer = styled.div`
   display: flex;

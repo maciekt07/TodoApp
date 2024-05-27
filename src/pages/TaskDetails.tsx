@@ -64,7 +64,7 @@ const TaskDetails = () => {
             </TableRow>
             <TableRow>
               <TableHeader>Description:</TableHeader>
-              <TableData>{task?.description}</TableData>
+              <TableData translate="no">{task?.description}</TableData>
             </TableRow>
             <TableRow>
               <TableHeader>Color:</TableHeader>

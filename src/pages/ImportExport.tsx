@@ -11,7 +11,7 @@ import {
   IntegrationInstructionsRounded,
   Link,
 } from "@mui/icons-material";
-import { exportTasksToJson, showToast } from "../utils";
+import { exportTasksToJson, showToast, systemInfo } from "../utils";
 import { IconButton, Tooltip } from "@mui/material";
 import {
   CATEGORY_NAME_MAX_LENGTH,
@@ -76,7 +76,7 @@ const ImportExport = () => {
             <li key={task.id}>
               <ListContent>
                 <Emoji unified={task.emoji || ""} size={20} emojiStyle={user.emojisStyle} />
-                <span>{task.name}</span>
+                <span translate="no">{task.name}</span>
               </ListContent>
             </li>
           ))}
@@ -98,8 +98,8 @@ const ImportExport = () => {
       if (file.type !== "application/json") {
         showToast(
           <div>
-            Incorrect file type{file.type !== "" && <span> {file.type}</span>}. Please select a JSON
-            file.
+            Incorrect file type {file.type !== "" && <span translate="no">{file.type}</span>}.
+            Please select a JSON file.
           </div>,
           { type: "error" }
         );
@@ -168,7 +168,6 @@ const ImportExport = () => {
             showToast(`File size is too large (${file.size}/${maxFileSize})`, { type: "error" });
             return;
           }
-          console.log(file.text);
 
           // Update user.categories if imported categories don't exist
           const updatedCategories = user.categories.slice(); // Create a copy of the existing categories
@@ -377,7 +376,7 @@ const ImportExport = () => {
 
         <h2 style={{ textAlign: "center" }}>Import Tasks From JSON</h2>
 
-        {/Windows|Linux|Macintosh/i.test(navigator.userAgent) && (
+        {systemInfo.os !== "Android" && systemInfo.os !== "iOS" && (
           <div style={{ width: "300px" }}>
             <DropZone
               onDragOver={handleDragOver}

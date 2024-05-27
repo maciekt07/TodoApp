@@ -1,5 +1,5 @@
 import styled from "@emotion/styled";
-import type { Category, UUID } from "../types/user";
+import { ExpandMoreRounded, RadioButtonChecked } from "@mui/icons-material";
 import {
   Box,
   Button,
@@ -9,15 +9,15 @@ import {
   Select,
   SelectChangeEvent,
 } from "@mui/material";
-import { ColorPalette } from "../styles";
 import { Emoji } from "emoji-picker-react";
-import { getFontColor, showToast } from "../utils";
 import { CSSProperties, useContext, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { CategoryBadge } from ".";
 import { MAX_CATEGORIES_IN_TASK } from "../constants";
 import { UserContext } from "../contexts/UserContext";
-import { ExpandMoreRounded, RadioButtonChecked } from "@mui/icons-material";
-import { CategoryBadge } from ".";
-import { useNavigate } from "react-router-dom";
+import { ColorPalette } from "../styles";
+import type { Category, UUID } from "../types/user";
+import { getFontColor, showToast } from "../utils";
 
 interface CategorySelectProps {
   selectedCategories: Category[];
