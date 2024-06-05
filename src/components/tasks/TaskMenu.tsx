@@ -22,8 +22,10 @@ import {
 import {
   Alert,
   AlertTitle,
+  Avatar,
   Box,
   Button,
+  Chip,
   Dialog,
   DialogActions,
   DialogContent,
@@ -39,7 +41,7 @@ import {
   Typography,
 } from "@mui/material";
 import { Emoji, EmojiStyle } from "emoji-picker-react";
-import { useContext, useState } from "react";
+import { useContext, useMemo, useState } from "react";
 import Marquee from "react-fast-marquee";
 import toast from "react-hot-toast";
 import QRCode from "react-qr-code";
@@ -51,7 +53,13 @@ import { UserContext } from "../../contexts/UserContext";
 import { useResponsiveDisplay } from "../../hooks/useResponsiveDisplay";
 import { ColorPalette, DialogBtn } from "../../styles";
 import { Task, UUID } from "../../types/user";
-import { calculateDateDifference, saveQRCode, showToast } from "../../utils";
+import {
+  calculateDateDifference,
+  getFontColor,
+  saveQRCode,
+  showToast,
+  systemInfo,
+} from "../../utils";
 
 interface TaskMenuProps {
   selectedTaskId: UUID | null;
@@ -79,8 +87,11 @@ export const TaskMenu: React.FC<TaskMenuProps> = ({
   const isMobile = useResponsiveDisplay();
   const n = useNavigate();
 
+  const selectedTask = useMemo(() => {
+    return tasks.find((task) => task.id === selectedTaskId) || ({} as Task);
+  }, [selectedTaskId, tasks]);
+
   const redirectToTaskDetails = () => {
-    const selectedTask = tasks.find((task) => task.id === selectedTaskId);
     const taskId = selectedTask?.id.toString().replace(".", "");
     n(`/task/${taskId}`);
   };
@@ -124,7 +135,7 @@ export const TaskMenu: React.FC<TaskMenuProps> = ({
       try {
         await navigator.share({
           title: "Share Task",
-          text: `Check out this task: ${tasks.find((task) => task.id === selectedTaskId)?.name}`,
+          text: `Check out this task: ${selectedTask.name}`,
           url: linkToShare,
         });
       } catch (error) {
@@ -189,8 +200,6 @@ export const TaskMenu: React.FC<TaskMenuProps> = ({
   const handleDuplicateTask = () => {
     handleCloseMoreMenu();
     if (selectedTaskId) {
-      // Find the selected task
-      const selectedTask = tasks.find((task) => task.id === selectedTaskId);
       if (selectedTask) {
         // Create a duplicated task with a new ID and current date
         const duplicatedTask: Task = {
@@ -211,7 +220,6 @@ export const TaskMenu: React.FC<TaskMenuProps> = ({
   };
 
   const handleReadAloud = () => {
-    const selectedTask = tasks.find((task) => task.id === selectedTaskId);
     const voices = window.speechSynthesis.getVoices();
     const voice = voices.find((voice) => voice.name === settings[0].voice);
     const voiceName = voices.find((voice) => voice.name === settings[0].voice);
@@ -332,15 +340,12 @@ export const TaskMenu: React.FC<TaskMenuProps> = ({
   const menuItems: JSX.Element = (
     <div>
       <StyledMenuItem onClick={handleMarkAsDone}>
-        {tasks.find((task) => task.id === selectedTaskId)?.done ? <Close /> : <Done />}
-        &nbsp;{" "}
-        {tasks.find((task) => task.id === selectedTaskId)?.done
-          ? "Mark as not done"
-          : "Mark as done"}
+        {selectedTask.done ? <Close /> : <Done />}
+        &nbsp; {selectedTask.done ? "Mark as not done" : "Mark as done"}
       </StyledMenuItem>
       <StyledMenuItem onClick={handlePin}>
         <PushPinRounded sx={{ textDecoration: "line-through" }} />
-        &nbsp; {tasks.find((task) => task.id === selectedTaskId)?.pinned ? "Unpin" : "Pin"}
+        &nbsp; {selectedTask.pinned ? "Unpin" : "Pin"}
       </StyledMenuItem>
 
       {selectedTasks.length === 0 && (
@@ -410,13 +415,9 @@ export const TaskMenu: React.FC<TaskMenuProps> = ({
           onClick={() => console.log("xd")}
           header={
             <SheetHeader translate="no">
-              <Emoji
-                emojiStyle={emojisStyle}
-                size={32}
-                unified={tasks.find((task) => task.id === selectedTaskId)?.emoji || ""}
-              />{" "}
+              <Emoji emojiStyle={emojisStyle} size={32} unified={selectedTask.emoji || ""} />{" "}
               {emojisStyle === EmojiStyle.NATIVE && "\u00A0 "}
-              {tasks.find((task) => task.id === selectedTaskId)?.name}
+              {selectedTask.name}
             </SheetHeader>
           }
         >
@@ -456,10 +457,30 @@ export const TaskMenu: React.FC<TaskMenuProps> = ({
       >
         <DialogTitle>Share Task</DialogTitle>
         <DialogContent>
-          <span>
-            Share Task:{" "}
-            <b translate="no">{tasks.find((task) => task.id === selectedTaskId)?.name}</b>
-          </span>
+          <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
+            <ShareTaskChip
+              translate="no"
+              label={selectedTask.name}
+              clr={selectedTask.color}
+              avatar={
+                selectedTask.emoji ? (
+                  <Avatar sx={{ background: "transparent", borderRadius: "0" }}>
+                    <Emoji
+                      unified={selectedTask.emoji || ""}
+                      emojiStyle={emojisStyle}
+                      size={
+                        emojisStyle === EmojiStyle.NATIVE
+                          ? systemInfo.os === "iOS" || systemInfo.os === "macOS"
+                            ? 24
+                            : 18
+                          : 24
+                      }
+                    />
+                  </Avatar>
+                ) : undefined
+              }
+            />
+          </div>
           <Tabs value={shareTabVal} onChange={handleTabChange} sx={{ m: "8px 0" }}>
             <StyledTab label="Link" icon={<LinkRounded />} />
             <StyledTab label="QR Code" icon={<QrCode2Rounded />} />
@@ -519,9 +540,7 @@ export const TaskMenu: React.FC<TaskMenuProps> = ({
             >
               <DownloadQrCodeBtn
                 variant="outlined"
-                onClick={() =>
-                  saveQRCode(tasks.find((task) => task.id === selectedTaskId)?.name || "")
-                }
+                onClick={() => saveQRCode(selectedTask.name || "")}
               >
                 <DownloadRounded /> &nbsp; Download QR Code
               </DownloadQrCodeBtn>
@@ -632,6 +651,20 @@ const ShareField = styled(TextField)`
     border-radius: 14px;
     padding: 2px;
     transition: 0.3s all;
+  }
+`;
+
+const ShareTaskChip = styled(Chip)<{ clr: string }>`
+  background: ${({ clr }) => clr};
+  color: ${({ clr }) => getFontColor(clr)};
+  font-size: 14px;
+  padding: 18px 8px;
+  border-radius: 50px;
+  font-weight: 500;
+  margin-left: 6px;
+  @media (max-width: 768px) {
+    font-size: 16px;
+    padding: 20px 10px;
   }
 `;
 

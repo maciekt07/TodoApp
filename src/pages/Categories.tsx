@@ -243,9 +243,13 @@ const Categories = () => {
                     </span>
                     &nbsp;
                     <span style={{ wordBreak: "break-all", fontWeight: 600 }}>{category.name}</span>
-                    <Tooltip title="The percentage of completion of tasks assigned to this category">
-                      <span style={{ opacity: 0.8, fontStyle: "italic" }}>{displayPercentage}</span>
-                    </Tooltip>
+                    {totalTasksCount > 0 && (
+                      <Tooltip title="The percentage of completion of tasks assigned to this category">
+                        <span style={{ opacity: 0.8, fontStyle: "italic" }}>
+                          {displayPercentage}
+                        </span>
+                      </Tooltip>
+                    )}
                   </CategoryContent>
                   <div style={{ display: "flex", gap: "4px" }}>
                     <ActionButton>

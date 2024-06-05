@@ -217,9 +217,9 @@ export const CustomEmojiPicker = ({ emoji, setEmoji, color, width, theme }: Emoj
           <EmojiPickerContainer>
             <Suspense
               fallback={
-                <PickerLoader pickerTheme={theme} width={width}>
-                  {/* <CircularProgress size={80} thickness={4} /> */}
-                </PickerLoader>
+                !settings[0].simpleEmojiPicker && (
+                  <PickerLoader pickerTheme={theme} width={width}></PickerLoader>
+                )
               }
             >
               <EmojiPicker
@@ -231,6 +231,7 @@ export const CustomEmojiPicker = ({ emoji, setEmoji, color, width, theme }: Emoj
                 reactions={getFrequentlyUsedEmojis()}
                 emojiStyle={emojisStyle}
                 // customEmojis={customEmojis}
+                // lazyLoadEmojis
                 theme={theme === "dark" ? Theme.DARK : Theme.LIGHT}
                 suggestedEmojisMode={SuggestionMode.FREQUENT}
                 autoFocusSearch={false}

@@ -176,6 +176,7 @@ export const ProfileSidebar = () => {
             src={(user.profilePicture as string) || undefined}
             alt={user.name || "User"}
             translate="no"
+            slotProps={{ img: { loading: "lazy" } }}
             onError={() => {
               setUser((prevUser) => ({
                 ...prevUser,
@@ -379,6 +380,7 @@ export const ProfileSidebar = () => {
             <Avatar
               src={(user.profilePicture as string) || undefined}
               sx={{ width: "44px", height: "44px" }}
+              slotProps={{ img: { loading: "lazy" } }}
             >
               {user.name ? user.name[0].toUpperCase() : undefined}
             </Avatar>

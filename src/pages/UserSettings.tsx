@@ -165,6 +165,7 @@ const UserSettings = () => {
             &nbsp;Registered {timeAgo(createdAt)}
           </CreatedAtDate>
         </Tooltip>
+
         <Grid
           container
           maxWidth="300px"

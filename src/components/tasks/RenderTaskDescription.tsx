@@ -110,6 +110,7 @@ export const RenderTaskDescription = memo(
                     <img
                       src={`https://i.ytimg.com/vi/${youtubeId(part)}/hqdefault.jpg`}
                       alt="YouTube Thumbnail"
+                      loading="lazy"
                     />
                   </YouTubeThumbnail>
                 )}

@@ -44,6 +44,8 @@ interface SettingsProps {
   onClose: () => void;
 }
 
+//TODO: Redesign settings component to have tabs on the left side
+
 export const SettingsDialog: React.FC<SettingsProps> = ({ open, onClose }) => {
   const { user, setUser } = useContext(UserContext);
   const { settings, emojisStyle } = user;
@@ -278,6 +280,8 @@ export const SettingsDialog: React.FC<SettingsProps> = ({ open, onClose }) => {
           <Tooltip title="This will delete data about frequently used emojis">
             <Button
               color="error"
+              variant="outlined"
+              sx={{ my: "12px", p: "12px", borderRadius: "18px" }}
               onClick={() => {
                 localStorage.removeItem("epr_suggested");
                 showToast("Deleted emoji data.");
@@ -429,7 +433,7 @@ export const SettingsDialog: React.FC<SettingsProps> = ({ open, onClose }) => {
                           {getLanguageRegion(voice.lang || "")}
                         </span>
                       )}
-                      {voice.default && systemInfo.os !== "iOS" && (
+                      {voice.default && systemInfo.os !== "iOS" && systemInfo.os !== "macOS" && (
                         <span style={{ fontWeight: 600 }}>&nbsp;Default</span>
                       )}
                     </MenuItem>

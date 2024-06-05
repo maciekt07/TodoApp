@@ -108,7 +108,10 @@ function App() {
     };
     // Function to display the application badge
     const displayAppBadge = async () => {
-      if (user.settings[0].appBadge === true) {
+      if (
+        user.settings[0].appBadge === true &&
+        window.matchMedia("(display-mode: standalone)").matches
+      ) {
         // Request permission for notifications
         if ((await Notification.requestPermission()) === "granted") {
           // Calculate the number of incomplete tasks
@@ -167,7 +170,7 @@ function App() {
           }}
           toastOptions={{
             position: "bottom-center",
-            duration: 3800,
+            duration: 4000,
             style: {
               padding: "14px 22px",
               borderRadius: "18px",

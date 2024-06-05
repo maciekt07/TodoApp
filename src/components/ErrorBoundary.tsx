@@ -6,6 +6,7 @@ import {
   ErrorOutlineRounded,
   ExpandMoreRounded,
   FileDownload,
+  RefreshRounded,
 } from "@mui/icons-material";
 import {
   Accordion,
@@ -57,11 +58,11 @@ class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoundarySta
     console.error("Error Info:", errorInfo);
   }
 
-  handleClearData = () => {
+  handleClearData() {
     localStorage.clear();
     sessionStorage.clear();
     location.reload();
-  };
+  }
 
   render() {
     if (this.state.hasError) {
@@ -90,16 +91,14 @@ class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoundarySta
           <Alert severity="error" variant="filled" sx={{ mt: "-8px", mb: "18px" }}>
             By cleaning app data, you will lose all of your tasks.
           </Alert>
-          <Button
-            size="large"
-            variant="outlined"
-            color="warning"
-            sx={{ p: "10px 20px", borderRadius: "12px" }}
-            onClick={this.handleClearData}
-          >
-            <DeleteForeverRounded /> &nbsp; Auto Clear
-          </Button>
-
+          <div style={{ display: "flex", gap: "12px" }}>
+            <StyledButton color="warning" onClick={() => location.reload()}>
+              <RefreshRounded /> &nbsp; Refresh Page
+            </StyledButton>
+            <StyledButton color="error" onClick={this.handleClearData}>
+              <DeleteForeverRounded /> &nbsp; Auto Clear
+            </StyledButton>
+          </div>
           <h3>
             <span style={{ color: "#ff3131", display: "inline-block" }}>
               <ErrorOutlineRounded sx={{ verticalAlign: "middle", mb: "4px" }} /> ERROR:
@@ -196,6 +195,18 @@ const ErrorExpandIcon = styled(ExpandMoreRounded)`
   color: ${({ theme }) => getFontColor(theme.secondary)};
   font-size: 32px;
 `;
+
+const StyledButton = styled(Button)`
+  padding: 10px 30px;
+  border-radius: 12px;
+  @media (max-width: 768px) {
+    width: 100%;
+  }
+`;
+StyledButton.defaultProps = {
+  variant: "outlined",
+  size: "large",
+};
 
 const UserDataLabel = styled.p`
   font-size: 18px;

@@ -27,7 +27,7 @@ export const fetchBMCInfo = async (): Promise<BMCResponse> => {
     }
   } catch (error) {
     console.error("Error fetching Buy Me a Coffee API:", error);
-    showToast("Failed to fetch Buy Me a Coffee API.", { type: "error" });
+    showToast("Failed to fetch Buy Me a Coffee API.", { type: "error", disableVibrate: true });
     return { supportersCount: 0 };
   }
 };

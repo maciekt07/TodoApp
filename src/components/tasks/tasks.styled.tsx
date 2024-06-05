@@ -29,15 +29,22 @@ export const TaskContainer = styled.div<TaskComponentProps>`
   filter: ${({ blur }) => (blur ? "blur(2px) opacity(75%)" : "none")};
   text-shadow: ${({ backgroundColor, glow, done }) =>
     glow && !done ? `0 0 4px ${getFontColor(backgroundColor)}78` : "none"};
-  &::selection {
+  /* If the theme color and task color are the same, it changes the selection color to be different. */
+  *::selection {
+    background-color: ${({ theme, backgroundColor }) =>
+      theme.primary === backgroundColor ? "#ffffff" : theme.primary} !important;
     color: ${({ theme, backgroundColor }) =>
-      theme.primary === backgroundColor ? "#ff0000" : theme.primary} !important;
+      theme.primary === backgroundColor ? "#000000" : getFontColor(theme.primary)} !important;
   }
   @media (max-width: 768px) {
     padding: 14px 14px 14px 18px;
     margin-top: 12px;
   }
 `;
+
+TaskContainer.defaultProps = {
+  className: "TaskContainer",
+};
 
 export const EmojiContainer = styled.span<{ clr: string }>`
   text-decoration: none;

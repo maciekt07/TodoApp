@@ -23,7 +23,7 @@ export const CategoryBadge: React.FC<CategoryBadgeProps> = ({ category, emojiSiz
   return (
     <StyledCategoryBadge
       key={category.id}
-      label={<span style={{ fontWeight: "bold" }}>{category.name}</span>}
+      label={category.name}
       variant="outlined"
       backgroundclr={category.color}
       glow={settings[0].enableGlow}
@@ -38,6 +38,7 @@ export const CategoryBadge: React.FC<CategoryBadgeProps> = ({ category, emojiSiz
             }}
           >
             <Emoji
+              lazyLoad
               size={
                 emojiSizes
                   ? emojisStyle !== EmojiStyle.NATIVE

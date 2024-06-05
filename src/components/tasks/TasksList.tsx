@@ -278,6 +278,10 @@ export const TasksList: React.FC = () => {
 
   const checkOverdueTasks = useCallback(
     (tasks: Task[]) => {
+      if (location.pathname === "/share") {
+        return;
+      }
+
       const overdueTasks = tasks.filter((task) => {
         return task.deadline && new Date() > new Date(task.deadline) && !task.done;
       });
@@ -498,16 +502,19 @@ export const TasksList: React.FC = () => {
                 >
                   {task.done ? (
                     <DoneRounded fontSize="large" />
-                  ) : user.emojisStyle === EmojiStyle.NATIVE ? (
-                    <div>
-                      <Emoji
-                        size={systemInfo.os === "iOS" ? 48 : 36}
-                        unified={task.emoji || ""}
-                        emojiStyle={EmojiStyle.NATIVE}
-                      />
-                    </div>
                   ) : (
-                    <Emoji size={48} unified={task.emoji || ""} emojiStyle={user.emojisStyle} />
+                    <Emoji
+                      size={
+                        user.emojisStyle === EmojiStyle.NATIVE
+                          ? systemInfo.os === "iOS" || systemInfo.os === "macOS"
+                            ? 50
+                            : 38
+                          : 46
+                      }
+                      unified={task.emoji || ""}
+                      emojiStyle={user.emojisStyle}
+                      lazyLoad
+                    />
                   )}
                 </EmojiContainer>
               ) : null}

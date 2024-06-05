@@ -1,10 +1,10 @@
 import { CSSProperties, useCallback, useContext, useEffect, useRef, useState } from "react";
-import { ColorElement, ColorPalette, DialogBtn } from "../styles";
+import { ColorElement, ColorPalette, DialogBtn, scale } from "../styles";
 import styled from "@emotion/styled";
 import {
   AddRounded,
   ColorizeRounded,
-  Done,
+  DoneRounded,
   ExpandMoreRounded,
   InfoRounded,
 } from "@mui/icons-material";
@@ -182,7 +182,7 @@ export const ColorPicker: React.FC<ColorPickerProps> = ({
                       }
                     }}
                   >
-                    {color.toUpperCase() === selectedColor.toUpperCase() && <Done />}
+                    {color.toUpperCase() === selectedColor.toUpperCase() && <SelectedIcon />}
                   </ColorElement>
                   <Popover
                     open={popoverOpen[index] === true}
@@ -338,6 +338,11 @@ const PickerLabel = styled.p<{ clr: string }>`
   left: 50%;
   transform: translate(-50%, 0%);
   font-weight: 600;
+`;
+
+const SelectedIcon = styled(DoneRounded)`
+  font-size: 28px;
+  animation: ${scale} 0.25s;
 `;
 
 const StyledColorPicker = styled.input`
