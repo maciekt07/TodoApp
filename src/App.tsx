@@ -1,7 +1,7 @@
 import { useStorageState } from "./hooks/useStorageState";
 import { defaultUser } from "./constants/defaultUser";
 import type { User } from "./types/user";
-import { ColorPalette, GlobalStyles, Themes } from "./styles";
+import { ColorPalette, GlobalStyles, Themes, createCustomTheme } from "./styles";
 import { ThemeProvider } from "@mui/material";
 import { useCallback, useEffect } from "react";
 import ErrorBoundary from "./components/ErrorBoundary";
@@ -142,24 +142,43 @@ function App() {
     return selectedTheme ? selectedTheme.MuiTheme : Themes[0].MuiTheme;
   }, [systemTheme, user.theme]);
 
-  const getSecondaryColor = useCallback(() => {
-    const theme = getMuiTheme();
-    return theme.palette.secondary.main;
-  }, [getMuiTheme]);
-
-  const getPrimaryColor = () => {
-    const theme = getMuiTheme();
-    return theme.palette.primary.main;
+  const isDarkMode = (): boolean => {
+    switch (user.darkmode) {
+      case "light":
+        return false;
+      case "dark":
+        return true;
+      case "system":
+        return systemTheme === "dark";
+      case "auto":
+        return getFontColor(getMuiTheme().palette.secondary.main) !== ColorPalette.fontDark;
+      default:
+        return false;
+    }
   };
 
   // Update the theme color meta tag in the document's head based on the user's selected theme.
   useEffect(() => {
-    document.querySelector("meta[name=theme-color]")?.setAttribute("content", getSecondaryColor());
-  }, [user.theme, getSecondaryColor]);
+    document
+      .querySelector("meta[name=theme-color]")
+      ?.setAttribute("content", getMuiTheme().palette.secondary.main);
+  }, [user.theme, getMuiTheme]);
 
   return (
-    <ThemeProvider theme={getMuiTheme()}>
-      <EmotionTheme theme={{ primary: getPrimaryColor(), secondary: getSecondaryColor() }}>
+    <ThemeProvider
+      theme={createCustomTheme(
+        getMuiTheme().palette.primary.main,
+        getMuiTheme().palette.secondary.main,
+        isDarkMode() ? "dark" : "light"
+      )}
+    >
+      <EmotionTheme
+        theme={{
+          primary: getMuiTheme().palette.primary.main,
+          secondary: getMuiTheme().palette.secondary.main,
+          darkmode: isDarkMode(),
+        }}
+      >
         <GlobalStyles />
         <Toaster
           position="top-center"
@@ -175,16 +194,16 @@ function App() {
               padding: "14px 22px",
               borderRadius: "18px",
               fontSize: "17px",
-              border: `2px solid ${getPrimaryColor()}`,
-              background: "#141431e0",
+              border: `2px solid ${getMuiTheme().palette.primary.main}`,
+              background: isDarkMode() ? "#141431e0" : "#F0F0F5be",
+              color: isDarkMode() ? ColorPalette.fontLight : ColorPalette.fontDark,
               WebkitBackdropFilter: "blur(6px)",
               backdropFilter: "blur(6px)",
-              color: ColorPalette.fontLight,
             },
             success: {
               iconTheme: {
-                primary: getPrimaryColor(),
-                secondary: getFontColor(getPrimaryColor()),
+                primary: getMuiTheme().palette.primary.main,
+                secondary: getFontColor(getMuiTheme().palette.primary.main),
               },
             },
             error: {

@@ -126,7 +126,6 @@ const AddTask = () => {
           emoji={typeof emoji === "string" ? emoji : undefined}
           setEmoji={setEmoji}
           color={color}
-          theme={getFontColor(theme.secondary) === ColorPalette.fontDark ? "light" : "dark"}
         />
         <StyledInput
           label="Task Name"

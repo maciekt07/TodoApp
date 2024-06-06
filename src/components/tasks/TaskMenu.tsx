@@ -60,6 +60,7 @@ import {
   showToast,
   systemInfo,
 } from "../../utils";
+import { useTheme } from "@emotion/react";
 
 interface TaskMenuProps {
   selectedTaskId: UUID | null;
@@ -86,7 +87,7 @@ export const TaskMenu: React.FC<TaskMenuProps> = ({
   const [shareTabVal, setShareTabVal] = useState<number>(0);
   const isMobile = useResponsiveDisplay();
   const n = useNavigate();
-
+  const theme = useTheme();
   const selectedTask = useMemo(() => {
     return tasks.find((task) => task.id === selectedTaskId) || ({} as Task);
   }, [selectedTaskId, tasks]);
@@ -289,7 +290,6 @@ export const TaskMenu: React.FC<TaskMenuProps> = ({
             <ReadAloudControls>
               {isPlaying ? (
                 <IconButton
-                  sx={{ color: "white" }}
                   onClick={() => {
                     pauseSpeech();
                     setIsPlaying(!isPlaying);
@@ -299,7 +299,6 @@ export const TaskMenu: React.FC<TaskMenuProps> = ({
                 </IconButton>
               ) : (
                 <IconButton
-                  sx={{ color: "white" }}
                   onClick={() => {
                     resumeSpeech();
                     setIsPlaying(!isPlaying);
@@ -308,7 +307,7 @@ export const TaskMenu: React.FC<TaskMenuProps> = ({
                   <PlayArrow fontSize="large" />
                 </IconButton>
               )}
-              <IconButton sx={{ color: "white" }} onClick={cancelSpeech}>
+              <IconButton onClick={cancelSpeech}>
                 <Cancel fontSize="large" />
               </IconButton>
             </ReadAloudControls>
@@ -318,7 +317,7 @@ export const TaskMenu: React.FC<TaskMenuProps> = ({
       {
         duration: 999999999,
         style: {
-          border: "1px solid #1b1d4eb7",
+          border: `1px solid ${theme.darkmode ? "#1b1d4eb7" : "#afb1ecb7"} `,
           WebkitBackdropFilter: "blur(10px)",
           backdropFilter: "blur(10px)",
         },
@@ -412,7 +411,6 @@ export const TaskMenu: React.FC<TaskMenuProps> = ({
           onDismiss={handleCloseMoreMenu}
           snapPoints={({ minHeight, maxHeight }) => [minHeight, maxHeight]}
           expandOnContentDrag
-          onClick={() => console.log("xd")}
           header={
             <SheetHeader translate="no">
               <Emoji emojiStyle={emojisStyle} size={32} unified={selectedTask.emoji || ""} />{" "}
@@ -592,13 +590,13 @@ const SheetHeader = styled.h3`
   justify-content: center;
   align-items: center;
   gap: 6px;
-  color: ${ColorPalette.fontDark};
+  color: ${({ theme }) => (theme.darkmode ? ColorPalette.fontLight : ColorPalette.fontDark)};
   margin: 10px;
   font-size: 20px;
 `;
 
 const SheetContent = styled.div`
-  color: ${ColorPalette.fontDark};
+  color: ${({ theme }) => (theme.darkmode ? ColorPalette.fontLight : ColorPalette.fontDark)};
   margin: 20px 10px;
   & .MuiMenuItem-root {
     font-size: 16px;
@@ -616,11 +614,11 @@ const StyledMenuItem = styled(MenuItem)<{ clr?: string }>`
   border-radius: 12px;
   box-shadow: none;
   gap: 2px;
-  color: ${({ clr }) => clr || ColorPalette.fontDark};
+  color: ${({ clr }) => clr || "unset"};
 
-  &:hover {
+  /* &:hover {
     background-color: #f0f0f0;
-  }
+  } */
 `;
 
 const ReadAloudContainer = styled.div`

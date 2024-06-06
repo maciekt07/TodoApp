@@ -28,10 +28,9 @@ interface EmojiPickerProps {
   // onEmojiChange: (emojiData: EmojiClickData) => void;
   color?: string;
   width?: CSSProperties["width"];
-  theme?: "light" | "dark";
 }
 
-export const CustomEmojiPicker = ({ emoji, setEmoji, color, width, theme }: EmojiPickerProps) => {
+export const CustomEmojiPicker = ({ emoji, setEmoji, color, width }: EmojiPickerProps) => {
   const { user, setUser } = useContext(UserContext);
   const { emojisStyle, settings } = user;
   const [showEmojiPicker, setShowEmojiPicker] = useState<boolean>(false);
@@ -218,7 +217,10 @@ export const CustomEmojiPicker = ({ emoji, setEmoji, color, width, theme }: Emoj
             <Suspense
               fallback={
                 !settings[0].simpleEmojiPicker && (
-                  <PickerLoader pickerTheme={theme} width={width}></PickerLoader>
+                  <PickerLoader
+                    pickerTheme={emotionTheme.darkmode ? "dark" : "light"}
+                    width={width}
+                  ></PickerLoader>
                 )
               }
             >
@@ -232,7 +234,7 @@ export const CustomEmojiPicker = ({ emoji, setEmoji, color, width, theme }: Emoj
                 emojiStyle={emojisStyle}
                 // customEmojis={customEmojis}
                 // lazyLoadEmojis
-                theme={theme === "dark" ? Theme.DARK : Theme.LIGHT}
+                theme={emotionTheme.darkmode ? Theme.DARK : Theme.LIGHT}
                 suggestedEmojisMode={SuggestionMode.FREQUENT}
                 autoFocusSearch={false}
                 onEmojiClick={handleEmojiClick}

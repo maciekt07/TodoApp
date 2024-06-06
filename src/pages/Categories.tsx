@@ -294,7 +294,6 @@ const Categories = () => {
             emoji={typeof emoji === "string" ? emoji : undefined}
             setEmoji={setEmoji}
             color={color}
-            theme={getFontColor(theme.secondary) === ColorPalette.fontDark ? "light" : "dark"}
           />
           <CategoryInput
             focused

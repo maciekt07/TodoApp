@@ -33,6 +33,7 @@ import React, { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { SettingsDialog } from ".";
 import bmcLogo from "../assets/bmc-logo.svg";
+import bmcLogoLight from "../assets/bmc-logo-light.svg";
 import logo from "../assets/logo256.png";
 import { defaultUser } from "../constants/defaultUser";
 import { UserContext } from "../contexts/UserContext";
@@ -40,6 +41,7 @@ import { fetchBMCInfo } from "../services/bmcApi";
 import { fetchGitHubInfo } from "../services/githubApi";
 import { ColorPalette, DialogBtn, pulseAnimation, ring } from "../styles";
 import { showToast, systemInfo, timeAgo } from "../utils";
+import { useTheme } from "@emotion/react";
 
 export const ProfileSidebar = () => {
   const { user, setUser } = useContext(UserContext);
@@ -55,6 +57,8 @@ export const ProfileSidebar = () => {
   const [issuesCount, setIssuesCount] = useState<number | null>(null);
 
   const [bmcSupporters, setBmcSupporters] = useState<number | null>(null);
+
+  const theme = useTheme();
 
   useEffect(() => {
     const fetchRepoInfo: () => Promise<void> = async () => {
@@ -322,7 +326,8 @@ export const ProfileSidebar = () => {
             window.open("https://www.buymeacoffee.com/maciekt07");
           }}
         >
-          <BmcIcon className="bmc-icon" src={bmcLogo} /> &nbsp; Buy me a coffee{" "}
+          <BmcIcon className="bmc-icon" src={theme.darkmode ? bmcLogoLight : bmcLogo} /> &nbsp; Buy
+          me a coffee{" "}
           {bmcSupporters && (
             <Tooltip title={`${bmcSupporters} supporters on Buy me a coffee`}>
               <MenuLabel clr="#f93c58">
@@ -364,17 +369,11 @@ export const ProfileSidebar = () => {
             {user.settings[0] === defaultUser.settings[0] && <PulseMenuLabel />}
           </SettingsMenuItem>
           <StyledDivider />
-          <StyledMenuItem
+          <ProfileMenuItem
             translate={user.name ? "no" : "yes"}
             onClick={() => {
               n("/user");
               handleClose();
-            }}
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: "10px",
-              background: "#d7d7d7",
             }}
           >
             <Avatar
@@ -388,7 +387,7 @@ export const ProfileSidebar = () => {
             {(user.name === null || user.name === "") &&
               user.profilePicture === null &&
               user.theme! == defaultUser.theme && <PulseMenuLabel />}
-          </StyledMenuItem>
+          </ProfileMenuItem>
           <StyledDivider />
           <CreditsContainer translate="no">
             <span style={{ display: "flex", alignItems: "center" }}>
@@ -452,7 +451,7 @@ const StyledSwipeableDrawer = styled(SwipeableDrawer)`
     min-width: 300px;
     box-shadow: none;
     padding: 4px;
-    background: #f9fafc;
+    color: ${({ theme }) => (theme.darkmode ? ColorPalette.fontLight : "#101727")};
     z-index: 999;
 
     @media (min-width: 1920px) {
@@ -476,7 +475,7 @@ const StyledMenuItem = styled(MenuItem)`
   box-shadow: none;
   display: flex;
   font-weight: 500;
-  color: #101727;
+  /* color: #101727; */
   align-items: center;
   gap: 6px;
 
@@ -486,7 +485,6 @@ const StyledMenuItem = styled(MenuItem)`
   }
 
   &:hover {
-    background-color: #f0f0f0;
     & svg[data-testid="GitHubIcon"] {
       transform: rotateY(${2 * Math.PI}rad);
     }
@@ -500,14 +498,24 @@ const StyledMenuItem = styled(MenuItem)`
 `;
 
 const SettingsMenuItem = styled(StyledMenuItem)`
-  background: #101727;
+  background: ${({ theme }) => (theme.darkmode ? "#1f1f1f" : "#101727")};
   color: ${ColorPalette.fontLight} !important;
   margin-top: 8px !important;
   &:hover {
-    background: #101727db !important;
+    background: ${({ theme }) => (theme.darkmode ? "#1f1f1fb2" : "#101727b2")};
     & svg[data-testid="SettingsRoundedIcon"] {
       transform: rotate(180deg);
     }
+  }
+`;
+
+const ProfileMenuItem = styled(StyledMenuItem)`
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: ${({ theme }) => (theme.darkmode ? "#1f1f1f" : "#d7d7d7")};
+  &:hover {
+    background: ${({ theme }) => (theme.darkmode ? "#1f1f1fb2" : "#d7d7d7b2")};
   }
 `;
 
@@ -579,7 +587,8 @@ const ProfileOptionsBottom = styled.div<{ isMobile: boolean }>`
 const CreditsContainer = styled.div`
   font-size: 12px;
   margin: 0;
-  color: #101727c0;
+  /* color: #101727c0; */
+  opacity: 0.8;
   text-align: center;
   display: flex;
   align-items: center;

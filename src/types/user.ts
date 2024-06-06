@@ -6,6 +6,8 @@ import type { AppTheme } from "../styles/theme";
  */
 export type UUID = ReturnType<typeof crypto.randomUUID>;
 
+export type DarkModeOptions = "system" | "auto" | "light" | "dark";
+
 /**
  * Represents a user in the application.
  */
@@ -19,6 +21,7 @@ export interface User {
   colorList: string[];
   settings: AppSettings[];
   theme: AppTheme;
+  darkmode: DarkModeOptions;
 }
 
 /**

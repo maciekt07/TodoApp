@@ -11,5 +11,9 @@ declare module "@emotion/react" {
      * Emotion Background color
      */
     secondary: string;
+    /**
+     * Emotion darkmode
+     */
+    darkmode: boolean;
   }
 }

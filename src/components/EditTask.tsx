@@ -17,6 +17,7 @@ import { UserContext } from "../contexts/UserContext";
 import { ColorPalette, DialogBtn } from "../styles";
 import { Category, Task } from "../types/user";
 import { showToast, timeAgo } from "../utils";
+import { useTheme } from "@emotion/react";
 
 interface EditTaskProps {
   open: boolean;
@@ -30,6 +31,8 @@ export const EditTask = ({ open, task, onClose, onSave }: EditTaskProps) => {
   const [editedTask, setEditedTask] = useState<Task | undefined>(task);
   const [emoji, setEmoji] = useState<string | undefined>();
   const [selectedCategories, setSelectedCategories] = useState<Category[]>([]);
+
+  const theme = useTheme();
 
   const nameError = useMemo(
     () => (editedTask?.name ? editedTask.name.length > TASK_NAME_MAX_LENGTH : undefined),
@@ -198,7 +201,7 @@ export const EditTask = ({ open, task, onClose, onSave }: EditTaskProps) => {
           defaultValue=""
           InputLabelProps={{ shrink: true }}
           sx={{
-            colorScheme: "light",
+            colorScheme: theme.darkmode ? "dark" : "light",
             " & .MuiInputBase-root": {
               transition: ".3s all",
             },
@@ -225,7 +228,7 @@ export const EditTask = ({ open, task, onClose, onSave }: EditTaskProps) => {
         />
         {user.settings[0].enableCategories !== undefined && user.settings[0].enableCategories && (
           <CategorySelect
-            fontColor={ColorPalette.fontDark}
+            fontColor={theme.darkmode ? ColorPalette.fontLight : ColorPalette.fontDark}
             selectedCategories={selectedCategories}
             onCategoryChange={(categories) => setSelectedCategories(categories)}
           />
@@ -241,7 +244,7 @@ export const EditTask = ({ open, task, onClose, onSave }: EditTaskProps) => {
           <ColorPicker
             width={"100%"}
             color={editedTask?.color || "#000000"}
-            fontColor={ColorPalette.fontDark}
+            fontColor={theme.darkmode ? ColorPalette.fontLight : ColorPalette.fontDark}
             onColorChange={(color) => {
               setEditedTask((prevTask) => ({
                 ...(prevTask as Task),

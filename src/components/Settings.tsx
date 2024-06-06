@@ -1,10 +1,14 @@
 import styled from "@emotion/styled";
 import {
+  BrightnessAutoRounded,
   CachedRounded,
+  DarkModeRounded,
   DeleteRounded,
   ExpandMoreRounded,
   Google,
+  LightModeRounded,
   Microsoft,
+  PersonalVideoRounded,
   VolumeDown,
   VolumeOff,
   VolumeUp,
@@ -35,9 +39,11 @@ import { useContext, useEffect, useState } from "react";
 import { defaultUser } from "../constants/defaultUser";
 import { UserContext } from "../contexts/UserContext";
 import { useOnlineStatus } from "../hooks/useOnlineStatus";
-import { DialogBtn } from "../styles";
-import type { AppSettings } from "../types/user";
-import { showToast, systemInfo } from "../utils";
+import { ColorPalette, DialogBtn } from "../styles";
+import type { AppSettings, DarkModeOptions } from "../types/user";
+import { getFontColor, showToast, systemInfo } from "../utils";
+import { useSystemTheme } from "../hooks/useSystemTheme";
+import { useTheme } from "@emotion/react";
 
 interface SettingsProps {
   open: boolean;
@@ -60,6 +66,9 @@ export const SettingsDialog: React.FC<SettingsProps> = ({ open, onClose }) => {
 
   const isOnline = useOnlineStatus();
 
+  const systemTheme = useSystemTheme();
+  const theme = useTheme();
+
   // Array of available emoji styles with their labels
   const emojiStyles: { label: string; style: EmojiStyle }[] = [
     { label: "Apple", style: EmojiStyle.APPLE },
@@ -67,6 +76,37 @@ export const SettingsDialog: React.FC<SettingsProps> = ({ open, onClose }) => {
     { label: "Twitter, Discord", style: EmojiStyle.TWITTER },
     { label: "Google", style: EmojiStyle.GOOGLE },
     { label: "Native", style: EmojiStyle.NATIVE },
+  ];
+
+  // type MuiIcon = OverridableComponent<SvgIconTypeMap<object, "svg">> & {
+  //   muiName: string;
+  // };
+
+  const darkModeOptions: {
+    label: string;
+    mode: DarkModeOptions;
+    icon: JSX.Element;
+  }[] = [
+    {
+      label: "System",
+      mode: "system",
+      icon: <PersonalVideoRounded />,
+    },
+    {
+      label: "Auto",
+      mode: "auto",
+      icon: <BrightnessAutoRounded />,
+    },
+    {
+      label: "Light",
+      mode: "light",
+      icon: <LightModeRounded />,
+    },
+    {
+      label: "Dark",
+      mode: "dark",
+      icon: <DarkModeRounded />,
+    },
   ];
 
   const getFlagEmoji = (countryCode: string): string =>
@@ -124,6 +164,14 @@ export const SettingsDialog: React.FC<SettingsProps> = ({ open, onClose }) => {
     setUser((prevUser) => ({
       ...prevUser,
       emojisStyle: selectedEmojiStyle,
+    }));
+  };
+
+  const handleDarkModeChange = (event: SelectChangeEvent<unknown>) => {
+    const selectedDarkMode = event.target.value as DarkModeOptions;
+    setUser((prevUser) => ({
+      ...prevUser,
+      darkmode: selectedDarkMode,
     }));
   };
 
@@ -207,6 +255,39 @@ export const SettingsDialog: React.FC<SettingsProps> = ({ open, onClose }) => {
     <Dialog open={open} onClose={onClose}>
       <DialogTitle sx={{ fontWeight: 600 }}>Settings</DialogTitle>
       <Container>
+        <FormGroup>
+          <FormControl>
+            <FormLabel>Dark Mode</FormLabel>
+            <StyledSelect
+              value={user.darkmode}
+              onChange={handleDarkModeChange}
+              translate="no"
+              IconComponent={ExpandMoreRounded}
+            >
+              {darkModeOptions.map((option) => (
+                <MenuItem
+                  key={option.mode}
+                  value={option.mode}
+                  translate="no"
+                  sx={{
+                    padding: "12px 20px",
+                    borderRadius: "12px",
+                    margin: "0 8px",
+                    display: "flex",
+                    gap: "6px",
+                  }}
+                >
+                  {option.icon} {option.label} {option.mode === "system" && `(${systemTheme})`}{" "}
+                  {option.mode === "auto" &&
+                    `(${
+                      getFontColor(theme.secondary) === ColorPalette.fontDark ? "light" : "dark"
+                    })`}
+                  {/* {option.mode === "auto" && "(Based on app theme)"} */}
+                </MenuItem>
+              ))}
+            </StyledSelect>
+          </FormControl>
+        </FormGroup>
         {/* Select component to choose the emoji style */}
         <FormGroup>
           <FormControl>
@@ -262,6 +343,7 @@ export const SettingsDialog: React.FC<SettingsProps> = ({ open, onClose }) => {
                 </MenuItem>
               ))}
             </StyledSelect>
+
             <Tooltip title="Emoji picker will only show frequently used emojis">
               <FormGroup>
                 <StyledFormLabel
@@ -463,7 +545,7 @@ export const SettingsDialog: React.FC<SettingsProps> = ({ open, onClose }) => {
                     title={settings[0].voiceVolume ? "Mute" : "Unmute"}
                     onClick={handleMuteClick}
                   >
-                    <IconButton sx={{ color: "black" }}>
+                    <IconButton>
                       {settings[0].voiceVolume === 0 ? (
                         <VolumeOff />
                       ) : settings[0].voiceVolume <= 0.4 ? (
@@ -514,7 +596,6 @@ const Container = styled.div`
 
 const StyledSelect = styled(Select)`
   width: 330px;
-  color: black;
   margin: 8px 0;
 `;
 
@@ -538,7 +619,4 @@ const VolumeSlider = styled(Stack)`
   padding: 12px 24px 12px 18px;
   border-radius: 18px;
   transition: 0.3s all;
-  &:hover {
-    background: #89898939;
-  }
 `;

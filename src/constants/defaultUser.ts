@@ -13,6 +13,7 @@ export const defaultUser: User = {
     systemInfo.os === "iOS" || systemInfo.os === "macOS" ? EmojiStyle.NATIVE : EmojiStyle.APPLE,
   tasks: [],
   theme: "system",
+  darkmode: "auto",
   settings: [
     {
       enableCategories: true,

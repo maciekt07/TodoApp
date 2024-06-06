@@ -31,6 +31,7 @@ export const GlobalStyles = () => {
           -moz-osx-font-smoothing: grayscale;
           -webkit-text-size-adjust: 100%;
           --rsbs-backdrop-bg: rgba(0, 0, 0, 0.3);
+          --rsbs-bg: ${theme.darkmode ? "#383838" : "#ffffff"};
         }
         img {
           -webkit-user-select: none;
@@ -170,8 +171,8 @@ export const GlobalStyles = () => {
           gap: 4px;
         }
         .MuiTooltip-tooltip {
-          color: white !important;
-          background-color: #141431dd !important;
+          color: ${theme.darkmode ? "white" : "black"} !important;
+          background-color: ${theme.darkmode ? "#141431dd" : "#ededf3dd"} !important;
           backdrop-filter: blur(6px) !important;
           padding: 8px 16px !important;
           border-radius: 8px !important;

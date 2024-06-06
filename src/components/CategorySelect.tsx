@@ -226,10 +226,10 @@ const HeaderMenuItem = styled(MenuItem)`
   font-weight: 500;
   position: sticky !important;
   top: 0;
-  background: #ffffffce;
   backdrop-filter: blur(6px);
   z-index: 99;
   pointer-events: none;
+  background: ${({ theme }) => (theme.darkmode ? "#2f2f2fc3" : "#ffffffc3")};
 `;
 
 const SelectedNames = styled.span`

@@ -31,6 +31,10 @@ const themeConfig: ThemeConfig = {
   Blue: {
     primaryColor: "#2a93d5",
   },
+  Bluetone: {
+    primaryColor: "#00246B",
+    secondaryColor: "#CADCFC",
+  },
   Pink: {
     primaryColor: "#e5369a",
   },
@@ -55,6 +59,7 @@ const themeConfig: ThemeConfig = {
     primaryColor: "#00e952",
     secondaryColor: "#011926",
   },
+
   // Add new themes here
 };
 
@@ -97,6 +102,7 @@ const commonComponentProps: Theme["components"] = {
     defaultProps: {
       style: {
         fontWeight: 500,
+        color: "#fff",
       },
     },
   },
@@ -118,7 +124,11 @@ const commonComponentProps: Theme["components"] = {
   },
 };
 
-export const createCustomTheme = (primaryColor: string, backgroundColor = "#232e58"): Theme => {
+export const createCustomTheme = (
+  primaryColor: string,
+  backgroundColor = "#232e58",
+  mode: "light" | "dark" = "dark"
+): Theme => {
   return createTheme({
     components: {
       ...commonComponentProps,
@@ -136,6 +146,7 @@ export const createCustomTheme = (primaryColor: string, backgroundColor = "#232e
       error: {
         main: ColorPalette.red,
       },
+      mode,
     },
   });
 };

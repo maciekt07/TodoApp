@@ -166,7 +166,7 @@ const UserSettings = () => {
           </CreatedAtDate>
         </Tooltip>
 
-        <Grid
+        <ThemePickerContainer
           container
           maxWidth="300px"
           marginBottom="6px"
@@ -175,7 +175,6 @@ const UserSettings = () => {
           justifyContent="left"
           alignItems="center"
           gap={1}
-          sx={{ background: "#d9d9d9", padding: "10px", borderRadius: "32px", overflowY: "auto" }}
         >
           <Grid item>
             <Tooltip title={`System (${systemTheme})`}>
@@ -220,7 +219,7 @@ const UserSettings = () => {
               </Tooltip>
             </Grid>
           ))}
-        </Grid>
+        </ThemePickerContainer>
         <TextField
           sx={{ width: "300px" }}
           label={name === null ? "Add Name" : "Change Name"}
@@ -340,8 +339,8 @@ const Container = styled.div`
   padding: 64px 48px;
   border-radius: 48px;
   box-shadow: 0px 4px 50px rgba(0, 0, 0, 0.25);
-  background: #f5f5f5;
-  color: ${ColorPalette.fontDark};
+  background: ${({ theme }) => (theme.darkmode ? "#383838" : "#f5f5f5")};
+  color: ${({ theme }) => (theme.darkmode ? ColorPalette.fontLight : ColorPalette.fontDark)};
   transition: border 0.3s, box-shadow 0.3s;
   border: 4px solid ${({ theme }) => theme.primary};
   box-shadow: 0 0 72px -1px ${({ theme }) => theme.primary + "bf"};
@@ -362,6 +361,13 @@ const CheckIcon = styled(CheckRounded)`
   color: white;
   background: #141414;
   border-radius: 100px;
+`;
+
+const ThemePickerContainer = styled(Grid)`
+  background: ${({ theme }) => (theme.darkmode ? "#505050" : "#d9d9d9")};
+  padding: 10px;
+  border-radius: 32px;
+  overflow-y: auto;
 `;
 
 const SaveBtn = styled(Button)`
