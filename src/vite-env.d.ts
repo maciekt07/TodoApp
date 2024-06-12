@@ -1,6 +1,6 @@
 /// <reference types="vite/client" />
 import "@emotion/react";
-
+declare module "ntc-ts";
 declare module "@emotion/react" {
   export interface Theme {
     /**

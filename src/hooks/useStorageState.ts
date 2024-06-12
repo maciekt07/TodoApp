@@ -30,26 +30,22 @@ export function useStorageState<T>(
     storage.setItem(key, JSON.stringify(value));
   }, [key, value, storage]);
 
-  //FIXME: This causes issues with volume slider in `components/Settings.tsx`
-
   // This allows to synchronize localStorage between tabs in real time
 
   // Listen for storage events and update state if the key matches
-  // useEffect(() => {
-  //   const handleStorageChange = (event: StorageEvent) => {
-  //     console.log(event.type);
+  useEffect(() => {
+    const handleStorageChange = (event: StorageEvent) => {
+      if (event.key === key && event.newValue !== null && event.key !== "") {
+        setValue(JSON.parse(event.newValue));
+      }
+    };
 
-  //     if (event.key === key && event.newValue !== null && event.key !== "") {
-  //       setValue(JSON.parse(event.newValue));
-  //     }
-  //   };
+    window.addEventListener("storage", handleStorageChange);
 
-  //   window.addEventListener("storage", handleStorageChange);
-
-  //   return () => {
-  //     window.removeEventListener("storage", handleStorageChange);
-  //   };
-  // }, [key]);
+    return () => {
+      window.removeEventListener("storage", handleStorageChange);
+    };
+  }, [key]);
 
   // Return the state value and update function
   return [value, setValue];

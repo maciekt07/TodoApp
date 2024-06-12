@@ -1,9 +1,10 @@
-import { lazy, useContext, useEffect, useState } from "react";
-import { ColorPicker, CustomEmojiPicker, TopBar } from "../components";
-import { Category, UUID } from "../types/user";
-import { useNavigate } from "react-router-dom";
 import { Emoji } from "emoji-picker-react";
-
+import { lazy, useContext, useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { ColorPicker, CustomEmojiPicker, TopBar } from "../components";
+import type { Category, UUID } from "../types/user";
+import { useTheme } from "@emotion/react";
+import { Delete, DeleteRounded, Edit, SaveRounded } from "@mui/icons-material";
 import {
   Dialog,
   DialogActions,
@@ -12,9 +13,9 @@ import {
   IconButton,
   Tooltip,
 } from "@mui/material";
-import { Delete, Edit, SaveRounded, DeleteRounded } from "@mui/icons-material";
 import { CATEGORY_NAME_MAX_LENGTH } from "../constants";
-import { getFontColor, showToast } from "../utils";
+import { UserContext } from "../contexts/UserContext";
+import { useStorageState } from "../hooks/useStorageState";
 import {
   ActionButton,
   AddCategoryButton,
@@ -23,14 +24,12 @@ import {
   CategoryContent,
   CategoryElement,
   CategoryElementsContainer,
+  CategoryInput,
   ColorPalette,
   DialogBtn,
   EditNameInput,
-  CategoryInput,
 } from "../styles";
-import { UserContext } from "../contexts/UserContext";
-import { useStorageState } from "../hooks/useStorageState";
-import { useTheme } from "@emotion/react";
+import { getFontColor, showToast } from "../utils";
 
 const NotFound = lazy(() => import("./NotFound"));
 
@@ -411,7 +410,7 @@ const Categories = () => {
               <ColorPicker
                 color={editColor}
                 width="300px"
-                fontColor={ColorPalette.fontDark}
+                fontColor={theme.darkmode ? ColorPalette.fontLight : ColorPalette.fontDark}
                 onColorChange={(clr) => {
                   setEditColor(clr);
                 }}

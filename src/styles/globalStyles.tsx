@@ -186,8 +186,8 @@ export const GlobalStyles = () => {
         .MuiSlider-valueLabel {
           border-radius: 10px !important;
           padding: 6px 14px !important;
-          color: #ffffff !important;
-          background-color: #141431dd !important;
+          color: ${theme.darkmode ? "white" : "black"} !important;
+          background-color: ${theme.darkmode ? "#141431dd" : "#ededf3dd"} !important;
           &::before,
           &::after {
             display: none;

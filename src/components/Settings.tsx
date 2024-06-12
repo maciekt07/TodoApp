@@ -1,3 +1,4 @@
+import { useTheme } from "@emotion/react";
 import styled from "@emotion/styled";
 import {
   BrightnessAutoRounded,
@@ -39,11 +40,10 @@ import { useContext, useEffect, useState } from "react";
 import { defaultUser } from "../constants/defaultUser";
 import { UserContext } from "../contexts/UserContext";
 import { useOnlineStatus } from "../hooks/useOnlineStatus";
+import { useSystemTheme } from "../hooks/useSystemTheme";
 import { ColorPalette, DialogBtn } from "../styles";
 import type { AppSettings, DarkModeOptions } from "../types/user";
 import { getFontColor, showToast, systemInfo } from "../utils";
-import { useSystemTheme } from "../hooks/useSystemTheme";
-import { useTheme } from "@emotion/react";
 
 interface SettingsProps {
   open: boolean;
@@ -54,18 +54,16 @@ interface SettingsProps {
 
 export const SettingsDialog: React.FC<SettingsProps> = ({ open, onClose }) => {
   const { user, setUser } = useContext(UserContext);
-  const { settings, emojisStyle } = user;
+  const { settings, emojisStyle, darkmode } = user;
   const [userSettings, setUserSettings] = useState<AppSettings>(settings[0]);
   const [lastStyle] = useState<EmojiStyle>(emojisStyle);
 
   const [availableVoices, setAvailableVoices] = useState<SpeechSynthesisVoice[]>([]);
   const [voiceVolume, setVoiceVolume] = useState<number>(settings[0].voiceVolume);
   const [prevVoiceVol, setPrevVoiceVol] = useState<number>(settings[0].voiceVolume);
-
   const [showLocalVoices, setShowLocalVoices] = useState<boolean>(false);
 
   const isOnline = useOnlineStatus();
-
   const systemTheme = useSystemTheme();
   const theme = useTheme();
 
@@ -77,25 +75,21 @@ export const SettingsDialog: React.FC<SettingsProps> = ({ open, onClose }) => {
     { label: "Google", style: EmojiStyle.GOOGLE },
     { label: "Native", style: EmojiStyle.NATIVE },
   ];
-
-  // type MuiIcon = OverridableComponent<SvgIconTypeMap<object, "svg">> & {
-  //   muiName: string;
-  // };
-
+  // Array of available dark mode options
   const darkModeOptions: {
     label: string;
     mode: DarkModeOptions;
     icon: JSX.Element;
   }[] = [
     {
-      label: "System",
-      mode: "system",
-      icon: <PersonalVideoRounded />,
-    },
-    {
       label: "Auto",
       mode: "auto",
       icon: <BrightnessAutoRounded />,
+    },
+    {
+      label: "System",
+      mode: "system",
+      icon: <PersonalVideoRounded />,
     },
     {
       label: "Light",
@@ -109,6 +103,7 @@ export const SettingsDialog: React.FC<SettingsProps> = ({ open, onClose }) => {
     },
   ];
 
+  // function to get the flag emoji for a given country code
   const getFlagEmoji = (countryCode: string): string =>
     typeof countryCode === "string"
       ? String.fromCodePoint(
@@ -116,6 +111,8 @@ export const SettingsDialog: React.FC<SettingsProps> = ({ open, onClose }) => {
         )
       : "";
 
+  // Function to get the available speech synthesis voices
+  // https://developer.mozilla.org/en-US/docs/Web/API/SpeechSynthesis
   const getAvailableVoices = (): SpeechSynthesisVoice[] => {
     const voices = window.speechSynthesis.getVoices();
     const voiceInfoArray: SpeechSynthesisVoice[] = [];
@@ -147,7 +144,7 @@ export const SettingsDialog: React.FC<SettingsProps> = ({ open, onClose }) => {
       if (name === "appBadge" && navigator.clearAppBadge && !isChecked) {
         navigator.clearAppBadge();
       }
-      const updatedSettings = {
+      const updatedSettings: AppSettings = {
         ...userSettings,
         [name]: isChecked,
       };
@@ -193,9 +190,12 @@ export const SettingsDialog: React.FC<SettingsProps> = ({ open, onClose }) => {
       }));
     }
   };
-  // Function to handle changes in voice volume
-  const handleVoiceVolChange = (_event: Event, value: number | number[]) => {
-    setVoiceVolume(value as number);
+
+  // Function to handle changes in voice volume after mouse up
+  const handleVoiceVolCommitChange = (
+    _event: Event | React.SyntheticEvent<Element, Event>,
+    value: number | number[]
+  ) => {
     // Update user settings with the new voice volume
     setUser((prevUser) => ({
       ...prevUser,
@@ -227,6 +227,7 @@ export const SettingsDialog: React.FC<SettingsProps> = ({ open, onClose }) => {
     }));
     setVoiceVolume(newVoiceVolume);
   };
+
   const getLanguageRegion = (lang: string) => {
     if (!lang) {
       // If lang is undefined or falsy, return an empty string
@@ -259,31 +260,19 @@ export const SettingsDialog: React.FC<SettingsProps> = ({ open, onClose }) => {
           <FormControl>
             <FormLabel>Dark Mode</FormLabel>
             <StyledSelect
-              value={user.darkmode}
+              value={darkmode}
               onChange={handleDarkModeChange}
-              translate="no"
               IconComponent={ExpandMoreRounded}
             >
               {darkModeOptions.map((option) => (
-                <MenuItem
-                  key={option.mode}
-                  value={option.mode}
-                  translate="no"
-                  sx={{
-                    padding: "12px 20px",
-                    borderRadius: "12px",
-                    margin: "0 8px",
-                    display: "flex",
-                    gap: "6px",
-                  }}
-                >
-                  {option.icon} {option.label} {option.mode === "system" && `(${systemTheme})`}{" "}
+                <StyledMenuItem key={option.mode} value={option.mode}>
+                  {option.icon} {option.label}
+                  {option.mode === "system" && ` (${systemTheme})`}
                   {option.mode === "auto" &&
-                    `(${
+                    ` (${
                       getFontColor(theme.secondary) === ColorPalette.fontDark ? "light" : "dark"
                     })`}
-                  {/* {option.mode === "auto" && "(Based on app theme)"} */}
-                </MenuItem>
+                </StyledMenuItem>
               ))}
             </StyledSelect>
           </FormControl>
@@ -314,33 +303,23 @@ export const SettingsDialog: React.FC<SettingsProps> = ({ open, onClose }) => {
               )}
 
               {emojiStyles.map((style) => (
-                <MenuItem
+                <StyledMenuItem
                   key={style.style}
                   value={style.style}
                   translate="no"
-                  // Disable non-native styles when offline or if they are not the default style or last selected style
-                  // This prevents users from selecting styles that require fetching external resources (emojis) when offline,
-                  // as those emojis may not load without an internet connection.
                   disabled={
                     !isOnline &&
                     style.style !== EmojiStyle.NATIVE &&
                     style.style !== defaultUser.emojisStyle &&
                     style.style !== lastStyle
                   }
-                  sx={{
-                    padding: "12px 20px",
-                    borderRadius: "12px",
-                    margin: "0 8px",
-                    display: "flex",
-                    gap: "4px",
-                  }}
                 >
                   <Emoji size={24} unified="1f60e" emojiStyle={style.style} />
                   &nbsp;
                   {/* Space For Native Emoji */}
                   {style.style === EmojiStyle.NATIVE && "\u00A0"}
                   {style.label}
-                </MenuItem>
+                </StyledMenuItem>
               ))}
             </StyledSelect>
 
@@ -469,7 +448,6 @@ export const SettingsDialog: React.FC<SettingsProps> = ({ open, onClose }) => {
               />
               {filteredVoices.length !== 0 ? (
                 <StyledSelect
-                  // Set the value to the first voice in the availableVoices array
                   value={settings[0].voice}
                   variant="outlined"
                   onChange={handleVoiceChange}
@@ -484,7 +462,6 @@ export const SettingsDialog: React.FC<SettingsProps> = ({ open, onClose }) => {
                     },
                   }}
                 >
-                  {/* Map over available voices to create MenuItem components */}
                   {filteredVoices.map((voice) => (
                     <MenuItem
                       key={voice.name}
@@ -541,14 +518,11 @@ export const SettingsDialog: React.FC<SettingsProps> = ({ open, onClose }) => {
             <Box>
               <div style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
                 <VolumeSlider spacing={2} direction="row" alignItems="center">
-                  <Tooltip
-                    title={settings[0].voiceVolume ? "Mute" : "Unmute"}
-                    onClick={handleMuteClick}
-                  >
+                  <Tooltip title={voiceVolume ? "Mute" : "Unmute"} onClick={handleMuteClick}>
                     <IconButton>
-                      {settings[0].voiceVolume === 0 ? (
+                      {voiceVolume === 0 ? (
                         <VolumeOff />
-                      ) : settings[0].voiceVolume <= 0.4 ? (
+                      ) : voiceVolume <= 0.4 ? (
                         <VolumeDown />
                       ) : (
                         <VolumeUp />
@@ -560,13 +534,14 @@ export const SettingsDialog: React.FC<SettingsProps> = ({ open, onClose }) => {
                       width: "230px",
                     }}
                     value={voiceVolume}
-                    onChange={handleVoiceVolChange}
+                    onChange={(_event, value) => setVoiceVolume(value as number)}
+                    onChangeCommitted={handleVoiceVolCommitChange}
                     min={0}
                     max={1}
                     step={0.01}
                     aria-label="Volume Slider"
                     valueLabelFormat={() => {
-                      const vol = Math.floor(settings[0].voiceVolume * 100);
+                      const vol = Math.floor(voiceVolume * 100);
                       return vol === 0 ? "Muted" : vol + "%";
                     }}
                     valueLabelDisplay="auto"
@@ -597,6 +572,14 @@ const Container = styled.div`
 const StyledSelect = styled(Select)`
   width: 330px;
   margin: 8px 0;
+`;
+
+const StyledMenuItem = styled(MenuItem)`
+  padding: 12px 20px;
+  border-radius: 12px;
+  margin: 0 8px;
+  display: flex;
+  gap: 6px;
 `;
 
 const StyledFormLabel = styled(FormControlLabel)`

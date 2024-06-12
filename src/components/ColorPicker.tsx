@@ -244,7 +244,18 @@ export const ColorPicker: React.FC<ColorPickerProps> = ({
             {addColorVal.toUpperCase()}
           </div>
           <div style={{ position: "relative" }}>
-            <StyledColorPicker type="color" value={addColorVal} onChange={handlePickerChange} />
+            <StyledColorPicker
+              type="color"
+              // list={systemInfo.os === "iOS" ? "color-list" : undefined}
+              value={addColorVal}
+              onChange={handlePickerChange}
+            />
+            {/* <datalist id="color-list">
+              <option value={theme.primary} />
+              {colorList.map((color) => (
+                <option value={color} key={color} />
+              ))}
+            </datalist> */}
             <PickerLabel clr={getFontColor(addColorVal)}>
               <ColorizeRounded /> Choose color
             </PickerLabel>

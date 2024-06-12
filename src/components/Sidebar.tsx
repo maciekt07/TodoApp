@@ -45,8 +45,7 @@ import { useTheme } from "@emotion/react";
 
 export const ProfileSidebar = () => {
   const { user, setUser } = useContext(UserContext);
-  const n = useNavigate();
-
+  const { name, profilePicture, tasks, settings } = user;
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
   const [logoutConfirmationOpen, setLogoutConfirmationOpen] = useState<boolean>(false);
@@ -59,6 +58,7 @@ export const ProfileSidebar = () => {
   const [bmcSupporters, setBmcSupporters] = useState<number | null>(null);
 
   const theme = useTheme();
+  const n = useNavigate();
 
   useEffect(() => {
     const fetchRepoInfo: () => Promise<void> = async () => {
@@ -167,7 +167,7 @@ export const ProfileSidebar = () => {
 
   return (
     <Container>
-      <Tooltip title={<div translate={user.name ? "no" : "yes"}>{user.name || "User"}</div>}>
+      <Tooltip title={<div translate={name ? "no" : "yes"}>{name || "User"}</div>}>
         <IconButton
           aria-label="Sidebar"
           aria-controls={open ? "basic-menu" : undefined}
@@ -177,8 +177,8 @@ export const ProfileSidebar = () => {
           sx={{ zIndex: 1 }}
         >
           <Avatar
-            src={(user.profilePicture as string) || undefined}
-            alt={user.name || "User"}
+            src={(profilePicture as string) || undefined}
+            alt={name || "User"}
             translate="no"
             slotProps={{ img: { loading: "lazy" } }}
             onError={() => {
@@ -193,12 +193,12 @@ export const ProfileSidebar = () => {
             sx={{
               width: "52px",
               height: "52px",
-              background: user.profilePicture ? "#ffffff1c" : "#747474",
+              background: profilePicture ? "#ffffff1c" : "#747474",
               transition: ".2s all",
               fontSize: "26px",
             }}
           >
-            {user.name ? user.name[0].toUpperCase() : undefined}
+            {name ? name[0].toUpperCase() : undefined}
           </Avatar>
         </IconButton>
       </Tooltip>
@@ -219,10 +219,10 @@ export const ProfileSidebar = () => {
           }}
         >
           <Logo src={logo} alt="logo" />
-          <h2>
-            <span style={{ color: "#7764E8" }}>Todo</span> App
-            <span style={{ color: "#7764E8" }}>.</span>
-          </h2>
+          <LogoText>
+            <span>Todo</span> App
+            <span>.</span>
+          </LogoText>
         </LogoContainer>
 
         <StyledMenuItem
@@ -232,12 +232,12 @@ export const ProfileSidebar = () => {
           }}
         >
           <TaskAltRounded /> &nbsp; Tasks
-          {user.tasks.filter((task) => !task.done).length > 0 && (
-            <Tooltip title={`${user.tasks.filter((task) => !task.done).length} tasks to do`}>
+          {tasks.filter((task) => !task.done).length > 0 && (
+            <Tooltip title={`${tasks.filter((task) => !task.done).length} tasks to do`}>
               <MenuLabel>
-                {user.tasks.filter((task) => !task.done).length > 99
+                {tasks.filter((task) => !task.done).length > 99
                   ? "99+"
-                  : user.tasks.filter((task) => !task.done).length}
+                  : tasks.filter((task) => !task.done).length}
               </MenuLabel>
             </Tooltip>
           )}
@@ -261,7 +261,7 @@ export const ProfileSidebar = () => {
           <DeleteForeverRounded /> &nbsp; Purge Tasks
         </StyledMenuItem>
 
-        {user.settings[0].enableCategories !== undefined && user.settings[0].enableCategories && (
+        {settings[0].enableCategories !== undefined && settings[0].enableCategories && (
           <StyledMenuItem
             onClick={() => {
               n("/categories");
@@ -309,7 +309,7 @@ export const ProfileSidebar = () => {
           <BugReportRounded /> &nbsp; Report Issue{" "}
           {Boolean(issuesCount || issuesCount === 0) && (
             <Tooltip title={`${issuesCount} open issues`}>
-              <MenuLabel clr={issuesCount && issuesCount > 0 ? ColorPalette.red : "#3bb61c"}>
+              <MenuLabel clr="#3bb61c">
                 <span style={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
                   <AdjustRounded style={{ fontSize: "18px" }} />
                   &nbsp;
@@ -366,26 +366,26 @@ export const ProfileSidebar = () => {
             }}
           >
             <SettingsRounded /> &nbsp; Settings
-            {user.settings[0] === defaultUser.settings[0] && <PulseMenuLabel />}
+            {settings[0] === defaultUser.settings[0] && <PulseMenuLabel />}
           </SettingsMenuItem>
           <StyledDivider />
           <ProfileMenuItem
-            translate={user.name ? "no" : "yes"}
+            translate={name ? "no" : "yes"}
             onClick={() => {
               n("/user");
               handleClose();
             }}
           >
             <Avatar
-              src={(user.profilePicture as string) || undefined}
+              src={(profilePicture as string) || undefined}
               sx={{ width: "44px", height: "44px" }}
               slotProps={{ img: { loading: "lazy" } }}
             >
-              {user.name ? user.name[0].toUpperCase() : undefined}
+              {name ? name[0].toUpperCase() : undefined}
             </Avatar>
-            <h4 style={{ margin: 0, fontWeight: 600 }}> {user.name || "User"}</h4>{" "}
-            {(user.name === null || user.name === "") &&
-              user.profilePicture === null &&
+            <h4 style={{ margin: 0, fontWeight: 600 }}> {name || "User"}</h4>{" "}
+            {(name === null || name === "") &&
+              profilePicture === null &&
               user.theme! == defaultUser.theme && <PulseMenuLabel />}
           </ProfileMenuItem>
           <StyledDivider />
@@ -475,7 +475,6 @@ const StyledMenuItem = styled(MenuItem)`
   box-shadow: none;
   display: flex;
   font-weight: 500;
-  /* color: #101727; */
   align-items: center;
   gap: 6px;
 
@@ -563,17 +562,23 @@ const LogoContainer = styled.div`
   cursor: pointer;
 `;
 
-const BmcIcon = styled.img`
-  width: 1em;
-  height: 1em;
-  font-size: 1.5rem;
-`;
-
 const Logo = styled.img`
   width: 52px;
   height: 52px;
   margin-left: 18px;
   border-radius: 14px;
+`;
+
+const LogoText = styled.h2`
+  & span {
+    color: ${({ theme }) => theme.primary};
+  }
+`;
+
+const BmcIcon = styled.img`
+  width: 1em;
+  height: 1em;
+  font-size: 1.5rem;
 `;
 
 const ProfileOptionsBottom = styled.div<{ isMobile: boolean }>`
@@ -587,7 +592,6 @@ const ProfileOptionsBottom = styled.div<{ isMobile: boolean }>`
 const CreditsContainer = styled.div`
   font-size: 12px;
   margin: 0;
-  /* color: #101727c0; */
   opacity: 0.8;
   text-align: center;
   display: flex;

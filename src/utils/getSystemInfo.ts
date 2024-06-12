@@ -5,9 +5,9 @@ const userAgent = window.navigator.userAgent;
 
 const getOperatingSystem = (): OperatingSystem => {
   if (/Windows NT/i.test(userAgent)) return "Windows";
+  if (/iPhone|iPad|iPod/i.test(userAgent)) return "iOS";
   if (/Mac/i.test(userAgent)) return "macOS";
   if (/Linux/i.test(userAgent)) return "Linux";
-  if (/iPhone|iPad|iPod/i.test(userAgent)) return "iOS";
   if (/Android/i.test(userAgent)) return "Android";
   return "Unknown";
 };

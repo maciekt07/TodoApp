@@ -85,9 +85,11 @@ export const TaskMenu: React.FC<TaskMenuProps> = ({
   const { tasks, name, settings, emojisStyle } = user;
   const [showShareDialog, setShowShareDialog] = useState<boolean>(false);
   const [shareTabVal, setShareTabVal] = useState<number>(0);
+
   const isMobile = useResponsiveDisplay();
   const n = useNavigate();
   const theme = useTheme();
+
   const selectedTask = useMemo(() => {
     return tasks.find((task) => task.id === selectedTaskId) || ({} as Task);
   }, [selectedTaskId, tasks]);
@@ -99,7 +101,6 @@ export const TaskMenu: React.FC<TaskMenuProps> = ({
 
   const generateShareableLink = (taskId: UUID | null, userName: string): string => {
     const task = tasks.find((task) => task.id === taskId);
-
     // This removes id property from link as a new identifier is generated on the share page.
     interface TaskToShare extends Omit<Task, "id"> {
       id: undefined;
@@ -220,6 +221,7 @@ export const TaskMenu: React.FC<TaskMenuProps> = ({
     }
   };
 
+  //https://developer.mozilla.org/en-US/docs/Web/API/SpeechSynthesis
   const handleReadAloud = () => {
     const voices = window.speechSynthesis.getVoices();
     const voice = voices.find((voice) => voice.name === settings[0].voice);
@@ -317,7 +319,7 @@ export const TaskMenu: React.FC<TaskMenuProps> = ({
       {
         duration: 999999999,
         style: {
-          border: `1px solid ${theme.darkmode ? "#1b1d4eb7" : "#afb1ecb7"} `,
+          border: `1px solid ${theme.darkmode ? "#1b1d4eb7" : "#ededf7a8"} `,
           WebkitBackdropFilter: "blur(10px)",
           backdropFilter: "blur(10px)",
         },

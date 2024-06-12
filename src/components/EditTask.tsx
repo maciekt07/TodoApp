@@ -28,6 +28,7 @@ interface EditTaskProps {
 
 export const EditTask = ({ open, task, onClose, onSave }: EditTaskProps) => {
   const { user } = useContext(UserContext);
+  const { settings } = user;
   const [editedTask, setEditedTask] = useState<Task | undefined>(task);
   const [emoji, setEmoji] = useState<string | undefined>();
   const [selectedCategories, setSelectedCategories] = useState<Category[]>([]);
@@ -226,7 +227,7 @@ export const EditTask = ({ open, task, onClose, onSave }: EditTaskProps) => {
             ) : undefined,
           }}
         />
-        {user.settings[0].enableCategories !== undefined && user.settings[0].enableCategories && (
+        {settings[0].enableCategories !== undefined && settings[0].enableCategories && (
           <CategorySelect
             fontColor={theme.darkmode ? ColorPalette.fontLight : ColorPalette.fontDark}
             selectedCategories={selectedCategories}

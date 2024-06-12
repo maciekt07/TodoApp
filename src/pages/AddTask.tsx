@@ -35,6 +35,9 @@ const AddTask = () => {
 
   useEffect(() => {
     document.title = "Todo App - Add Task";
+  }, []);
+
+  useEffect(() => {
     if (name.length > TASK_NAME_MAX_LENGTH) {
       setNameError(`Name should be less than or equal to ${TASK_NAME_MAX_LENGTH} characters`);
     } else {

@@ -22,15 +22,10 @@ import { AddRounded, TodayRounded, WifiOff } from "@mui/icons-material";
 import { UserContext } from "../contexts/UserContext";
 import { useResponsiveDisplay } from "../hooks/useResponsiveDisplay";
 import { useNavigate } from "react-router-dom";
-import { useTheme } from "@emotion/react";
 
 const Home = () => {
   const { user } = useContext(UserContext);
   const { tasks, emojisStyle, settings, name } = user;
-
-  const theme = useTheme();
-  console.log(theme);
-
   const [randomGreeting, setRandomGreeting] = useState<string | ReactNode>("");
   const [greetingKey, setGreetingKey] = useState<number>(0);
   const [completedTasksCount, setCompletedTasksCount] = useState<number>(0);
