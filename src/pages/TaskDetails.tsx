@@ -7,6 +7,7 @@ import { Clear, Done } from "@mui/icons-material";
 import { Emoji } from "emoji-picker-react";
 import { useContext, useEffect } from "react";
 import { UserContext } from "../contexts/UserContext";
+import { getColorName } from "ntc-ts";
 
 const TaskDetails = () => {
   const { user } = useContext(UserContext);
@@ -69,7 +70,8 @@ const TaskDetails = () => {
             <TableRow>
               <TableHeader>Color:</TableHeader>
               <TableData>
-                <ColorSquare clr={task.color} /> {task.color.toUpperCase()}
+                <ColorSquare clr={task.color} />
+                {getColorName(task.color).name} ({task.color.toUpperCase()})
               </TableData>
             </TableRow>
             <TableRow>

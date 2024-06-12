@@ -24,6 +24,8 @@ import {
 import { useTheme } from "@emotion/react";
 import { UserContext } from "../contexts/UserContext";
 import { MAX_COLORS_IN_LIST } from "../constants";
+import { getColorName } from "ntc-ts";
+import { type ToastOptions } from "react-hot-toast";
 
 interface ColorPickerProps {
   color: string;
@@ -104,6 +106,13 @@ export const ColorPicker: React.FC<ColorPickerProps> = ({
   const handlePickerChange = (e: React.ChangeEvent<HTMLInputElement>) =>
     setAddColorVal(e.target.value as string);
 
+  const ToastColorOptions = (color: string): Pick<ToastOptions, "iconTheme" | "style"> => {
+    return {
+      iconTheme: { primary: color, secondary: getFontColor(color) },
+      style: { borderColor: color },
+    };
+  };
+
   const handleAddColor = () => {
     if (colorList.length >= MAX_COLORS_IN_LIST) {
       showToast(`You cannot add more than ${MAX_COLORS_IN_LIST} colors to color list.`, {
@@ -124,14 +133,32 @@ export const ColorPicker: React.FC<ColorPickerProps> = ({
     setUser({ ...user, colorList: [...colorList, addColorVal.toUpperCase()] });
     showToast(
       <div>
-        Added <b>{addColorVal.toUpperCase()}</b> to your color list.
-      </div>
+        Added{" "}
+        <b>
+          <ToastColorPreview clr={addColorVal} />
+          {getColorName(addColorVal).name}
+        </b>{" "}
+        to your color list.
+      </div>,
+      ToastColorOptions(addColorVal)
     );
     handleAddDialogClose();
   };
 
   const handleDeleteColor = () => {
     setPopoverOpen(Array(colorList.length).fill(false));
+    showToast(
+      <div>
+        Removed{" "}
+        <b>
+          <ToastColorPreview clr={color} />
+          {getColorName(color).name}
+        </b>{" "}
+        from your color list.
+      </div>,
+      ToastColorOptions(color)
+    );
+
     setUser({
       ...user,
       colorList: colorList.filter((listColor) => listColor !== color),
@@ -152,12 +179,15 @@ export const ColorPicker: React.FC<ColorPickerProps> = ({
         >
           <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
             {!accordionExpanded && <AccordionPreview clr={selectedColor} />}
-            <span style={{ color: fontColor || ColorPalette.fontLight }}>{label || "Color"}</span>
+            <span style={{ color: fontColor || ColorPalette.fontLight }}>
+              {label || "Color"}
+              {!accordionExpanded && ` - ${getColorName(selectedColor).name}`}
+            </span>
           </div>
         </AccordionSummary>
         <AccordionDetails>
           <ColorPreview maxWidth={width || 400} clr={selectedColor}>
-            {selectedColor.toUpperCase()}
+            {selectedColor.toUpperCase()} - {getColorName(selectedColor).name}
           </ColorPreview>
           <div
             style={{
@@ -170,20 +200,22 @@ export const ColorPicker: React.FC<ColorPickerProps> = ({
             <Grid container spacing={1} maxWidth={width || 400} m={1}>
               {[theme.primary, ...colorList].map((color, index) => (
                 <Grid item key={color}>
-                  <ColorElement
-                    ref={(element) => (colorElementRefs.current[index] = element)}
-                    id={`color-element-${index}`}
-                    clr={color}
-                    aria-label={`Select color - ${color}`}
-                    onClick={() => {
-                      handleColorChange(color);
-                      if (selectedColor === color && color !== theme.primary) {
-                        togglePopover(index);
-                      }
-                    }}
-                  >
-                    {color.toUpperCase() === selectedColor.toUpperCase() && <SelectedIcon />}
-                  </ColorElement>
+                  <Tooltip title={getColorName(color).name}>
+                    <ColorElement
+                      ref={(element) => (colorElementRefs.current[index] = element)}
+                      id={`color-element-${index}`}
+                      clr={color}
+                      aria-label={`Select color - ${color}`}
+                      onClick={() => {
+                        handleColorChange(color);
+                        if (selectedColor === color && color !== theme.primary) {
+                          togglePopover(index);
+                        }
+                      }}
+                    >
+                      {color.toUpperCase() === selectedColor.toUpperCase() && <SelectedIcon />}
+                    </ColorElement>
+                  </Tooltip>
                   <Popover
                     open={popoverOpen[index] === true}
                     onClose={() => togglePopover(index)}
@@ -241,7 +273,7 @@ export const ColorPicker: React.FC<ColorPickerProps> = ({
               fontWeight: 600,
             }}
           >
-            {addColorVal.toUpperCase()}
+            {addColorVal.toUpperCase()} - {getColorName(addColorVal).name}
           </div>
           <div style={{ position: "relative" }}>
             <StyledColorPicker
@@ -295,6 +327,16 @@ const AccordionPreview = styled.div<{ clr: string }>`
   background: ${({ clr }) => clr};
   border-radius: 8px;
   transition: 0.3s background;
+`;
+
+const ToastColorPreview = styled(AccordionPreview)`
+  width: 18px;
+  height: 18px;
+  border-radius: 6px;
+  display: inline-block;
+  margin-right: 5px;
+  margin-left: 2px;
+  vertical-align: middle;
 `;
 
 const ColorPreview = styled(Grid)<{ clr: string }>`
