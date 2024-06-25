@@ -179,7 +179,7 @@ const UserSettings = () => {
           <Grid item>
             <Tooltip title={`System (${systemTheme})`}>
               <ColorElement
-                clr={systemTheme === "dark" ? "#3d3e59" : "#ffffff"}
+                clr={systemTheme === "dark" || systemTheme === "unknown" ? "#3d3e59" : "#ffffff"}
                 style={{ transition: ".3s background" }}
                 size="40px"
                 onClick={() => {
@@ -205,6 +205,12 @@ const UserSettings = () => {
                   secondClr={theme.MuiTheme.palette.secondary.main}
                   aria-label={`Change theme - ${theme.name}`}
                   size="40px"
+                  style={{
+                    border:
+                      user.theme === theme.name
+                        ? `3px solid ${theme.MuiTheme.palette.primary.main}`
+                        : "none",
+                  }}
                   onClick={() => {
                     setUser((prevUser) => ({
                       ...prevUser,
@@ -359,7 +365,7 @@ const CheckIcon = styled(CheckRounded)`
   font-size: 18px;
   padding: 2px;
   color: white;
-  background: #141414;
+  background: #242427;
   border-radius: 100px;
 `;
 

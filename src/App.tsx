@@ -1,22 +1,20 @@
 import { ThemeProvider as EmotionTheme } from "@emotion/react";
 import { DataObjectRounded } from "@mui/icons-material";
 import { ThemeProvider, type Theme } from "@mui/material";
-import { useCallback, useEffect } from "react";
+import { useCallback, useContext, useEffect } from "react";
 import { Toaster } from "react-hot-toast";
 import ErrorBoundary from "./components/ErrorBoundary";
 import { defaultUser } from "./constants/defaultUser";
-import { UserContext } from "./contexts/UserContext";
+import { UserContext, UserContextProvider } from "./contexts/UserContext";
 import { useResponsiveDisplay } from "./hooks/useResponsiveDisplay";
-import { useStorageState } from "./hooks/useStorageState";
 import { useSystemTheme } from "./hooks/useSystemTheme";
 import MainLayout from "./layouts/MainLayout";
 import AppRouter from "./router";
 import { ColorPalette, GlobalStyles, Themes, createCustomTheme } from "./styles";
-import type { User } from "./types/user";
 import { getFontColor, showToast } from "./utils";
 
 function App() {
-  const [user, setUser] = useStorageState<User>(defaultUser, "user");
+  const { user, setUser } = useContext(UserContext);
   const isMobile = useResponsiveDisplay();
   const systemTheme = useSystemTheme();
 
@@ -149,7 +147,7 @@ function App() {
       case "system":
         return systemTheme === "dark";
       case "auto":
-        return getFontColor(getMuiTheme().palette.secondary.main) !== ColorPalette.fontDark;
+        return getFontColor(getMuiTheme().palette.secondary.main) === ColorPalette.fontLight;
       default:
         return false;
     }
@@ -193,10 +191,10 @@ function App() {
               borderRadius: "18px",
               fontSize: "17px",
               border: `2px solid ${getMuiTheme().palette.primary.main}`,
-              background: isDarkMode() ? "#141431e0" : "#f0f0f594",
+              background: isDarkMode() ? "#141431e0" : "#ffffff99",
               color: isDarkMode() ? ColorPalette.fontLight : ColorPalette.fontDark,
-              WebkitBackdropFilter: "blur(6px)",
-              backdropFilter: "blur(6px)",
+              WebkitBackdropFilter: `blur(${isDarkMode() ? "6" : "14"}px)`,
+              backdropFilter: `blur(${isDarkMode() ? "6" : "14"}px)`,
             },
             success: {
               iconTheme: {
@@ -215,13 +213,13 @@ function App() {
             },
           }}
         />
-        <UserContext.Provider value={{ user, setUser }}>
+        <UserContextProvider>
           <ErrorBoundary>
             <MainLayout>
               <AppRouter />
             </MainLayout>
           </ErrorBoundary>
-        </UserContext.Provider>
+        </UserContextProvider>
       </EmotionTheme>
     </ThemeProvider>
   );

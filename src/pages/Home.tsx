@@ -1,5 +1,4 @@
-import { useState, useEffect, ReactNode, useContext, useMemo } from "react";
-import { TasksList } from "../components";
+import { useState, useEffect, ReactNode, useContext, useMemo, lazy, Suspense } from "react";
 import {
   AddButton,
   GreetingHeader,
@@ -22,6 +21,11 @@ import { AddRounded, TodayRounded, WifiOff } from "@mui/icons-material";
 import { UserContext } from "../contexts/UserContext";
 import { useResponsiveDisplay } from "../hooks/useResponsiveDisplay";
 import { useNavigate } from "react-router-dom";
+import { TaskProvider } from "../contexts/TaskContext";
+
+const TasksList = lazy(() =>
+  import("../components/tasks/TasksList").then((module) => ({ default: module.TasksList }))
+);
 
 const Home = () => {
   const { user } = useContext(UserContext);
@@ -168,7 +172,11 @@ const Home = () => {
         </TasksCountContainer>
       )}
 
-      <TasksList />
+      <Suspense fallback={<div>Loading...</div>}>
+        <TaskProvider>
+          <TasksList />
+        </TaskProvider>
+      </Suspense>
 
       {!isMobile && (
         <Tooltip title={tasks.length > 0 ? "Add New Task" : "Add Task"} placement="left">

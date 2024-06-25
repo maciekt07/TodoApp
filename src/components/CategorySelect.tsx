@@ -122,7 +122,7 @@ export const CategorySelect: React.FC<CategorySelectProps> = ({
                   color: selectedCats.length >= MAX_CATEGORIES_IN_TASK ? "#f34141" : "currentcolor",
                 }}
               >
-                (max {MAX_CATEGORIES_IN_TASK})
+                {categories.length > 3 && <span>(max {MAX_CATEGORIES_IN_TASK})</span>}
               </span>
             </b>
             {selectedCats.length > 0 && (
@@ -160,6 +160,8 @@ export const CategorySelect: React.FC<CategorySelectProps> = ({
           <NoCategories disableTouchRipple>
             <p>You don't have any categories</p>
             <Button
+              fullWidth
+              variant="outlined"
               onClick={() => {
                 n("/categories");
               }}
@@ -250,6 +252,9 @@ const NoCategories = styled(MenuItem)`
   margin: 12px 0;
   gap: 6px;
   cursor: default !important;
+  & p {
+    margin: 20px 0 32px 0;
+  }
   &:hover {
     background: transparent !important;
   }

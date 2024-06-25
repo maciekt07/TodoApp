@@ -22,13 +22,12 @@ import {
   Tooltip,
 } from "@mui/material";
 import { Emoji, EmojiStyle } from "emoji-picker-react";
-import { useCallback, useContext, useEffect, useMemo, useState, type ReactNode } from "react";
+import { useCallback, useContext, useEffect, useMemo, useState } from "react";
 import { CategoryBadge, EditTask, TaskIcon, TaskMenu } from "..";
 import { URL_REGEX } from "../../constants";
 import { UserContext } from "../../contexts/UserContext";
 import { useCtrlS } from "../../hooks/useCtrlS";
 import { useResponsiveDisplay } from "../../hooks/useResponsiveDisplay";
-import { useStorageState } from "../../hooks/useStorageState";
 import { ColorPalette, DialogBtn } from "../../styles";
 import type { Category, Task, UUID } from "../../types/user";
 import {
@@ -42,7 +41,6 @@ import { RenderTaskDescription } from "./RenderTaskDescription";
 import {
   CategoriesListContainer,
   EmojiContainer,
-  HighlightedText,
   NoTasks,
   Pinned,
   RadioChecked,
@@ -61,6 +59,7 @@ import {
   TasksContainer,
   TimeLeft,
 } from "./tasks.styled";
+import { TaskContext } from "../../contexts/TaskContext";
 
 /**
  * Component to display a list of tasks.
@@ -68,28 +67,34 @@ import {
 
 export const TasksList: React.FC = () => {
   const { user, setUser } = useContext(UserContext);
-  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const {
+    selectedTaskId,
+    setSelectedTaskId,
+    anchorEl,
+    setAnchorEl,
+    setAnchorPosition,
+    expandedTasks,
+    toggleShowMore,
+    search,
+    setSearch,
+    highlightMatchingText,
+    multipleSelectedTasks,
+    setMultipleSelectedTasks,
+    handleSelectTask,
+    editModalOpen,
+    setEditModalOpen,
+    categories,
+    selectedCatId,
+    categoryCounts,
+    setCategories,
+    setSelectedCatId,
+    setCategoryCounts,
+    deleteDialogOpen,
+    setDeleteDialogOpen,
+  } = useContext(TaskContext);
   const open = Boolean(anchorEl);
-  const [selectedTaskId, setSelectedTaskId] = useState<UUID | null>(null);
-  const [search, setSearch] = useStorageState<string>("", "search", "sessionStorage");
-  const [expandedTasks, setExpandedTasks] = useState<Set<UUID>>(new Set());
-  const [deleteDialogOpen, setDeleteDialogOpen] = useState<boolean>(false);
-  const [editModalOpen, setEditModalOpen] = useState<boolean>(false);
-  const [multipleSelectedTasks, setMultipleSelectedTasks] = useStorageState<UUID[]>(
-    [],
-    "selectedTasks",
-    "sessionStorage"
-  );
+
   const [deleteSelectedOpen, setDeleteSelectedOpen] = useState<boolean>(false);
-  const [categories, setCategories] = useState<Category[] | undefined>(undefined);
-  const [selectedCatId, setSelectedCatId] = useStorageState<UUID | undefined>(
-    undefined,
-    "selectedCategory",
-    "sessionStorage"
-  );
-  const [categoryCounts, setCategoryCounts] = useState<{
-    [categoryId: UUID]: number;
-  }>({});
 
   const isMobile = useResponsiveDisplay();
   const theme = useTheme();
@@ -104,23 +109,26 @@ export const TasksList: React.FC = () => {
     []
   );
 
-  const selectedTask = user.tasks.find((task) => task.id === selectedTaskId) || ({} as Task);
+  const selectedTask = useMemo(() => {
+    return user.tasks.find((task) => task.id === selectedTaskId) || ({} as Task);
+  }, [user.tasks, selectedTaskId]);
 
   // Handler for clicking the more options button in a task
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>, taskId: UUID) => {
     setAnchorEl(event.currentTarget);
     setSelectedTaskId(taskId);
-
+    const target = event.target as HTMLElement;
+    // Position the menu where the click event occurred
+    if (target.tagName !== "BUTTON") {
+      setAnchorPosition({
+        top: event.clientY,
+        left: event.clientX,
+      });
+    } else {
+      setAnchorPosition(null);
+    }
     if (!isMobile && !expandedTasks.has(taskId)) {
       toggleShowMore(taskId);
-    }
-  };
-
-  const handleCloseMoreMenu = () => {
-    setAnchorEl(null);
-    document.body.style.overflow = "visible";
-    if (selectedTaskId && !isMobile && expandedTasks.has(selectedTaskId)) {
-      toggleShowMore(selectedTaskId);
     }
   };
 
@@ -158,13 +166,6 @@ export const TasksList: React.FC = () => {
     [search, selectedCatId, user.settings]
   );
 
-  const handleDeleteTask = () => {
-    // Opens the delete task dialog
-
-    if (selectedTaskId) {
-      setDeleteDialogOpen(true);
-    }
-  };
   const confirmDeleteTask = () => {
     // Deletes the selected task
 
@@ -187,19 +188,6 @@ export const TasksList: React.FC = () => {
   const cancelDeleteTask = () => {
     // Cancels the delete task operation
     setDeleteDialogOpen(false);
-  };
-
-  const handleSelectTask = (taskId: UUID) => {
-    setAnchorEl(null);
-    setMultipleSelectedTasks((prevSelectedTaskIds) => {
-      if (prevSelectedTaskIds.includes(taskId)) {
-        // Deselect the task if already selected
-        return prevSelectedTaskIds.filter((id) => id !== taskId);
-      } else {
-        // Select the task if not selected
-        return [...prevSelectedTaskIds, taskId];
-      }
-    });
   };
 
   const handleMarkSelectedAsDone = () => {
@@ -251,30 +239,7 @@ export const TasksList: React.FC = () => {
 
     setCategories(uniqueCategories);
     setCategoryCounts(counts);
-  }, [user.tasks, search, reorderTasks]);
-
-  const toggleShowMore = (taskId: UUID) => {
-    setExpandedTasks((prevExpandedTasks) => {
-      const newSet = new Set(prevExpandedTasks);
-      newSet.has(taskId) ? newSet.delete(taskId) : newSet.add(taskId);
-      return newSet;
-    });
-  };
-
-  const highlightMatchingText = (text: string): ReactNode => {
-    if (!search) {
-      return text;
-    }
-
-    const parts = text.split(new RegExp(`(${search})`, "gi"));
-    return parts.map((part, index) =>
-      part.toLowerCase() === search.toLowerCase() ? (
-        <HighlightedText key={index}>{part}</HighlightedText>
-      ) : (
-        part
-      )
-    );
-  };
+  }, [user.tasks, search, reorderTasks, setCategories, setCategoryCounts]);
 
   const checkOverdueTasks = useCallback(
     (tasks: Task[]) => {
@@ -314,18 +279,9 @@ export const TasksList: React.FC = () => {
     checkOverdueTasks(user.tasks);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-
   return (
     <>
-      <TaskMenu
-        selectedTaskId={selectedTaskId}
-        selectedTasks={multipleSelectedTasks}
-        setEditModalOpen={setEditModalOpen}
-        anchorEl={anchorEl}
-        handleDeleteTask={handleDeleteTask}
-        handleCloseMoreMenu={handleCloseMoreMenu}
-        handleSelectTask={handleSelectTask}
-      />
+      <TaskMenu />
       <TasksContainer>
         {user.tasks.length > 0 && (
           <SearchInput
@@ -471,6 +427,10 @@ export const TasksList: React.FC = () => {
           reorderTasks(user.tasks).map((task) => (
             <TaskContainer
               // ref={(ref) => (scrollToRefs.current[task.id.toString()] = ref)}
+              onContextMenu={(e) => {
+                e.preventDefault();
+                handleClick(e as unknown as React.MouseEvent<HTMLButtonElement>, task.id);
+              }}
               key={task.id}
               id={task.id.toString()}
               backgroundColor={task.color}
@@ -537,14 +497,9 @@ export const TasksList: React.FC = () => {
                 </TaskHeader>
 
                 <TaskDescription done={task.done}>
-                  <RenderTaskDescription
-                    task={task}
-                    expandedTasks={expandedTasks}
-                    highlightMatchingText={highlightMatchingText}
-                    selectedTaskId={selectedTaskId}
-                    toggleShowMore={toggleShowMore}
-                  />
+                  <RenderTaskDescription task={task} />
                 </TaskDescription>
+
                 {task.deadline && (
                   <Tooltip
                     title={new Intl.DateTimeFormat(navigator.language, {

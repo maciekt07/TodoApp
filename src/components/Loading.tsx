@@ -18,7 +18,7 @@ export const Loading = () => {
       {showLoading && (
         <>
           <CircularProgress size={80} thickness={4} aria-label="loading" />
-          <h3 style={{ opacity: 0.8 }}>Loading Page...</h3>
+          {/* <h3 style={{ opacity: 0.8 }}>Loading Page...</h3> */}
         </>
       )}
     </Container>

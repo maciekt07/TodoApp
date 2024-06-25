@@ -21,9 +21,7 @@ export const GlobalStyles = () => {
           font-family: "Poppins", sans-serif;
           line-height: 1.5;
           font-weight: 400;
-          color-scheme: ${getFontColor(theme.secondary) === ColorPalette.fontDark
-            ? "light"
-            : "dark"};
+          color-scheme: ${theme.darkmode ? "dark" : "light"};
           color: ${getFontColor(theme.secondary)};
           font-synthesis: none;
           text-rendering: optimizeLegibility;
@@ -40,6 +38,13 @@ export const GlobalStyles = () => {
           -o-user-select: none;
           user-select: none;
         }
+
+        a {
+          text-decoration: none;
+          -webkit-text-decoration: none;
+          color: inherit;
+        }
+
         input[type="file"]::-webkit-file-upload-button {
           display: none;
         }

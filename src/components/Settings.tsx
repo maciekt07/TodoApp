@@ -63,6 +63,8 @@ export const SettingsDialog: React.FC<SettingsProps> = ({ open, onClose }) => {
   const [prevVoiceVol, setPrevVoiceVol] = useState<number>(settings[0].voiceVolume);
   const [showLocalVoices, setShowLocalVoices] = useState<boolean>(false);
 
+  const [storageUsage, setStorageUsage] = useState<number | undefined>(undefined);
+
   const isOnline = useOnlineStatus();
   const systemTheme = useSystemTheme();
   const theme = useTheme();
@@ -75,6 +77,7 @@ export const SettingsDialog: React.FC<SettingsProps> = ({ open, onClose }) => {
     { label: "Google", style: EmojiStyle.GOOGLE },
     { label: "Native", style: EmojiStyle.NATIVE },
   ];
+
   // Array of available dark mode options
   const darkModeOptions: {
     label: string;
@@ -125,6 +128,12 @@ export const SettingsDialog: React.FC<SettingsProps> = ({ open, onClose }) => {
   useEffect(() => {
     const availableVoices = getAvailableVoices();
     setAvailableVoices(availableVoices ?? []);
+
+    const getStorageUsage = async () => {
+      const storageUsage = await navigator.storage.estimate();
+      setStorageUsage(storageUsage.usage);
+    };
+    getStorageUsage();
   }, []);
 
   // Ensure the voices are loaded before calling getAvailableVoices
@@ -531,7 +540,7 @@ export const SettingsDialog: React.FC<SettingsProps> = ({ open, onClose }) => {
                   </Tooltip>
                   <Slider
                     sx={{
-                      width: "230px",
+                      width: "100%",
                     }}
                     value={voiceVolume}
                     onChange={(_event, value) => setVoiceVolume(value as number)}
@@ -549,6 +558,12 @@ export const SettingsDialog: React.FC<SettingsProps> = ({ open, onClose }) => {
                 </VolumeSlider>
               </div>
             </Box>
+          </FormGroup>
+        )}
+        {storageUsage !== undefined && storageUsage !== 0 && (
+          <FormGroup>
+            <FormLabel>Storage Usage</FormLabel>
+            <div>{storageUsage ? `${(storageUsage / 1024 / 1024).toFixed(2)} MB` : "0 MB"}</div>
           </FormGroup>
         )}
       </Container>
@@ -570,7 +585,7 @@ const Container = styled.div`
 `;
 
 const StyledSelect = styled(Select)`
-  width: 330px;
+  width: 360px;
   margin: 8px 0;
 `;
 
@@ -583,7 +598,7 @@ const StyledMenuItem = styled(MenuItem)`
 `;
 
 const StyledFormLabel = styled(FormControlLabel)`
-  max-width: 300px;
+  max-width: 350px;
 `;
 
 const NoVoiceStyles = styled.p`
@@ -602,4 +617,5 @@ const VolumeSlider = styled(Stack)`
   padding: 12px 24px 12px 18px;
   border-radius: 18px;
   transition: 0.3s all;
+  width: 100%;
 `;

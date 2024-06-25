@@ -31,18 +31,25 @@ const themeConfig: ThemeConfig = {
   Blue: {
     primaryColor: "#2a93d5",
   },
-  Bluetone: {
-    primaryColor: "#00246B",
-    secondaryColor: "#CADCFC",
+  "Minty Fresh": {
+    primaryColor: "#26C6DA",
+    secondaryColor: "#E0F7FA",
   },
   Pink: {
     primaryColor: "#e5369a",
+  },
+  "Blush Blossom": {
+    primaryColor: "#EC407A",
+    secondaryColor: "#FCE4EC",
   },
   "Ultra Pink": {
     primaryColor: "#ff0090",
     secondaryColor: "#ff94d1",
   },
-
+  Cheesecake: {
+    primaryColor: "#E14C94",
+    secondaryColor: "#FDF0D5",
+  },
   "Dark Orange": {
     primaryColor: "#FF5631",
     secondaryColor: "#0D0D0D",
@@ -51,15 +58,10 @@ const themeConfig: ThemeConfig = {
     primaryColor: "#F26E56",
     secondaryColor: "#F6F6F6",
   },
-  Cheesecake: {
-    primaryColor: "#E14C94",
-    secondaryColor: "#FDF0D5",
-  },
   Aurora: {
     primaryColor: "#00e952",
     secondaryColor: "#011926",
   },
-
   // Add new themes here
 };
 

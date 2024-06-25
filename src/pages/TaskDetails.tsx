@@ -161,7 +161,7 @@ const TaskTable = styled.table`
 `;
 
 const TableRow = styled.tr`
-  border-bottom: 2px solid #d9d9d9bc;
+  border-bottom: 2px solid ${({ theme }) => theme.primary}41;
 
   &:last-child {
     border-bottom: none;

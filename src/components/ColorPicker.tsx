@@ -145,23 +145,23 @@ export const ColorPicker: React.FC<ColorPickerProps> = ({
     handleAddDialogClose();
   };
 
-  const handleDeleteColor = () => {
+  const handleDeleteColor = (clr: string) => {
     setPopoverOpen(Array(colorList.length).fill(false));
     showToast(
       <div>
         Removed{" "}
         <b>
-          <ToastColorPreview clr={color} />
-          {getColorName(color).name}
+          <ToastColorPreview clr={clr} />
+          {getColorName(clr).name}
         </b>{" "}
         from your color list.
       </div>,
-      ToastColorOptions(color)
+      ToastColorOptions(clr)
     );
 
     setUser({
       ...user,
-      colorList: colorList.filter((listColor) => listColor !== color),
+      colorList: colorList.filter((listColor) => listColor !== clr),
     });
   };
 
@@ -206,10 +206,20 @@ export const ColorPicker: React.FC<ColorPickerProps> = ({
                       id={`color-element-${index}`}
                       clr={color}
                       aria-label={`Select color - ${color}`}
+                      // show delete popover only on desktop
+                      onContextMenu={(e) => {
+                        if (window.matchMedia("(pointer:fine)").matches) {
+                          e.preventDefault();
+                          togglePopover(index);
+                        }
+                      }}
                       onClick={() => {
                         handleColorChange(color);
-                        if (selectedColor === color && color !== theme.primary) {
-                          togglePopover(index);
+                        // show delete popover on mobile only after double tap
+                        if (!window.matchMedia("(pointer:fine)").matches) {
+                          if (selectedColor === color && color !== theme.primary) {
+                            togglePopover(index);
+                          }
                         }
                       }}
                     >
@@ -238,7 +248,9 @@ export const ColorPicker: React.FC<ColorPickerProps> = ({
                     }}
                   >
                     <div>
-                      <DeleteColorBtn onClick={handleDeleteColor}>Delete</DeleteColorBtn>
+                      <DeleteColorBtn onClick={() => handleDeleteColor(color)}>
+                        Delete
+                      </DeleteColorBtn>
                     </div>
                   </Popover>
                 </Grid>
@@ -257,7 +269,9 @@ export const ColorPicker: React.FC<ColorPickerProps> = ({
             </Grid>
           </div>
           <StyledInfo clr={fontColor || ColorPalette.fontLight}>
-            <InfoRounded fontSize="small" /> Double tap to remove color from list
+            <InfoRounded fontSize="small" />{" "}
+            {window.matchMedia("(pointer:fine)").matches ? "Right click" : "Double tap"} to remove
+            color from list
           </StyledInfo>
         </AccordionDetails>
       </StyledAccordion>

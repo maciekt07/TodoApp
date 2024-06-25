@@ -61,28 +61,21 @@ import {
   systemInfo,
 } from "../../utils";
 import { useTheme } from "@emotion/react";
+import { TaskContext } from "../../contexts/TaskContext";
 
-interface TaskMenuProps {
-  selectedTaskId: UUID | null;
-  selectedTasks: UUID[];
-  setEditModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  anchorEl: null | HTMLElement;
-  handleDeleteTask: () => void;
-  handleCloseMoreMenu: () => void;
-  handleSelectTask: (taskId: UUID) => void;
-}
-
-export const TaskMenu: React.FC<TaskMenuProps> = ({
-  selectedTaskId,
-  selectedTasks,
-  setEditModalOpen,
-  anchorEl,
-  handleDeleteTask,
-  handleCloseMoreMenu,
-  handleSelectTask,
-}) => {
+export const TaskMenu = () => {
   const { user, setUser } = useContext(UserContext);
   const { tasks, name, settings, emojisStyle } = user;
+  const {
+    selectedTaskId,
+    anchorEl,
+    anchorPosition,
+    multipleSelectedTasks,
+    handleSelectTask,
+    setEditModalOpen,
+    handleDeleteTask,
+    handleCloseMoreMenu,
+  } = useContext(TaskContext);
   const [showShareDialog, setShowShareDialog] = useState<boolean>(false);
   const [shareTabVal, setShareTabVal] = useState<number>(0);
 
@@ -229,7 +222,7 @@ export const TaskMenu: React.FC<TaskMenuProps> = ({
     const voiceVolume = settings[0].voiceVolume;
     const taskName = selectedTask?.name || "";
     const taskDescription =
-      selectedTask?.description?.replace(/((?:https?):\/\/[^\s/$.?#].[^\s]*)/gi, "[link]") || "";
+      selectedTask?.description?.replace(/((?:https?):\/\/[^\s/$.?#].[^\s]*)/gi, "") || ""; // remove links from description
     // Read task date in voice language
     const taskDate = new Intl.DateTimeFormat(voice ? voice.lang : navigator.language, {
       dateStyle: "full",
@@ -319,9 +312,9 @@ export const TaskMenu: React.FC<TaskMenuProps> = ({
       {
         duration: 999999999,
         style: {
-          border: `1px solid ${theme.darkmode ? "#1b1d4eb7" : "#ededf7a8"} `,
-          WebkitBackdropFilter: "blur(10px)",
-          backdropFilter: "blur(10px)",
+          border: `1px solid ${theme.darkmode ? "#1b1d4eb7" : "#ededf7b0"} `,
+          WebkitBackdropFilter: `blur(${theme.darkmode ? "10" : "14"}px)`,
+          backdropFilter: `blur(${theme.darkmode ? "10" : "14"}px)`,
         },
       }
     );
@@ -349,7 +342,7 @@ export const TaskMenu: React.FC<TaskMenuProps> = ({
         &nbsp; {selectedTask.pinned ? "Unpin" : "Pin"}
       </StyledMenuItem>
 
-      {selectedTasks.length === 0 && (
+      {multipleSelectedTasks.length === 0 && (
         <StyledMenuItem onClick={() => handleSelectTask(selectedTaskId || crypto.randomUUID())}>
           <RadioButtonChecked /> &nbsp; Select
         </StyledMenuItem>
@@ -427,6 +420,8 @@ export const TaskMenu: React.FC<TaskMenuProps> = ({
         <Menu
           id="task-menu"
           anchorEl={anchorEl}
+          anchorPosition={anchorPosition ? anchorPosition : undefined}
+          anchorReference={anchorPosition ? "anchorPosition" : undefined}
           open={Boolean(anchorEl)}
           onClose={handleCloseMoreMenu}
           sx={{
@@ -617,10 +612,6 @@ const StyledMenuItem = styled(MenuItem)<{ clr?: string }>`
   box-shadow: none;
   gap: 2px;
   color: ${({ clr }) => clr || "unset"};
-
-  /* &:hover {
-    background-color: #f0f0f0;
-  } */
 `;
 
 const ReadAloudContainer = styled.div`

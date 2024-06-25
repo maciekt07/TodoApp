@@ -209,7 +209,7 @@ export const CategoriesListContainer = styled.div`
   position: sticky;
   background: transparent;
   backdrop-filter: blur(24px);
-  z-index: 1;
+  z-index: 2;
   top: 0;
   display: flex;
   justify-content: left;

@@ -12,7 +12,9 @@ import {
   GitHub,
   InstallDesktopRounded,
   InstallMobileRounded,
+  IosShareRounded,
   Logout,
+  PhoneIphoneRounded,
   SettingsRounded,
   StarRounded,
   TaskAltRounded,
@@ -30,7 +32,7 @@ import {
   Tooltip,
 } from "@mui/material";
 import React, { useContext, useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { SettingsDialog } from ".";
 import bmcLogo from "../assets/bmc-logo.svg";
 import bmcLogoLight from "../assets/bmc-logo-light.svg";
@@ -42,6 +44,7 @@ import { fetchGitHubInfo } from "../services/githubApi";
 import { ColorPalette, DialogBtn, pulseAnimation, ring } from "../styles";
 import { showToast, systemInfo, timeAgo } from "../utils";
 import { useTheme } from "@emotion/react";
+import { useOnlineStatus } from "../hooks/useOnlineStatus";
 
 export const ProfileSidebar = () => {
   const { user, setUser } = useContext(UserContext);
@@ -59,6 +62,7 @@ export const ProfileSidebar = () => {
 
   const theme = useTheme();
   const n = useNavigate();
+  const isOnline = useOnlineStatus();
 
   useEffect(() => {
     const fetchRepoInfo: () => Promise<void> = async () => {
@@ -78,6 +82,7 @@ export const ProfileSidebar = () => {
         console.error("No BMC supporters found.");
       }
     };
+
     fetchBMC();
     fetchRepoInfo();
   }, []);
@@ -182,11 +187,12 @@ export const ProfileSidebar = () => {
             translate="no"
             slotProps={{ img: { loading: "lazy" } }}
             onError={() => {
+              // This prevents the error handling from being called unnecessarily when offline
+              if (!isOnline) return;
               setUser((prevUser) => ({
                 ...prevUser,
                 profilePicture: null,
               }));
-
               showToast("Error in profile picture URL", { type: "error" });
               throw new Error("Error in profile picture URL");
             }}
@@ -225,120 +231,98 @@ export const ProfileSidebar = () => {
           </LogoText>
         </LogoContainer>
 
-        <StyledMenuItem
-          onClick={() => {
-            n("/");
-            handleClose();
-          }}
-        >
-          <TaskAltRounded /> &nbsp; Tasks
-          {tasks.filter((task) => !task.done).length > 0 && (
-            <Tooltip title={`${tasks.filter((task) => !task.done).length} tasks to do`}>
-              <MenuLabel>
-                {tasks.filter((task) => !task.done).length > 99
-                  ? "99+"
-                  : tasks.filter((task) => !task.done).length}
-              </MenuLabel>
-            </Tooltip>
-          )}
-        </StyledMenuItem>
+        <MenuLink to="/">
+          <StyledMenuItem onClick={handleClose}>
+            <TaskAltRounded /> &nbsp; Tasks
+            {tasks.filter((task) => !task.done).length > 0 && (
+              <Tooltip title={`${tasks.filter((task) => !task.done).length} tasks to do`}>
+                <MenuLabel>
+                  {tasks.filter((task) => !task.done).length > 99
+                    ? "99+"
+                    : tasks.filter((task) => !task.done).length}
+                </MenuLabel>
+              </Tooltip>
+            )}
+          </StyledMenuItem>
+        </MenuLink>
 
-        <StyledMenuItem
-          onClick={() => {
-            n("/add");
-            handleClose();
-          }}
-        >
-          <AddRounded /> &nbsp; Add Task
-        </StyledMenuItem>
+        <MenuLink to="/add">
+          <StyledMenuItem onClick={handleClose}>
+            <AddRounded /> &nbsp; Add Task
+          </StyledMenuItem>
+        </MenuLink>
 
-        <StyledMenuItem
-          onClick={() => {
-            n("/purge");
-            handleClose();
-          }}
-        >
-          <DeleteForeverRounded /> &nbsp; Purge Tasks
-        </StyledMenuItem>
+        <MenuLink to="/purge">
+          <StyledMenuItem onClick={handleClose}>
+            <DeleteForeverRounded /> &nbsp; Purge Tasks
+          </StyledMenuItem>
+        </MenuLink>
 
         {settings[0].enableCategories !== undefined && settings[0].enableCategories && (
-          <StyledMenuItem
-            onClick={() => {
-              n("/categories");
-              handleClose();
-            }}
-          >
-            <CategoryRounded /> &nbsp; Categories
-          </StyledMenuItem>
+          <MenuLink to="/categories">
+            <StyledMenuItem onClick={handleClose}>
+              <CategoryRounded /> &nbsp; Categories
+            </StyledMenuItem>
+          </MenuLink>
         )}
 
-        <StyledMenuItem
-          onClick={() => {
-            n("/transfer");
-            handleClose();
-          }}
-        >
-          <GetAppRounded /> &nbsp; Transfer
-        </StyledMenuItem>
+        <MenuLink to="/transfer">
+          <StyledMenuItem onClick={handleClose}>
+            <GetAppRounded /> &nbsp; Transfer
+          </StyledMenuItem>
+        </MenuLink>
 
         <StyledDivider />
-        <StyledMenuItem
-          translate="no"
-          onClick={() => {
-            window.open("https://github.com/maciekt07/TodoApp");
-          }}
-        >
-          <GitHub /> &nbsp; Github{" "}
-          {stars && (
-            <Tooltip title={`${stars} stars on Github`}>
-              <MenuLabel clr="#ff9d00">
-                <span style={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
-                  <StarRounded style={{ fontSize: "18px" }} />
-                  &nbsp;{stars}
-                </span>
-              </MenuLabel>
-            </Tooltip>
-          )}
-        </StyledMenuItem>
 
-        <StyledMenuItem
-          onClick={() => {
-            window.open("https://github.com/maciekt07/TodoApp/issues/new");
-          }}
-        >
-          <BugReportRounded /> &nbsp; Report Issue{" "}
-          {Boolean(issuesCount || issuesCount === 0) && (
-            <Tooltip title={`${issuesCount} open issues`}>
-              <MenuLabel clr="#3bb61c">
-                <span style={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
-                  <AdjustRounded style={{ fontSize: "18px" }} />
-                  &nbsp;
-                  {issuesCount}
-                </span>
-              </MenuLabel>
-            </Tooltip>
-          )}
-        </StyledMenuItem>
+        <MenuLink to="https://github.com/maciekt07/TodoApp">
+          <StyledMenuItem translate="no">
+            <GitHub /> &nbsp; Github{" "}
+            {stars && (
+              <Tooltip title={`${stars} stars on Github`}>
+                <MenuLabel clr="#ff9d00">
+                  <span style={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
+                    <StarRounded style={{ fontSize: "18px" }} />
+                    &nbsp;{stars}
+                  </span>
+                </MenuLabel>
+              </Tooltip>
+            )}
+          </StyledMenuItem>
+        </MenuLink>
 
-        <StyledMenuItem
-          className="bmcMenu"
-          onClick={() => {
-            window.open("https://www.buymeacoffee.com/maciekt07");
-          }}
-        >
-          <BmcIcon className="bmc-icon" src={theme.darkmode ? bmcLogoLight : bmcLogo} /> &nbsp; Buy
-          me a coffee{" "}
-          {bmcSupporters && (
-            <Tooltip title={`${bmcSupporters} supporters on Buy me a coffee`}>
-              <MenuLabel clr="#f93c58">
-                <span style={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
-                  <FavoriteRounded style={{ fontSize: "16px" }} />
-                  &nbsp;{bmcSupporters}
-                </span>
-              </MenuLabel>
-            </Tooltip>
-          )}
-        </StyledMenuItem>
+        <MenuLink to="https://github.com/maciekt07/TodoApp/issues/new">
+          <StyledMenuItem>
+            <BugReportRounded /> &nbsp; Report Issue{" "}
+            {Boolean(issuesCount || issuesCount === 0) && (
+              <Tooltip title={`${issuesCount} open issues`}>
+                <MenuLabel clr="#3bb61c">
+                  <span style={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
+                    <AdjustRounded style={{ fontSize: "18px" }} />
+                    &nbsp;
+                    {issuesCount}
+                  </span>
+                </MenuLabel>
+              </Tooltip>
+            )}
+          </StyledMenuItem>
+        </MenuLink>
+
+        <MenuLink to="https://www.buymeacoffee.com/maciekt07">
+          <StyledMenuItem className="bmcMenu">
+            <BmcIcon className="bmc-icon" src={theme.darkmode ? bmcLogoLight : bmcLogo} /> &nbsp;
+            Buy me a coffee{" "}
+            {bmcSupporters && (
+              <Tooltip title={`${bmcSupporters} supporters on Buy me a coffee`}>
+                <MenuLabel clr="#f93c58">
+                  <span style={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
+                    <FavoriteRounded style={{ fontSize: "16px" }} />
+                    &nbsp;{bmcSupporters}
+                  </span>
+                </MenuLabel>
+              </Tooltip>
+            )}
+          </StyledMenuItem>
+        </MenuLink>
 
         <StyledDivider />
 
@@ -349,16 +333,32 @@ export const ProfileSidebar = () => {
           </StyledMenuItem>
         )}
 
+        {systemInfo.browser === "Safari" &&
+          systemInfo.os === "iOS" &&
+          !window.matchMedia("(display-mode: standalone)").matches && (
+            <StyledMenuItem
+              onClick={() => {
+                showToast(
+                  <div style={{ display: "inline-block" }}>
+                    To install the app on iOS Safari, click on{" "}
+                    <IosShareRounded sx={{ verticalAlign: "middle", mb: "4px" }} /> and then{" "}
+                    <span style={{ fontWeight: "bold" }}>Add to Home Screen</span>.
+                  </div>,
+                  { type: "blank", duration: 8000 }
+                );
+                handleClose();
+              }}
+            >
+              <PhoneIphoneRounded />
+              &nbsp; Install App
+            </StyledMenuItem>
+          )}
+
         <StyledMenuItem onClick={handleLogoutConfirmationOpen} sx={{ color: "#ff4040 !important" }}>
           <Logout /> &nbsp; Logout
         </StyledMenuItem>
 
-        <ProfileOptionsBottom
-          isMobile={
-            window.matchMedia("(display-mode: standalone)").matches &&
-            /Mobi/.test(navigator.userAgent)
-          }
-        >
+        <ProfileOptionsBottom>
           <SettingsMenuItem
             onClick={() => {
               setOpenSettings(true);
@@ -368,27 +368,26 @@ export const ProfileSidebar = () => {
             <SettingsRounded /> &nbsp; Settings
             {settings[0] === defaultUser.settings[0] && <PulseMenuLabel />}
           </SettingsMenuItem>
+
           <StyledDivider />
-          <ProfileMenuItem
-            translate={name ? "no" : "yes"}
-            onClick={() => {
-              n("/user");
-              handleClose();
-            }}
-          >
-            <Avatar
-              src={(profilePicture as string) || undefined}
-              sx={{ width: "44px", height: "44px" }}
-              slotProps={{ img: { loading: "lazy" } }}
-            >
-              {name ? name[0].toUpperCase() : undefined}
-            </Avatar>
-            <h4 style={{ margin: 0, fontWeight: 600 }}> {name || "User"}</h4>{" "}
-            {(name === null || name === "") &&
-              profilePicture === null &&
-              user.theme! == defaultUser.theme && <PulseMenuLabel />}
-          </ProfileMenuItem>
+          <MenuLink to="/user">
+            <ProfileMenuItem translate={name ? "no" : "yes"} onClick={handleClose}>
+              <Avatar
+                src={(profilePicture as string) || undefined}
+                sx={{ width: "44px", height: "44px" }}
+                slotProps={{ img: { loading: "lazy" } }}
+              >
+                {name ? name[0].toUpperCase() : undefined}
+              </Avatar>
+              <h4 style={{ margin: 0, fontWeight: 600 }}> {name || "User"}</h4>{" "}
+              {(name === null || name === "") &&
+                profilePicture === null &&
+                user.theme! == defaultUser.theme && <PulseMenuLabel />}
+            </ProfileMenuItem>
+          </MenuLink>
+
           <StyledDivider />
+
           <CreditsContainer translate="no">
             <span style={{ display: "flex", alignItems: "center" }}>
               Made with &nbsp;
@@ -435,6 +434,24 @@ export const ProfileSidebar = () => {
   );
 };
 
+const MenuLink = ({ to, children }: { to: string; children: React.ReactNode }) => {
+  const styles: React.CSSProperties = { borderRadius: "14px" };
+  if (to.startsWith("/")) {
+    return (
+      // React Router Link component for internal navigation
+      <Link to={to} style={styles}>
+        {children}
+      </Link>
+    );
+  }
+  // Render an anchor tag for external navigation
+  return (
+    <a href={to} target="_blank" style={styles}>
+      {children}
+    </a>
+  );
+};
+
 const Container = styled.div`
   position: absolute;
   right: 16vw;
@@ -450,32 +467,30 @@ const StyledSwipeableDrawer = styled(SwipeableDrawer)`
     border-radius: 24px 0 0 0;
     min-width: 300px;
     box-shadow: none;
-    padding: 4px;
+    padding: 4px 12px;
     color: ${({ theme }) => (theme.darkmode ? ColorPalette.fontLight : "#101727")};
     z-index: 999;
 
     @media (min-width: 1920px) {
-      min-width: 320px;
+      min-width: 310px;
     }
 
     @media (max-width: 1024px) {
-      min-width: 280px;
+      min-width: 270px;
     }
 
     @media (max-width: 600px) {
-      min-width: 56vw;
+      min-width: 55vw;
     }
   }
 `;
 
 const StyledMenuItem = styled(MenuItem)`
-  margin: 0px 8px;
+  /* margin: 0px 8px; */
   padding: 16px 12px;
   border-radius: 14px;
   box-shadow: none;
-  display: flex;
   font-weight: 500;
-  align-items: center;
   gap: 6px;
 
   & svg,
@@ -529,7 +544,7 @@ const MenuLabel = styled.span<{ clr?: string }>`
 `;
 
 const StyledDivider = styled(Divider)`
-  margin: 0 8px;
+  margin: 8px 4px;
 `;
 
 const PulseMenuLabel = styled(MenuLabel)`
@@ -558,14 +573,14 @@ const LogoContainer = styled.div`
   flex-direction: row;
   margin-top: 8px;
   margin-bottom: 16px;
-  gap: 16px;
+  gap: 12px;
   cursor: pointer;
 `;
 
 const Logo = styled.img`
   width: 52px;
   height: 52px;
-  margin-left: 18px;
+  margin-left: 12px;
   border-radius: 14px;
 `;
 
@@ -581,9 +596,12 @@ const BmcIcon = styled.img`
   font-size: 1.5rem;
 `;
 
-const ProfileOptionsBottom = styled.div<{ isMobile: boolean }>`
+const ProfileOptionsBottom = styled.div`
   margin-top: auto;
-  margin-bottom: ${({ isMobile }) => (isMobile ? "38px" : "16px")};
+  margin-bottom: ${window.matchMedia("(display-mode: standalone)").matches &&
+  /Mobi/.test(navigator.userAgent)
+    ? "38px"
+    : "16px"};
   display: flex;
   flex-direction: column;
   gap: 8px;

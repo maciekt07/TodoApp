@@ -74,11 +74,3 @@ export interface AppSettings {
   voice: string;
   voiceVolume: number;
 }
-
-/**
- * Represents the props for a component that requires user-related data.
- */
-export interface UserProps {
-  user: User; // User data
-  setUser: React.Dispatch<React.SetStateAction<User>>; // Function to update user data
-}

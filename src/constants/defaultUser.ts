@@ -53,7 +53,7 @@ export const defaultUser: User = {
     "#FF22B4",
     "#C6A7FF",
     "#7ACCFA",
-    "#4A9DFF",
+    "#4898F4",
     "#5061FF",
     "#3DFF7F",
     "#3AE836",

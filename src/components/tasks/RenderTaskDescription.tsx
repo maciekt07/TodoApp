@@ -9,31 +9,24 @@ import {
   YouTube,
 } from "@mui/icons-material";
 import { Tooltip } from "@mui/material";
-import { ReactNode, memo } from "react";
+import { memo, useContext } from "react";
 import { DESCRIPTION_SHORT_LENGTH, URL_REGEX } from "../../constants";
 import { useResponsiveDisplay } from "../../hooks/useResponsiveDisplay";
-import { Task, UUID } from "../../types/user";
+import { Task } from "../../types/user";
 import { DescriptionLink, ShowMoreBtn, YouTubeThumbnail } from "./tasks.styled";
+import { TaskContext } from "../../contexts/TaskContext";
 
 interface RenderTaskDescriptionProps {
   task: Task;
-  expandedTasks: Set<UUID>;
-  selectedTaskId: UUID | null;
-  highlightMatchingText: (text: string) => ReactNode;
-  toggleShowMore: (taskId: UUID) => void;
 }
 
 /**
  * Function to render task description with links
  */
 export const RenderTaskDescription = memo(
-  ({
-    task,
-    expandedTasks,
-    selectedTaskId,
-    highlightMatchingText,
-    toggleShowMore,
-  }: RenderTaskDescriptionProps): JSX.Element | null => {
+  ({ task }: RenderTaskDescriptionProps): JSX.Element | null => {
+    const { selectedTaskId, expandedTasks, toggleShowMore, highlightMatchingText } =
+      useContext(TaskContext);
     const isMobile = useResponsiveDisplay();
 
     if (!task || !task.description) {
@@ -139,7 +132,6 @@ export const RenderTaskDescription = memo(
         {(!open || task.id !== selectedTaskId || isMobile) &&
           task.description &&
           task.description.length > DESCRIPTION_SHORT_LENGTH &&
-          task.description &&
           !hasLinks && (
             <ShowMoreBtn onClick={() => toggleShowMore(task.id)} clr={task.color}>
               {expandedTasks.has(task.id) ? "Show less" : "Show more"}
