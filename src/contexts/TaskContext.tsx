@@ -1,5 +1,5 @@
 import { Dispatch, ReactNode, SetStateAction, createContext, useState } from "react";
-import type { Category, UUID } from "../types/user";
+import type { UUID } from "../types/user";
 import { useStorageState } from "../hooks/useStorageState";
 import { HighlightedText } from "../components/tasks/tasks.styled";
 import { useResponsiveDisplay } from "../hooks/useResponsiveDisplay";
@@ -12,9 +12,6 @@ interface TaskState {
   multipleSelectedTasks: UUID[];
   search: string;
   editModalOpen: boolean;
-  categories: Category[] | undefined;
-  selectedCatId: UUID | undefined;
-  categoryCounts: { [categoryId: UUID]: number };
   deleteDialogOpen: boolean;
 }
 
@@ -29,9 +26,6 @@ interface TaskActions {
   handleSelectTask: (taskId: UUID) => void;
   highlightMatchingText: (text: string) => ReactNode;
   setEditModalOpen: Dispatch<SetStateAction<boolean>>;
-  setCategories: Dispatch<SetStateAction<Category[] | undefined>>;
-  setSelectedCatId: Dispatch<SetStateAction<UUID | undefined>>;
-  setCategoryCounts: Dispatch<SetStateAction<{ [categoryId: UUID]: number }>>;
   setDeleteDialogOpen: Dispatch<SetStateAction<boolean>>;
   handleDeleteTask: () => void;
   handleCloseMoreMenu: () => void;
@@ -53,15 +47,7 @@ export const TaskProvider = ({ children }: { children: ReactNode }) => {
   );
   const [search, setSearch] = useStorageState<string>("", "search", "sessionStorage");
   const [editModalOpen, setEditModalOpen] = useState<boolean>(false);
-  const [categories, setCategories] = useState<Category[] | undefined>(undefined);
-  const [selectedCatId, setSelectedCatId] = useStorageState<UUID | undefined>(
-    undefined,
-    "selectedCategory",
-    "sessionStorage"
-  );
-  const [categoryCounts, setCategoryCounts] = useState<{
-    [categoryId: UUID]: number;
-  }>({});
+
   const [deleteDialogOpen, setDeleteDialogOpen] = useState<boolean>(false);
 
   const toggleShowMore = (taskId: UUID) => {
@@ -135,12 +121,6 @@ export const TaskProvider = ({ children }: { children: ReactNode }) => {
     handleSelectTask,
     editModalOpen,
     setEditModalOpen,
-    categories,
-    selectedCatId,
-    categoryCounts,
-    setCategories,
-    setSelectedCatId,
-    setCategoryCounts,
     handleDeleteTask,
     deleteDialogOpen,
     setDeleteDialogOpen,

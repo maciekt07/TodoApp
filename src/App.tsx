@@ -5,7 +5,7 @@ import { useCallback, useContext, useEffect } from "react";
 import { Toaster } from "react-hot-toast";
 import ErrorBoundary from "./components/ErrorBoundary";
 import { defaultUser } from "./constants/defaultUser";
-import { UserContext, UserContextProvider } from "./contexts/UserContext";
+import { UserContext } from "./contexts/UserContext";
 import { useResponsiveDisplay } from "./hooks/useResponsiveDisplay";
 import { useSystemTheme } from "./hooks/useSystemTheme";
 import MainLayout from "./layouts/MainLayout";
@@ -213,13 +213,12 @@ function App() {
             },
           }}
         />
-        <UserContextProvider>
-          <ErrorBoundary>
-            <MainLayout>
-              <AppRouter />
-            </MainLayout>
-          </ErrorBoundary>
-        </UserContextProvider>
+
+        <ErrorBoundary>
+          <MainLayout>
+            <AppRouter />
+          </MainLayout>
+        </ErrorBoundary>
       </EmotionTheme>
     </ThemeProvider>
   );

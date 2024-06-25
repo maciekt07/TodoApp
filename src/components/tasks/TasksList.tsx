@@ -60,6 +60,7 @@ import {
   TimeLeft,
 } from "./tasks.styled";
 import { TaskContext } from "../../contexts/TaskContext";
+import { useStorageState } from "../../hooks/useStorageState";
 
 /**
  * Component to display a list of tasks.
@@ -83,19 +84,21 @@ export const TasksList: React.FC = () => {
     handleSelectTask,
     editModalOpen,
     setEditModalOpen,
-    categories,
-    selectedCatId,
-    categoryCounts,
-    setCategories,
-    setSelectedCatId,
-    setCategoryCounts,
     deleteDialogOpen,
     setDeleteDialogOpen,
   } = useContext(TaskContext);
   const open = Boolean(anchorEl);
 
   const [deleteSelectedOpen, setDeleteSelectedOpen] = useState<boolean>(false);
-
+  const [categories, setCategories] = useState<Category[] | undefined>(undefined);
+  const [selectedCatId, setSelectedCatId] = useStorageState<UUID | undefined>(
+    undefined,
+    "selectedCategory",
+    "sessionStorage"
+  );
+  const [categoryCounts, setCategoryCounts] = useState<{
+    [categoryId: UUID]: number;
+  }>({});
   const isMobile = useResponsiveDisplay();
   const theme = useTheme();
   useCtrlS();
