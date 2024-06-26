@@ -97,7 +97,6 @@ export const TaskProvider = ({ children }: { children: ReactNode }) => {
   const handleCloseMoreMenu = () => {
     setAnchorEl(null);
     document.body.style.overflow = "visible";
-    setSelectedTaskId(null);
     if (selectedTaskId && !isMobile && expandedTasks.has(selectedTaskId)) {
       toggleShowMore(selectedTaskId);
     }
