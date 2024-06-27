@@ -25,8 +25,7 @@ interface RenderTaskDescriptionProps {
  */
 export const RenderTaskDescription = memo(
   ({ task }: RenderTaskDescriptionProps): JSX.Element | null => {
-    const { selectedTaskId, expandedTasks, toggleShowMore, highlightMatchingText } =
-      useContext(TaskContext);
+    const { expandedTasks, toggleShowMore, highlightMatchingText } = useContext(TaskContext);
     const isMobile = useResponsiveDisplay();
 
     if (!task || !task.description) {
@@ -129,14 +128,11 @@ export const RenderTaskDescription = memo(
     return (
       <div>
         {descriptionWithLinks}{" "}
-        {(!open || task.id !== selectedTaskId || isMobile) &&
-          task.description &&
-          task.description.length > DESCRIPTION_SHORT_LENGTH &&
-          !hasLinks && (
-            <ShowMoreBtn onClick={() => toggleShowMore(task.id)} clr={task.color}>
-              {expandedTasks.has(task.id) ? "Show less" : "Show more"}
-            </ShowMoreBtn>
-          )}
+        {task.description && task.description.length > DESCRIPTION_SHORT_LENGTH && !hasLinks && (
+          <ShowMoreBtn onClick={() => toggleShowMore(task.id)} clr={task.color}>
+            {expandedTasks.has(task.id) ? "Show less" : "Show more"}
+          </ShowMoreBtn>
+        )}
       </div>
     );
   }

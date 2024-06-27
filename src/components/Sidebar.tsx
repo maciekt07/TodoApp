@@ -41,10 +41,10 @@ import { defaultUser } from "../constants/defaultUser";
 import { UserContext } from "../contexts/UserContext";
 import { fetchBMCInfo } from "../services/bmcApi";
 import { fetchGitHubInfo } from "../services/githubApi";
-import { ColorPalette, DialogBtn, pulseAnimation, ring } from "../styles";
+import { DialogBtn, pulseAnimation, ring } from "../styles";
 import { showToast, systemInfo, timeAgo } from "../utils";
 import { useTheme } from "@emotion/react";
-import { useOnlineStatus } from "../hooks/useOnlineStatus";
+import { ColorPalette } from "../theme/themeConfig";
 
 export const ProfileSidebar = () => {
   const { user, setUser } = useContext(UserContext);
@@ -62,7 +62,6 @@ export const ProfileSidebar = () => {
 
   const theme = useTheme();
   const n = useNavigate();
-  const isOnline = useOnlineStatus();
 
   useEffect(() => {
     const fetchRepoInfo: () => Promise<void> = async () => {
@@ -188,7 +187,7 @@ export const ProfileSidebar = () => {
             slotProps={{ img: { loading: "lazy" } }}
             onError={() => {
               // This prevents the error handling from being called unnecessarily when offline
-              if (!isOnline) return;
+              if (!navigator.onLine) return;
               setUser((prevUser) => ({
                 ...prevUser,
                 profilePicture: null,
@@ -615,4 +614,7 @@ const CreditsContainer = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
+  & span {
+    backdrop-filter: none !important;
+  }
 `;

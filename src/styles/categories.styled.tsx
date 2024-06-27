@@ -18,6 +18,7 @@ export const CategoryElementsContainer = styled.div`
   max-height: 350px;
   background: ${({ theme }) => getFontColor(theme.secondary)}1a;
   overflow-y: auto;
+  overflow-x: hidden;
   padding: 24px 18px;
   border-radius: 18px 0 0 18px;
   /* Custom Scrollbar Styles */

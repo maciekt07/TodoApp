@@ -25,10 +25,13 @@ import { Emoji, EmojiStyle } from "emoji-picker-react";
 import { useCallback, useContext, useEffect, useMemo, useState } from "react";
 import { CategoryBadge, EditTask, TaskIcon, TaskMenu } from "..";
 import { URL_REGEX } from "../../constants";
+import { TaskContext } from "../../contexts/TaskContext";
 import { UserContext } from "../../contexts/UserContext";
 import { useCtrlS } from "../../hooks/useCtrlS";
 import { useResponsiveDisplay } from "../../hooks/useResponsiveDisplay";
-import { ColorPalette, DialogBtn } from "../../styles";
+import { useStorageState } from "../../hooks/useStorageState";
+import { DialogBtn } from "../../styles";
+import { ColorPalette } from "../../theme/themeConfig";
 import type { Category, Task, UUID } from "../../types/user";
 import {
   calculateDateDifference,
@@ -59,8 +62,6 @@ import {
   TasksContainer,
   TimeLeft,
 } from "./tasks.styled";
-import { TaskContext } from "../../contexts/TaskContext";
-import { useStorageState } from "../../hooks/useStorageState";
 
 /**
  * Component to display a list of tasks.
@@ -117,7 +118,7 @@ export const TasksList: React.FC = () => {
   }, [user.tasks, selectedTaskId]);
 
   // Handler for clicking the more options button in a task
-  const handleClick = (event: React.MouseEvent<HTMLButtonElement>, taskId: UUID) => {
+  const handleClick = (event: React.MouseEvent<HTMLElement>, taskId: UUID) => {
     setAnchorEl(event.currentTarget);
     setSelectedTaskId(taskId);
     const target = event.target as HTMLElement;
@@ -429,13 +430,13 @@ export const TasksList: React.FC = () => {
         {user.tasks.length !== 0 ? (
           reorderTasks(user.tasks).map((task) => (
             <TaskContainer
-              // ref={(ref) => (scrollToRefs.current[task.id.toString()] = ref)}
-              onContextMenu={(e) => {
-                e.preventDefault();
-                handleClick(e as unknown as React.MouseEvent<HTMLButtonElement>, task.id);
-              }}
               key={task.id}
               id={task.id.toString()}
+              // open the task menu on right click
+              onContextMenu={(e) => {
+                e.preventDefault();
+                handleClick(e, task.id);
+              }}
               backgroundColor={task.color}
               glow={user.settings[0].enableGlow}
               done={task.done}

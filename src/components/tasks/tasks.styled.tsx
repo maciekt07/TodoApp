@@ -1,9 +1,9 @@
 import styled from "@emotion/styled";
 import { Alarm, RadioButtonChecked, RadioButtonUnchecked } from "@mui/icons-material";
 import { Button, Checkbox, IconButton, TextField, css } from "@mui/material";
-import { ColorPalette } from "../../styles";
 import { fadeIn, ring, scale } from "../../styles/keyframes.styled";
 import { getFontColor, systemInfo } from "../../utils";
+import { ColorPalette } from "../../theme/themeConfig";
 
 interface TaskComponentProps {
   backgroundColor: string;

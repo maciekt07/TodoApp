@@ -3,7 +3,7 @@ import App from "./App.tsx";
 import { BrowserRouter } from "react-router-dom";
 import { initColors } from "ntc-ts";
 import { ORIGINAL_COLORS } from "ntc-ts";
-import { UserContextProvider } from "./contexts/UserContext.tsx";
+import { UserContextProvider } from "./contexts/UserProvider.tsx";
 
 // initialize ntc colors
 initColors(ORIGINAL_COLORS);

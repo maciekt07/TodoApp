@@ -14,10 +14,11 @@ import { useContext, useEffect, useMemo, useState } from "react";
 import { CategorySelect, ColorPicker, CustomEmojiPicker } from ".";
 import { DESCRIPTION_MAX_LENGTH, TASK_NAME_MAX_LENGTH } from "../constants";
 import { UserContext } from "../contexts/UserContext";
-import { ColorPalette, DialogBtn } from "../styles";
+import { DialogBtn } from "../styles";
 import { Category, Task } from "../types/user";
 import { showToast, timeAgo } from "../utils";
 import { useTheme } from "@emotion/react";
+import { ColorPalette } from "../theme/themeConfig";
 
 interface EditTaskProps {
   open: boolean;

@@ -51,7 +51,7 @@ import "react-spring-bottom-sheet/dist/style.css";
 import { TaskIcon } from "..";
 import { UserContext } from "../../contexts/UserContext";
 import { useResponsiveDisplay } from "../../hooks/useResponsiveDisplay";
-import { ColorPalette, DialogBtn } from "../../styles";
+import { DialogBtn } from "../../styles";
 import { Task, UUID } from "../../types/user";
 import {
   calculateDateDifference,
@@ -62,6 +62,7 @@ import {
 } from "../../utils";
 import { useTheme } from "@emotion/react";
 import { TaskContext } from "../../contexts/TaskContext";
+import { ColorPalette } from "../../theme/themeConfig";
 
 export const TaskMenu = () => {
   const { user, setUser } = useContext(UserContext);

@@ -1,7 +1,7 @@
 import { Category, Task } from "../types/user";
 import { useState, useEffect, useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { AddTaskButton, ColorPalette, Container, StyledInput } from "../styles";
+import { AddTaskButton, Container, StyledInput } from "../styles";
 import { AddTaskRounded, CancelRounded, Edit } from "@mui/icons-material";
 import { Button, IconButton, InputAdornment, Tooltip } from "@mui/material";
 import { DESCRIPTION_MAX_LENGTH, TASK_NAME_MAX_LENGTH } from "../constants";
@@ -10,6 +10,7 @@ import { UserContext } from "../contexts/UserContext";
 import { useStorageState } from "../hooks/useStorageState";
 import { useTheme } from "@emotion/react";
 import { getFontColor, showToast } from "../utils";
+import { ColorPalette } from "../theme/themeConfig";
 
 const AddTask = () => {
   const { user, setUser } = useContext(UserContext);

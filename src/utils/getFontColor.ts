@@ -1,4 +1,4 @@
-import { ColorPalette } from "../styles";
+import { ColorPalette } from "../theme/themeConfig";
 
 /**
  * Returns the appropriate font color (either black or white) based on the provided background color in hex format.

@@ -1,4 +1,3 @@
-export * from "./theme";
 export * from "./globalStyles";
 export * from "./home.styled";
 export * from "./addTask.styled";

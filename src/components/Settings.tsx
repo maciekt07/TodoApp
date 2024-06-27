@@ -41,9 +41,10 @@ import { defaultUser } from "../constants/defaultUser";
 import { UserContext } from "../contexts/UserContext";
 import { useOnlineStatus } from "../hooks/useOnlineStatus";
 import { useSystemTheme } from "../hooks/useSystemTheme";
-import { ColorPalette, DialogBtn } from "../styles";
+import { DialogBtn } from "../styles";
 import type { AppSettings, DarkModeOptions } from "../types/user";
 import { getFontColor, showToast, systemInfo } from "../utils";
+import { ColorPalette } from "../theme/themeConfig";
 
 interface SettingsProps {
   open: boolean;

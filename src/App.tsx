@@ -2,20 +2,21 @@ import { ThemeProvider as EmotionTheme } from "@emotion/react";
 import { DataObjectRounded } from "@mui/icons-material";
 import { ThemeProvider, type Theme } from "@mui/material";
 import { useCallback, useContext, useEffect } from "react";
-import { Toaster } from "react-hot-toast";
 import ErrorBoundary from "./components/ErrorBoundary";
 import { defaultUser } from "./constants/defaultUser";
 import { UserContext } from "./contexts/UserContext";
-import { useResponsiveDisplay } from "./hooks/useResponsiveDisplay";
 import { useSystemTheme } from "./hooks/useSystemTheme";
 import MainLayout from "./layouts/MainLayout";
 import AppRouter from "./router";
-import { ColorPalette, GlobalStyles, Themes, createCustomTheme } from "./styles";
+import { GlobalStyles } from "./styles";
 import { getFontColor, showToast } from "./utils";
+import { CustomToaster } from "./components/Toaster";
+import { User } from "./types/user";
+import { ColorPalette } from "./theme/themeConfig";
+import { Themes, createCustomTheme } from "./theme/theme";
 
 function App() {
   const { user, setUser } = useContext(UserContext);
-  const isMobile = useResponsiveDisplay();
   const systemTheme = useSystemTheme();
 
   // Initialize user properties if they are undefined
@@ -41,7 +42,7 @@ function App() {
           return;
         }
 
-        const userValue = userObject[key];
+        const userValue = userObject[key] as User[keyof User];
         const defaultValue = defaultObject[key];
 
         if (typeof defaultValue === "object" && defaultValue !== null) {
@@ -55,7 +56,7 @@ function App() {
             <div>
               Added new property to user object{" "}
               <i translate="no">
-                {key}: {userObject[key].toString()}
+                {key.toString()}: {userObject[key].toString()}
               </i>
             </div>,
             {
@@ -176,44 +177,7 @@ function App() {
         }}
       >
         <GlobalStyles />
-        <Toaster
-          position="top-center"
-          reverseOrder={false}
-          gutter={12}
-          containerStyle={{
-            marginBottom: isMobile ? "96px" : "12px",
-          }}
-          toastOptions={{
-            position: "bottom-center",
-            duration: 4000,
-            style: {
-              padding: "14px 22px",
-              borderRadius: "18px",
-              fontSize: "17px",
-              border: `2px solid ${getMuiTheme().palette.primary.main}`,
-              background: isDarkMode() ? "#141431e0" : "#ffffff99",
-              color: isDarkMode() ? ColorPalette.fontLight : ColorPalette.fontDark,
-              WebkitBackdropFilter: `blur(${isDarkMode() ? "6" : "14"}px)`,
-              backdropFilter: `blur(${isDarkMode() ? "6" : "14"}px)`,
-            },
-            success: {
-              iconTheme: {
-                primary: getMuiTheme().palette.primary.main,
-                secondary: getFontColor(getMuiTheme().palette.primary.main),
-              },
-            },
-            error: {
-              iconTheme: {
-                primary: ColorPalette.red,
-                secondary: "white",
-              },
-              style: {
-                borderColor: ColorPalette.red,
-              },
-            },
-          }}
-        />
-
+        <CustomToaster />
         <ErrorBoundary>
           <MainLayout>
             <AppRouter />

@@ -270,7 +270,6 @@ const SharePage = () => {
                     }}
                   >
                     {taskData.category &&
-                      // user.settings[0].enableCategories &&
                       taskData.category.map((category) => (
                         <div key={category.id}>
                           <CategoryBadge

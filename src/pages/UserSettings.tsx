@@ -27,11 +27,13 @@ import {
 } from "@mui/icons-material";
 import { PROFILE_PICTURE_MAX_LENGTH, USER_NAME_MAX_LENGTH } from "../constants";
 import { SettingsDialog, TopBar } from "../components";
-import { ColorElement, ColorPalette, DialogBtn, Themes } from "../styles";
+import { ColorElement, DialogBtn } from "../styles";
 import { defaultUser } from "../constants/defaultUser";
 import { UserContext } from "../contexts/UserContext";
 import { timeAgo, getFontColor, showToast } from "../utils";
 import { useSystemTheme } from "../hooks/useSystemTheme";
+import { Themes } from "../theme/theme";
+import { ColorPalette } from "../theme/themeConfig";
 
 const UserSettings = () => {
   const { user, setUser } = useContext(UserContext);
@@ -339,6 +341,7 @@ const UserSettings = () => {
 };
 
 export default UserSettings;
+
 const Container = styled.div`
   margin: 0 auto;
   max-width: 400px;

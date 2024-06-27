@@ -1,5 +1,4 @@
-import { CSSProperties, useCallback, useContext, useEffect, useRef, useState } from "react";
-import { ColorElement, ColorPalette, DialogBtn, scale } from "../styles";
+import { useTheme } from "@emotion/react";
 import styled from "@emotion/styled";
 import {
   AddRounded,
@@ -8,7 +7,6 @@ import {
   ExpandMoreRounded,
   InfoRounded,
 } from "@mui/icons-material";
-import { getFontColor, showToast } from "../utils";
 import {
   Accordion,
   AccordionDetails,
@@ -21,11 +19,14 @@ import {
   Popover,
   Tooltip,
 } from "@mui/material";
-import { useTheme } from "@emotion/react";
-import { UserContext } from "../contexts/UserContext";
-import { MAX_COLORS_IN_LIST } from "../constants";
 import { getColorName } from "ntc-ts";
+import { CSSProperties, useCallback, useContext, useEffect, useRef, useState } from "react";
 import { type ToastOptions } from "react-hot-toast";
+import { MAX_COLORS_IN_LIST } from "../constants";
+import { UserContext } from "../contexts/UserContext";
+import { ColorElement, DialogBtn, scale } from "../styles";
+import { ColorPalette } from "../theme/themeConfig";
+import { getFontColor, showToast } from "../utils";
 
 interface ColorPickerProps {
   color: string;
@@ -208,7 +209,10 @@ export const ColorPicker: React.FC<ColorPickerProps> = ({
                       aria-label={`Select color - ${color}`}
                       // show delete popover only on desktop
                       onContextMenu={(e) => {
-                        if (window.matchMedia("(pointer:fine)").matches) {
+                        if (
+                          window.matchMedia("(pointer:fine)").matches &&
+                          color !== theme.primary
+                        ) {
                           e.preventDefault();
                           togglePopover(index);
                         }

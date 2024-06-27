@@ -15,9 +15,9 @@ import { useNavigate } from "react-router-dom";
 import { CategoryBadge } from ".";
 import { MAX_CATEGORIES_IN_TASK } from "../constants";
 import { UserContext } from "../contexts/UserContext";
-import { ColorPalette } from "../styles";
 import type { Category, UUID } from "../types/user";
 import { getFontColor, showToast } from "../utils";
+import { ColorPalette } from "../theme/themeConfig";
 
 interface CategorySelectProps {
   selectedCategories: Category[];

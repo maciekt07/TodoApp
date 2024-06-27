@@ -21,7 +21,7 @@ import { AddRounded, TodayRounded, WifiOff } from "@mui/icons-material";
 import { UserContext } from "../contexts/UserContext";
 import { useResponsiveDisplay } from "../hooks/useResponsiveDisplay";
 import { useNavigate } from "react-router-dom";
-import { TaskProvider } from "../contexts/TaskContext";
+import { TaskProvider } from "../contexts/TaskProvider";
 
 const TasksList = lazy(() =>
   import("../components/tasks/TasksList").then((module) => ({ default: module.TasksList }))

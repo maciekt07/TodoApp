@@ -15,7 +15,8 @@ import {
 } from "react";
 import { UserContext } from "../contexts/UserContext";
 import { useOnlineStatus } from "../hooks/useOnlineStatus";
-import { ColorPalette, fadeIn } from "../styles";
+import { fadeIn } from "../styles";
+import { ColorPalette } from "../theme/themeConfig";
 import { getFontColor, systemInfo } from "../utils";
 
 const EmojiPicker = lazy(() => import("emoji-picker-react"));
@@ -142,15 +143,6 @@ export const CustomEmojiPicker = ({ emoji, setEmoji, color, width }: EmojiPicker
   return (
     <>
       <EmojiContainer>
-        {/* <Tooltip
-          title={
-            showEmojiPicker
-              ? "Close Emoji Picker"
-              : currentEmoji
-              ? "Change Emoji"
-              : "Choose an Emoji"
-          }
-        > */}
         <Badge
           overlap="circular"
           anchorOrigin={{ vertical: "bottom", horizontal: "right" }}

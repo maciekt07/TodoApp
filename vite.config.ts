@@ -18,6 +18,7 @@ export default defineConfig({
             urlPattern: ({ request }) =>
               request.destination === "script" ||
               request.destination === "style" ||
+              request.destination === "font" ||
               request.destination === "worker",
             handler: "CacheFirst",
             options: {

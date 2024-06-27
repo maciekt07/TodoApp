@@ -2,7 +2,7 @@ import styled from "@emotion/styled";
 import { fadeIn, fadeInLeft, progressPulse, pulseAnimation } from "./keyframes.styled";
 import { Box, Button, CircularProgress, css } from "@mui/material";
 import { getFontColor } from "../utils";
-import { ColorPalette } from "./theme";
+import { ColorPalette } from "../theme/themeConfig";
 
 export const GreetingHeader = styled.div`
   display: flex;

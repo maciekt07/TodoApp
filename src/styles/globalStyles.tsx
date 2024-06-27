@@ -1,6 +1,6 @@
 import { Global, css, useTheme } from "@emotion/react";
 import { getFontColor } from "../utils";
-import { ColorPalette } from ".";
+import { ColorPalette } from "../theme/themeConfig";
 
 export const GlobalStyles = () => {
   const theme = useTheme();
@@ -53,11 +53,11 @@ export const GlobalStyles = () => {
           z-index: 9999999;
         }
 
-        div[data-rsbs-backdrop="true"] {
+        div[data-rsbs-backdrop] {
           z-index: 999;
         }
 
-        div[data-rsbs-header="true"] {
+        div[data-rsbs-header] {
           z-index: 999999;
           &::before {
             width: 60px;
@@ -67,7 +67,12 @@ export const GlobalStyles = () => {
             margin-top: 2px;
           }
         }
-
+        div[data-rsbs-header] {
+          /* box-shadow: none;
+          border-bottom-width: thin;
+          border-bottom: 1px solid
+            ${theme.darkmode ? "rgba(255, 255, 255, 0.12)" : "rgba(0, 0, 0, 0.12) "}; */
+        }
         body {
           margin: 8px 16vw;
           touch-action: manipulation;
@@ -115,12 +120,11 @@ export const GlobalStyles = () => {
           --epr-focus-bg-color: ${theme.primary + "af"};
           --epr-highlight-color: ${theme.primary};
           --epr-search-border-color: ${theme.primary};
+          --epr-hover-bg-color: "red";
           border-radius: 20px !important;
           padding: 8px !important;
-          /* & .epr-category-nav > button.epr-cat-btn {
-            filter: hue-rotate(75deg);
-          } */
         }
+
         .epr-reactions {
           background: ${getFontColor(theme.secondary) === ColorPalette.fontDark
             ? ColorPalette.fontLight

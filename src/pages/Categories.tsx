@@ -25,11 +25,11 @@ import {
   CategoryElement,
   CategoryElementsContainer,
   CategoryInput,
-  ColorPalette,
   DialogBtn,
   EditNameInput,
 } from "../styles";
 import { getFontColor, showToast } from "../utils";
+import { ColorPalette } from "../theme/themeConfig";
 
 const NotFound = lazy(() => import("./NotFound"));
 

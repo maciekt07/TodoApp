@@ -1,5 +1,4 @@
 import type { EmojiStyle } from "emoji-picker-react";
-import type { AppTheme } from "../styles/theme";
 
 /**
  * Represents a universally unique identifier.
@@ -20,7 +19,7 @@ export interface User {
   categories: Category[];
   colorList: string[];
   settings: AppSettings[];
-  theme: AppTheme;
+  theme: string;
   darkmode: DarkModeOptions;
 }
 
