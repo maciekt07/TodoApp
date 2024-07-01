@@ -130,6 +130,7 @@ const AddTask = () => {
           emoji={typeof emoji === "string" ? emoji : undefined}
           setEmoji={setEmoji}
           color={color}
+          name={name}
         />
         <StyledInput
           label="Task Name"

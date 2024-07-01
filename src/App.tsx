@@ -11,7 +11,6 @@ import AppRouter from "./router";
 import { GlobalStyles } from "./styles";
 import { getFontColor, showToast } from "./utils";
 import { CustomToaster } from "./components/Toaster";
-import { User } from "./types/user";
 import { ColorPalette } from "./theme/themeConfig";
 import { Themes, createCustomTheme } from "./theme/theme";
 
@@ -42,7 +41,7 @@ function App() {
           return;
         }
 
-        const userValue = userObject[key] as User[keyof User];
+        const userValue = userObject[key];
         const defaultValue = defaultObject[key];
 
         if (typeof defaultValue === "object" && defaultValue !== null) {

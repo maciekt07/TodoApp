@@ -1,6 +1,7 @@
 import styled from "@emotion/styled";
-import { Button } from "@mui/material";
+import { Avatar, Button } from "@mui/material";
 import { getFontColor } from "../utils";
+import { CSSProperties } from "react";
 
 export const DialogBtn = styled(Button)`
   padding: 10px 16px;
@@ -43,6 +44,23 @@ export const StyledLink = styled.a<{ clr?: string }>`
     box-shadow: none;
   }
 `;
+// linear-gradient(#A4AAB7, #868B95)
+export const UserAvatar = styled(Avatar)<{ hasImage: boolean; size: CSSProperties["height"] }>`
+  color: #ffffff;
+  background: ${({ hasImage, theme }) =>
+    hasImage ? "#ffffff1c" : theme.darkmode ? "#5e5e65" : "#8c919c"} !important;
+  transition: 0.3s background;
+  font-weight: 500;
+  width: ${({ size }) => size};
+  height: ${({ size }) => size};
+  font-size: ${({ size }) => `calc(${size} / 2)`};
+`;
+
+UserAvatar.defaultProps = {
+  translate: "no",
+  slotProps: { img: { loading: "lazy" } },
+};
+
 // Styled button for color selection
 export const ColorElement = styled.button<{ clr: string; secondClr?: string; size?: string }>`
   background: ${({ clr, secondClr }) =>

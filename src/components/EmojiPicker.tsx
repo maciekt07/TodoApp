@@ -1,7 +1,7 @@
 import { useTheme } from "@emotion/react";
 import styled from "@emotion/styled";
-import { AddReaction, Edit, RemoveCircleOutline } from "@mui/icons-material";
-import { Avatar, Badge, Button } from "@mui/material";
+import { AddReaction, AutoAwesome, Edit, RemoveCircleOutline } from "@mui/icons-material";
+import { Avatar, Badge, Button, CircularProgress } from "@mui/material";
 import { Emoji, EmojiClickData, EmojiStyle, SuggestionMode, Theme } from "emoji-picker-react";
 import {
   CSSProperties,
@@ -17,7 +17,7 @@ import { UserContext } from "../contexts/UserContext";
 import { useOnlineStatus } from "../hooks/useOnlineStatus";
 import { fadeIn } from "../styles";
 import { ColorPalette } from "../theme/themeConfig";
-import { getFontColor, systemInfo } from "../utils";
+import { getFontColor, showToast, systemInfo } from "../utils";
 
 const EmojiPicker = lazy(() => import("emoji-picker-react"));
 interface EmojiPickerProps {
@@ -29,9 +29,10 @@ interface EmojiPickerProps {
   // onEmojiChange: (emojiData: EmojiClickData) => void;
   color?: string;
   width?: CSSProperties["width"];
+  name?: string;
 }
 
-export const CustomEmojiPicker = ({ emoji, setEmoji, color, width }: EmojiPickerProps) => {
+export const CustomEmojiPicker = ({ emoji, setEmoji, color, width, name }: EmojiPickerProps) => {
   const { user, setUser } = useContext(UserContext);
   const { emojisStyle, settings } = user;
   const [showEmojiPicker, setShowEmojiPicker] = useState<boolean>(false);
@@ -39,20 +40,6 @@ export const CustomEmojiPicker = ({ emoji, setEmoji, color, width }: EmojiPicker
 
   const isOnline = useOnlineStatus();
   const emotionTheme = useTheme();
-
-  //FIXME: emojis doesnt load on first load using Emoji component
-
-  // const customEmojis: CustomEmoji[] = [
-  //   {
-  //     names: ["Todo App", "Todo App Logo"],
-  //     imgUrl: logo,
-  //     id: "todoapp",
-  //   },
-  //   { names: ["React.js", "React"], imgUrl: ReactLogo, id: "reactjs" },
-  //   { names: ["Github", "Github Logo"], imgUrl: githubLogo, id: "github" },
-  //   //User pfp
-  //   { names: ["Crying Cat", "cat", "cry"], imgUrl: cryingCat, id: "cryingcat" },
-  // ];
 
   interface EmojiItem {
     unified: string;
@@ -97,9 +84,7 @@ export const CustomEmojiPicker = ({ emoji, setEmoji, color, width }: EmojiPicker
   const handleEmojiClick = (e: EmojiClickData) => {
     toggleEmojiPicker();
     setCurrentEmoji(e.unified);
-    // setEmojiData(e);
     console.log(e);
-    // console.log(e.getImageUrl(user.emojisStyle));
   };
 
   const handleRemoveEmoji = () => {
@@ -107,12 +92,61 @@ export const CustomEmojiPicker = ({ emoji, setEmoji, color, width }: EmojiPicker
     setCurrentEmoji(null);
   };
 
+  const [isAILoading, setIsAILoading] = useState<boolean>(false);
+  // ‼ This feature works only in Chrome (Dev / Canary) version 127 or higher with some flags enabled
+  async function useAI() {
+    const start = new Date().getTime();
+    setIsAILoading(true);
+    //@ts-expect-error window.ai is an experimental chrome feature
+    const session = window.ai.createTextSession();
+
+    const sessionInstance = await session;
+
+    const response = await sessionInstance.prompt(
+      `Choose an emoji that best represents the task: ${name}. (For example: 🖥️ for coding, 📝 for writing, 🎨 for design) Type 'none' if not applicable.`
+    );
+
+    console.log("Full AI response:", response);
+    // Validate if userInput is a valid emoji
+    const emojiRegex =
+      /[\u{1F300}-\u{1F6FF}\u{1F900}-\u{1F9FF}\u{2600}-\u{26FF}\u{2700}-\u{27BF}]/u;
+    if (emojiRegex.test(response)) {
+      setIsAILoading(false);
+
+      const unified = emojiToUnified(response.trim().toLowerCase()).toLowerCase();
+      console.log("Emoji unified:", unified);
+      setCurrentEmoji(unified);
+    } else {
+      setCurrentEmoji(null);
+      showToast(
+        `Invalid emoji (response: ${response}). Please try again with different task name.`,
+        { type: "error" }
+      );
+      console.error("Invalid emoji.");
+    }
+    const end = new Date().getTime();
+    setIsAILoading(false);
+    console.log(`%cTook ${end - start}ms to generate.`, "color: lime");
+  }
+
+  const emojiToUnified = (emoji: string): string => {
+    const codePoints = [...emoji].map((char) => {
+      if (char) {
+        return char.codePointAt(0)?.toString(16).toUpperCase() ?? "";
+      }
+      return "";
+    });
+    return codePoints.join("-");
+  };
+  // end of AI experimental feature code
+
   // Function to render the content of the Avatar based on whether an emoji is selected or not
   const renderAvatarContent = () => {
+    const fontColor = color ? getFontColor(color) : ColorPalette.fontLight;
+    if (isAILoading) {
+      return <CircularProgress size={40} thickness={5} sx={{ color: fontColor }} />;
+    }
     if (currentEmoji) {
-      // Determine the size of the emoji based on the user's emoji style preference
-      // const emojiSize = user.emojisStyle === EmojiStyle.NATIVE ? 48 : 64;
-
       const emojiSize =
         emojisStyle === EmojiStyle.NATIVE && systemInfo.os === "iOS"
           ? 64
@@ -126,8 +160,6 @@ export const CustomEmojiPicker = ({ emoji, setEmoji, color, width }: EmojiPicker
         </EmojiElement>
       );
     } else {
-      // If no emoji is selected, show the AddReaction icon with the specified color or default purple
-      const fontColor = color ? getFontColor(color) : ColorPalette.fontLight;
       return (
         <AddReaction
           sx={{
@@ -172,8 +204,16 @@ export const CustomEmojiPicker = ({ emoji, setEmoji, color, width }: EmojiPicker
             {renderAvatarContent()}
           </Avatar>
         </Badge>
-        {/* </Tooltip> */}
       </EmojiContainer>
+      {"ai" in window && name && (
+        <Button
+          onClick={useAI}
+          disabled={name?.length < 5}
+          style={{ width: "250px", height: "50px", marginBottom: "4px" }}
+        >
+          <AutoAwesome /> &nbsp; Find emoji with AI
+        </Button>
+      )}
       {showEmojiPicker && (
         <>
           {!isOnline && emojisStyle !== EmojiStyle.NATIVE && (
@@ -224,8 +264,6 @@ export const CustomEmojiPicker = ({ emoji, setEmoji, color, width }: EmojiPicker
                 }
                 reactions={getFrequentlyUsedEmojis()}
                 emojiStyle={emojisStyle}
-                // customEmojis={customEmojis}
-                // lazyLoadEmojis
                 theme={emotionTheme.darkmode ? Theme.DARK : Theme.LIGHT}
                 suggestedEmojisMode={SuggestionMode.FREQUENT}
                 autoFocusSearch={false}

@@ -20,7 +20,6 @@ import {
   TaskAltRounded,
 } from "@mui/icons-material";
 import {
-  Avatar,
   Dialog,
   DialogActions,
   DialogContent,
@@ -41,7 +40,7 @@ import { defaultUser } from "../constants/defaultUser";
 import { UserContext } from "../contexts/UserContext";
 import { fetchBMCInfo } from "../services/bmcApi";
 import { fetchGitHubInfo } from "../services/githubApi";
-import { DialogBtn, pulseAnimation, ring } from "../styles";
+import { DialogBtn, UserAvatar, pulseAnimation, ring } from "../styles";
 import { showToast, systemInfo, timeAgo } from "../utils";
 import { useTheme } from "@emotion/react";
 import { ColorPalette } from "../theme/themeConfig";
@@ -180,11 +179,11 @@ export const ProfileSidebar = () => {
           onClick={handleClick}
           sx={{ zIndex: 1 }}
         >
-          <Avatar
+          <UserAvatar
             src={(profilePicture as string) || undefined}
             alt={name || "User"}
-            translate="no"
-            slotProps={{ img: { loading: "lazy" } }}
+            hasImage={profilePicture !== null}
+            size="52px"
             onError={() => {
               // This prevents the error handling from being called unnecessarily when offline
               if (!navigator.onLine) return;
@@ -195,16 +194,9 @@ export const ProfileSidebar = () => {
               showToast("Error in profile picture URL", { type: "error" });
               throw new Error("Error in profile picture URL");
             }}
-            sx={{
-              width: "52px",
-              height: "52px",
-              background: profilePicture ? "#ffffff1c" : "#747474",
-              transition: ".2s all",
-              fontSize: "26px",
-            }}
           >
             {name ? name[0].toUpperCase() : undefined}
-          </Avatar>
+          </UserAvatar>
         </IconButton>
       </Tooltip>
       <StyledSwipeableDrawer
@@ -371,13 +363,13 @@ export const ProfileSidebar = () => {
           <StyledDivider />
           <MenuLink to="/user">
             <ProfileMenuItem translate={name ? "no" : "yes"} onClick={handleClose}>
-              <Avatar
+              <UserAvatar
                 src={(profilePicture as string) || undefined}
-                sx={{ width: "44px", height: "44px" }}
-                slotProps={{ img: { loading: "lazy" } }}
+                hasImage={profilePicture !== null}
+                size="44px"
               >
                 {name ? name[0].toUpperCase() : undefined}
-              </Avatar>
+              </UserAvatar>
               <h4 style={{ margin: 0, fontWeight: 600 }}> {name || "User"}</h4>{" "}
               {(name === null || name === "") &&
                 profilePicture === null &&

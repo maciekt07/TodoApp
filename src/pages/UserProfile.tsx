@@ -27,7 +27,7 @@ import {
 } from "@mui/icons-material";
 import { PROFILE_PICTURE_MAX_LENGTH, USER_NAME_MAX_LENGTH } from "../constants";
 import { SettingsDialog, TopBar } from "../components";
-import { ColorElement, DialogBtn } from "../styles";
+import { ColorElement, DialogBtn, UserAvatar } from "../styles";
 import { defaultUser } from "../constants/defaultUser";
 import { UserContext } from "../contexts/UserContext";
 import { timeAgo, getFontColor, showToast } from "../utils";
@@ -35,7 +35,7 @@ import { useSystemTheme } from "../hooks/useSystemTheme";
 import { Themes } from "../theme/theme";
 import { ColorPalette } from "../theme/themeConfig";
 
-const UserSettings = () => {
+const UserProfile = () => {
   const { user, setUser } = useContext(UserContext);
   const { name, profilePicture, createdAt } = user;
   const [userName, setUserName] = useState<string>("");
@@ -136,23 +136,14 @@ const UserSettings = () => {
               </Avatar>
             }
           >
-            <Avatar
+            <UserAvatar
               onClick={handleOpenImageDialog}
-              src={(profilePicture as string) || undefined}
-              translate="no"
-              sx={{
-                width: "96px",
-                height: "96px",
-                cursor: "pointer",
-                fontSize: "45px",
-              }}
+              src={profilePicture || undefined}
+              hasImage={profilePicture !== null}
+              size="96px"
             >
-              {!profilePicture && userName
-                ? userName[0].toUpperCase()
-                : !user.profilePicture && !userName && name
-                ? name[0].toUpperCase()
-                : undefined}
-            </Avatar>
+              {name ? name[0].toUpperCase() : undefined}
+            </UserAvatar>
           </Badge>
         </Tooltip>
         <UserName translate={name ? "no" : "yes"}>{name || "User"}</UserName>
@@ -340,7 +331,7 @@ const UserSettings = () => {
   );
 };
 
-export default UserSettings;
+export default UserProfile;
 
 const Container = styled.div`
   margin: 0 auto;
