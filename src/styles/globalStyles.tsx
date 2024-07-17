@@ -63,15 +63,12 @@ export const GlobalStyles = () => {
             width: 60px;
             height: 6px;
             border-radius: 100px;
-            background: #cfcfcf;
-            margin-top: 2px;
+            background: ${theme.darkmode ? "#717171" : "#cfcfcf"};
+            margin-top: 3px;
           }
         }
         div[data-rsbs-header] {
-          /* box-shadow: none;
-          border-bottom-width: thin;
-          border-bottom: 1px solid
-            ${theme.darkmode ? "rgba(255, 255, 255, 0.12)" : "rgba(0, 0, 0, 0.12) "}; */
+          box-shadow: none;
         }
         body {
           margin: 8px 16vw;

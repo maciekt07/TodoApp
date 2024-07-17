@@ -34,6 +34,7 @@ const Purge = () => {
     "tasksToPurge",
     "sessionStorage"
   ); // Array of selected task IDs
+
   const [deleteAllDialog, setDeleteAllDialog] = useState<boolean>(false);
 
   useEffect(() => {

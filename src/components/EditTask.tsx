@@ -31,7 +31,7 @@ export const EditTask = ({ open, task, onClose, onSave }: EditTaskProps) => {
   const { user } = useContext(UserContext);
   const { settings } = user;
   const [editedTask, setEditedTask] = useState<Task | undefined>(task);
-  const [emoji, setEmoji] = useState<string | undefined>();
+  const [emoji, setEmoji] = useState<string | null>(null);
   const [selectedCategories, setSelectedCategories] = useState<Category[]>([]);
 
   const theme = useTheme();
@@ -46,13 +46,11 @@ export const EditTask = ({ open, task, onClose, onSave }: EditTaskProps) => {
     [editedTask?.description]
   );
 
-  // const isMobile = useResponsiveDisplay(600);
-
   // Effect hook to update the editedTask with the selected emoji.
   useEffect(() => {
     setEditedTask((prevTask) => ({
       ...(prevTask as Task),
-      emoji: emoji,
+      emoji: emoji || undefined,
     }));
   }, [emoji]);
 
@@ -117,15 +115,11 @@ export const EditTask = ({ open, task, onClose, onSave }: EditTaskProps) => {
   return (
     <Dialog
       open={open}
-      // fullScreen={isMobile}
       onClose={() => {
         onClose();
-        // setEditedTask(task);
-        // setSelectedCategories(task?.category as Category[]);
       }}
       PaperProps={{
         style: {
-          // borderRadius: !isMobile ? "24px" : 0,
           borderRadius: "24px",
           padding: "12px",
           maxWidth: "600px",
@@ -157,6 +151,8 @@ export const EditTask = ({ open, task, onClose, onSave }: EditTaskProps) => {
           setEmoji={setEmoji}
           color={editedTask?.color}
           width="350px"
+          name={editedTask?.name || ""}
+          type="task"
         />
         <StyledInput
           label="Name"
@@ -193,14 +189,12 @@ export const EditTask = ({ open, task, onClose, onSave }: EditTaskProps) => {
               : `${editedTask?.description?.length}/${DESCRIPTION_MAX_LENGTH}`
           }
         />
-
         <StyledInput
           label="Deadline date"
           name="deadline"
           type="datetime-local"
           value={editedTask?.deadline || ""}
           onChange={handleInputChange}
-          defaultValue=""
           InputLabelProps={{ shrink: true }}
           sx={{
             colorScheme: theme.darkmode ? "dark" : "light",

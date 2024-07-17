@@ -18,21 +18,27 @@ import { useOnlineStatus } from "../hooks/useOnlineStatus";
 import { fadeIn } from "../styles";
 import { ColorPalette } from "../theme/themeConfig";
 import { getFontColor, showToast, systemInfo } from "../utils";
+import { CATEGORY_NAME_MAX_LENGTH, TASK_NAME_MAX_LENGTH } from "../constants";
+import { AITextSession } from "../types/ai";
 
 const EmojiPicker = lazy(() => import("emoji-picker-react"));
 interface EmojiPickerProps {
   emoji?: string;
-  //FIXME:
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  setEmoji: Dispatch<SetStateAction<any>>;
-  //TODO:
-  // onEmojiChange: (emojiData: EmojiClickData) => void;
+  setEmoji: Dispatch<SetStateAction<string | null>>;
   color?: string;
   width?: CSSProperties["width"];
   name?: string;
+  type?: "task" | "category";
 }
 
-export const CustomEmojiPicker = ({ emoji, setEmoji, color, width, name }: EmojiPickerProps) => {
+export const CustomEmojiPicker = ({
+  emoji,
+  setEmoji,
+  color,
+  width,
+  name,
+  type,
+}: EmojiPickerProps) => {
   const { user, setUser } = useContext(UserContext);
   const { emojisStyle, settings } = user;
   const [showEmojiPicker, setShowEmojiPicker] = useState<boolean>(false);
@@ -56,9 +62,9 @@ export const CustomEmojiPicker = ({ emoji, setEmoji, color, width, name }: Emoji
       return [];
     }
 
-    frequentlyUsedEmojis.sort((a: EmojiItem, b: EmojiItem) => b.count - a.count);
+    frequentlyUsedEmojis.sort((a, b) => b.count - a.count);
     const topEmojis: EmojiItem[] = frequentlyUsedEmojis.slice(0, 6);
-    const topUnified: string[] = topEmojis.map((item: EmojiItem) => item.unified);
+    const topUnified: string[] = topEmojis.map((item) => item.unified);
 
     return topUnified;
   };
@@ -93,51 +99,93 @@ export const CustomEmojiPicker = ({ emoji, setEmoji, color, width, name }: Emoji
   };
 
   const [isAILoading, setIsAILoading] = useState<boolean>(false);
+  const [session, setSession] = useState<AITextSession | null>(null);
+
+  // Create Session on component mount for faster first load
+  useEffect(() => {
+    const createSession = async () => {
+      if (window.ai) {
+        const session = await window.ai.createTextSession();
+        setSession(session);
+      }
+    };
+    createSession();
+  }, []);
+
   // ‼ This feature works only in Chrome (Dev / Canary) version 127 or higher with some flags enabled
-  async function useAI() {
+  // https://afficone.com/blog/window-ai-new-chrome-feature-api/
+  async function useAI(): Promise<void> {
     const start = new Date().getTime();
     setIsAILoading(true);
-    //@ts-expect-error window.ai is an experimental chrome feature
-    const session = window.ai.createTextSession();
-
-    const sessionInstance = await session;
-
-    const response = await sessionInstance.prompt(
-      `Choose an emoji that best represents the task: ${name}. (For example: 🖥️ for coding, 📝 for writing, 🎨 for design) Type 'none' if not applicable.`
-    );
-
-    console.log("Full AI response:", response);
-    // Validate if userInput is a valid emoji
-    const emojiRegex =
-      /[\u{1F300}-\u{1F6FF}\u{1F900}-\u{1F9FF}\u{2600}-\u{26FF}\u{2700}-\u{27BF}]/u;
-    if (emojiRegex.test(response)) {
-      setIsAILoading(false);
-
-      const unified = emojiToUnified(response.trim().toLowerCase()).toLowerCase();
-      console.log("Emoji unified:", unified);
-      setCurrentEmoji(unified);
-    } else {
-      setCurrentEmoji(null);
-      showToast(
-        `Invalid emoji (response: ${response}). Please try again with different task name.`,
-        { type: "error" }
+    try {
+      const sessionInstance: AITextSession = session || (await window.ai.createTextSession());
+      const response = await sessionInstance.prompt(
+        `Choose a single emoji that best represents the ${
+          type || "task"
+        }: ${name}. (For example: 🖥️ for coding, 📝 for writing, 🎨 for design, 📱 for mobile development) Please use the actual emoji, do not use shortcodes. Type 'none' if not applicable.`
       );
-      console.error("Invalid emoji.");
+      console.log("Full AI response:", response);
+
+      // Map to replace emoji shortcodes with actual emojis due to AI occasionally returning shortcodes.
+      const emojiMap: {
+        [key: string]: string;
+      } = {
+        ":joy:": "😄",
+        ":smile:": "😄",
+        ":heart:": "❤️",
+        "<3": "❤️",
+        ":sunglasses:": "😎",
+        ":thinking_head:": "🤔",
+        ":technology:": "💻",
+        ":tech:": "💻",
+        ":ml:": "🧠",
+        ":wave:": "👋",
+        ":O": "😮",
+        "☮": "✌️",
+        "🎙": "🎙️",
+        "🗣": "🗣️",
+      };
+      let emojiResponse = response.trim();
+      if (emojiMap[emojiResponse]) {
+        emojiResponse = emojiMap[emojiResponse];
+      }
+
+      // Validate if userInput is a valid emoji
+      const emojiRegex = /[\p{Emoji}]/u;
+
+      const unified = emojiToUnified(emojiResponse.replaceAll(":", ""));
+      if (emojiRegex.test(emojiResponse)) {
+        setIsAILoading(false);
+
+        console.log("Emoji unified:", unified);
+        setCurrentEmoji(unified);
+      } else {
+        setCurrentEmoji(null);
+        showToast(`Invalid emoji. Please try again with different ${type} name.`, {
+          type: "error",
+        });
+        console.error("Invalid emoji.", unified);
+      }
+
+      setIsAILoading(false);
+      const end = new Date().getTime();
+      console.log(
+        `%cTook ${end - start}ms to generate.`,
+        `color: ${end - start > 600 ? "orange" : "lime"}`
+      );
+    } catch (error) {
+      setIsAILoading(false);
+      console.error(error);
+      showToast(`${error}`, { type: "error" });
     }
-    const end = new Date().getTime();
-    setIsAILoading(false);
-    console.log(`%cTook ${end - start}ms to generate.`, "color: lime");
   }
 
-  const emojiToUnified = (emoji: string): string => {
-    const codePoints = [...emoji].map((char) => {
-      if (char) {
-        return char.codePointAt(0)?.toString(16).toUpperCase() ?? "";
-      }
-      return "";
-    });
-    return codePoints.join("-");
-  };
+  const emojiToUnified = (emoji: string): string =>
+    [...emoji]
+      .map((char) => (char ? char.codePointAt(0)?.toString(16).toUpperCase() ?? "" : ""))
+      .join("-")
+      .toLowerCase();
+
   // end of AI experimental feature code
 
   // Function to render the content of the Avatar based on whether an emoji is selected or not
@@ -179,54 +227,37 @@ export const CustomEmojiPicker = ({ emoji, setEmoji, color, width, name }: Emoji
           overlap="circular"
           anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
           badgeContent={
-            <Avatar
-              sx={{
-                background: "#9c9c9c81",
-                backdropFilter: "blur(6px)",
-                cursor: "pointer",
-              }}
-              onClick={toggleEmojiPicker}
-            >
+            <EditBadge onClick={toggleEmojiPicker}>
               <Edit />
-            </Avatar>
+            </EditBadge>
           }
         >
-          <Avatar
-            onClick={toggleEmojiPicker}
-            sx={{
-              width: "96px",
-              height: "96px",
-              background: color || emotionTheme.primary,
-              transition: ".3s all",
-              cursor: "pointer",
-            }}
-          >
+          <EmojiAvatar clr={color} onClick={toggleEmojiPicker}>
             {renderAvatarContent()}
-          </Avatar>
+          </EmojiAvatar>
         </Badge>
       </EmojiContainer>
       {"ai" in window && name && (
-        <Button
-          onClick={useAI}
-          disabled={name?.length < 5}
-          style={{ width: "250px", height: "50px", marginBottom: "4px" }}
-        >
-          <AutoAwesome /> &nbsp; Find emoji with AI
-        </Button>
+        <div style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
+          <Button
+            onClick={useAI}
+            disabled={
+              name?.length < 3 ||
+              (type === "task"
+                ? name.length > TASK_NAME_MAX_LENGTH
+                : name.length > CATEGORY_NAME_MAX_LENGTH)
+            }
+            style={{ marginBottom: "4px" }}
+          >
+            <AutoAwesome /> &nbsp; Find emoji with AI
+          </Button>
+        </div>
       )}
       {showEmojiPicker && (
         <>
           {!isOnline && emojisStyle !== EmojiStyle.NATIVE && (
-            <div
-              style={{
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                maxWidth: width || "350px",
-                margin: "6px auto -6px auto",
-              }}
-            >
-              <span style={{ margin: 0, fontSize: "14px", textAlign: "center" }}>
+            <OfflineContainer width={width}>
+              <span>
                 Emojis may not load correctly when offline. Try switching to the native emoji style.
                 <br />
                 <Button
@@ -236,13 +267,13 @@ export const CustomEmojiPicker = ({ emoji, setEmoji, color, width, name }: Emoji
                       ...prevUser,
                       emojisStyle: EmojiStyle.NATIVE,
                     }));
+                    setShowEmojiPicker(false);
                   }}
-                  sx={{ borderRadius: "12px", p: "10px 20px", mt: "12px" }}
                 >
                   Change Style
                 </Button>
               </span>
-            </div>
+            </OfflineContainer>
           )}
 
           <EmojiPickerContainer>
@@ -285,12 +316,7 @@ export const CustomEmojiPicker = ({ emoji, setEmoji, color, width, name }: Emoji
                 marginBottom: "14px",
               }}
             >
-              <Button
-                variant="outlined"
-                color="error"
-                onClick={handleRemoveEmoji}
-                sx={{ p: "10px 20px", borderRadius: "12px" }}
-              >
+              <Button variant="outlined" color="error" onClick={handleRemoveEmoji}>
                 <RemoveCircleOutline /> &nbsp; Remove Emoji
               </Button>
             </div>
@@ -314,6 +340,33 @@ const EmojiPickerContainer = styled.div`
   align-items: center;
   margin: 24px;
   animation: ${fadeIn} 0.4s ease-in;
+`;
+
+const EmojiAvatar = styled(Avatar)<{ clr: string | undefined }>`
+  background: ${({ clr, theme }) => clr || theme.primary};
+  transition: 0.3s all;
+  cursor: pointer;
+  width: 96px;
+  height: 96px;
+`;
+
+const EditBadge = styled(Avatar)`
+  background: #9c9c9c81;
+  backdrop-filter: blur(6px);
+  cursor: pointer;
+`;
+
+const OfflineContainer = styled.div<{ width?: CSSProperties["width"] | undefined }>`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  max-width: ${({ width }) => width || "350px"};
+  margin: 6px auto -6px auto;
+  & span {
+    margin: 0;
+    font-size: 14px;
+    text-align: center;
+  }
 `;
 
 const PickerLoader = styled.div<{

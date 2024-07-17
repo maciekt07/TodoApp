@@ -33,9 +33,7 @@ export const RenderTaskDescription = memo(
     }
 
     const { description, color, id } = task;
-
     const hasLinks = description.match(URL_REGEX);
-
     const isExpanded = expandedTasks.has(id);
     const highlightedDescription =
       isExpanded || hasLinks ? description : description.slice(0, DESCRIPTION_SHORT_LENGTH);

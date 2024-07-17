@@ -1,5 +1,10 @@
 import styled from "@emotion/styled";
-import { ExpandMoreRounded, RadioButtonChecked } from "@mui/icons-material";
+import {
+  AddRounded,
+  EditRounded,
+  ExpandMoreRounded,
+  RadioButtonChecked,
+} from "@mui/icons-material";
 import {
   Box,
   Button,
@@ -11,7 +16,7 @@ import {
 } from "@mui/material";
 import { Emoji } from "emoji-picker-react";
 import { CSSProperties, useContext, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { CategoryBadge } from ".";
 import { MAX_CATEGORIES_IN_TASK } from "../constants";
 import { UserContext } from "../contexts/UserContext";
@@ -21,7 +26,7 @@ import { ColorPalette } from "../theme/themeConfig";
 
 interface CategorySelectProps {
   selectedCategories: Category[];
-  onCategoryChange?: (categories: Category[]) => void;
+  onCategoryChange: (categories: Category[]) => void;
   width?: CSSProperties["width"];
   fontColor?: CSSProperties["color"];
 }
@@ -68,6 +73,7 @@ export const CategorySelect: React.FC<CategorySelectProps> = ({
       >
         Category
       </FormLabel>
+
       <StyledSelect
         multiple
         width={width}
@@ -127,7 +133,7 @@ export const CategorySelect: React.FC<CategorySelectProps> = ({
             </b>
             {selectedCats.length > 0 && (
               <SelectedNames>
-                Selected{" "}
+                Selected:{" "}
                 {selectedCats.length > 0 &&
                   new Intl.ListFormat("en", {
                     style: "long",
@@ -137,7 +143,15 @@ export const CategorySelect: React.FC<CategorySelectProps> = ({
             )}
           </div>
         </HeaderMenuItem>
-
+        {categories && categories.length > 0 && (
+          <div style={{ margin: "8px", marginBottom: "16px" }}>
+            <Link to="/categories">
+              <Button fullWidth variant="outlined">
+                <EditRounded /> &nbsp; Modify Categories
+              </Button>
+            </Link>
+          </div>
+        )}
         {categories && categories.length > 0 ? (
           categories.map((category) => (
             <CategoriesMenu
@@ -166,7 +180,7 @@ export const CategorySelect: React.FC<CategorySelectProps> = ({
                 n("/categories");
               }}
             >
-              Add Category
+              <AddRounded /> &nbsp; Add Category
             </Button>
           </NoCategories>
         )}
@@ -230,7 +244,8 @@ const HeaderMenuItem = styled(MenuItem)`
   top: 0;
   backdrop-filter: blur(6px);
   z-index: 99;
-  pointer-events: none;
+  pointer-events: none !important;
+  cursor: default !important;
   background: ${({ theme }) => (theme.darkmode ? "#2f2f2fc3" : "#ffffffc3")};
 `;
 

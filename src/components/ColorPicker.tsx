@@ -246,6 +246,7 @@ export const ColorPicker: React.FC<ColorPickerProps> = ({
                       paper: {
                         sx: {
                           background: "transparent",
+                          backdropFilter: "none",
                           boxShadow: "none",
                         },
                       },
@@ -358,13 +359,14 @@ const ToastColorPreview = styled(AccordionPreview)`
 `;
 
 const ColorPreview = styled(Grid)<{ clr: string }>`
-  margin-top: 16px;
   display: flex;
   justify-content: center;
   align-items: center;
   background: ${({ clr }) => clr};
   color: ${({ clr }) => getFontColor(clr)};
-  padding: 8px;
+  padding: 8px 0;
+  margin-left: 10px;
+  margin-right: 10px;
   border-radius: 100px;
   transition: 0.3s all;
   font-weight: 600;
@@ -377,10 +379,11 @@ const DeleteColorBtn = styled.button`
   background-color: #141431dd;
   color: #ff4e4e;
   font-weight: 500;
-  padding: 4px 8px;
+  padding: 6px 8px;
   cursor: pointer;
   border-radius: 10px;
   backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
   @media (max-width: 768px) {
     padding: 6px 10px;
     font-size: 15px;

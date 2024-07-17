@@ -1,9 +1,9 @@
 import { Category, Task } from "../types/user";
 import { useState, useEffect, useContext } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { AddTaskButton, Container, StyledInput } from "../styles";
-import { AddTaskRounded, CancelRounded, Edit } from "@mui/icons-material";
-import { Button, IconButton, InputAdornment, Tooltip } from "@mui/material";
+import { AddTaskRounded, CancelRounded } from "@mui/icons-material";
+import { IconButton, InputAdornment, Tooltip } from "@mui/material";
 import { DESCRIPTION_MAX_LENGTH, TASK_NAME_MAX_LENGTH } from "../constants";
 import { CategorySelect, ColorPicker, TopBar, CustomEmojiPicker } from "../components";
 import { UserContext } from "../contexts/UserContext";
@@ -131,6 +131,7 @@ const AddTask = () => {
           setEmoji={setEmoji}
           color={color}
           name={name}
+          type="task"
         />
         <StyledInput
           label="Task Name"
@@ -178,7 +179,6 @@ const AddTask = () => {
           type="datetime-local"
           value={deadline}
           onChange={handleDeadlineChange}
-          defaultValue=""
           focused
           sx={{
             colorScheme: getFontColor(theme.secondary) === ColorPalette.fontDark ? "light" : "dark",
@@ -197,7 +197,7 @@ const AddTask = () => {
           }}
         />
         {user.settings[0].enableCategories !== undefined && user.settings[0].enableCategories && (
-          <>
+          <div style={{ marginBottom: "14px" }}>
             <br />
             <CategorySelect
               selectedCategories={selectedCategories}
@@ -205,18 +205,7 @@ const AddTask = () => {
               width="400px"
               fontColor={getFontColor(theme.secondary)}
             />
-            <Link to="/categories">
-              <Button
-                sx={{
-                  margin: "8px 0 24px 0 ",
-                  p: "12px 20px",
-                  borderRadius: "14px",
-                }}
-              >
-                <Edit /> &nbsp; Modify Categories
-              </Button>
-            </Link>
-          </>
+          </div>
         )}
         <ColorPicker
           color={color}

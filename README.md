@@ -28,16 +28,16 @@
 - **🌐 Native Intl Integration**: Adapts to your language, timezone, and date preferences using the native `Intl` API.
 - **🌍 Browser Translation Support**: Seamlessly translate the entire page into different languages using your browser's translation feature, ensuring accessibility for users worldwide.
 - **🗂️ Customizable Categories**: Users can create and personalize task categories to suit their preferences.
-- **🎨 Color Themes**: Users can choose several app color themes. <br/> <img src="screenshots/ColorThemes.png" width="180px" />
-- **🗃️ Multi-Task Selection**: Option to select multiple tasks and perform actions on all of them at once. <br/> <img src="screenshots/Select.png" width="240px" />
+- **🎨 Color Themes**: Users can choose several app color themes. <br/> <img src="screenshots/ColorThemes.png" width="200px" />
+- **🗃️ Multi-Task Selection**: Option to select multiple tasks and perform actions on all of them at once. <br/> <img src="screenshots/Select.png" width="260px" />
 - **🔎 Search Tasks**: Search functionality allows you to filter tasks by name or description, making it easy to find what you need.
 - **🗣️ Task Reading Aloud**: Option to have tasks read aloud using the native `SpeechSynthesis` API, with a selection of voices to choose from. <br/>
-  <img src="screenshots/ReadAloud.png" width="240px" />
-- **🤖 AI emoji choosing**: This uses `window.ai` which is an experimental feature that works only in dev version of Chrome with some flags enabled. [More info](https://ai-sdk-chrome-ai.vercel.app/) <br/>
-  <img style="border-radius:12px" src="screenshots/emoji-ai.gif" alt="emoji-ai" width="240px" />
+  <img src="screenshots/ReadAloud.png" width="260px" />
+- **🤖 AI emoji choosing**: This uses `window.ai` which is an experimental feature that works only in dev version of Chrome with some flags enabled. [More info](https://afficone.com/blog/window-ai-new-chrome-feature-api/) <br/>
+  <img style="border-radius:12px" src="screenshots/emoji-ai.gif" alt="emoji-ai" width="260px" />
 - **📥 Import/Export Tasks**: Users can import and export tasks to/from JSON files. This feature allows users to back up their tasks or transfer them to other devices easily. [Example Import File](https://github.com/maciekt07/TodoApp/blob/main/example-import.json)
 - **📴 Works offline**: This app is a Progressive Web App (PWA), which means it can be installed on your device, used even when you're offline and behave like a normal application with shortcuts and badges.<br/>
-  <img src="screenshots/pwaTaskBar.png" alt="taskbar" width="240px" />
+  <img src="screenshots/pwaTaskBar.png" alt="taskbar" width="260px" />
 
 ## 📷 Screenshots
 

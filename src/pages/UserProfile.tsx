@@ -139,7 +139,7 @@ const UserProfile = () => {
             <UserAvatar
               onClick={handleOpenImageDialog}
               src={profilePicture || undefined}
-              hasImage={profilePicture !== null}
+              hasimage={profilePicture !== null}
               size="96px"
             >
               {name ? name[0].toUpperCase() : undefined}

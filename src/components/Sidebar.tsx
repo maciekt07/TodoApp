@@ -182,7 +182,7 @@ export const ProfileSidebar = () => {
           <UserAvatar
             src={(profilePicture as string) || undefined}
             alt={name || "User"}
-            hasImage={profilePicture !== null}
+            hasimage={profilePicture !== null}
             size="52px"
             onError={() => {
               // This prevents the error handling from being called unnecessarily when offline
@@ -243,12 +243,6 @@ export const ProfileSidebar = () => {
           </StyledMenuItem>
         </MenuLink>
 
-        <MenuLink to="/purge">
-          <StyledMenuItem onClick={handleClose}>
-            <DeleteForeverRounded /> &nbsp; Purge Tasks
-          </StyledMenuItem>
-        </MenuLink>
-
         {settings[0].enableCategories !== undefined && settings[0].enableCategories && (
           <MenuLink to="/categories">
             <StyledMenuItem onClick={handleClose}>
@@ -256,6 +250,12 @@ export const ProfileSidebar = () => {
             </StyledMenuItem>
           </MenuLink>
         )}
+
+        <MenuLink to="/purge">
+          <StyledMenuItem onClick={handleClose}>
+            <DeleteForeverRounded /> &nbsp; Purge Tasks
+          </StyledMenuItem>
+        </MenuLink>
 
         <MenuLink to="/transfer">
           <StyledMenuItem onClick={handleClose}>
@@ -365,7 +365,7 @@ export const ProfileSidebar = () => {
             <ProfileMenuItem translate={name ? "no" : "yes"} onClick={handleClose}>
               <UserAvatar
                 src={(profilePicture as string) || undefined}
-                hasImage={profilePicture !== null}
+                hasimage={profilePicture !== null}
                 size="44px"
               >
                 {name ? name[0].toUpperCase() : undefined}
@@ -373,7 +373,7 @@ export const ProfileSidebar = () => {
               <h4 style={{ margin: 0, fontWeight: 600 }}> {name || "User"}</h4>{" "}
               {(name === null || name === "") &&
                 profilePicture === null &&
-                user.theme! == defaultUser.theme && <PulseMenuLabel />}
+                user.theme === defaultUser.theme && <PulseMenuLabel />}
             </ProfileMenuItem>
           </MenuLink>
 

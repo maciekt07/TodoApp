@@ -276,7 +276,7 @@ export const SettingsDialog: React.FC<SettingsProps> = ({ open, onClose }) => {
             >
               {darkModeOptions.map((option) => (
                 <StyledMenuItem key={option.mode} value={option.mode}>
-                  {option.icon} {option.label}
+                  {option.icon}&nbsp;{option.label}
                   {option.mode === "system" && ` (${systemTheme})`}
                   {option.mode === "auto" &&
                     ` (${

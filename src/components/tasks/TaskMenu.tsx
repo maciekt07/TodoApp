@@ -408,11 +408,14 @@ export const TaskMenu = () => {
           snapPoints={({ minHeight, maxHeight }) => [minHeight, maxHeight]}
           expandOnContentDrag
           header={
-            <SheetHeader translate="no">
-              <Emoji emojiStyle={emojisStyle} size={32} unified={selectedTask.emoji || ""} />{" "}
-              {emojisStyle === EmojiStyle.NATIVE && "\u00A0 "}
-              {selectedTask.name}
-            </SheetHeader>
+            <div style={{ cursor: "ns-resize" }}>
+              <SheetHeader translate="no">
+                <Emoji emojiStyle={emojisStyle} size={32} unified={selectedTask.emoji || ""} />{" "}
+                {emojisStyle === EmojiStyle.NATIVE && "\u00A0 "}
+                {selectedTask.name}
+              </SheetHeader>
+              <Divider sx={{ mt: "20px", mb: "-20px" }} />
+            </div>
           }
         >
           <SheetContent>{menuItems}</SheetContent>

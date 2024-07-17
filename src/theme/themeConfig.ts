@@ -8,14 +8,7 @@ export const ColorPalette = {
   orange: "#ff9318",
 } as const;
 
-type ThemeConfig = {
-  [key: string]: {
-    primaryColor: string;
-    secondaryColor?: string;
-  };
-};
-
-export const themeConfig: ThemeConfig = {
+export const themeConfig: { [key: string]: { primaryColor: string; secondaryColor?: string } } = {
   Purple: {
     // Default dark theme
     primaryColor: ColorPalette.purple,

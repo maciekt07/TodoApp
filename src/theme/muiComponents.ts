@@ -11,16 +11,16 @@ export const muiComponentsProps: Theme["components"] = {
     },
   },
   MuiButton: {
-    defaultProps: {
-      sx: {
-        p: "12px 24px",
+    styleOverrides: {
+      root: {
+        padding: "12px 24px",
         borderRadius: "14px",
       },
     },
   },
   MuiSelect: {
-    defaultProps: {
-      style: {
+    styleOverrides: {
+      root: {
         borderRadius: "18px",
       },
     },
@@ -36,8 +36,8 @@ export const muiComponentsProps: Theme["components"] = {
     },
   },
   MuiAvatar: {
-    defaultProps: {
-      style: {
+    styleOverrides: {
+      root: {
         fontWeight: 500,
         color: "#fff",
       },

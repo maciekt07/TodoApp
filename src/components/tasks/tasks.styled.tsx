@@ -91,7 +91,7 @@ export const TaskDate = styled.p`
   backdrop-filter: none !important;
 `;
 
-export const TaskDescription = styled.p<{ done: boolean }>`
+export const TaskDescription = styled.div<{ done: boolean }>`
   margin: 0;
   font-size: 18px;
   text-decoration: ${({ done }) => (done ? "line-through" : "none")};

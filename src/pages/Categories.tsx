@@ -59,7 +59,7 @@ const Categories = () => {
       n("/");
     }
     if (name.length > CATEGORY_NAME_MAX_LENGTH) {
-      setNameError(`Name is too long maximum ${CATEGORY_NAME_MAX_LENGTH} characters`);
+      setNameError(`Name is too long (maximum ${CATEGORY_NAME_MAX_LENGTH} characters)`);
     }
   }, [n, name.length, user.settings]);
 
@@ -293,6 +293,8 @@ const Categories = () => {
             emoji={typeof emoji === "string" ? emoji : undefined}
             setEmoji={setEmoji}
             color={color}
+            name={name}
+            type="category"
           />
           <CategoryInput
             focused
@@ -384,6 +386,8 @@ const Categories = () => {
               setEmoji={setEditEmoji}
               width={300}
               color={editColor}
+              name={editName}
+              type="category"
             />
             <div
               style={{
