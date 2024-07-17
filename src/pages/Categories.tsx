@@ -48,7 +48,7 @@ const Categories = () => {
   const [openEditDialog, setOpenEditDialog] = useState<boolean>(false);
   const [editName, setEditName] = useState<string>("");
   const [editNameError, setEditNameError] = useState<string>("");
-  const [editEmoji, setEditEmoji] = useState<string | undefined>();
+  const [editEmoji, setEditEmoji] = useState<string | null>(null);
   const [editColor, setEditColor] = useState<string>(ColorPalette.purple);
 
   const n = useNavigate();
@@ -155,7 +155,7 @@ const Categories = () => {
     setOpenEditDialog(false);
     setEditColor(theme.primary);
     setEditName("");
-    setEditEmoji(undefined);
+    setEditEmoji(null);
   };
 
   const handleEditCategory = () => {
