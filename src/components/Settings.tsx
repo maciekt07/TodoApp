@@ -258,7 +258,7 @@ export const SettingsDialog: React.FC<SettingsProps> = ({ open, onClose }) => {
     }
   };
 
-  const filteredVoices = showLocalVoices
+  const filteredVoices: SpeechSynthesisVoice[] = showLocalVoices
     ? availableVoices.filter((voice) => voice.lang.startsWith(navigator.language))
     : availableVoices;
 
