@@ -231,11 +231,10 @@ export const TaskMenu = () => {
     }).format(new Date(selectedTask?.date || ""));
 
     const taskDeadline = selectedTask?.deadline
-      ? ". Task Deadline: " +
-        calculateDateDifference(
-          new Date(selectedTask.deadline) || "",
-          voice ? voice.lang : navigator.language, // Read task deadline in voice language
-        )
+      ? `. Task Deadline: ${calculateDateDifference(
+          new Date(selectedTask.deadline),
+          voice ? voice.lang : navigator.language,
+        )}`
       : "";
 
     const textToRead = `${taskName}. ${taskDescription}. Date: ${taskDate}${taskDeadline}`;

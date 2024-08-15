@@ -77,7 +77,7 @@ export const RenderTaskDescription = memo(
             mapping && mapping.domainName ? mapping.domainName : url.hostname.replace("www.", "");
         } catch (error) {
           // If URL construction fails
-          console.error("Invalid URL:", part);
+          console.error(`Invalid URL: ${part}`, error);
         }
 
         // Check if part matches any image file extensions

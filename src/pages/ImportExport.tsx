@@ -173,7 +173,7 @@ const ImportExport = () => {
           const updatedCategories = user.categories.slice(); // Create a copy of the existing categories
 
           importedTasks.forEach((task) => {
-            task.category !== undefined &&
+            if (task.category) {
               task.category.forEach((importedCat) => {
                 const existingCategory = updatedCategories.find((cat) => cat.id === importedCat.id);
 
@@ -184,6 +184,9 @@ const ImportExport = () => {
                   Object.assign(existingCategory, importedCat);
                 }
               });
+            } else {
+              console.log(`Task ${task.name} has no category`);
+            }
           });
 
           setUser((prevUser) => ({
@@ -308,7 +311,9 @@ const ImportExport = () => {
 
   const handleSelectChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files && e.target.files[0];
-    file && handleImport(file);
+    if (file) {
+      handleImport(file);
+    }
   };
 
   return (

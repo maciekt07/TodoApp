@@ -23,7 +23,11 @@ export const TaskProvider = ({ children }: { children: ReactNode }) => {
   const toggleShowMore = (taskId: UUID) => {
     setExpandedTasks((prevExpandedTasks) => {
       const newSet = new Set(prevExpandedTasks);
-      newSet.has(taskId) ? newSet.delete(taskId) : newSet.add(taskId);
+      if (newSet.has(taskId)) {
+        newSet.delete(taskId);
+      } else {
+        newSet.add(taskId);
+      }
       return newSet;
     });
   };

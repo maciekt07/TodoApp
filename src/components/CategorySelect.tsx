@@ -59,7 +59,7 @@ export const CategorySelect: React.FC<CategorySelectProps> = ({
     }
     const selectedCategories = categories.filter((cat) => selectedCategoryIds.includes(cat.id));
     setSelectedCats(selectedCategories);
-    onCategoryChange && onCategoryChange(selectedCategories);
+    onCategoryChange?.(selectedCategories);
   };
 
   return (

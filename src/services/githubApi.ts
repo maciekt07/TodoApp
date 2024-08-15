@@ -38,8 +38,9 @@ export const fetchGitHubInfo = async (): Promise<GitHubInfoResponse> => {
     }
   } catch (error) {
     console.error(error);
-    navigator.onLine &&
+    if (navigator.onLine) {
       showToast("Failed to fetch Github API.", { type: "error", disableVibrate: true });
+    }
   }
   // Return a default value in case of error
   return { repoData: {} as GitHubRepoResponse, branchData: {} as GitHubBranchResponse };
