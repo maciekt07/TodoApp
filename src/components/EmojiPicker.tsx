@@ -55,7 +55,7 @@ export const CustomEmojiPicker = ({
 
   const getFrequentlyUsedEmojis = (): string[] => {
     const frequentlyUsedEmojis: EmojiItem[] | null = JSON.parse(
-      localStorage.getItem("epr_suggested") || "null"
+      localStorage.getItem("epr_suggested") || "null",
     );
 
     if (!frequentlyUsedEmojis) {
@@ -122,7 +122,7 @@ export const CustomEmojiPicker = ({
       const response = await sessionInstance.prompt(
         `Choose a single emoji that best represents the ${
           type || "task"
-        }: ${name}. (For example: 🖥️ for coding, 📝 for writing, 🎨 for design, 📱 for mobile development) Please use the actual emoji, do not use shortcodes. Type 'none' if not applicable.`
+        }: ${name}. (For example: 🖥️ for coding, 📝 for writing, 🎨 for design, 📱 for mobile development) Please use the actual emoji, do not use shortcodes. Type 'none' if not applicable.`,
       );
       console.log("Full AI response:", response);
 
@@ -171,7 +171,7 @@ export const CustomEmojiPicker = ({
       const end = new Date().getTime();
       console.log(
         `%cTook ${end - start}ms to generate.`,
-        `color: ${end - start > 600 ? "orange" : "lime"}`
+        `color: ${end - start > 600 ? "orange" : "lime"}`,
       );
     } catch (error) {
       setIsAILoading(false);
@@ -182,7 +182,7 @@ export const CustomEmojiPicker = ({
 
   const emojiToUnified = (emoji: string): string =>
     [...emoji]
-      .map((char) => (char ? char.codePointAt(0)?.toString(16).toUpperCase() ?? "" : ""))
+      .map((char) => (char ? (char.codePointAt(0)?.toString(16).toUpperCase() ?? "") : ""))
       .join("-")
       .toLowerCase();
 
@@ -199,8 +199,8 @@ export const CustomEmojiPicker = ({
         emojisStyle === EmojiStyle.NATIVE && systemInfo.os === "iOS"
           ? 64
           : emojisStyle === EmojiStyle.NATIVE
-          ? 48
-          : 64;
+            ? 48
+            : 64;
 
       return (
         <EmojiElement key={currentEmoji}>

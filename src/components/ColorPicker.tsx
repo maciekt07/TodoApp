@@ -71,7 +71,7 @@ export const ColorPicker: React.FC<ColorPickerProps> = ({
       setSelectedColor(color);
       onColorChange(color);
     },
-    [onColorChange]
+    [onColorChange],
   );
 
   // Check if the current color is a valid hex color and update it if not
@@ -85,7 +85,7 @@ export const ColorPicker: React.FC<ColorPickerProps> = ({
 
   const handleAccordionChange = (
     _event: React.SyntheticEvent<Element, Event>,
-    isExpanded: boolean
+    isExpanded: boolean,
   ) => setAccordionExpanded(isExpanded);
 
   const togglePopover = (index: number) => {
@@ -141,7 +141,7 @@ export const ColorPicker: React.FC<ColorPickerProps> = ({
         </b>{" "}
         to your color list.
       </div>,
-      ToastColorOptions(addColorVal)
+      ToastColorOptions(addColorVal),
     );
     handleAddDialogClose();
   };
@@ -157,7 +157,7 @@ export const ColorPicker: React.FC<ColorPickerProps> = ({
         </b>{" "}
         from your color list.
       </div>,
-      ToastColorOptions(clr)
+      ToastColorOptions(clr),
     );
 
     setUser({

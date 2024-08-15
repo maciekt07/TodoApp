@@ -24,7 +24,7 @@ import { useNavigate } from "react-router-dom";
 import { TaskProvider } from "../contexts/TaskProvider";
 
 const TasksList = lazy(() =>
-  import("../components/tasks/TasksList").then((module) => ({ default: module.TasksList }))
+  import("../components/tasks/TasksList").then((module) => ({ default: module.TasksList })),
 );
 
 const Home = () => {
@@ -39,7 +39,7 @@ const Home = () => {
 
   const completedTaskPercentage = useMemo<number>(
     () => (completedTasksCount / tasks.length) * 100,
-    [completedTasksCount, tasks.length]
+    [completedTasksCount, tasks.length],
   );
 
   const isOnline = useOnlineStatus();

@@ -26,7 +26,7 @@ export const showToast = (
     disableVibrate,
     dismissButton,
     ...toastOptions
-  }: ToastProps = {} as ToastProps
+  }: ToastProps = {} as ToastProps,
 ): void => {
   // Selects the appropriate toast function based on the specified type or defaults to success.
   const toastFunction = {
@@ -61,7 +61,7 @@ export const showToast = (
     ),
     {
       ...toastOptions, // Passes any additional toast options.
-    }
+    },
   );
 
   const DismissButton = styled(Button)`

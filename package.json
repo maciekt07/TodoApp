@@ -9,6 +9,7 @@
     "devhost": "vite --host",
     "build": "tsc && vite build",
     "lint": "eslint src --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
+    "prettier": "prettier --write \"**/*.{ts,tsx,md,json,html}\"",
     "preview": "vite preview"
   },
   "dependencies": {
@@ -36,6 +37,7 @@
     "eslint": "^8.57.0",
     "eslint-plugin-react-hooks": "^4.6.0",
     "eslint-plugin-react-refresh": "^0.4.5",
+    "prettier": "^3.3.3",
     "typescript": "^5.3.3",
     "vite": "^5.1.4",
     "vite-plugin-pwa": "^0.19.0"

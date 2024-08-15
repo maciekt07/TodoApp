@@ -13,7 +13,7 @@ type StorageType = "localStorage" | "sessionStorage";
 export function useStorageState<T>(
   defaultValue: T,
   key: string,
-  storageType: StorageType = "localStorage"
+  storageType: StorageType = "localStorage",
 ): [T, React.Dispatch<React.SetStateAction<T>>] {
   const storage = window[storageType];
 

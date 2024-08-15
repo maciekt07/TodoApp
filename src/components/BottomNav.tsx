@@ -160,7 +160,9 @@ const StyledBottomNavigation = styled(BottomNavigation)<{ glow: boolean }>`
   backdrop-filter: blur(20px);
   margin: 0px 20px 0px -20px;
   padding: 18px 10px 32px 10px;
-  transition: 0.3s background, color;
+  transition:
+    0.3s background,
+    color;
 `;
 
 const NavigationButton = styled(BottomNavigationAction)`

@@ -65,7 +65,7 @@ const Categories = () => {
 
   useEffect(() => {
     setEditColor(
-      user.categories.find((cat) => cat.id === selectedCategoryId)?.color || ColorPalette.purple
+      user.categories.find((cat) => cat.id === selectedCategoryId)?.color || ColorPalette.purple,
     );
     setEditName(user.categories.find((cat) => cat.id === selectedCategoryId)?.name || "");
     setEditNameError("");
@@ -94,7 +94,7 @@ const Categories = () => {
       showToast(
         <div>
           Deleted category - <b translate="no">{categoryName}.</b>
-        </div>
+        </div>,
       );
     }
   };
@@ -134,7 +134,7 @@ const Categories = () => {
       showToast(
         <div>
           Added category - <b translate="no">{newCategory.name}</b>
-        </div>
+        </div>,
       );
 
       setUser((prevUser) => ({
@@ -200,7 +200,7 @@ const Categories = () => {
       showToast(
         <div>
           Updated category - <b translate="no">{editName}</b>
-        </div>
+        </div>,
       );
 
       setOpenEditDialog(false);
@@ -219,12 +219,12 @@ const Categories = () => {
           <CategoryElementsContainer>
             {user.categories.map((category) => {
               const categoryTasks = user.tasks.filter((task) =>
-                task.category?.some((cat) => cat.id === category.id)
+                task.category?.some((cat) => cat.id === category.id),
               );
 
               const completedTasksCount = categoryTasks.reduce(
                 (count, task) => (task.done ? count + 1 : count),
-                0
+                0,
               );
               const totalTasksCount = categoryTasks.length;
               const completionPercentage =
@@ -308,8 +308,8 @@ const Categories = () => {
               name == ""
                 ? undefined
                 : !nameError
-                ? `${name.length}/${CATEGORY_NAME_MAX_LENGTH}`
-                : nameError
+                  ? `${name.length}/${CATEGORY_NAME_MAX_LENGTH}`
+                  : nameError
             }
           />
           {/* <Typography>Color</Typography> */}
@@ -407,8 +407,8 @@ const Categories = () => {
                   editNameError
                     ? editNameError
                     : editName.length === 0
-                    ? "Category name is required"
-                    : `${editName.length}/${CATEGORY_NAME_MAX_LENGTH}`
+                      ? "Category name is required"
+                      : `${editName.length}/${CATEGORY_NAME_MAX_LENGTH}`
                 }
               />
               <ColorPicker

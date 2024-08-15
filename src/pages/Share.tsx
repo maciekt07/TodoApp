@@ -105,7 +105,7 @@ const SharePage = () => {
       if (taskData.category) {
         taskData.category.forEach((taskCategory) => {
           const existingCategoryIndex = updatedCategories.findIndex(
-            (cat) => cat.id === taskCategory.id
+            (cat) => cat.id === taskCategory.id,
           );
 
           if (existingCategoryIndex !== -1) {
@@ -138,7 +138,7 @@ const SharePage = () => {
         </div>,
         {
           icon: <AddTaskRounded />,
-        }
+        },
       );
     }
   };

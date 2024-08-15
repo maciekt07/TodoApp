@@ -6,7 +6,7 @@ import { muiComponentsProps } from "./muiComponents";
 export const createCustomTheme = (
   primaryColor: string,
   backgroundColor = "#232e58",
-  mode: "light" | "dark" = "dark"
+  mode: "light" | "dark" = "dark",
 ): Theme => {
   return createTheme({
     components: {
@@ -37,5 +37,5 @@ export const Themes: { name: string; MuiTheme: Theme }[] = Object.entries(themeC
   ([name, config]) => ({
     name: name as string,
     MuiTheme: createCustomTheme(config.primaryColor, config.secondaryColor),
-  })
+  }),
 );

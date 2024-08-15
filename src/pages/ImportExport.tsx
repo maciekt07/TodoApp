@@ -37,7 +37,7 @@ const ImportExport = () => {
   const [selectedTasks, setSelectedTasks] = useStorageState<UUID[]>(
     [],
     "tasksToExport",
-    "sessionStorage"
+    "sessionStorage",
   ); // Array of selected task IDs
   const [isDragging, setIsDragging] = useState<boolean>(false);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
@@ -82,7 +82,7 @@ const ImportExport = () => {
           ))}
         </ul>
       </div>,
-      { dismissButton: true, type: "blank" }
+      { dismissButton: true, type: "blank" },
     );
   };
 
@@ -101,7 +101,7 @@ const ImportExport = () => {
             Incorrect file type {file.type !== "" && <span translate="no">{file.type}</span>}.
             Please select a JSON file.
           </div>,
-          { type: "error" }
+          { type: "error" },
         );
         return;
       }
@@ -135,11 +135,11 @@ const ImportExport = () => {
           if (invalidTasks.length > 0) {
             const invalidTaskNames = invalidTasks.map((task) => task.name).join(", ");
             console.error(
-              `These tasks cannot be imported due to exceeding maximum character lengths: ${invalidTaskNames}`
+              `These tasks cannot be imported due to exceeding maximum character lengths: ${invalidTaskNames}`,
             );
             showToast(
               `These tasks cannot be imported due to exceeding maximum character lengths: ${invalidTaskNames}`,
-              { type: "error" }
+              { type: "error" },
             );
             return;
           }
@@ -226,7 +226,7 @@ const ImportExport = () => {
                 ))}
               </ul>
             </div>,
-            { dismissButton: true, type: "blank" }
+            { dismissButton: true, type: "blank" },
           );
 
           if (fileInputRef.current) {
@@ -238,7 +238,7 @@ const ImportExport = () => {
             <div style={{ wordBreak: "break-all" }}>
               Error parsing the imported file: <br /> <i>{file.name}</i>
             </div>,
-            { type: "error" }
+            { type: "error" },
           );
           if (fileInputRef.current) {
             fileInputRef.current.value = "";
@@ -261,7 +261,7 @@ const ImportExport = () => {
             Failed to import task from the provided link. Please ensure that the link is copied
             correctly.
           </div>,
-          { type: "error" }
+          { type: "error" },
         );
       }
     } catch (err) {
@@ -299,7 +299,7 @@ const ImportExport = () => {
             {file.name}
           </i>
         </div>,
-        { type: "error" }
+        { type: "error" },
       );
       return;
     }
@@ -360,7 +360,7 @@ const ImportExport = () => {
                   selectedTasks.map((taskId) => {
                     const selectedTask = user.tasks.find((task) => task.id === taskId);
                     return selectedTask ? selectedTask.name : "";
-                  })
+                  }),
                 )}`
               : undefined
           }

@@ -335,7 +335,7 @@ export const ProfileSidebar = () => {
                     <IosShareRounded sx={{ verticalAlign: "middle", mb: "4px" }} /> and then{" "}
                     <span style={{ fontWeight: "bold" }}>Add to Home Screen</span>.
                   </div>,
-                  { type: "blank", duration: 8000 }
+                  { type: "blank", duration: 8000 },
                 );
                 handleClose();
               }}

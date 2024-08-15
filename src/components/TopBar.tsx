@@ -33,7 +33,9 @@ const Container = styled.div`
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
   background: ${({ theme }) => theme.secondary + "c1"};
-  transition: background 0.3s, color 0.3s;
+  transition:
+    background 0.3s,
+    color 0.3s;
   margin-bottom: 48px;
 `;
 

@@ -170,7 +170,7 @@ export const TaskMenu = () => {
                 <TaskIcon variant="success" scale={0.18} />
               </div>
             ),
-          }
+          },
         );
       }
     }
@@ -234,7 +234,7 @@ export const TaskMenu = () => {
       ? ". Task Deadline: " +
         calculateDateDifference(
           new Date(selectedTask.deadline) || "",
-          voice ? voice.lang : navigator.language // Read task deadline in voice language
+          voice ? voice.lang : navigator.language, // Read task deadline in voice language
         )
       : "";
 
@@ -317,7 +317,7 @@ export const TaskMenu = () => {
           WebkitBackdropFilter: `blur(${theme.darkmode ? "10" : "14"}px)`,
           backdropFilter: `blur(${theme.darkmode ? "10" : "14"}px)`,
         },
-      }
+      },
     );
 
     // Set up event listener for the end of speech

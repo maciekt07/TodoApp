@@ -76,7 +76,9 @@ export const ColorElement = styled.button<{ clr: string; secondClr?: string; siz
   justify-content: center;
   align-items: center;
   border-radius: 100%;
-  transition: 0.2s all, 0s border;
+  transition:
+    0.2s all,
+    0s border;
   transform: scale(1);
 
   &:focus-visible {

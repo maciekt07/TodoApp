@@ -38,12 +38,12 @@ export const EditTask = ({ open, task, onClose, onSave }: EditTaskProps) => {
 
   const nameError = useMemo(
     () => (editedTask?.name ? editedTask.name.length > TASK_NAME_MAX_LENGTH : undefined),
-    [editedTask?.name]
+    [editedTask?.name],
   );
   const descriptionError = useMemo(
     () =>
       editedTask?.description ? editedTask.description.length > DESCRIPTION_MAX_LENGTH : undefined,
-    [editedTask?.description]
+    [editedTask?.description],
   );
 
   // Effect hook to update the editedTask with the selected emoji.
@@ -78,7 +78,7 @@ export const EditTask = ({ open, task, onClose, onSave }: EditTaskProps) => {
       showToast(
         <div>
           Task <b translate="no">{editedTask.name}</b> updated.
-        </div>
+        </div>,
       );
     }
   };
@@ -166,8 +166,8 @@ export const EditTask = ({ open, task, onClose, onSave }: EditTaskProps) => {
               ? editedTask?.name.length === 0
                 ? "Name is required"
                 : editedTask?.name.length > TASK_NAME_MAX_LENGTH
-                ? `Name is too long (maximum ${TASK_NAME_MAX_LENGTH} characters)`
-                : `${editedTask?.name?.length}/${TASK_NAME_MAX_LENGTH}`
+                  ? `Name is too long (maximum ${TASK_NAME_MAX_LENGTH} characters)`
+                  : `${editedTask?.name?.length}/${TASK_NAME_MAX_LENGTH}`
               : "Name is required"
           }
         />
@@ -185,8 +185,8 @@ export const EditTask = ({ open, task, onClose, onSave }: EditTaskProps) => {
             editedTask?.description === "" || editedTask?.description === undefined
               ? undefined
               : descriptionError
-              ? `Description is too long (maximum ${DESCRIPTION_MAX_LENGTH} characters)`
-              : `${editedTask?.description?.length}/${DESCRIPTION_MAX_LENGTH}`
+                ? `Description is too long (maximum ${DESCRIPTION_MAX_LENGTH} characters)`
+                : `${editedTask?.description?.length}/${DESCRIPTION_MAX_LENGTH}`
           }
         />
         <StyledInput

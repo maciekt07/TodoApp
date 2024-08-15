@@ -13,7 +13,7 @@ export const TaskProvider = ({ children }: { children: ReactNode }) => {
   const [multipleSelectedTasks, setMultipleSelectedTasks] = useStorageState<UUID[]>(
     [],
     "selectedTasks",
-    "sessionStorage"
+    "sessionStorage",
   );
   const [search, setSearch] = useStorageState<string>("", "search", "sessionStorage");
   const [editModalOpen, setEditModalOpen] = useState<boolean>(false);
@@ -52,7 +52,7 @@ export const TaskProvider = ({ children }: { children: ReactNode }) => {
         <HighlightedText key={index}>{part}</HighlightedText>
       ) : (
         part
-      )
+      ),
     );
   };
   const handleDeleteTask = () => {

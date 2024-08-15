@@ -62,7 +62,7 @@ function App() {
               duration: 6000,
               icon: <DataObjectRounded />,
               disableVibrate: true,
-            }
+            },
           );
         }
       });
@@ -165,7 +165,7 @@ function App() {
       theme={createCustomTheme(
         getMuiTheme().palette.primary.main,
         getMuiTheme().palette.secondary.main,
-        isDarkMode() ? "dark" : "light"
+        isDarkMode() ? "dark" : "light",
       )}
     >
       <EmotionTheme

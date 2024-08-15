@@ -87,7 +87,7 @@ export const RenderTaskDescription = memo(
 
         const youtubeId = (youtubeLink: string) =>
           youtubeLink.match(
-            /(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))([^&?]+)/
+            /(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))([^&?]+)/,
           )?.[1] || null;
 
         return (
@@ -133,5 +133,5 @@ export const RenderTaskDescription = memo(
         )}
       </div>
     );
-  }
+  },
 );

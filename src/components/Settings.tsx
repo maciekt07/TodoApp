@@ -111,7 +111,7 @@ export const SettingsDialog: React.FC<SettingsProps> = ({ open, onClose }) => {
   const getFlagEmoji = (countryCode: string): string =>
     typeof countryCode === "string"
       ? String.fromCodePoint(
-          ...[...countryCode.toUpperCase()].map((x) => 0x1f1a5 + x.charCodeAt(0))
+          ...[...countryCode.toUpperCase()].map((x) => 0x1f1a5 + x.charCodeAt(0)),
         )
       : "";
 
@@ -185,7 +185,7 @@ export const SettingsDialog: React.FC<SettingsProps> = ({ open, onClose }) => {
   const handleVoiceChange = (event: SelectChangeEvent<unknown>) => {
     // Handle the selected voice
     const selectedVoice = availableVoices.find(
-      (voice) => voice.name === (event.target.value as string)
+      (voice) => voice.name === (event.target.value as string),
     );
     if (selectedVoice) {
       // Update the user settings with the selected voice
@@ -204,7 +204,7 @@ export const SettingsDialog: React.FC<SettingsProps> = ({ open, onClose }) => {
   // Function to handle changes in voice volume after mouse up
   const handleVoiceVolCommitChange = (
     _event: Event | React.SyntheticEvent<Element, Event>,
-    value: number | number[]
+    value: number | number[],
   ) => {
     // Update user settings with the new voice volume
     setUser((prevUser) => ({

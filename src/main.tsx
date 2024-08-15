@@ -13,5 +13,5 @@ ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
     <UserContextProvider>
       <App />
     </UserContextProvider>
-  </BrowserRouter>
+  </BrowserRouter>,
 );

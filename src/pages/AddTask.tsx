@@ -21,7 +21,7 @@ const AddTask = () => {
   const [description, setDescription] = useStorageState<string>(
     "",
     "description",
-    "sessionStorage"
+    "sessionStorage",
   );
   const [deadline, setDeadline] = useStorageState<string>("", "deadline", "sessionStorage");
   const [nameError, setNameError] = useState<string>("");
@@ -29,7 +29,7 @@ const AddTask = () => {
   const [selectedCategories, setSelectedCategories] = useStorageState<Category[]>(
     [],
     "categories",
-    "sessionStorage"
+    "sessionStorage",
   );
 
   const n = useNavigate();
@@ -46,7 +46,7 @@ const AddTask = () => {
     }
     if (description.length > DESCRIPTION_MAX_LENGTH) {
       setDescriptionError(
-        `Description should be less than or equal to ${DESCRIPTION_MAX_LENGTH} characters`
+        `Description should be less than or equal to ${DESCRIPTION_MAX_LENGTH} characters`,
       );
     } else {
       setDescriptionError("");
@@ -68,7 +68,7 @@ const AddTask = () => {
     setDescription(newDescription);
     if (newDescription.length > DESCRIPTION_MAX_LENGTH) {
       setDescriptionError(
-        `Description should be less than or equal to ${DESCRIPTION_MAX_LENGTH} characters`
+        `Description should be less than or equal to ${DESCRIPTION_MAX_LENGTH} characters`,
       );
     } else {
       setDescriptionError("");
@@ -115,7 +115,7 @@ const AddTask = () => {
       </div>,
       {
         icon: <AddTaskRounded />,
-      }
+      },
     );
 
     const itemsToRemove = ["name", "color", "description", "emoji", "deadline", "categories"];
@@ -148,8 +148,8 @@ const AddTask = () => {
             name === ""
               ? undefined
               : !nameError
-              ? `${name.length}/${TASK_NAME_MAX_LENGTH}`
-              : nameError
+                ? `${name.length}/${TASK_NAME_MAX_LENGTH}`
+                : nameError
           }
         />
         <StyledInput
@@ -168,8 +168,8 @@ const AddTask = () => {
             description === ""
               ? undefined
               : !descriptionError
-              ? `${description.length}/${DESCRIPTION_MAX_LENGTH}`
-              : descriptionError
+                ? `${description.length}/${DESCRIPTION_MAX_LENGTH}`
+                : descriptionError
           }
         />
         <StyledInput

@@ -32,7 +32,7 @@ const Purge = () => {
   const [selectedTasks, setSelectedTasks] = useStorageState<UUID[]>(
     [],
     "tasksToPurge",
-    "sessionStorage"
+    "sessionStorage",
   ); // Array of selected task IDs
 
   const [deleteAllDialog, setDeleteAllDialog] = useState<boolean>(false);
@@ -51,7 +51,7 @@ const Purge = () => {
     selectedTasks.map((taskId) => {
       const selectedTask = user.tasks.find((task) => task.id === taskId);
       return selectedTask ? selectedTask.name : "";
-    })
+    }),
   );
 
   const handleTaskClick = (taskId: UUID) => {
@@ -66,7 +66,7 @@ const Purge = () => {
 
   const purgeTasks = (tasks: Task[]) => {
     const updatedTasks = user.tasks.filter(
-      (task) => !tasks.some((purgeTask) => purgeTask === task)
+      (task) => !tasks.some((purgeTask) => purgeTask === task),
     );
     setSelectedTasks([]);
     setUser((prevUser) => ({
@@ -81,7 +81,7 @@ const Purge = () => {
     showToast(
       <div>
         Purged selectedTasks tasks: <b translate="no">{selectedNamesList}</b>
-      </div>
+      </div>,
     );
   };
 

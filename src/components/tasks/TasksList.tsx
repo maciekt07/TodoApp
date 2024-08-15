@@ -95,7 +95,7 @@ export const TasksList: React.FC = () => {
   const [selectedCatId, setSelectedCatId] = useStorageState<UUID | undefined>(
     undefined,
     "selectedCategory",
-    "sessionStorage"
+    "sessionStorage",
   );
   const [categoryCounts, setCategoryCounts] = useState<{
     [categoryId: UUID]: number;
@@ -110,7 +110,7 @@ export const TasksList: React.FC = () => {
         style: "long",
         type: "conjunction",
       }),
-    []
+    [],
   );
 
   const selectedTask = useMemo(() => {
@@ -167,7 +167,7 @@ export const TasksList: React.FC = () => {
 
       return [...pinnedTasks, ...unpinnedTasks];
     },
-    [search, selectedCatId, user.settings]
+    [search, selectedCatId, user.settings],
   );
 
   const confirmDeleteTask = () => {
@@ -185,7 +185,7 @@ export const TasksList: React.FC = () => {
         <div>
           Deleted Task -{" "}
           <b translate="no">{user.tasks.find((task) => task.id === selectedTaskId)?.name}</b>
-        </div>
+        </div>,
       );
     }
   };
@@ -229,7 +229,7 @@ export const TasksList: React.FC = () => {
     const counts: { [categoryId: UUID]: number } = {};
     uniqueCategories.forEach((category) => {
       const categoryTasks = tasks.filter((task) =>
-        task.category?.some((cat) => cat.id === category.id)
+        task.category?.some((cat) => cat.id === category.id),
       );
       counts[category.id] = categoryTasks.length;
     });
@@ -272,11 +272,11 @@ export const TasksList: React.FC = () => {
               borderColor: ColorPalette.red,
               boxShadow: user.settings[0].enableGlow ? `0 0 18px -8px ${ColorPalette.red}` : "none",
             },
-          }
+          },
         );
       }
     },
-    [listFormat, user.settings]
+    [listFormat, user.settings],
   );
 
   useEffect(() => {
@@ -384,7 +384,7 @@ export const TasksList: React.FC = () => {
                 {listFormat.format(
                   multipleSelectedTasks
                     .map((taskId) => user.tasks.find((task) => task.id === taskId)?.name)
-                    .filter((taskName) => taskName !== undefined) as string[]
+                    .filter((taskName) => taskName !== undefined) as string[],
                 )}
               </span>
             </div>
@@ -451,7 +451,7 @@ export const TasksList: React.FC = () => {
                   onChange={() => {
                     if (multipleSelectedTasks.includes(task.id)) {
                       setMultipleSelectedTasks((prevTasks) =>
-                        prevTasks.filter((id) => id !== task.id)
+                        prevTasks.filter((id) => id !== task.id),
                       );
                     } else {
                       handleSelectTask(task.id);
@@ -678,7 +678,7 @@ export const TasksList: React.FC = () => {
           {listFormat.format(
             multipleSelectedTasks
               .map((taskId) => user.tasks.find((task) => task.id === taskId)?.name)
-              .filter((taskName) => taskName !== undefined) as string[]
+              .filter((taskName) => taskName !== undefined) as string[],
           )}
         </DialogContent>
         <DialogActions>
