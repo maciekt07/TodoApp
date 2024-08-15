@@ -14,6 +14,14 @@
 <img src="screenshots/iPhone Mockup black.png" width="400px" />
 </p>
 
+## 💻 Tech Stack
+
+- React
+- Typescript
+- Vite
+- Emotion
+- Material UI (MUI)
+
 ## ⚡ Features
 
 - **📦 Local and session storage**: Save tasks locally and retain form data using session storage.
@@ -54,14 +62,6 @@
 ## 🚀 Performance
 
 <img src="screenshots/performance.png" width="600px" />
-
-## 💻 Tech Stack
-
-- React
-- Typescript
-- Vite
-- Emotion
-- MUI
 
 ## 👨‍💻 Installation
 

@@ -21,6 +21,6 @@
 
     "types": ["vite-plugin-pwa/client"]
   },
-  "include": ["src", "manifest.ts"],
+  "include": ["src"],
   "references": [{ "path": "./tsconfig.node.json" }]
 }
