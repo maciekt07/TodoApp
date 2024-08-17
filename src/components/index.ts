@@ -11,3 +11,4 @@ export { ColorPicker } from "./ColorPicker";
 export { CategoryBadge } from "./CategoryBadge";
 export { TaskIcon } from "./TaskIcon";
 export { Loading } from "./Loading";
+export { CustomDialogTitle } from "./DialogTitle";

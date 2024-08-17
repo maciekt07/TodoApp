@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState } from "react";
-import { TopBar } from "../components";
+import { CustomDialogTitle, TopBar } from "../components";
 import {
   DialogBtn,
   ManagementButton,
@@ -14,7 +14,6 @@ import {
   Dialog,
   DialogActions,
   DialogContent,
-  DialogTitle,
   Divider,
   Tooltip,
   Typography,
@@ -161,7 +160,12 @@ const Purge = () => {
         </ManagementButton>
       </ManagementButtonsContainer>
       <Dialog open={deleteAllDialog} onClose={() => setDeleteAllDialog(false)}>
-        <DialogTitle>Are You sure you want to pure all of your tasks?</DialogTitle>
+        <CustomDialogTitle
+          title="Purge All Tasks"
+          subTitle="Confirm that you want to purge all tasks"
+          onClose={() => setDeleteAllDialog(false)}
+          icon={<DeleteForeverRounded />}
+        />
         <DialogContent>
           This action cannot be undone. Are you sure you want to proceed?
         </DialogContent>

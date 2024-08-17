@@ -16,14 +16,13 @@ import {
   Dialog,
   DialogActions,
   DialogContent,
-  DialogTitle,
   IconButton,
   InputAdornment,
   Tooltip,
 } from "@mui/material";
 import { Emoji, EmojiStyle } from "emoji-picker-react";
 import { useCallback, useContext, useEffect, useMemo, useState } from "react";
-import { CategoryBadge, EditTask, TaskIcon, TaskMenu } from "..";
+import { CategoryBadge, CustomDialogTitle, EditTask, TaskIcon, TaskMenu } from "..";
 import { URL_REGEX } from "../../constants";
 import { TaskContext } from "../../contexts/TaskContext";
 import { UserContext } from "../../contexts/UserContext";
@@ -624,7 +623,12 @@ export const TasksList: React.FC = () => {
         />
       </TasksContainer>
       <Dialog open={deleteDialogOpen} onClose={cancelDeleteTask}>
-        <DialogTitle>Are you sure you want to delete the task?</DialogTitle>
+        <CustomDialogTitle
+          title="Delete task"
+          subTitle="Confirm to delete task"
+          onClose={cancelDeleteTask}
+          icon={<Delete />}
+        />
         <DialogContent>
           {selectedTask !== undefined && (
             <>
@@ -673,7 +677,11 @@ export const TasksList: React.FC = () => {
         </DialogActions>
       </Dialog>
       <Dialog open={deleteSelectedOpen}>
-        <DialogTitle>Are you sure you want to delete selected tasks?</DialogTitle>
+        <CustomDialogTitle
+          title="Delete selected tasks"
+          subTitle="Confirm to delete selected tasks"
+          icon={<DeleteRounded />}
+        />
         <DialogContent translate="no">
           {listFormat.format(
             multipleSelectedTasks

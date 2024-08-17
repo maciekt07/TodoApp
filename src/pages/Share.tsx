@@ -1,12 +1,4 @@
-import {
-  Alert,
-  AlertTitle,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
-  Tooltip,
-} from "@mui/material";
+import { Alert, AlertTitle, Dialog, DialogActions, DialogContent, Tooltip } from "@mui/material";
 import {
   DescriptionLink,
   EmojiContainer,
@@ -31,11 +23,12 @@ import {
   AddTaskRounded,
   DoNotDisturbAltRounded,
   DoneRounded,
+  ErrorRounded,
   LinkOff,
   PushPinRounded,
 } from "@mui/icons-material";
 import { URL_REGEX, USER_NAME_MAX_LENGTH } from "../constants";
-import { CategoryBadge } from "../components";
+import { CategoryBadge, CustomDialogTitle } from "../components";
 import Home from "./Home";
 
 //FIXME: make everything type-safe
@@ -189,7 +182,11 @@ const SharePage = () => {
       >
         {!error && taskData ? (
           <>
-            <DialogTitle>Recieved Task</DialogTitle>
+            <CustomDialogTitle
+              title="Recieved Task"
+              subTitle="You can now include this task in your list"
+              icon={<AddTaskRounded />}
+            />
             <DialogContent>
               <p style={{ fontSize: "16px", marginLeft: "6px" }}>
                 <b translate="no">{userName}</b> shared you a task.
@@ -318,7 +315,12 @@ const SharePage = () => {
           </>
         ) : (
           <>
-            <DialogTitle>Something went wrong</DialogTitle>
+            <CustomDialogTitle
+              title="Something went wrong"
+              subTitle="The shared task couldn't be processed."
+              onClose={() => n("/")}
+              icon={<ErrorRounded />}
+            />
             <DialogContent>
               <p>
                 Oops! Something went wrong while processing the shared task.{" "}

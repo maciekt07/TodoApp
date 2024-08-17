@@ -1,7 +1,7 @@
 import { Emoji } from "emoji-picker-react";
 import { lazy, useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { ColorPicker, CustomEmojiPicker, TopBar } from "../components";
+import { ColorPicker, CustomDialogTitle, CustomEmojiPicker, TopBar } from "../components";
 import type { Category, UUID } from "../types/user";
 import { useTheme } from "@emotion/react";
 import { Delete, DeleteRounded, Edit, SaveRounded } from "@mui/icons-material";
@@ -373,10 +373,12 @@ const Categories = () => {
             },
           }}
         >
-          <DialogTitle>
-            Edit Category
-            {/* <b>{user.categories.find((cat) => cat.id === selectedCategoryId)?.name}</b> */}
-          </DialogTitle>
+          <CustomDialogTitle
+            title="Edit Category"
+            subTitle={`Edit the details of the category.`}
+            icon={<Edit />}
+            onClose={handleEditDimiss}
+          />
 
           <DialogContent>
             <CustomEmojiPicker

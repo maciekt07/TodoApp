@@ -3,6 +3,7 @@ import styled from "@emotion/styled";
 import {
   AddRounded,
   ColorizeRounded,
+  ColorLensRounded,
   DoneRounded,
   ExpandMoreRounded,
   InfoRounded,
@@ -14,7 +15,6 @@ import {
   Dialog,
   DialogActions,
   DialogContent,
-  DialogTitle,
   Grid,
   Popover,
   Tooltip,
@@ -27,6 +27,7 @@ import { UserContext } from "../contexts/UserContext";
 import { ColorElement, DialogBtn, scale } from "../styles";
 import { ColorPalette } from "../theme/themeConfig";
 import { getFontColor, showToast } from "../utils";
+import { CustomDialogTitle } from "./DialogTitle";
 
 interface ColorPickerProps {
   color: string;
@@ -281,7 +282,12 @@ export const ColorPicker: React.FC<ColorPickerProps> = ({
         </AccordionDetails>
       </StyledAccordion>
       <Dialog open={openAddDialog} onClose={handleAddDialogClose}>
-        <DialogTitle>Add new color</DialogTitle>
+        <CustomDialogTitle
+          title="Choose a color"
+          subTitle="Add a new color to the color list."
+          icon={<ColorLensRounded />}
+          onClose={handleAddDialogClose}
+        />
         <DialogContent>
           <div
             style={{

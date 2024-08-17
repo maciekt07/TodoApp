@@ -23,7 +23,6 @@ import {
   Dialog,
   DialogActions,
   DialogContent,
-  DialogTitle,
   Divider,
   IconButton,
   MenuItem,
@@ -32,7 +31,7 @@ import {
 } from "@mui/material";
 import React, { useContext, useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { SettingsDialog } from ".";
+import { CustomDialogTitle, SettingsDialog } from ".";
 import bmcLogo from "../assets/bmc-logo.svg";
 import bmcLogoLight from "../assets/bmc-logo-light.svg";
 import logo from "../assets/logo256.png";
@@ -409,7 +408,7 @@ export const ProfileSidebar = () => {
       </StyledSwipeableDrawer>
 
       <Dialog open={logoutConfirmationOpen} onClose={handleLogoutConfirmationClose}>
-        <DialogTitle>Logout Confirmation</DialogTitle>
+        <CustomDialogTitle title="Logout Confirmation" icon={<Logout />} />
         <DialogContent>
           Are you sure you want to logout? <b>Your tasks will not be saved.</b>
         </DialogContent>

@@ -1,0 +1,74 @@
+import styled from "@emotion/styled";
+import { CloseRounded } from "@mui/icons-material";
+import { DialogTitle, Divider, IconButton } from "@mui/material";
+import { ComponentProps } from "react";
+
+type MuiDialogTitleProps = ComponentProps<typeof DialogTitle>;
+
+interface CustomDialogTitleProps extends MuiDialogTitleProps {
+  title: string;
+  subTitle?: string;
+  icon?: JSX.Element;
+  onClose?: () => void;
+}
+
+export const CustomDialogTitle = ({
+  title,
+  subTitle,
+  icon,
+  onClose,
+  ...props
+}: CustomDialogTitleProps) => {
+  return (
+    <DialogTitle {...props}>
+      {onClose && (
+        <IconButton
+          sx={{ position: "absolute", right: "24px", top: "24px", zIndex: 1 }}
+          onClick={onClose}
+          size="small"
+        >
+          <CloseRounded />
+        </IconButton>
+      )}
+      <TitleContainer>
+        {icon && <IconWrapper>{icon}</IconWrapper>}
+        <div style={{ lineHeight: "1.4em" }}>
+          <Title>{title}</Title>
+          <SubTitle>{subTitle}</SubTitle>
+        </div>
+      </TitleContainer>
+
+      <Divider sx={{ mt: "16px", width: "100%" }} />
+    </DialogTitle>
+  );
+};
+
+const TitleContainer = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 16px;
+  max-width: 400px;
+`;
+
+const IconWrapper = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 1px solid ${({ theme }) => (theme.darkmode ? "#5c5c5c" : "#E5E5E8")};
+  box-shadow: 0px 0px 1px ${({ theme }) => (theme.darkmode ? "#5c5c5c" : "#E5E5E8")};
+  color: ${({ theme }) => (theme.darkmode ? "#c2c2c2" : "#696969")};
+  width: 24px;
+  height: 24px;
+  padding: 12px;
+  border-radius: 16px;
+`;
+
+const Title = styled.div`
+  font-weight: 600;
+  opacity: 0.9;
+`;
+const SubTitle = styled.div`
+  font-size: 14px;
+  opacity: 0.7;
+`;

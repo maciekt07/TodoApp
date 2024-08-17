@@ -29,7 +29,6 @@ import {
   Dialog,
   DialogActions,
   DialogContent,
-  DialogTitle,
   Divider,
   IconButton,
   InputAdornment,
@@ -48,7 +47,7 @@ import QRCode from "react-qr-code";
 import { useNavigate } from "react-router-dom";
 import { BottomSheet } from "react-spring-bottom-sheet";
 import "react-spring-bottom-sheet/dist/style.css";
-import { TaskIcon } from "..";
+import { CustomDialogTitle, TaskIcon } from "..";
 import { UserContext } from "../../contexts/UserContext";
 import { useResponsiveDisplay } from "../../hooks/useResponsiveDisplay";
 import { DialogBtn } from "../../styles";
@@ -453,7 +452,12 @@ export const TaskMenu = () => {
           },
         }}
       >
-        <DialogTitle>Share Task</DialogTitle>
+        <CustomDialogTitle
+          title="Share Task"
+          subTitle="Share your task with others."
+          onClose={() => setShowShareDialog(false)}
+          icon={<IosShare />}
+        />
         <DialogContent>
           <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
             <ShareTaskChip
@@ -546,9 +550,8 @@ export const TaskMenu = () => {
           </CustomTabPanel>
           <Alert severity="info" sx={{ mt: "20px" }}>
             <AlertTitle>Share Your Task</AlertTitle>
-            Share your task with others using the link or QR code. Copy the link to share manually
-            or use the share button to send it via other apps. You can also download the QR code for
-            easy access.
+            Copy the link to share manually or use the share button to send it via other apps. You
+            can also download the QR code for easy access.
           </Alert>
           {/* <Alert severity="warning" sx={{ mt: "8px" }}>
             Anyone with access to this link will be able to view your name and task details.

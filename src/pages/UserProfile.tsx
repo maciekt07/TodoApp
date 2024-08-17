@@ -5,7 +5,6 @@ import {
   Dialog,
   DialogActions,
   DialogContent,
-  DialogTitle,
   Grid,
   IconButton,
   InputAdornment,
@@ -26,7 +25,7 @@ import {
   TodayRounded,
 } from "@mui/icons-material";
 import { PROFILE_PICTURE_MAX_LENGTH, USER_NAME_MAX_LENGTH } from "../constants";
-import { SettingsDialog, TopBar } from "../components";
+import { CustomDialogTitle, SettingsDialog, TopBar } from "../components";
 import { ColorElement, DialogBtn, UserAvatar } from "../styles";
 import { defaultUser } from "../constants/defaultUser";
 import { UserContext } from "../contexts/UserContext";
@@ -255,7 +254,12 @@ const UserProfile = () => {
         </Button>
       </Container>
       <Dialog open={openChangeImage} onClose={handleCloseImageDialog}>
-        <DialogTitle>Change Profile Picture</DialogTitle>
+        <CustomDialogTitle
+          title="Profile Picture"
+          subTitle="Change or delete profile picture"
+          onClose={handleCloseImageDialog}
+          icon={<AddAPhotoRounded />}
+        />
         <DialogContent>
           <TextField
             autoFocus
@@ -315,7 +319,7 @@ const UserProfile = () => {
         </DialogActions>
       </Dialog>
       <Dialog open={logoutConfirmationOpen} onClose={handleLogoutConfirmationClose}>
-        <DialogTitle>Logout Confirmation</DialogTitle>
+        <CustomDialogTitle title="Logout Confirmation" icon={<Logout />} />
         <DialogContent>
           Are you sure you want to logout? <b>Your tasks will not be saved.</b>
         </DialogContent>

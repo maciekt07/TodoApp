@@ -4,19 +4,18 @@ import {
   Dialog,
   DialogActions,
   DialogContent,
-  DialogTitle,
   IconButton,
   InputAdornment,
   TextField,
   Tooltip,
 } from "@mui/material";
 import { useContext, useEffect, useMemo, useState } from "react";
-import { CategorySelect, ColorPicker, CustomEmojiPicker } from ".";
+import { CategorySelect, ColorPicker, CustomDialogTitle, CustomEmojiPicker } from ".";
 import { DESCRIPTION_MAX_LENGTH, TASK_NAME_MAX_LENGTH } from "../constants";
 import { UserContext } from "../contexts/UserContext";
 import { DialogBtn } from "../styles";
 import { Category, Task } from "../types/user";
-import { showToast, timeAgo } from "../utils";
+import { showToast } from "../utils";
 import { useTheme } from "@emotion/react";
 import { ColorPalette } from "../theme/themeConfig";
 
@@ -126,7 +125,7 @@ export const EditTask = ({ open, task, onClose, onSave }: EditTaskProps) => {
         },
       }}
     >
-      <DialogTitle
+      {/* <DialogTitle
         sx={{
           justifyContent: "space-between",
           display: "flex",
@@ -144,7 +143,18 @@ export const EditTask = ({ open, task, onClose, onSave }: EditTaskProps) => {
             </LastEdit>
           </Tooltip>
         )}
-      </DialogTitle>
+      </DialogTitle> */}
+
+      <CustomDialogTitle
+        title="Edit Task"
+        subTitle={
+          editedTask?.lastSave
+            ? `Last Edited: ${new Date(editedTask.lastSave).toLocaleDateString()} • ${new Date(editedTask.lastSave).toLocaleTimeString()}`
+            : "Edit the details of the task."
+        }
+        icon={<EditCalendarRounded />}
+        onClose={onClose}
+      />
       <DialogContent>
         <CustomEmojiPicker
           emoji={editedTask?.emoji || undefined}
@@ -280,15 +290,15 @@ StyledInput.defaultProps = {
   fullWidth: true,
 };
 
-const LastEdit = styled.span`
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  font-size: 15px;
-  font-style: italic;
-  font-weight: 400;
-  opacity: 0.8;
-  @media (max-width: 768px) {
-    font-size: 14px;
-  }
-`;
+// const LastEdit = styled.span`
+//   display: flex;
+//   align-items: center;
+//   gap: 6px;
+//   font-size: 15px;
+//   font-style: italic;
+//   font-weight: 400;
+//   opacity: 0.8;
+//   @media (max-width: 768px) {
+//     font-size: 14px;
+//   }
+// `;

@@ -10,6 +10,7 @@ import {
   LightModeRounded,
   Microsoft,
   PersonalVideoRounded,
+  SettingsRounded,
   VolumeDown,
   VolumeOff,
   VolumeUp,
@@ -21,7 +22,6 @@ import {
   Chip,
   Dialog,
   DialogActions,
-  DialogTitle,
   FormControl,
   FormControlLabel,
   FormGroup,
@@ -45,6 +45,7 @@ import { DialogBtn } from "../styles";
 import type { AppSettings, DarkModeOptions } from "../types/user";
 import { getFontColor, showToast, systemInfo } from "../utils";
 import { ColorPalette } from "../theme/themeConfig";
+import { CustomDialogTitle } from "./DialogTitle";
 
 interface SettingsProps {
   open: boolean;
@@ -264,7 +265,12 @@ export const SettingsDialog: React.FC<SettingsProps> = ({ open, onClose }) => {
 
   return (
     <Dialog open={open} onClose={onClose}>
-      <DialogTitle sx={{ fontWeight: 600 }}>Settings</DialogTitle>
+      <CustomDialogTitle
+        title="Settings"
+        subTitle="Manage your settings and preferences."
+        icon={<SettingsRounded />}
+        onClose={onClose}
+      />
       <Container>
         <FormGroup>
           <FormControl>
