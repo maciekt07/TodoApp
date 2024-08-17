@@ -8,6 +8,7 @@ import {
 import {
   Box,
   Button,
+  Divider,
   FormControl,
   FormLabel,
   MenuItem,
@@ -143,15 +144,7 @@ export const CategorySelect: React.FC<CategorySelectProps> = ({
             )}
           </div>
         </HeaderMenuItem>
-        {categories && categories.length > 0 && (
-          <div style={{ margin: "8px", marginBottom: "16px" }}>
-            <Link to="/categories">
-              <Button fullWidth variant="outlined">
-                <EditRounded /> &nbsp; Modify Categories
-              </Button>
-            </Link>
-          </div>
-        )}
+
         {categories && categories.length > 0 ? (
           categories.map((category) => (
             <CategoriesMenu
@@ -183,6 +176,17 @@ export const CategorySelect: React.FC<CategorySelectProps> = ({
               <AddRounded /> &nbsp; Add Category
             </Button>
           </NoCategories>
+        )}
+
+        {categories && categories.length > 0 && (
+          <div style={{ margin: "8px" }}>
+            <Divider sx={{ marginBottom: "12px", marginTop: "16px" }} />
+            <Link to="/categories">
+              <Button fullWidth variant="outlined" sx={{ marginBottom: "8px" }}>
+                <EditRounded /> &nbsp; Modify Categories
+              </Button>
+            </Link>
+          </div>
         )}
       </StyledSelect>
     </FormControl>

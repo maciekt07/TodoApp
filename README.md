@@ -1,4 +1,3 @@
-<!-- prettier-ignore -->
 <p align="center">
 <img src="public/logo256.png" width="128px" />
 <h1>📝React.js Todo App</h1>
@@ -8,6 +7,7 @@
 
 [![Netlify Status](https://api.netlify.com/api/v1/badges/e3b07d34-f0da-4280-9076-fd40eea893c6/deploy-status)](https://app.netlify.com/sites/react-cool-todo-app/deploys)
 ![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/maciekt07/TodoApp?color=%23b624ff)
+![GitHub last commit](https://img.shields.io/github/last-commit/maciekt07/TodoApp?color=%23b624ff)
 ![GitHub License](https://img.shields.io/github/license/maciekt07/TodoApp?color=%23b624ff)
 
 <p align="center">
@@ -16,11 +16,23 @@
 
 ## 💻 Tech Stack
 
-- React
-- Typescript
-- Vite
-- Emotion
-- Material UI (MUI)
+<ul style="display: flex; flex-direction: column; gap:10px;">
+  <li style="vertical-align: middle;">
+    <img src="https://go-skill-icons.vercel.app/api/icons?i=react" alt="react" width="24" style="vertical-align: middle; margin-right: 4px;" /> React
+  </li>
+    <li style="vertical-align: middle;">
+    <img src="https://go-skill-icons.vercel.app/api/icons?i=typescript" alt="typescript" width="20" style="vertical-align: middle;margin-right: 4px;" /> Typescript
+  </li>
+    <li style="vertical-align: middle;">
+    <img src="https://go-skill-icons.vercel.app/api/icons?i=vite" alt="vite" width="24" style="vertical-align: middle;margin-right: 4px;" /> Vite
+  </li>
+  <li style="vertical-align: middle;">
+    <img src="https://go-skill-icons.vercel.app/api/icons?i=emotion" alt="emotion" width="24" style="vertical-align: middle;margin-right: 4px;" /> Emotion
+  </li>
+    <li style="vertical-align: middle;">
+    <img src="https://go-skill-icons.vercel.app/api/icons?i=mui" alt="mui" width="24" style="vertical-align: middle;margin-right: 4px;" /> Material UI (MUI)
+  </li>
+</ul>
 
 ## ⚡ Features
 

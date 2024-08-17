@@ -573,9 +573,9 @@ export const TasksList: React.FC = () => {
           ))
         ) : (
           <NoTasks>
-            <b>You don't have any tasks yet</b>
+            <span>You don't have any tasks yet</span>
             <br />
-            Click on the <b>+</b> button to add one
+            Click on the <span>+</span> button to add one
           </NoTasks>
         )}
         {search && reorderTasks(user.tasks).length === 0 && user.tasks.length > 0 && (

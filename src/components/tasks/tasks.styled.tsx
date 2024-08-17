@@ -2,8 +2,8 @@ import styled from "@emotion/styled";
 import { Alarm, RadioButtonChecked, RadioButtonUnchecked } from "@mui/icons-material";
 import { Button, Checkbox, IconButton, TextField, css } from "@mui/material";
 import { fadeIn, ring, scale } from "../../styles/keyframes.styled";
-import { getFontColor, systemInfo } from "../../utils";
 import { ColorPalette } from "../../theme/themeConfig";
+import { getFontColor, systemInfo } from "../../utils";
 
 interface TaskComponentProps {
   backgroundColor: string;
@@ -15,20 +15,22 @@ interface TaskComponentProps {
 export const TaskContainer = styled.div<TaskComponentProps>`
   display: flex;
   align-items: center;
+  padding: 16px 16px 16px 20px;
+  border-radius: 28px;
   margin-top: 14px;
   transition: 0.3s all !important;
+  color: ${({ backgroundColor }) => getFontColor(backgroundColor)};
   background-color: ${({ backgroundColor, done }) => `${backgroundColor}${done ? "cc" : ""}`};
   opacity: ${({ done }) => (done ? 0.8 : 1)};
-  color: ${({ backgroundColor }) => getFontColor(backgroundColor)};
   border-left: ${({ done }) => (done ? "8px solid #00ff1ee3" : "1px solid transparent")};
   box-shadow: ${(props) =>
     props.glow && !props.blur ? `0 0 128px -20px ${props.backgroundColor}` : "none"};
-  padding: 16px 16px 16px 20px;
-  border-radius: 28px;
-  animation: ${fadeIn} 0.5s ease-in;
-  filter: ${({ blur }) => (blur ? "blur(2px) opacity(75%)" : "none")};
   text-shadow: ${({ backgroundColor, glow, done }) =>
-    glow && !done ? `0 0 4px ${getFontColor(backgroundColor)}78` : "none"};
+    glow && !done ? `0 0 2px ${getFontColor(backgroundColor)}78` : "none"};
+  filter: ${({ blur }) => (blur ? "blur(2px) opacity(75%)" : "none")};
+
+  animation: ${fadeIn} 0.5s ease-in;
+
   /* If the theme color and task color are the same, it changes the selection color to be different. */
   *::selection {
     background-color: ${({ theme, backgroundColor }) =>
@@ -36,6 +38,7 @@ export const TaskContainer = styled.div<TaskComponentProps>`
     color: ${({ theme, backgroundColor }) =>
       theme.primary === backgroundColor ? "#000000" : getFontColor(theme.primary)} !important;
   }
+
   @media (max-width: 768px) {
     padding: 14px 14px 14px 18px;
     margin-top: 12px;
@@ -122,6 +125,9 @@ export const NoTasks = styled.div`
   min-width: 100vw;
   opacity: 0.9;
   font-size: 18px;
+  & span {
+    font-weight: bold;
+  }
 `;
 
 export const TasksContainer = styled.main`
