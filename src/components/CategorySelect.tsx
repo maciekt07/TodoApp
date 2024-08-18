@@ -180,9 +180,9 @@ export const CategorySelect: React.FC<CategorySelectProps> = ({
 
         {categories && categories.length > 0 && (
           <div style={{ margin: "8px" }}>
-            <Divider sx={{ marginBottom: "12px", marginTop: "16px" }} />
+            <Divider sx={{ mb: "12px", mt: "16px" }} />
             <Link to="/categories">
-              <Button fullWidth variant="outlined" sx={{ marginBottom: "8px" }}>
+              <Button fullWidth variant="outlined" sx={{ mb: "8px", mt: "2px" }}>
                 <EditRounded /> &nbsp; Modify Categories
               </Button>
             </Link>
@@ -201,6 +201,7 @@ const StyledSelect = styled(Select)<{ width?: CSSProperties["width"] }>`
   color: white;
   background: #ffffff18;
   z-index: 999;
+  border: 1px solid #0000003a;
 `;
 
 const CategoriesMenu = styled(MenuItem)<{ clr: string; disable?: boolean }>`

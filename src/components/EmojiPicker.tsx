@@ -262,8 +262,26 @@ export const CustomEmojiPicker = ({
           </Button>
         </div>
       )}
+      {/* Simple Emoji Picker */}
+      {showEmojiPicker && user.settings[0].simpleEmojiPicker && (
+        <SimplePickerContainer>
+          <Suspense fallback={<CircularProgress size={40} thickness={5} />}>
+            <EmojiPicker
+              style={{ border: "none" }}
+              reactionsDefaultOpen
+              lazyLoadEmojis
+              reactions={getFrequentlyUsedEmojis()}
+              emojiStyle={emojisStyle}
+              onReactionClick={handleEmojiClick}
+              allowExpandReactions={false}
+              theme={emotionTheme.darkmode ? Theme.DARK : Theme.LIGHT}
+              autoFocusSearch={false}
+            />
+          </Suspense>
+        </SimplePickerContainer>
+      )}
 
-      {showEmojiPicker && (
+      {showEmojiPicker && !user.settings[0].simpleEmojiPicker && (
         <>
           <Dialog
             open={showEmojiPicker}
@@ -304,14 +322,6 @@ export const CustomEmojiPicker = ({
                   </span>
                 </OfflineContainer>
               )}
-
-            {/* <div
-              style={{ display: "flex", justifyContent: "center", alignItems: "center", margin: 0 }}
-            >
-              <EmojiAvatar clr={color} onClick={toggleEmojiPicker} style={{ cursor: "default" }}>
-                {renderAvatarContent()}
-              </EmojiAvatar>
-            </div> */}
             <EmojiPickerContainer>
               <Suspense
                 fallback={
@@ -351,20 +361,6 @@ export const CustomEmojiPicker = ({
               )}
             </DialogActions>
           </Dialog>
-          {/* {currentEmoji && (
-            <div
-              style={{
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-                marginBottom: "14px",
-              }}
-            >
-              <Button variant="outlined" color="error" onClick={handleRemoveEmoji}>
-                <RemoveCircleOutline /> &nbsp; Remove Emoji
-              </Button>
-            </div>
-          )} */}
         </>
       )}
     </>
@@ -379,6 +375,15 @@ const EmojiContainer = styled.div`
 `;
 
 const EmojiPickerContainer = styled(DialogContent)`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 16px;
+  animation: ${fadeIn} 0.4s ease-in;
+  padding: 0;
+`;
+
+const SimplePickerContainer = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;

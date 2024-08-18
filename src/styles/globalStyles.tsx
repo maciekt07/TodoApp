@@ -125,15 +125,15 @@ export const GlobalStyles = () => {
         }
 
         .epr-reactions {
-          background: ${getFontColor(theme.secondary) === ColorPalette.fontDark
-            ? ColorPalette.fontLight
-            : ColorPalette.fontDark} !important;
+          background: ${theme.darkmode ? "#141431dd" : "#ffffffd3"} !important;
+          border: 1px solid ${theme.darkmode ? "#020217" : "#7d7d7d"} !important;
         }
 
         .epr-emoji-category-label {
           backdrop-filter: blur(3px);
           -webkit-backdrop-filter: blur(3px);
         }
+
         .epr-emoji-native {
           display: flex !important;
           align-items: center !important;
