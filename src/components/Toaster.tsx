@@ -23,7 +23,7 @@ export const CustomToaster = () => {
           borderRadius: "18px",
           fontSize: "17px",
           border: `2px solid ${theme.primary}`,
-          background: theme.darkmode ? "#141431e0" : "#ffffff99",
+          background: theme.darkmode ? "#141431e0" : "#ffffffd2",
           color: theme.darkmode ? ColorPalette.fontLight : ColorPalette.fontDark,
           WebkitBackdropFilter: `blur(${theme.darkmode ? "6" : "14"}px)`,
           backdropFilter: `blur(${theme.darkmode ? "6" : "14"}px)`,

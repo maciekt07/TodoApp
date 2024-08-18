@@ -95,7 +95,7 @@ export const EditNameInput = styled(TextField)`
   margin-top: 8px;
   .MuiOutlinedInput-root {
     border-radius: 16px;
-    width: 300px;
+    width: 350px;
   }
 `;
 

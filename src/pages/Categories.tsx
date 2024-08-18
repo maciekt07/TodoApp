@@ -369,7 +369,7 @@ const Categories = () => {
             style: {
               borderRadius: "24px",
               padding: "12px",
-              maxWidth: "600px",
+              minWidth: "350px",
             },
           }}
         >
@@ -415,7 +415,7 @@ const Categories = () => {
               />
               <ColorPicker
                 color={editColor}
-                width="300px"
+                width="350px"
                 fontColor={theme.darkmode ? ColorPalette.fontLight : ColorPalette.fontDark}
                 onColorChange={(clr) => {
                   setEditColor(clr);

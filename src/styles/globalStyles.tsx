@@ -73,7 +73,6 @@ export const GlobalStyles = () => {
         body {
           margin: 8px 16vw;
           touch-action: manipulation;
-          //FIXME:
           background: ${theme.secondary};
           background-attachment: fixed;
           background-size: cover;
@@ -113,11 +112,14 @@ export const GlobalStyles = () => {
         }
 
         .EmojiPickerReact {
-          --epr-hover-bg-color: ${theme.primary + "af"};
-          --epr-focus-bg-color: ${theme.primary + "af"};
-          --epr-highlight-color: ${theme.primary};
-          --epr-search-border-color: ${theme.primary};
-          --epr-hover-bg-color: "red";
+          --epr-search-border-color: ${theme.primary} !important;
+          --epr-dark-bg-color: ${ColorPalette.darkMode} !important;
+          --epr-dark-category-label-bg-color: ${ColorPalette.darkMode + "d8"} !important;
+          --epr-skin-tone-picker-menu-color: ${ColorPalette.darkMode} !important;
+          --epr-emoji-variation-picker-bg-color: ${ColorPalette.darkMode} !important;
+          --epr-emoji-variation-picker-menu-color: ${ColorPalette.darkMode} !important;
+          --epr-dark-search-input-bg-color-active: #313131 !important;
+          --epr-dark-picker-border-color: #616161 !important;
           border-radius: 20px !important;
           padding: 8px !important;
         }

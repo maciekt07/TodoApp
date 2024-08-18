@@ -22,23 +22,18 @@ export const CustomDialogTitle = ({
   return (
     <DialogTitle {...props}>
       {onClose && (
-        <IconButton
-          sx={{ position: "absolute", right: "24px", top: "24px", zIndex: 1 }}
-          onClick={onClose}
-          size="small"
-        >
+        <CloseButton onClick={onClose} size="small">
           <CloseRounded />
-        </IconButton>
+        </CloseButton>
       )}
       <TitleContainer>
         {icon && <IconWrapper>{icon}</IconWrapper>}
-        <div style={{ lineHeight: "1.4em" }}>
+        <TextContainer>
           <Title>{title}</Title>
           <SubTitle>{subTitle}</SubTitle>
-        </div>
+        </TextContainer>
       </TitleContainer>
-
-      <Divider sx={{ mt: "16px", width: "100%" }} />
+      <StyledDivider />
     </DialogTitle>
   );
 };
@@ -49,6 +44,13 @@ const TitleContainer = styled.div`
   align-items: center;
   gap: 16px;
   max-width: 400px;
+`;
+
+const CloseButton = styled(IconButton)`
+  position: absolute;
+  right: 24px;
+  top: 24px;
+  z-index: 1;
 `;
 
 const IconWrapper = styled.div`
@@ -63,12 +65,19 @@ const IconWrapper = styled.div`
   padding: 12px;
   border-radius: 16px;
 `;
-
+const TextContainer = styled.div`
+  line-height: 1.4em;
+`;
 const Title = styled.div`
   font-weight: 600;
   opacity: 0.9;
 `;
+
 const SubTitle = styled.div`
   font-size: 14px;
   opacity: 0.7;
+`;
+
+const StyledDivider = styled(Divider)`
+  margin-top: 16px;
 `;

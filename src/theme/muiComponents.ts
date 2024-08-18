@@ -31,6 +31,7 @@ export const muiComponentsProps: Theme["components"] = {
         style: {
           padding: "12px",
           borderRadius: "24px",
+          minWidth: "400px",
         },
       },
     },

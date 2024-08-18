@@ -1,7 +1,15 @@
 import { useTheme } from "@emotion/react";
 import styled from "@emotion/styled";
 import { AddReaction, AutoAwesome, Edit, RemoveCircleOutline } from "@mui/icons-material";
-import { Avatar, Badge, Button, CircularProgress } from "@mui/material";
+import {
+  Avatar,
+  Badge,
+  Button,
+  CircularProgress,
+  Dialog,
+  DialogActions,
+  DialogContent,
+} from "@mui/material";
 import { Emoji, EmojiClickData, EmojiStyle, SuggestionMode, Theme } from "emoji-picker-react";
 import {
   CSSProperties,
@@ -15,11 +23,12 @@ import {
 } from "react";
 import { UserContext } from "../contexts/UserContext";
 import { useOnlineStatus } from "../hooks/useOnlineStatus";
-import { fadeIn } from "../styles";
+import { DialogBtn, fadeIn } from "../styles";
 import { ColorPalette } from "../theme/themeConfig";
 import { getFontColor, showToast, systemInfo } from "../utils";
 import { CATEGORY_NAME_MAX_LENGTH, TASK_NAME_MAX_LENGTH } from "../constants";
 import { AITextSession } from "../types/ai";
+import { CustomDialogTitle } from "./DialogTitle";
 
 const EmojiPicker = lazy(() => import("emoji-picker-react"));
 interface EmojiPickerProps {
@@ -253,61 +262,96 @@ export const CustomEmojiPicker = ({
           </Button>
         </div>
       )}
+
       {showEmojiPicker && (
         <>
-          {!isOnline && emojisStyle !== EmojiStyle.NATIVE && (
-            <OfflineContainer width={width}>
-              <span>
-                Emojis may not load correctly when offline. Try switching to the native emoji style.
-                <br />
-                <Button
-                  variant="outlined"
-                  onClick={() => {
-                    setUser((prevUser) => ({
-                      ...prevUser,
-                      emojisStyle: EmojiStyle.NATIVE,
-                    }));
-                    setShowEmojiPicker(false);
-                  }}
-                >
-                  Change Style
-                </Button>
-              </span>
-            </OfflineContainer>
-          )}
+          <Dialog
+            open={showEmojiPicker}
+            onClose={toggleEmojiPicker}
+            PaperProps={{
+              style: {
+                padding: "12px",
+                borderRadius: "24px",
+                minWidth: "400px",
+              },
+            }}
+          >
+            <CustomDialogTitle
+              title="Choose Emoji"
+              subTitle={`Choose the perfect emoji for your ${type}.`}
+              onClose={toggleEmojiPicker}
+              icon={<AddReaction />}
+            />
+            {!isOnline &&
+              emojisStyle !== EmojiStyle.NATIVE && ( //TODO: design this better
+                <OfflineContainer width={width}>
+                  <span>
+                    Emojis may not load correctly when offline. Try switching to the native emoji
+                    style.
+                    <br />
+                    <Button
+                      variant="outlined"
+                      onClick={() => {
+                        setUser((prevUser) => ({
+                          ...prevUser,
+                          emojisStyle: EmojiStyle.NATIVE,
+                        }));
+                        setShowEmojiPicker(false);
+                      }}
+                    >
+                      Change Style
+                    </Button>
+                  </span>
+                </OfflineContainer>
+              )}
 
-          <EmojiPickerContainer>
-            <Suspense
-              fallback={
-                !settings[0].simpleEmojiPicker && (
-                  <PickerLoader
-                    pickerTheme={emotionTheme.darkmode ? "dark" : "light"}
-                    width={width}
-                  ></PickerLoader>
-                )
-              }
+            {/* <div
+              style={{ display: "flex", justifyContent: "center", alignItems: "center", margin: 0 }}
             >
-              <EmojiPicker
-                width={width || "350px"}
-                height="500px"
-                reactionsDefaultOpen={
-                  settings[0].simpleEmojiPicker && getFrequentlyUsedEmojis().length !== 0
+              <EmojiAvatar clr={color} onClick={toggleEmojiPicker} style={{ cursor: "default" }}>
+                {renderAvatarContent()}
+              </EmojiAvatar>
+            </div> */}
+            <EmojiPickerContainer>
+              <Suspense
+                fallback={
+                  !settings[0].simpleEmojiPicker && (
+                    <PickerLoader
+                      pickerTheme={emotionTheme.darkmode ? "dark" : "light"}
+                    ></PickerLoader>
+                  )
                 }
-                reactions={getFrequentlyUsedEmojis()}
-                emojiStyle={emojisStyle}
-                theme={emotionTheme.darkmode ? Theme.DARK : Theme.LIGHT}
-                suggestedEmojisMode={SuggestionMode.FREQUENT}
-                autoFocusSearch={false}
-                onEmojiClick={handleEmojiClick}
-                searchPlaceHolder="Search emoji"
-                previewConfig={{
-                  defaultEmoji: "1f4dd",
-                  defaultCaption: "Choose the perfect emoji for your task",
-                }}
-              />
-            </Suspense>
-          </EmojiPickerContainer>
-          {currentEmoji && (
+              >
+                <EmojiPicker
+                  width="100vw"
+                  height="550px"
+                  reactionsDefaultOpen={
+                    settings[0].simpleEmojiPicker && getFrequentlyUsedEmojis().length !== 0
+                  }
+                  reactions={getFrequentlyUsedEmojis()}
+                  emojiStyle={emojisStyle}
+                  theme={emotionTheme.darkmode ? Theme.DARK : Theme.LIGHT}
+                  suggestedEmojisMode={SuggestionMode.FREQUENT}
+                  autoFocusSearch={false}
+                  onEmojiClick={handleEmojiClick}
+                  searchPlaceHolder="Search emoji"
+                  previewConfig={{
+                    defaultEmoji: "1f4dd",
+                    defaultCaption: `Choose the perfect emoji for your ${type}`,
+                  }}
+                />
+              </Suspense>
+            </EmojiPickerContainer>
+            <DialogActions>
+              <DialogBtn onClick={toggleEmojiPicker}>Cancel</DialogBtn>
+              {currentEmoji && (
+                <DialogBtn color="error" onClick={handleRemoveEmoji}>
+                  <RemoveCircleOutline /> &nbsp; Remove Emoji
+                </DialogBtn>
+              )}
+            </DialogActions>
+          </Dialog>
+          {/* {currentEmoji && (
             <div
               style={{
                 display: "flex",
@@ -320,7 +364,7 @@ export const CustomEmojiPicker = ({
                 <RemoveCircleOutline /> &nbsp; Remove Emoji
               </Button>
             </div>
-          )}
+          )} */}
         </>
       )}
     </>
@@ -334,12 +378,13 @@ const EmojiContainer = styled.div`
   margin: 14px;
 `;
 
-const EmojiPickerContainer = styled.div`
+const EmojiPickerContainer = styled(DialogContent)`
   display: flex;
   justify-content: center;
   align-items: center;
-  margin: 24px;
+  margin: 16px;
   animation: ${fadeIn} 0.4s ease-in;
+  padding: 0;
 `;
 
 const EmojiAvatar = styled(Avatar)<{ clr: string | undefined }>`
@@ -371,7 +416,7 @@ const OfflineContainer = styled.div<{ width?: CSSProperties["width"] | undefined
 
 const PickerLoader = styled.div<{
   pickerTheme: "light" | "dark" | undefined;
-  width: CSSProperties["width"] | undefined;
+  width?: CSSProperties["width"] | undefined;
 }>`
   display: flex;
   align-items: center;
