@@ -66,7 +66,7 @@ const IconWrapper = styled.div`
   border-radius: 16px;
 `;
 const TextContainer = styled.div`
-  line-height: 1.4em;
+  line-height: 1.3em;
 `;
 const Title = styled.div`
   font-weight: 600;

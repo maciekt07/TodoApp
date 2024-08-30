@@ -265,7 +265,7 @@ const UserProfile = () => {
             autoFocus
             label="Link to profile picture"
             placeholder="Enter link to profile picture..."
-            sx={{ my: "8px", width: "300px" }}
+            sx={{ my: "8px", width: "100%" }}
             value={profilePictureURL}
             onChange={(e) => {
               setProfilePictureURL(e.target.value);

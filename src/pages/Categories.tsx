@@ -386,7 +386,6 @@ const Categories = () => {
                 user.categories.find((cat) => cat.id === selectedCategoryId)?.emoji || undefined
               }
               setEmoji={setEditEmoji}
-              width={300}
               color={editColor}
               name={editName}
               type="category"

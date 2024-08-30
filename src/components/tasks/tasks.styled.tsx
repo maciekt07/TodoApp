@@ -25,8 +25,8 @@ export const TaskContainer = styled.div<TaskComponentProps>`
   border-left: ${({ done }) => (done ? "8px solid #00ff1ee3" : "1px solid transparent")};
   box-shadow: ${(props) =>
     props.glow && !props.blur ? `0 0 128px -20px ${props.backgroundColor}` : "none"};
-  text-shadow: ${({ backgroundColor, glow, done }) =>
-    glow && !done ? `0 0 2px ${getFontColor(backgroundColor)}78` : "none"};
+  /* text-shadow: ${({ backgroundColor, glow, done }) =>
+    glow && !done ? `0 0 2px ${getFontColor(backgroundColor)}78` : "none"}; */
   filter: ${({ blur }) => (blur ? "blur(2px) opacity(75%)" : "none")};
 
   animation: ${fadeIn} 0.5s ease-in;

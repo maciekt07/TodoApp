@@ -6,7 +6,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "devhost": "vite --host",
+    "dev:host": "vite --host",
     "build": "tsc && vite build",
     "lint": "eslint .",
     "prettier": "prettier --write \"**/*.{ts,tsx,md,json,html}\"",
@@ -38,11 +38,12 @@
     "eslint": "^9.9.0",
     "eslint-plugin-react-hooks": "^5.1.0-rc.0",
     "eslint-plugin-react-refresh": "^0.4.9",
+    "globals": "^15.9.0",
     "prettier": "^3.3.3",
     "typescript": "^5.5.4",
     "typescript-eslint": "^8.0.1",
-    "globals": "^15.9.0",
     "vite": "^5.4.0",
-    "vite-plugin-pwa": "^0.20.1"
+    "vite-plugin-pwa": "^0.20.1",
+    "vite-plugin-qrcode": "^0.2.3"
   }
 }

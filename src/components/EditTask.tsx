@@ -125,26 +125,6 @@ export const EditTask = ({ open, task, onClose, onSave }: EditTaskProps) => {
         },
       }}
     >
-      {/* <DialogTitle
-        sx={{
-          justifyContent: "space-between",
-          display: "flex",
-          alignItems: "center",
-        }}
-      >
-        <span>Edit Task</span>
-        {editedTask?.lastSave && (
-          <Tooltip title={timeAgo(editedTask.lastSave)}>
-            <LastEdit>
-              <EditCalendarRounded sx={{ fontSize: "20px" }} /> Last Edited:{" "}
-              {new Date(editedTask.lastSave).toLocaleDateString()}
-              {" • "}
-              {new Date(editedTask.lastSave).toLocaleTimeString()}
-            </LastEdit>
-          </Tooltip>
-        )}
-      </DialogTitle> */}
-
       <CustomDialogTitle
         title="Edit Task"
         subTitle={
@@ -160,7 +140,6 @@ export const EditTask = ({ open, task, onClose, onSave }: EditTaskProps) => {
           emoji={editedTask?.emoji || undefined}
           setEmoji={setEmoji}
           color={editedTask?.color}
-          width="350px"
           name={editedTask?.name || ""}
           type="task"
         />
@@ -289,16 +268,3 @@ const StyledInput = styled(TextField)`
 StyledInput.defaultProps = {
   fullWidth: true,
 };
-
-// const LastEdit = styled.span`
-//   display: flex;
-//   align-items: center;
-//   gap: 6px;
-//   font-size: 15px;
-//   font-style: italic;
-//   font-weight: 400;
-//   opacity: 0.8;
-//   @media (max-width: 768px) {
-//     font-size: 14px;
-//   }
-// `;

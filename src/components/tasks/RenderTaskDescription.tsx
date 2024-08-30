@@ -108,16 +108,13 @@ export const RenderTaskDescription = memo(
             }
             key={index}
           >
-            <DescriptionLink
-              role="link"
-              data-href={part}
-              clr={color}
-              onClick={() => window.open(part)}
-            >
-              <div>
-                {icon} {highlightMatchingText(domain)}
-              </div>
-            </DescriptionLink>
+            <a href={part} target="_blank" rel="noreferrer">
+              <DescriptionLink role="link" data-href={part} clr={color}>
+                <div>
+                  {icon} {highlightMatchingText(domain)}
+                </div>
+              </DescriptionLink>
+            </a>
           </Tooltip>
         );
       }

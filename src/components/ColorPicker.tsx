@@ -179,26 +179,17 @@ export const ColorPicker: React.FC<ColorPickerProps> = ({
           expandIcon={<ExpandMoreRounded sx={{ color: fontColor || ColorPalette.fontLight }} />}
           sx={{ fontWeight: 500 }}
         >
-          <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
+          <SummaryContent clr={fontColor || ColorPalette.fontLight}>
             {!accordionExpanded && <AccordionPreview clr={selectedColor} />}
-            <span style={{ color: fontColor || ColorPalette.fontLight }}>
-              {label || "Color"}
-              {!accordionExpanded && ` - ${getColorName(selectedColor).name}`}
-            </span>
-          </div>
+            {label || "Color"}
+            {!accordionExpanded && ` - ${getColorName(selectedColor).name}`}
+          </SummaryContent>
         </AccordionSummary>
         <AccordionDetails>
           <ColorPreview maxWidth={width || 400} clr={selectedColor}>
             {selectedColor.toUpperCase()} - {getColorName(selectedColor).name}
           </ColorPreview>
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-              maxWidth: width || 400,
-            }}
-          >
+          <Grid container maxWidth={width || 400}>
             <Grid container spacing={1} maxWidth={width || 400} m={1}>
               {[theme.primary, ...colorList].map((color, index) => (
                 <Grid item key={color}>
@@ -273,7 +264,7 @@ export const ColorPicker: React.FC<ColorPickerProps> = ({
                 </Grid>
               </Tooltip>
             </Grid>
-          </div>
+          </Grid>
           <StyledInfo clr={fontColor || ColorPalette.fontLight}>
             <InfoRounded fontSize="small" />{" "}
             {window.matchMedia("(pointer:fine)").matches ? "Right click" : "Double tap"} to remove
@@ -289,17 +280,9 @@ export const ColorPicker: React.FC<ColorPickerProps> = ({
           onClose={handleAddDialogClose}
         />
         <DialogContent>
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              margin: "4px 0",
-              fontWeight: 600,
-            }}
-          >
+          <DialogPreview>
             {addColorVal.toUpperCase()} - {getColorName(addColorVal).name}
-          </div>
+          </DialogPreview>
           <div style={{ position: "relative" }}>
             <StyledColorPicker
               type="color"
@@ -352,6 +335,13 @@ const AccordionPreview = styled.div<{ clr: string }>`
   background: ${({ clr }) => clr};
   border-radius: 8px;
   transition: 0.3s background;
+`;
+
+const SummaryContent = styled.div<{ clr: string }>`
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: ${({ clr }) => clr};
 `;
 
 const ToastColorPreview = styled(AccordionPreview)`
@@ -417,6 +407,14 @@ const PickerLabel = styled.p<{ clr: string }>`
   top: 0;
   left: 50%;
   transform: translate(-50%, 0%);
+  font-weight: 600;
+`;
+
+const DialogPreview = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 4px 0;
   font-weight: 600;
 `;
 

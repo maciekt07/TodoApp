@@ -35,19 +35,11 @@ interface EmojiPickerProps {
   emoji?: string;
   setEmoji: Dispatch<SetStateAction<string | null>>;
   color?: string;
-  width?: CSSProperties["width"];
   name?: string;
   type?: "task" | "category";
 }
 
-export const CustomEmojiPicker = ({
-  emoji,
-  setEmoji,
-  color,
-  width,
-  name,
-  type,
-}: EmojiPickerProps) => {
+export const CustomEmojiPicker = ({ emoji, setEmoji, color, name, type }: EmojiPickerProps) => {
   const { user, setUser } = useContext(UserContext);
   const { emojisStyle, settings } = user;
   const [showEmojiPicker, setShowEmojiPicker] = useState<boolean>(false);
@@ -263,7 +255,7 @@ export const CustomEmojiPicker = ({
         </div>
       )}
       {/* Simple Emoji Picker */}
-      {showEmojiPicker && user.settings[0].simpleEmojiPicker && (
+      {showEmojiPicker && settings[0].simpleEmojiPicker && (
         <SimplePickerContainer>
           <Suspense fallback={<CircularProgress size={40} thickness={5} />}>
             <EmojiPicker
@@ -281,7 +273,7 @@ export const CustomEmojiPicker = ({
         </SimplePickerContainer>
       )}
 
-      {showEmojiPicker && !user.settings[0].simpleEmojiPicker && (
+      {showEmojiPicker && !settings[0].simpleEmojiPicker && (
         <>
           <Dialog
             open={showEmojiPicker}
@@ -302,7 +294,7 @@ export const CustomEmojiPicker = ({
             />
             {!isOnline &&
               emojisStyle !== EmojiStyle.NATIVE && ( //TODO: design this better
-                <OfflineContainer width={width}>
+                <OfflineContainer>
                   <span>
                     Emojis may not load correctly when offline. Try switching to the native emoji
                     style.
@@ -428,6 +420,7 @@ const PickerLoader = styled.div<{
   justify-content: center;
   width: ${({ width }) => width || "350px"};
   height: 500px;
+  width: 100vw;
   padding: 8px;
   border-radius: 20px;
   background: ${({ pickerTheme }) => (pickerTheme === "dark" ? "#222222" : "#ffffff")};
