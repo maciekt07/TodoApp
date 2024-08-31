@@ -9,7 +9,7 @@ import { CategorySelect, ColorPicker, TopBar, CustomEmojiPicker } from "../compo
 import { UserContext } from "../contexts/UserContext";
 import { useStorageState } from "../hooks/useStorageState";
 import { useTheme } from "@emotion/react";
-import { getFontColor, showToast } from "../utils";
+import { getFontColor, isDark, showToast } from "../utils";
 import { ColorPalette } from "../theme/themeConfig";
 
 const AddTask = () => {
@@ -181,7 +181,7 @@ const AddTask = () => {
           onChange={handleDeadlineChange}
           focused
           sx={{
-            colorScheme: getFontColor(theme.secondary) === ColorPalette.fontDark ? "light" : "dark",
+            colorScheme: isDark(theme.secondary) ? "dark" : "light",
           }}
           InputProps={{
             startAdornment:

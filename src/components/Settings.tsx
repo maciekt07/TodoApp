@@ -43,8 +43,7 @@ import { useOnlineStatus } from "../hooks/useOnlineStatus";
 import { useSystemTheme } from "../hooks/useSystemTheme";
 import { DialogBtn } from "../styles";
 import type { AppSettings, DarkModeOptions } from "../types/user";
-import { getFontColor, showToast, systemInfo } from "../utils";
-import { ColorPalette } from "../theme/themeConfig";
+import { isDark, showToast, systemInfo } from "../utils";
 import { CustomDialogTitle } from "./DialogTitle";
 
 interface SettingsProps {
@@ -284,10 +283,7 @@ export const SettingsDialog: React.FC<SettingsProps> = ({ open, onClose }) => {
                 <StyledMenuItem key={option.mode} value={option.mode}>
                   {option.icon}&nbsp;{option.label}
                   {option.mode === "system" && ` (${systemTheme})`}
-                  {option.mode === "auto" &&
-                    ` (${
-                      getFontColor(theme.secondary) === ColorPalette.fontDark ? "light" : "dark"
-                    })`}
+                  {option.mode === "auto" && ` (${isDark(theme.secondary) ? "dark" : "light"})`}
                 </StyledMenuItem>
               ))}
             </StyledSelect>

@@ -3,7 +3,7 @@ import { Alarm, RadioButtonChecked, RadioButtonUnchecked } from "@mui/icons-mate
 import { Button, Checkbox, IconButton, TextField, css } from "@mui/material";
 import { fadeIn, ring, scale } from "../../styles/keyframes.styled";
 import { ColorPalette } from "../../theme/themeConfig";
-import { getFontColor, systemInfo } from "../../utils";
+import { getFontColor, isDark, systemInfo } from "../../utils";
 
 interface TaskComponentProps {
   backgroundColor: string;
@@ -167,8 +167,7 @@ export const SelectedTasksContainer = styled.div`
   align-items: center;
   justify-content: space-between;
   margin: 8px 0;
-  background: ${({ theme }) =>
-    getFontColor(theme.secondary) === ColorPalette.fontLight ? "#090b2287" : "#ffffff5c"};
+  background: ${({ theme }) => (isDark(theme.secondary) ? "#090b2287" : "#ffffff5c")};
   padding: 16px 20px;
   border-radius: 18px;
   position: sticky;
@@ -311,18 +310,13 @@ export const SearchInput = styled(TextField)`
   transition: 0.3s all;
   width: 100%;
   & .MuiOutlinedInput-notchedOutline {
-    border: 1px solid
-      ${({ theme }) =>
-        getFontColor(theme.secondary) === ColorPalette.fontLight
-          ? "#44479cb7"
-          : theme.primary} !important;
+    border: 1px solid ${({ theme }) => (isDark(theme.secondary) ? "#44479cb7" : theme.primary)} !important;
   }
   & .MuiOutlinedInput-root {
     padding: 2px 16px;
     border-radius: 16px;
     transition: 0.3s all;
-    background: ${({ theme }) =>
-      getFontColor(theme.secondary) === ColorPalette.fontLight ? "#090b2258" : "#ffffff3e"};
+    background: ${({ theme }) => (isDark(theme.secondary) ? "#090b2258" : "#ffffff3e")};
     color: ${({ theme }) => getFontColor(theme.secondary)};
     & .MuiSvgIcon-root {
       color: ${({ theme }) => getFontColor(theme.secondary)};

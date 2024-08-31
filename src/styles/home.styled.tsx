@@ -1,8 +1,7 @@
 import styled from "@emotion/styled";
 import { fadeIn, fadeInLeft, progressPulse, pulseAnimation } from "./keyframes.styled";
 import { Box, Button, CircularProgress, css } from "@mui/material";
-import { getFontColor } from "../utils";
-import { ColorPalette } from "../theme/themeConfig";
+import { getFontColor, isDark } from "../utils";
 
 export const GreetingHeader = styled.div`
   display: flex;
@@ -37,8 +36,7 @@ export const TasksCountContainer = styled.div`
 export const TasksCount = styled.div<{ glow: boolean }>`
   color: ${({ theme }) => getFontColor(theme.secondary)};
   /* background: #090b2258; */
-  background: ${({ theme }) =>
-    getFontColor(theme.secondary) === ColorPalette.fontLight ? "#090b2258" : "#ffffff3e"};
+  background: ${({ theme }) => (isDark(theme.secondary) ? "#090b2258" : "#ffffff3e")};
   transition: 0.3s all;
   display: flex;
   align-items: center;
@@ -48,9 +46,7 @@ export const TasksCount = styled.div<{ glow: boolean }>`
   margin: 24px 0 12px 0;
   border-radius: 24px;
   width: 650px;
-  border: 1px solid
-    ${({ theme }) =>
-      getFontColor(theme.secondary) === ColorPalette.fontLight ? "#44479cb7" : theme.primary};
+  border: 1px solid ${({ theme }) => (isDark(theme.secondary) ? "#44479cb7" : theme.primary)};
   @media (min-width: 1024px) {
     padding: 24px;
   }
@@ -84,18 +80,11 @@ export const ProgressPercentageContainer = styled(Box)<{ glow: boolean }>`
   align-items: center;
   justify-content: center;
   /* background: #090b2287; */
-  background: ${({ theme }) =>
-    getFontColor(theme.secondary) === ColorPalette.fontLight ? "#090b2287" : "#ffffff5c"};
-
+  background: ${({ theme }) => (isDark(theme.secondary) ? "#090b2287" : "#ffffff5c")};
   border-radius: 100px;
   margin: -5px;
-  border: 1px solid
-    ${({ theme }) =>
-      getFontColor(theme.secondary) === ColorPalette.fontLight ? "#44479cb7" : theme.primary};
-  box-shadow: ${({ theme }) =>
-    `0 0 18px -2px ${
-      getFontColor(theme.secondary) === ColorPalette.fontLight ? "#090b22" : "#bababa"
-    }`};
+  border: 1px solid ${({ theme }) => (isDark(theme.secondary) ? "#44479cb7" : theme.primary)};
+  box-shadow: ${({ theme }) => `0 0 18px -2px ${isDark(theme.secondary) ? "#090b22" : "#bababa"}`};
   & .MuiTypography-root {
     color: ${({ theme }) => getFontColor(theme.secondary)};
   }

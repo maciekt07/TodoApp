@@ -1,10 +1,15 @@
+/// <reference types="vitest" />
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 import { VitePWA } from "vite-plugin-pwa";
 import { qrcode } from "vite-plugin-qrcode";
 import manifest from "./manifest";
 
+// https://vitejs.dev/config/
 export default defineConfig({
+  test: {
+    globals: true,
+  },
   plugins: [
     react(),
     qrcode({ filter: (url) => url === "http://192.168.0.10:5173/" }),

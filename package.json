@@ -7,9 +7,10 @@
   "scripts": {
     "dev": "vite",
     "dev:host": "vite --host",
-    "build": "tsc && vite build",
+    "test": "vitest",
     "lint": "eslint .",
     "prettier": "prettier --write \"**/*.{ts,tsx,md,json,html}\"",
+    "build": "tsc && vite build",
     "preview": "vite preview"
   },
   "dependencies": {
@@ -44,6 +45,7 @@
     "typescript-eslint": "^8.0.1",
     "vite": "^5.4.0",
     "vite-plugin-pwa": "^0.20.1",
-    "vite-plugin-qrcode": "^0.2.3"
+    "vite-plugin-qrcode": "^0.2.3",
+    "vitest": "^2.0.5"
   }
 }

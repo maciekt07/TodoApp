@@ -1,3 +1,8 @@
+/**
+ * Formats a date into a human-readable string based on its proximity to the current date.
+ * @param {Date} date - The date to format.
+ * @returns {string} The formatted date string.
+ */
 export const formatDate = (date: Date): string => {
   const today = new Date();
   const yesterday = new Date(today);

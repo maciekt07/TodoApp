@@ -2,7 +2,7 @@ export { calculateDateDifference } from "./calculateTimeDiff";
 export { displayGreeting } from "./displayGreeting";
 export { exportTasksToJson } from "./exportTasksToJson";
 export { formatDate } from "./formatDate";
-export { getFontColor } from "./getFontColor";
+export { getFontColor, isDark } from "./colorUtils";
 export { getRandomGreeting } from "./getRandomGreeting";
 export { systemInfo } from "./getSystemInfo";
 export { getTaskCompletionText } from "./getTaskCompletionText";

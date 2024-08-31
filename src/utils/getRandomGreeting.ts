@@ -1,3 +1,6 @@
+const recentGreetings: Set<number> = new Set();
+const maxRecentGreetings = 8; // Number of recent greetings to track
+
 /**
  * Returns a random greeting message to inspire productivity.
  * @returns {string} A random greeting message with optional emoji code.
@@ -26,7 +29,6 @@ export const getRandomGreeting = (): string => {
     "Stay focused, stay productive.",
     "Unlock your productivity potential. **1f513**",
     "Turn your to-do list into a to-done list! **1f4dd**",
-
     `Have a wonderful  ${new Date().toLocaleDateString("en", {
       weekday: "long",
     })}!`,
@@ -38,6 +40,24 @@ export const getRandomGreeting = (): string => {
       : `Only ${hoursLeft} hours left in the day`,
   ];
 
-  const randomIndex = Math.floor(Math.random() * greetingsText.length);
-  return greetingsText[randomIndex];
+  // Function to get a new greeting that hasn't been used recently
+  const getUniqueGreeting = (): string => {
+    let randomIndex: number;
+    do {
+      randomIndex = Math.floor(Math.random() * greetingsText.length);
+    } while (recentGreetings.has(randomIndex));
+
+    // Update recent greetings
+    recentGreetings.add(randomIndex);
+    if (recentGreetings.size > maxRecentGreetings) {
+      const firstEntry = Array.from(recentGreetings).shift();
+      if (firstEntry !== undefined) {
+        recentGreetings.delete(firstEntry);
+      }
+    }
+
+    return greetingsText[randomIndex];
+  };
+
+  return getUniqueGreeting();
 };
