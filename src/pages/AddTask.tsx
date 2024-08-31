@@ -9,7 +9,7 @@ import { CategorySelect, ColorPicker, TopBar, CustomEmojiPicker } from "../compo
 import { UserContext } from "../contexts/UserContext";
 import { useStorageState } from "../hooks/useStorageState";
 import { useTheme } from "@emotion/react";
-import { getFontColor, isDark, showToast } from "../utils";
+import { generateUUID, getFontColor, isDark, showToast } from "../utils";
 import { ColorPalette } from "../theme/themeConfig";
 
 const AddTask = () => {
@@ -90,7 +90,7 @@ const AddTask = () => {
     }
 
     const newTask: Task = {
-      id: crypto.randomUUID(),
+      id: generateUUID(),
       done: false,
       pinned: false,
       name,

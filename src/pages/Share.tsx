@@ -16,7 +16,14 @@ import { DialogBtn } from "../styles";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useContext, useEffect, useState } from "react";
 import type { Task } from "../types/user";
-import { calculateDateDifference, formatDate, getFontColor, showToast, systemInfo } from "../utils";
+import {
+  calculateDateDifference,
+  formatDate,
+  generateUUID,
+  getFontColor,
+  showToast,
+  systemInfo,
+} from "../utils";
 import { Emoji, EmojiStyle } from "emoji-picker-react";
 import { UserContext } from "../contexts/UserContext";
 import {
@@ -52,7 +59,7 @@ const SharePage = () => {
         const decodedTask = decodeURIComponent(taskParam);
         const task: Task = {
           ...(JSON.parse(decodedTask) as Task),
-          id: crypto.randomUUID(),
+          id: generateUUID(),
         };
         if (!isHexColor(task.color)) {
           setError(true);
@@ -118,7 +125,7 @@ const SharePage = () => {
           ...prevUser.tasks.filter(Boolean),
           {
             ...taskData,
-            id: crypto.randomUUID(),
+            id: generateUUID(),
             sharedBy: userName,
           },
         ],

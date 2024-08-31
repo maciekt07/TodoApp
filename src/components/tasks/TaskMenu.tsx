@@ -54,6 +54,7 @@ import { DialogBtn } from "../../styles";
 import { Task, UUID } from "../../types/user";
 import {
   calculateDateDifference,
+  generateUUID,
   getFontColor,
   saveQRCode,
   showToast,
@@ -199,7 +200,7 @@ export const TaskMenu = () => {
         // Create a duplicated task with a new ID and current date
         const duplicatedTask: Task = {
           ...selectedTask,
-          id: crypto.randomUUID(),
+          id: generateUUID(),
           date: new Date(),
           lastSave: undefined,
         };
@@ -342,7 +343,7 @@ export const TaskMenu = () => {
       </StyledMenuItem>
 
       {multipleSelectedTasks.length === 0 && (
-        <StyledMenuItem onClick={() => handleSelectTask(selectedTaskId || crypto.randomUUID())}>
+        <StyledMenuItem onClick={() => handleSelectTask(selectedTaskId || generateUUID())}>
           <RadioButtonChecked /> &nbsp; Select
         </StyledMenuItem>
       )}

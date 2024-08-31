@@ -28,7 +28,7 @@ import {
   DialogBtn,
   EditNameInput,
 } from "../styles";
-import { getFontColor, showToast } from "../utils";
+import { generateUUID, getFontColor, showToast } from "../utils";
 import { ColorPalette } from "../theme/themeConfig";
 
 const NotFound = lazy(() => import("./NotFound"));
@@ -125,7 +125,7 @@ const Categories = () => {
         return;
       }
       const newCategory: Category = {
-        id: crypto.randomUUID(),
+        id: generateUUID(),
         name,
         emoji: emoji !== "" && emoji !== null ? emoji : undefined,
         color,

@@ -9,3 +9,4 @@ export { getTaskCompletionText } from "./getTaskCompletionText";
 export { saveQRCode } from "./saveQRCode";
 export { showToast } from "./showToast";
 export { timeAgo } from "./timeAgo";
+export { generateUUID } from "./generateUUID";
