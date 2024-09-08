@@ -24,3 +24,4 @@ dev-dist
 *.njsproj
 *.sln
 *.sw?
+.history

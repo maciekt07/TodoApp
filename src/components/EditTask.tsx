@@ -4,13 +4,16 @@ import {
   Dialog,
   DialogActions,
   DialogContent,
+  FormGroup,
+  FormControlLabel,
   IconButton,
   InputAdornment,
+  Switch,
   TextField,
   Tooltip,
 } from "@mui/material";
 import { useContext, useEffect, useMemo, useState } from "react";
-import { CategorySelect, ColorPicker, CustomDialogTitle, CustomEmojiPicker } from ".";
+import { CategorySelect, ColorPicker, CustomDialogTitle, CustomEmojiPicker, RecurringIntervalSelect } from ".";
 import { DESCRIPTION_MAX_LENGTH, TASK_NAME_MAX_LENGTH } from "../constants";
 import { UserContext } from "../contexts/UserContext";
 import { DialogBtn } from "../styles";
@@ -31,6 +34,7 @@ export const EditTask = ({ open, task, onClose, onSave }: EditTaskProps) => {
   const { settings } = user;
   const [editedTask, setEditedTask] = useState<Task | undefined>(task);
   const [emoji, setEmoji] = useState<string | null>(null);
+  const [selectedRecurringInterval, setSelectedRecurringInterval] = useState<string>("");
   const [selectedCategories, setSelectedCategories] = useState<Category[]>([]);
 
   const theme = useTheme();
@@ -57,6 +61,7 @@ export const EditTask = ({ open, task, onClose, onSave }: EditTaskProps) => {
   useEffect(() => {
     setEditedTask(task);
     setSelectedCategories(task?.category as Category[]);
+    setSelectedRecurringInterval(task?.recurringInterval as string);
   }, [task]);
 
   // Event handler for input changes in the form fields.
@@ -69,6 +74,17 @@ export const EditTask = ({ open, task, onClose, onSave }: EditTaskProps) => {
       [name]: value,
     }));
   };
+
+  const handleSwitchChange = (event: React.SyntheticEvent<Element>) => {
+    const { name, checked } = event.target as HTMLInputElement;
+    setEditedTask((prevTask) => ({
+      ...(prevTask as Task),
+      [name]: checked
+    }));
+
+    console.log(name);
+  };
+
   // Event handler for saving the edited task.
   const handleSave = () => {
     document.body.style.overflow = "auto";
@@ -86,14 +102,16 @@ export const EditTask = ({ open, task, onClose, onSave }: EditTaskProps) => {
     onClose();
     setEditedTask(task);
     setSelectedCategories(task?.category as Category[]);
+    setSelectedRecurringInterval(task?.recurringInterval as string);
   };
 
   useEffect(() => {
     setEditedTask((prevTask) => ({
       ...(prevTask as Task),
       category: (selectedCategories as Category[]) || undefined,
+      recurringInterval: (selectedRecurringInterval as string) || undefined
     }));
-  }, [selectedCategories]);
+  }, [selectedCategories, selectedRecurringInterval]);
 
   useEffect(() => {
     const handleBeforeUnload = (e: BeforeUnloadEvent) => {
@@ -177,7 +195,7 @@ export const EditTask = ({ open, task, onClose, onSave }: EditTaskProps) => {
                 ? `Description is too long (maximum ${DESCRIPTION_MAX_LENGTH} characters)`
                 : `${editedTask?.description?.length}/${DESCRIPTION_MAX_LENGTH}`
           }
-        />
+        />        
         <StyledInput
           label="Deadline date"
           name="deadline"
@@ -211,6 +229,25 @@ export const EditTask = ({ open, task, onClose, onSave }: EditTaskProps) => {
             ) : undefined,
           }}
         />
+        <FormGroup>
+          <FormControlLabel
+            sx={{ opacity: editedTask?.isRecurring ? 1 : 0.8 }}
+            checked={editedTask?.isRecurring} 
+            onChange={handleSwitchChange} 
+            name="isRecurring"
+            control={
+              <Switch />
+            } 
+            labelPlacement="top"
+            label="Is recurring task?"
+          />
+        </FormGroup>
+        {editedTask?.isRecurring && (
+          <RecurringIntervalSelect
+            selectedRecurringInterval={selectedRecurringInterval}
+            onRecurringChange={(recurringInterval) => setSelectedRecurringInterval(recurringInterval)}
+          />
+        )}
         {settings[0].enableCategories !== undefined && settings[0].enableCategories && (
           <CategorySelect
             fontColor={theme.darkmode ? ColorPalette.fontLight : ColorPalette.fontDark}
