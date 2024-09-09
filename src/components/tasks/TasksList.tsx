@@ -529,16 +529,14 @@ export const TasksList: React.FC = () => {
                             {calculateDateDifference(new Date(task.deadline))}
                           </>
                         )}
-                      </TimeLeft>
-                    </Tooltip>
-                    <>
-                      {task.isRecurring && (
+                        {task.isRecurring && (
                         <>
-                          {" • "} 
-                          est récurrente
+                          {" • is recurring "} 
+                          {task.recurringInterval}
                         </>
                       )}
-                    </>
+                      </TimeLeft>
+                    </Tooltip>
                   </>
                 )}
                 {task.sharedBy && (
