@@ -22,5 +22,8 @@
     "types": ["vite-plugin-pwa/client"]
   },
   "include": ["src"],
-  "references": [{ "path": "./tsconfig.node.json" }]
+  "references": [{ "path": "./tsconfig.node.json" }],
+  "paths": {
+   "react": [ "./node_modules/@types/react" ]
+ }
 }

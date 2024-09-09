@@ -39,6 +39,8 @@ export interface Task {
   category?: Category[];
   lastSave?: Date;
   sharedBy?: string;
+  isRecurring: boolean;
+  recurringInterval?: string;
 }
 
 // export type Emoji = Omit<
@@ -73,3 +75,5 @@ export interface AppSettings {
   voice: string;
   voiceVolume: number;
 }
+
+export type RecurringIntervals = "" | "daily" | "weekly" | "monthly" | "yearly";

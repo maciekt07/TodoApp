@@ -7,6 +7,7 @@ export { SettingsDialog } from "./Settings";
 export { TaskMenu } from "./tasks/TaskMenu";
 export { BottomNav } from "./BottomNav";
 export { CategorySelect } from "./CategorySelect";
+export { RecurringIntervalSelect } from "./RecurringIntervalSelect";
 export { ColorPicker } from "./ColorPicker";
 export { CategoryBadge } from "./CategoryBadge";
 export { TaskIcon } from "./TaskIcon";

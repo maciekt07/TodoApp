@@ -504,32 +504,40 @@ export const TasksList: React.FC = () => {
                 </TaskDescription>
 
                 {task.deadline && (
-                  <Tooltip
-                    title={new Intl.DateTimeFormat(navigator.language, {
-                      dateStyle: "full",
-                      timeStyle: "medium",
-                    }).format(new Date(task.deadline))}
-                    placement="bottom-start"
-                  >
-                    <TimeLeft done={task.done} translate="yes">
-                      <RingAlarm
-                        fontSize="small"
-                        animate={new Date() > new Date(task.deadline) && !task.done}
-                        sx={{
-                          color: `${getFontColor(task.color)} !important`,
-                        }}
-                      />{" "}
-                      &nbsp;
-                      {new Date(task.deadline).toLocaleDateString()} {" • "}
-                      {new Date(task.deadline).toLocaleTimeString()}
-                      {!task.done && (
+                  <>
+                    <Tooltip
+                      title={new Intl.DateTimeFormat(navigator.language, {
+                        dateStyle: "full",
+                        timeStyle: "medium",
+                      }).format(new Date(task.deadline))}
+                      placement="bottom-start"
+                    >
+                      <TimeLeft done={task.done} translate="yes">
+                        <RingAlarm
+                          fontSize="small"
+                          animate={new Date() > new Date(task.deadline) && !task.done}
+                          sx={{
+                            color: `${getFontColor(task.color)} !important`,
+                          }}
+                        />{" "}
+                        &nbsp;
+                        {new Date(task.deadline).toLocaleDateString()} {" • "}
+                        {new Date(task.deadline).toLocaleTimeString()}
+                        {!task.done && (
+                          <>
+                            {" • "}
+                            {calculateDateDifference(new Date(task.deadline))}
+                          </>
+                        )}
+                        {task.isRecurring && (
                         <>
-                          {" • "}
-                          {calculateDateDifference(new Date(task.deadline))}
+                          {" • is recurring "} 
+                          {task.recurringInterval}
                         </>
                       )}
-                    </TimeLeft>
-                  </Tooltip>
+                      </TimeLeft>
+                    </Tooltip>
+                  </>
                 )}
                 {task.sharedBy && (
                   <div
@@ -610,6 +618,8 @@ export const TasksList: React.FC = () => {
                   deadline: editedTask.deadline || undefined,
                   category: editedTask.category || undefined,
                   lastSave: new Date(),
+                  isRecurring: editedTask.isRecurring || false,
+                  recurringInterval: editedTask.recurringInterval || undefined
                 };
               }
               return task;
