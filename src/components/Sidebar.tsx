@@ -150,12 +150,11 @@ export const ProfileSidebar = () => {
           if ("setAppBadge" in navigator) {
             setUser((prevUser) => ({
               ...prevUser,
-              settings: [
+              settings: 
                 {
-                  ...prevUser.settings[0],
+                  ...prevUser.settings,
                   appBadge: true,
                 },
-              ],
             }));
           }
           handleClose();
@@ -242,7 +241,7 @@ export const ProfileSidebar = () => {
           </StyledMenuItem>
         </MenuLink>
 
-        {settings[0].enableCategories !== undefined && settings[0].enableCategories && (
+        {settings.enableCategories !== undefined && settings.enableCategories && (
           <MenuLink to="/categories">
             <StyledMenuItem onClick={handleClose}>
               <CategoryRounded /> &nbsp; Categories
@@ -356,7 +355,7 @@ export const ProfileSidebar = () => {
             }}
           >
             <SettingsRounded /> &nbsp; Settings
-            {settings[0] === defaultUser.settings[0] && <PulseMenuLabel />}
+            {settings === defaultUser.settings && <PulseMenuLabel />}
           </SettingsMenuItem>
 
           <StyledDivider />

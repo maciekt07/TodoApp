@@ -105,7 +105,7 @@ export const TaskMenu = () => {
         ...task,
         sharedBy: undefined,
         id: undefined,
-        category: settings[0].enableCategories ? task.category : undefined,
+        category: settings.enableCategories ? task.category : undefined,
       };
       const encodedTask = encodeURIComponent(JSON.stringify(taskToShare));
       const encodedUserName = encodeURIComponent(userName);
@@ -218,9 +218,9 @@ export const TaskMenu = () => {
   //https://developer.mozilla.org/en-US/docs/Web/API/SpeechSynthesis
   const handleReadAloud = () => {
     const voices = window.speechSynthesis.getVoices();
-    const voice = voices.find((voice) => voice.name === settings[0].voice);
-    const voiceName = voices.find((voice) => voice.name === settings[0].voice);
-    const voiceVolume = settings[0].voiceVolume;
+    const voice = voices.find((voice) => voice.name === settings.voice);
+    const voiceName = voices.find((voice) => voice.name === settings.voice);
+    const voiceVolume = settings.voiceVolume;
     const taskName = selectedTask?.name || "";
     const taskDescription =
       selectedTask?.description?.replace(/((?:https?):\/\/[^\s/$.?#].[^\s]*)/gi, "") || ""; // remove links from description
@@ -352,7 +352,7 @@ export const TaskMenu = () => {
         <LaunchRounded /> &nbsp; Task details
       </StyledMenuItem>
 
-      {settings[0].enableReadAloud && (
+      {settings.enableReadAloud && (
         <StyledMenuItem
           onClick={handleReadAloud}
           disabled={window.speechSynthesis.speaking || window.speechSynthesis.pending}

@@ -231,10 +231,10 @@ export const EditTask = ({ open, task, onClose, onSave }: EditTaskProps) => {
         />
         <FormGroup>
           <FormControlLabel
-            sx={{ opacity: editedTask?.isRecurring ? 1 : 0.8 }}
-            checked={editedTask?.isRecurring} 
+            sx={{ opacity: editedTask?.recurring ? 1 : 0.8 }}
+            checked={editedTask?.recurring} 
             onChange={handleSwitchChange} 
-            name="isRecurring"
+            name="recurring"
             control={
               <Switch />
             } 
@@ -242,13 +242,13 @@ export const EditTask = ({ open, task, onClose, onSave }: EditTaskProps) => {
             label="Is recurring task?"
           />
         </FormGroup>
-        {editedTask?.isRecurring && (
+        {editedTask?.recurring && (
           <RecurringIntervalSelect
             selectedRecurringInterval={selectedRecurringInterval}
             onRecurringChange={(recurringInterval) => setSelectedRecurringInterval(recurringInterval)}
           />
         )}
-        {settings[0].enableCategories !== undefined && settings[0].enableCategories && (
+        {settings.enableCategories !== undefined && settings.enableCategories && (
           <CategorySelect
             fontColor={theme.darkmode ? ColorPalette.fontLight : ColorPalette.fontDark}
             selectedCategories={selectedCategories}

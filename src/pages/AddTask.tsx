@@ -24,7 +24,7 @@ const AddTask = () => {
     "description",
     "sessionStorage",
   );
-  const [isRecurring, setIsRecurring] = useStorageState<boolean>(false, "isRecurring", "sessionStorage");
+  const [recurring, isRecurring] = useStorageState<boolean>(false, "recurring", "sessionStorage");
   const [selectedRecurringInterval, setSelectedRecurringInterval] = useStorageState<string>("", "recurringInterval", "sessionStorage");
   const [deadline, setDeadline] = useStorageState<string>("", "deadline", "sessionStorage");
   const [nameError, setNameError] = useState<string>("");
@@ -79,7 +79,7 @@ const AddTask = () => {
   };
 
   const handleSwitchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setIsRecurring(event.target.checked);
+    isRecurring(event.target.checked);
   };
 
   const handleDeadlineChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -107,7 +107,7 @@ const AddTask = () => {
       date: new Date(),
       deadline: deadline !== "" ? new Date(deadline) : undefined,
       category: selectedCategories ? selectedCategories : [],
-      isRecurring,
+      recurring,
       recurringInterval: selectedRecurringInterval !== "" ? selectedRecurringInterval : undefined
     };
 
@@ -207,11 +207,11 @@ const AddTask = () => {
         />
         <FormGroup>
           <FormControlLabel
-            sx={{ opacity: isRecurring ? 1 : 0.8 }}
+            sx={{ opacity: recurring ? 1 : 0.8 }}
             control={
               <Switch 
                 name="recurring"
-                checked={isRecurring} 
+                checked={recurring} 
                 onChange={handleSwitchChange}
               />
             } 
@@ -219,13 +219,13 @@ const AddTask = () => {
             label="Is recurring task?"
           />
         </FormGroup>
-        {isRecurring && 
+        {recurring && 
           <RecurringIntervalSelect
             selectedRecurringInterval={selectedRecurringInterval}
             onRecurringChange={(recurringInterval) => setSelectedRecurringInterval(recurringInterval)}
           />
         }
-        {user.settings[0].enableCategories !== undefined && user.settings[0].enableCategories && (
+        {user.settings.enableCategories !== undefined && user.settings.enableCategories && (
           <div style={{ marginBottom: "14px" }}>
             <br />
             <CategorySelect

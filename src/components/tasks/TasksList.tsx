@@ -158,7 +158,7 @@ export const TasksList: React.FC = () => {
       pinnedTasks = pinnedTasks.filter(searchFilter);
 
       // Move done tasks to bottom if the setting is enabled
-      if (user.settings[0]?.doneToBottom) {
+      if (user.settings?.doneToBottom) {
         const doneTasks = unpinnedTasks.filter((task) => task.done);
         const notDoneTasks = unpinnedTasks.filter((task) => !task.done);
         return [...pinnedTasks, ...notDoneTasks, ...doneTasks];
@@ -269,7 +269,7 @@ export const TasksList: React.FC = () => {
             icon: <RingAlarm animate sx={{ color: ColorPalette.red }} />,
             style: {
               borderColor: ColorPalette.red,
-              boxShadow: user.settings[0].enableGlow ? `0 0 18px -8px ${ColorPalette.red}` : "none",
+              boxShadow: user.settings.enableGlow ? `0 0 18px -8px ${ColorPalette.red}` : "none",
             },
           },
         );
@@ -329,7 +329,7 @@ export const TasksList: React.FC = () => {
         )}
         {categories !== undefined &&
           categories?.length > 0 &&
-          user.settings[0].enableCategories && (
+          user.settings.enableCategories && (
             <CategoriesListContainer>
               {categories?.map((cat) => (
                 <CategoryBadge
@@ -437,7 +437,7 @@ export const TasksList: React.FC = () => {
                 handleClick(e, task.id);
               }}
               backgroundColor={task.color}
-              glow={user.settings[0].enableGlow}
+              glow={user.settings.enableGlow}
               done={task.done}
               blur={selectedTaskId !== task.id && open && !isMobile}
             >
@@ -529,7 +529,7 @@ export const TasksList: React.FC = () => {
                             {calculateDateDifference(new Date(task.deadline))}
                           </>
                         )}
-                        {task.isRecurring && (
+                        {task.recurring && (
                         <>
                           {" • is recurring "} 
                           {task.recurringInterval}
@@ -558,7 +558,7 @@ export const TasksList: React.FC = () => {
                   }}
                 >
                   {task.category &&
-                    user.settings[0].enableCategories &&
+                    user.settings.enableCategories &&
                     task.category.map((category) => (
                       <div key={category.id}>
                         <CategoryBadge category={category} borderclr={getFontColor(task.color)} />
@@ -618,7 +618,7 @@ export const TasksList: React.FC = () => {
                   deadline: editedTask.deadline || undefined,
                   category: editedTask.category || undefined,
                   lastSave: new Date(),
-                  isRecurring: editedTask.isRecurring || false,
+                  recurring: editedTask.recurring || false,
                   recurringInterval: editedTask.recurringInterval || undefined
                 };
               }

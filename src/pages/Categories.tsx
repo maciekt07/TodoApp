@@ -55,7 +55,7 @@ const Categories = () => {
 
   useEffect(() => {
     document.title = "Todo App - Categories";
-    if (!user.settings[0].enableCategories) {
+    if (!user.settings.enableCategories) {
       n("/");
     }
     if (name.length > CATEGORY_NAME_MAX_LENGTH) {
@@ -207,7 +207,7 @@ const Categories = () => {
     }
   };
 
-  if (!user.settings[0].enableCategories) {
+  if (!user.settings.enableCategories) {
     return <NotFound message="Categories are not enabled." />;
   }
 

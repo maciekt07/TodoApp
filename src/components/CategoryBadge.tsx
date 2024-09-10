@@ -26,7 +26,7 @@ export const CategoryBadge: React.FC<CategoryBadgeProps> = ({ category, emojiSiz
       label={category.name}
       variant="outlined"
       backgroundclr={category.color}
-      glow={settings[0].enableGlow}
+      glow={settings.enableGlow}
       translate="no"
       avatar={
         category.emoji ? (
