@@ -31,7 +31,7 @@ import { defaultUser } from "../constants/defaultUser";
 import { UserContext } from "../contexts/UserContext";
 import { timeAgo, getFontColor, showToast } from "../utils";
 import { useSystemTheme } from "../hooks/useSystemTheme";
-import { Themes } from "../theme/theme";
+import { Themes } from "../theme/createTheme";
 import { ColorPalette } from "../theme/themeConfig";
 
 const UserProfile = () => {

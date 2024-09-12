@@ -41,7 +41,7 @@ import { fetchBMCInfo } from "../services/bmcApi";
 import { fetchGitHubInfo } from "../services/githubApi";
 import { DialogBtn, UserAvatar, pulseAnimation, ring } from "../styles";
 import { showToast, systemInfo, timeAgo } from "../utils";
-import { useTheme } from "@emotion/react";
+import { keyframes, useTheme } from "@emotion/react";
 import { ColorPalette } from "../theme/themeConfig";
 
 export const ProfileSidebar = () => {
@@ -474,6 +474,38 @@ const StyledSwipeableDrawer = styled(SwipeableDrawer)`
     }
   }
 `;
+const LogoutAnimation = keyframes`
+  0% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(0.9) translateX(-2px);
+    opacity: 0.7;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+`;
+
+const InstallAppAnimation = keyframes`
+   0% {
+    transform: translateY(0);
+  }
+  30% {
+    transform: translateY(-5px);
+  }
+  50% {
+    transform: translateY(2px);
+  }
+  70% {
+    transform: translateY(-2px);
+  }
+  100% {
+    transform: translateY(0);
+  }
+`;
 
 const StyledMenuItem = styled(MenuItem)`
   /* margin: 0px 8px; */
@@ -493,8 +525,17 @@ const StyledMenuItem = styled(MenuItem)`
       transform: rotateY(${2 * Math.PI}rad);
     }
     & svg[data-testid="BugReportRoundedIcon"] {
-      transform: rotate(45deg) scale(0.9) translateY(-20%);
+      transform: rotate(45deg) scale(1.1) translateY(-10%);
     }
+
+    & svg[data-testid="InstallDesktopRoundedIcon"] {
+      animation: ${InstallAppAnimation} 0.8s ease-in alternate;
+    }
+
+    & svg[data-testid="LogoutIcon"] {
+      animation: ${LogoutAnimation} 0.5s ease-in alternate;
+    }
+
     & .bmc-icon {
       animation: ${ring} 2.5s ease-in alternate;
     }
@@ -576,7 +617,7 @@ const Logo = styled.img`
 
 const LogoText = styled.h2`
   & span {
-    color: ${({ theme }) => theme.primary};
+    color: #7764e8;
   }
 `;
 

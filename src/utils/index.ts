@@ -1,12 +1,8 @@
-export { calculateDateDifference } from "./calculateTimeDiff";
-export { displayGreeting } from "./displayGreeting";
-export { exportTasksToJson } from "./exportTasksToJson";
-export { formatDate } from "./formatDate";
+export { exportTasksToJson } from "./exportTasks";
 export { getFontColor, isDark } from "./colorUtils";
 export { getRandomGreeting } from "./getRandomGreeting";
 export { systemInfo } from "./getSystemInfo";
-export { getTaskCompletionText } from "./getTaskCompletionText";
 export { saveQRCode } from "./saveQRCode";
 export { showToast } from "./showToast";
-export { timeAgo } from "./timeAgo";
 export { generateUUID } from "./generateUUID";
+export { timeAgo, formatDate, calculateDateDifference } from "./timeUtils";

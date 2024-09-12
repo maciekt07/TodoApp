@@ -12,7 +12,7 @@ import { GlobalStyles } from "./styles";
 import { getFontColor, showToast } from "./utils";
 import { CustomToaster } from "./components/Toaster";
 import { ColorPalette } from "./theme/themeConfig";
-import { Themes, createCustomTheme } from "./theme/theme";
+import { Themes, createCustomTheme } from "./theme/createTheme";
 
 function App() {
   const { user, setUser } = useContext(UserContext);

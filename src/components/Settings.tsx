@@ -588,7 +588,7 @@ const Container = styled.div`
 `;
 
 const StyledSelect = styled(Select)`
-  width: 400px;
+  width: 360px;
   margin: 8px 0;
 `;
 
@@ -601,7 +601,7 @@ const StyledMenuItem = styled(MenuItem)`
 `;
 
 const StyledFormLabel = styled(FormControlLabel)`
-  max-width: 400px;
+  max-width: 360px;
 `;
 
 const NoVoiceStyles = styled.p`

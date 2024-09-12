@@ -3,7 +3,7 @@ import { useContext } from "react";
 import { UserContext } from "../contexts/UserContext";
 import { getFontColor } from "../utils";
 
-interface NotFoundIconProps {
+interface TaskIconProps {
   scale?: number;
   color?: string;
   variant?: "error" | "add" | "success";
@@ -11,7 +11,7 @@ interface NotFoundIconProps {
 /**
  * Component for displaying a svg task icon in theme color.
  */
-export const TaskIcon = ({ scale = 1, color, variant = "error" }: NotFoundIconProps) => {
+export const TaskIcon = ({ scale = 1, color, variant = "error" }: TaskIconProps) => {
   const theme = useTheme();
   const { user } = useContext(UserContext);
   const { settings } = user;

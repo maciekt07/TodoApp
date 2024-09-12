@@ -21,6 +21,8 @@ export const fetchGitHubInfo = async (): Promise<GitHubInfoResponse> => {
         repoResponse.json() as Promise<GitHubRepoResponse>,
         branchResponse.json() as Promise<GitHubBranchResponse>,
       ]);
+      console.log(repoData);
+
       return {
         repoData,
         branchData,

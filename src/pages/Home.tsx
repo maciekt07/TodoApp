@@ -13,7 +13,7 @@ import {
   TasksCountContainer,
 } from "../styles";
 
-import { displayGreeting, getRandomGreeting, getTaskCompletionText } from "../utils";
+import { getRandomGreeting } from "../utils";
 import { Emoji } from "emoji-picker-react";
 import { Box, Tooltip, Typography } from "@mui/material";
 import { useOnlineStatus } from "../hooks/useOnlineStatus";
@@ -101,6 +101,40 @@ const Home = () => {
     } else {
       // It's already a ReactNode, no need to process
       return text;
+    }
+  };
+
+  // Returns a greeting based on the current time.
+  const displayGreeting = (): string => {
+    const currentTime = new Date();
+    const currentHour = currentTime.getHours();
+    let greeting: string;
+    if (currentHour < 12 && currentHour >= 5) {
+      greeting = "Good morning";
+    } else if (currentHour < 18 && currentHour > 12) {
+      greeting = "Good afternoon";
+    } else {
+      greeting = "Good evening";
+    }
+
+    return greeting;
+  };
+
+  // Returns a task completion message based on the completion percentage.
+  const getTaskCompletionText = (completionPercentage: number): string => {
+    switch (true) {
+      case completionPercentage === 0:
+        return "No tasks completed yet. Keep going!";
+      case completionPercentage === 100:
+        return "Congratulations! All tasks completed!";
+      case completionPercentage >= 75:
+        return "Almost there!";
+      case completionPercentage >= 50:
+        return "You're halfway there! Keep it up!";
+      case completionPercentage >= 25:
+        return "You're making good progress.";
+      default:
+        return "You're just getting started.";
     }
   };
 

@@ -54,7 +54,9 @@ export const showToast = (
         {message}
         {dismissButton && (
           <div>
-            <DismissButton onClick={() => toast.dismiss(t.id)}>Dismiss</DismissButton>
+            <DismissButton variant="outlined" onClick={() => toast.dismiss(t.id)}>
+              Dismiss
+            </DismissButton>
           </div>
         )}
       </div>
@@ -71,7 +73,4 @@ export const showToast = (
     margin-top: 8px;
     font-size: 16px;
   `;
-  DismissButton.defaultProps = {
-    variant: "outlined",
-  };
 };
