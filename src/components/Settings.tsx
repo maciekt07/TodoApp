@@ -156,6 +156,7 @@ export const SettingsDialog: React.FC<SettingsProps> = ({ open, onClose }) => {
       }
       const updatedSettings: AppSettings = {
         ...userSettings,
+        voice: userSettings.voice, // Bug fix: reset voice to default when changing other settings
         [name]: isChecked,
       };
       setUserSettings(updatedSettings);
