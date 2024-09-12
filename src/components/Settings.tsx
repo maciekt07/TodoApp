@@ -56,12 +56,12 @@ interface SettingsProps {
 export const SettingsDialog: React.FC<SettingsProps> = ({ open, onClose }) => {
   const { user, setUser } = useContext(UserContext);
   const { settings, emojisStyle, darkmode } = user;
-  const [userSettings, setUserSettings] = useState<AppSettings>(settings[0]);
+  const [userSettings, setUserSettings] = useState<AppSettings>(settings);
   const [lastStyle] = useState<EmojiStyle>(emojisStyle);
 
   const [availableVoices, setAvailableVoices] = useState<SpeechSynthesisVoice[]>([]);
-  const [voiceVolume, setVoiceVolume] = useState<number>(settings[0].voiceVolume);
-  const [prevVoiceVol, setPrevVoiceVol] = useState<number>(settings[0].voiceVolume);
+  const [voiceVolume, setVoiceVolume] = useState<number>(settings.voiceVolume);
+  const [prevVoiceVol, setPrevVoiceVol] = useState<number>(settings.voiceVolume);
   const [showLocalVoices, setShowLocalVoices] = useState<boolean>(false);
 
   const [storageUsage, setStorageUsage] = useState<number | undefined>(undefined);
@@ -161,7 +161,7 @@ export const SettingsDialog: React.FC<SettingsProps> = ({ open, onClose }) => {
       setUserSettings(updatedSettings);
       setUser((prevUser) => ({
         ...prevUser,
-        settings: [updatedSettings],
+        settings: updatedSettings,
       }));
     };
 
@@ -191,12 +191,10 @@ export const SettingsDialog: React.FC<SettingsProps> = ({ open, onClose }) => {
       // Update the user settings with the selected voice
       setUser((prevUser) => ({
         ...prevUser,
-        settings: [
-          {
-            ...prevUser.settings[0],
-            voice: selectedVoice.name,
-          },
-        ],
+        settings: {
+          ...prevUser.settings,
+          voice: selectedVoice.name,
+        },
       }));
     }
   };
@@ -209,12 +207,10 @@ export const SettingsDialog: React.FC<SettingsProps> = ({ open, onClose }) => {
     // Update user settings with the new voice volume
     setUser((prevUser) => ({
       ...prevUser,
-      settings: [
-        {
-          ...prevUser.settings[0],
-          voiceVolume: value as number,
-        },
-      ],
+      settings: {
+        ...prevUser.settings,
+        voiceVolume: value as number,
+      },
     }));
   };
 
@@ -225,15 +221,13 @@ export const SettingsDialog: React.FC<SettingsProps> = ({ open, onClose }) => {
     // Save the previous voice volume before muting
     setPrevVoiceVol(vol);
     const newVoiceVolume =
-      vol === 0 ? (prevVoiceVol !== 0 ? prevVoiceVol : defaultUser.settings[0].voiceVolume) : 0;
+      vol === 0 ? (prevVoiceVol !== 0 ? prevVoiceVol : defaultUser.settings.voiceVolume) : 0;
     setUser((prevUser) => ({
       ...prevUser,
-      settings: [
-        {
-          ...prevUser.settings[0],
-          voiceVolume: newVoiceVolume,
-        },
-      ],
+      settings: {
+        ...prevUser.settings,
+        voiceVolume: newVoiceVolume,
+      },
     }));
     setVoiceVolume(newVoiceVolume);
   };
@@ -442,7 +436,7 @@ export const SettingsDialog: React.FC<SettingsProps> = ({ open, onClose }) => {
           />
         </FormGroup>
 
-        {settings[0].enableReadAloud && (
+        {settings.enableReadAloud && (
           <FormGroup>
             <FormControl>
               <FormLabel>Voice Settings</FormLabel>
@@ -460,7 +454,7 @@ export const SettingsDialog: React.FC<SettingsProps> = ({ open, onClose }) => {
               />
               {filteredVoices.length !== 0 ? (
                 <StyledSelect
-                  value={settings[0].voice}
+                  value={settings.voice}
                   variant="outlined"
                   onChange={handleVoiceChange}
                   translate="no"

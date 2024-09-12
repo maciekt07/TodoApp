@@ -196,7 +196,7 @@ const AddTask = () => {
               ) : undefined,
           }}
         />
-        {user.settings[0].enableCategories !== undefined && user.settings[0].enableCategories && (
+        {user.settings.enableCategories !== undefined && user.settings.enableCategories && (
           <div style={{ marginBottom: "14px" }}>
             <br />
             <CategorySelect

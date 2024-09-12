@@ -211,7 +211,7 @@ export const EditTask = ({ open, task, onClose, onSave }: EditTaskProps) => {
             ) : undefined,
           }}
         />
-        {settings[0].enableCategories !== undefined && settings[0].enableCategories && (
+        {settings.enableCategories !== undefined && settings.enableCategories && (
           <CategorySelect
             fontColor={theme.darkmode ? ColorPalette.fontLight : ColorPalette.fontDark}
             selectedCategories={selectedCategories}

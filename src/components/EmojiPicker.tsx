@@ -255,7 +255,7 @@ export const CustomEmojiPicker = ({ emoji, setEmoji, color, name, type }: EmojiP
         </div>
       )}
       {/* Simple Emoji Picker */}
-      {showEmojiPicker && settings[0].simpleEmojiPicker && (
+      {showEmojiPicker && settings.simpleEmojiPicker && (
         <SimplePickerContainer>
           <Suspense fallback={<CircularProgress size={40} thickness={5} />}>
             <EmojiPicker
@@ -273,7 +273,7 @@ export const CustomEmojiPicker = ({ emoji, setEmoji, color, name, type }: EmojiP
         </SimplePickerContainer>
       )}
 
-      {showEmojiPicker && !settings[0].simpleEmojiPicker && (
+      {showEmojiPicker && !settings.simpleEmojiPicker && (
         <>
           <Dialog
             open={showEmojiPicker}
@@ -317,7 +317,7 @@ export const CustomEmojiPicker = ({ emoji, setEmoji, color, name, type }: EmojiP
             <EmojiPickerContainer>
               <Suspense
                 fallback={
-                  !settings[0].simpleEmojiPicker && (
+                  !settings.simpleEmojiPicker && (
                     <PickerLoader
                       pickerTheme={emotionTheme.darkmode ? "dark" : "light"}
                     ></PickerLoader>
@@ -328,7 +328,7 @@ export const CustomEmojiPicker = ({ emoji, setEmoji, color, name, type }: EmojiP
                   width="100vw"
                   height="550px"
                   reactionsDefaultOpen={
-                    settings[0].simpleEmojiPicker && getFrequentlyUsedEmojis().length !== 0
+                    settings.simpleEmojiPicker && getFrequentlyUsedEmojis().length !== 0
                   }
                   reactions={getFrequentlyUsedEmojis()}
                   emojiStyle={emojisStyle}

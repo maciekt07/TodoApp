@@ -156,7 +156,7 @@ const Home = () => {
       )}
       {tasks.length > 0 && (
         <TasksCountContainer>
-          <TasksCount glow={settings[0].enableGlow}>
+          <TasksCount glow={settings.enableGlow}>
             <Box sx={{ position: "relative", display: "inline-flex" }}>
               <StyledProgress
                 variant="determinate"
@@ -164,11 +164,11 @@ const Home = () => {
                 size={64}
                 thickness={5}
                 aria-label="Progress"
-                glow={settings[0].enableGlow}
+                glow={settings.enableGlow}
               />
 
               <ProgressPercentageContainer
-                glow={settings[0].enableGlow && completedTaskPercentage > 0}
+                glow={settings.enableGlow && completedTaskPercentage > 0}
               >
                 <Typography
                   variant="caption"
@@ -216,7 +216,7 @@ const Home = () => {
         <Tooltip title={tasks.length > 0 ? "Add New Task" : "Add Task"} placement="left">
           <AddButton
             animate={tasks.length === 0}
-            glow={settings[0].enableGlow}
+            glow={settings.enableGlow}
             onClick={() => n("add")}
             aria-label="Add Task"
           >

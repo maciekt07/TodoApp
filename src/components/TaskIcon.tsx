@@ -87,7 +87,7 @@ export const TaskIcon = ({ scale = 1, color, variant = "error" }: TaskIconProps)
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
       style={{
-        filter: settings[0].enableGlow
+        filter: settings.enableGlow
           ? `drop-shadow(0px 0px ${64 * scale}px ${taskIconClr}c8)`
           : "none",
       }}

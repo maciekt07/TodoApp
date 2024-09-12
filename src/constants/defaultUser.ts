@@ -14,18 +14,17 @@ export const defaultUser: User = {
   tasks: [],
   theme: "system",
   darkmode: "auto",
-  settings: [
-    {
-      enableCategories: true,
-      doneToBottom: false,
-      enableGlow: true,
-      simpleEmojiPicker: false,
-      enableReadAloud: "speechSynthesis" in window,
-      voice: "Google UK English Male",
-      appBadge: false,
-      voiceVolume: 0.6,
-    },
-  ],
+  settings: {
+    enableCategories: true,
+    doneToBottom: false,
+    enableGlow: true,
+    simpleEmojiPicker: false,
+    enableReadAloud: "speechSynthesis" in window,
+    voice: "Google UK English Male",
+    appBadge: false,
+    voiceVolume: 0.6,
+  },
+
   categories: [
     { id: "857f0db6-43b2-43eb-8143-ec4e26472516", name: "Home", emoji: "1f3e0", color: "#1fff44" },
     { id: "0292cba5-f6e2-41c4-b5a7-c59a0aaecfe3", name: "Work", emoji: "1f3e2", color: "#248eff" },

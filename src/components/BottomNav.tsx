@@ -74,7 +74,7 @@ export const BottomNav = (): JSX.Element | null => {
     <Container>
       <StyledBottomNavigation
         showLabels
-        glow={settings[0].enableGlow}
+        glow={settings.enableGlow}
         value={value}
         onChange={(_event, newValue: number) => {
           window.scrollTo({
@@ -101,7 +101,7 @@ export const BottomNav = (): JSX.Element | null => {
           onClick={() => n("/categories")}
           label="Categories"
           icon={<CategoryRounded sx={{ fontSize: smallIconSize }} />}
-          disabled={!settings[0].enableCategories}
+          disabled={!settings.enableCategories}
         />
         <NavigationButton
           onClick={() => n("add")}

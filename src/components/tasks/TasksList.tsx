@@ -158,7 +158,7 @@ export const TasksList: React.FC = () => {
       pinnedTasks = pinnedTasks.filter(searchFilter);
 
       // Move done tasks to bottom if the setting is enabled
-      if (user.settings[0]?.doneToBottom) {
+      if (user.settings?.doneToBottom) {
         const doneTasks = unpinnedTasks.filter((task) => task.done);
         const notDoneTasks = unpinnedTasks.filter((task) => !task.done);
         return [...pinnedTasks, ...notDoneTasks, ...doneTasks];
@@ -269,7 +269,7 @@ export const TasksList: React.FC = () => {
             icon: <RingAlarm animate sx={{ color: ColorPalette.red }} />,
             style: {
               borderColor: ColorPalette.red,
-              boxShadow: user.settings[0].enableGlow ? `0 0 18px -8px ${ColorPalette.red}` : "none",
+              boxShadow: user.settings.enableGlow ? `0 0 18px -8px ${ColorPalette.red}` : "none",
             },
           },
         );
@@ -327,51 +327,45 @@ export const TasksList: React.FC = () => {
             }}
           />
         )}
-        {categories !== undefined &&
-          categories?.length > 0 &&
-          user.settings[0].enableCategories && (
-            <CategoriesListContainer>
-              {categories?.map((cat) => (
-                <CategoryBadge
-                  key={cat.id}
-                  category={cat}
-                  emojiSizes={[24, 20]}
-                  list={"true"}
-                  label={
-                    <div>
-                      <span style={{ fontWeight: "bold" }}>{cat.name}</span>
-                      <span
-                        style={{
-                          fontSize: "14px",
-                          opacity: 0.9,
-                          marginLeft: "4px",
-                        }}
-                      >
-                        ({categoryCounts[cat.id]})
-                      </span>
-                    </div>
-                  }
-                  onClick={() =>
-                    selectedCatId !== cat.id
-                      ? setSelectedCatId(cat.id)
-                      : setSelectedCatId(undefined)
-                  }
-                  onDelete={
-                    selectedCatId === cat.id ? () => setSelectedCatId(undefined) : undefined
-                  }
-                  sx={{
-                    boxShadow: "none",
-                    display:
-                      selectedCatId === undefined || selectedCatId === cat.id
-                        ? "inline-flex"
-                        : "none",
-                    p: "20px 14px",
-                    fontSize: "16px",
-                  }}
-                />
-              ))}
-            </CategoriesListContainer>
-          )}
+        {categories !== undefined && categories?.length > 0 && user.settings.enableCategories && (
+          <CategoriesListContainer>
+            {categories?.map((cat) => (
+              <CategoryBadge
+                key={cat.id}
+                category={cat}
+                emojiSizes={[24, 20]}
+                list={"true"}
+                label={
+                  <div>
+                    <span style={{ fontWeight: "bold" }}>{cat.name}</span>
+                    <span
+                      style={{
+                        fontSize: "14px",
+                        opacity: 0.9,
+                        marginLeft: "4px",
+                      }}
+                    >
+                      ({categoryCounts[cat.id]})
+                    </span>
+                  </div>
+                }
+                onClick={() =>
+                  selectedCatId !== cat.id ? setSelectedCatId(cat.id) : setSelectedCatId(undefined)
+                }
+                onDelete={selectedCatId === cat.id ? () => setSelectedCatId(undefined) : undefined}
+                sx={{
+                  boxShadow: "none",
+                  display:
+                    selectedCatId === undefined || selectedCatId === cat.id
+                      ? "inline-flex"
+                      : "none",
+                  p: "20px 14px",
+                  fontSize: "16px",
+                }}
+              />
+            ))}
+          </CategoriesListContainer>
+        )}
         {multipleSelectedTasks.length > 0 && (
           <SelectedTasksContainer>
             <div>
@@ -437,7 +431,7 @@ export const TasksList: React.FC = () => {
                 handleClick(e, task.id);
               }}
               backgroundColor={task.color}
-              glow={user.settings[0].enableGlow}
+              glow={user.settings.enableGlow}
               done={task.done}
               blur={selectedTaskId !== task.id && open && !isMobile}
             >
@@ -550,7 +544,7 @@ export const TasksList: React.FC = () => {
                   }}
                 >
                   {task.category &&
-                    user.settings[0].enableCategories &&
+                    user.settings.enableCategories &&
                     task.category.map((category) => (
                       <div key={category.id}>
                         <CategoryBadge category={category} borderclr={getFontColor(task.color)} />

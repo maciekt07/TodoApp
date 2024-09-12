@@ -40,7 +40,10 @@ function App() {
         ) {
           return;
         }
-
+        // If 'settings' is an array in userObject, convert it to an object
+        // if (key === "settings" && Array.isArray(userObject.settings)) {
+        //   userObject.settings = { ...userObject.settings };
+        // }
         const userValue = userObject[key];
         const defaultValue = defaultObject[key];
 
@@ -107,7 +110,7 @@ function App() {
     };
     // Function to display the application badge
     const displayAppBadge = async () => {
-      if (user.settings[0].appBadge === true) {
+      if (user.settings.appBadge === true) {
         // Request permission for notifications
         if ((await Notification.requestPermission()) === "granted") {
           // Calculate the number of incomplete tasks

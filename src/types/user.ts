@@ -18,7 +18,7 @@ export interface User {
   tasks: Task[];
   categories: Category[];
   colorList: string[];
-  settings: AppSettings[];
+  settings: AppSettings;
   theme: string;
   darkmode: DarkModeOptions;
 }
