@@ -40,10 +40,7 @@ function App() {
         ) {
           return;
         }
-        // If 'settings' is an array in userObject, convert it to an object
-        // if (key === "settings" && Array.isArray(userObject.settings)) {
-        //   userObject.settings = { ...userObject.settings };
-        // }
+
         const userValue = userObject[key];
         const defaultValue = defaultObject[key];
 

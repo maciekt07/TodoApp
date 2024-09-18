@@ -9,6 +9,7 @@ import {
   Dialog,
   DialogActions,
   DialogContent,
+  Tooltip,
 } from "@mui/material";
 import { Emoji, EmojiClickData, EmojiStyle, SuggestionMode, Theme } from "emoji-picker-react";
 import {
@@ -238,21 +239,23 @@ export const CustomEmojiPicker = ({ emoji, setEmoji, color, name, type }: EmojiP
           </EmojiAvatar>
         </Badge>
       </EmojiContainer>
-      {"ai" in window && name && (
-        <div style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
-          <Button
-            onClick={useAI}
-            disabled={
-              name?.length < 3 ||
-              (type === "task"
-                ? name.length > TASK_NAME_MAX_LENGTH
-                : name.length > CATEGORY_NAME_MAX_LENGTH)
-            }
-            style={{ marginBottom: "4px" }}
-          >
-            <AutoAwesome /> &nbsp; Find emoji with AI
-          </Button>
-        </div>
+      {"ai" in window && name !== undefined && (
+        <Tooltip title={!name ? `Enter a name for the ${type} to find emoji` : undefined}>
+          <div style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
+            <Button
+              onClick={useAI}
+              disabled={
+                name?.length < 3 ||
+                (type === "task"
+                  ? name.length > TASK_NAME_MAX_LENGTH
+                  : name.length > CATEGORY_NAME_MAX_LENGTH)
+              }
+              style={{ marginBottom: "4px" }}
+            >
+              <AutoAwesome /> &nbsp; Find emoji with AI
+            </Button>
+          </div>
+        </Tooltip>
       )}
       {/* Simple Emoji Picker */}
       {showEmojiPicker && settings.simpleEmojiPicker && (

@@ -5,6 +5,7 @@ import {
   BugReportRounded,
   CategoryRounded,
   DeleteForeverRounded,
+  DownloadDoneRounded,
   Favorite,
   FavoriteRounded,
   FiberManualRecord,
@@ -18,6 +19,7 @@ import {
   SettingsRounded,
   StarRounded,
   TaskAltRounded,
+  ThumbUpRounded,
 } from "@mui/icons-material";
 import {
   Dialog,
@@ -120,6 +122,8 @@ export const ProfileSidebar = () => {
   const [deferredPrompt, setDeferredPrompt] = useState<BeforeInstallPromptEvent | null>(null);
   const [isAppInstalled, setIsAppInstalled] = useState<boolean>(false);
 
+  const [openInstalledDialog, setOpenInstalledDialog] = useState<boolean>(false);
+
   useEffect(() => {
     const beforeInstallPromptHandler = (e: Event) => {
       e.preventDefault();
@@ -146,7 +150,6 @@ export const ProfileSidebar = () => {
       deferredPrompt.prompt();
       deferredPrompt.userChoice.then((choiceResult) => {
         if (choiceResult.outcome === "accepted") {
-          showToast("App installed successfully!");
           if ("setAppBadge" in navigator) {
             setUser((prevUser) => ({
               ...prevUser,
@@ -155,6 +158,12 @@ export const ProfileSidebar = () => {
                 appBadge: true,
               },
             }));
+          }
+          // Show a dialog to inform the user that the app is now running as a PWA on Windows
+          if (systemInfo.os === "Windows") {
+            setOpenInstalledDialog(true);
+          } else {
+            showToast("App installed successfully!");
           }
           handleClose();
         }
@@ -404,6 +413,24 @@ export const ProfileSidebar = () => {
           </CreditsContainer>
         </ProfileOptionsBottom>
       </StyledSwipeableDrawer>
+
+      <Dialog open={openInstalledDialog} onClose={() => setOpenInstalledDialog(false)}>
+        <CustomDialogTitle
+          title="App installed successfully!"
+          subTitle="The app is now running as a PWA."
+          icon={<DownloadDoneRounded />}
+          onClose={() => setOpenInstalledDialog(false)}
+        />
+        <DialogContent>
+          You can access it from your home screen, with offline support and features like shortcuts
+          and badges.
+        </DialogContent>
+        <DialogActions>
+          <DialogBtn onClick={() => setOpenInstalledDialog(false)}>
+            <ThumbUpRounded /> &nbsp; Got it
+          </DialogBtn>
+        </DialogActions>
+      </Dialog>
 
       <Dialog open={logoutConfirmationOpen} onClose={handleLogoutConfirmationClose}>
         <CustomDialogTitle title="Logout Confirmation" icon={<Logout />} />

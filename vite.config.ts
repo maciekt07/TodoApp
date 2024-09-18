@@ -12,7 +12,7 @@ export default defineConfig({
   },
   plugins: [
     react(),
-    qrcode({ filter: (url) => url === "http://192.168.0.10:5173/" }),
+    qrcode({ filter: (url) => url.startsWith("http://192.168.0.") }),
     VitePWA({
       devOptions: {
         enabled: true,

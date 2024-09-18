@@ -1,4 +1,3 @@
-import { describe, it, expect } from "vitest";
 import { ColorPalette } from "../../theme/themeConfig";
 import { getFontColor, isDark } from "../colorUtils";
 

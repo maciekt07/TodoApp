@@ -139,6 +139,7 @@ const UserProfile = () => {
               onClick={handleOpenImageDialog}
               src={profilePicture || undefined}
               hasimage={profilePicture !== null}
+              style={{ cursor: "pointer" }}
               size="96px"
             >
               {name ? name[0].toUpperCase() : undefined}

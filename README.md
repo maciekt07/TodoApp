@@ -1,5 +1,7 @@
+<!-- TODO: replace images path with github raw link -->
+
 <p align="center">
-<img src="public/logo256.png" width="128px" />
+<img src="https://raw.githubusercontent.com/maciekt07/TodoApp/main/public/logo192.png" width="128px" />
 <h1>📝React.js Todo App</h1>
 </p>
 
@@ -11,7 +13,7 @@
 ![GitHub License](https://img.shields.io/github/license/maciekt07/TodoApp?color=%23b624ff)
 
 <p align="center">
-<img src="screenshots/iPhone Mockup black.png" width="400px" />
+<img src="https://raw.githubusercontent.com/maciekt07/TodoApp/main/screenshots/iPhone%20Mockup%20black.png" width="400px" />
 </p>
 
 ## 💻 Tech Stack
