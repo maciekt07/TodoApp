@@ -68,7 +68,7 @@ export const StyledCategoryBadge = styled(Chip)<StyledBadgeProps>`
   color: ${({ backgroundclr }) => getFontColor(backgroundclr || "")};
   background-color: ${({ backgroundclr }) => backgroundclr};
   box-shadow: ${({ glow, backgroundclr }) => (glow ? `0 0 8px 0 ${backgroundclr}` : "none")};
-  border: ${({ borderclr }) => (borderclr ? `2px solid ${borderclr}` : "none")};
+  border: ${({ borderclr }) => (borderclr ? `1px solid ${borderclr}` : "none")};
   font-weight: bold;
   font-size: 14px;
   margin: 6px 0 0 0;

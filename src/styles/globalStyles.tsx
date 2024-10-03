@@ -168,6 +168,9 @@ export const GlobalStyles = () => {
         .MuiDialog-container {
           backdrop-filter: blur(4px);
         }
+        .MuiButton-contained {
+          box-shadow: none !important;
+        }
         .MuiPaper-elevation8 {
           border-radius: 16px !important;
         }

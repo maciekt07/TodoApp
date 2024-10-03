@@ -1,12 +1,15 @@
 import { createTheme } from "@mui/material";
-import type { Theme } from "@mui/material";
+import type { PaletteMode, Theme } from "@mui/material";
 import { ColorPalette, themeConfig } from "./themeConfig";
 import { muiComponentsProps } from "./muiComponents";
 
+/**
+ * Creates a custom MUI theme based on provided primary color, background color, and palette mode.
+ */
 export const createCustomTheme = (
   primaryColor: string,
   backgroundColor = "#232e58",
-  mode: "light" | "dark" = "dark",
+  mode: PaletteMode = "dark",
 ): Theme => {
   return createTheme({
     components: {
@@ -20,7 +23,7 @@ export const createCustomTheme = (
         main: backgroundColor,
       },
       warning: {
-        main: ColorPalette.orange,
+        main: mode === "dark" ? ColorPalette.orange : ColorPalette.orangeDark,
       },
       error: {
         main: ColorPalette.red,
@@ -33,6 +36,9 @@ export const createCustomTheme = (
   });
 };
 
+/**
+ * List of available themes with their name and corresponding MUI theme object.
+ */
 export const Themes: { name: string; MuiTheme: Theme }[] = Object.entries(themeConfig).map(
   ([name, config]) => ({
     name: name as string,

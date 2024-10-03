@@ -17,6 +17,7 @@ dev-dist
 
 # Editor directories and files
 !.vscode/extensions.json
+.vs
 .idea
 .DS_Store
 *.suo

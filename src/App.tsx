@@ -1,18 +1,18 @@
-import { ThemeProvider as EmotionTheme } from "@emotion/react";
+import { ThemeProvider as EmotionThemeProvider } from "@emotion/react";
 import { DataObjectRounded } from "@mui/icons-material";
-import { ThemeProvider, type Theme } from "@mui/material";
+import { ThemeProvider as MuiThemeProvider, type Theme } from "@mui/material";
 import { useCallback, useContext, useEffect } from "react";
 import ErrorBoundary from "./components/ErrorBoundary";
+import { CustomToaster } from "./components/Toaster";
 import { defaultUser } from "./constants/defaultUser";
 import { UserContext } from "./contexts/UserContext";
 import { useSystemTheme } from "./hooks/useSystemTheme";
 import MainLayout from "./layouts/MainLayout";
 import AppRouter from "./router";
 import { GlobalStyles } from "./styles";
-import { getFontColor, showToast } from "./utils";
-import { CustomToaster } from "./components/Toaster";
-import { ColorPalette } from "./theme/themeConfig";
 import { Themes, createCustomTheme } from "./theme/createTheme";
+import { ColorPalette } from "./theme/themeConfig";
+import { getFontColor, showToast } from "./utils";
 
 function App() {
   const { user, setUser } = useContext(UserContext);
@@ -161,14 +161,14 @@ function App() {
   }, [user.theme, getMuiTheme]);
 
   return (
-    <ThemeProvider
+    <MuiThemeProvider
       theme={createCustomTheme(
         getMuiTheme().palette.primary.main,
         getMuiTheme().palette.secondary.main,
         isDarkMode() ? "dark" : "light",
       )}
     >
-      <EmotionTheme
+      <EmotionThemeProvider
         theme={{
           primary: getMuiTheme().palette.primary.main,
           secondary: getMuiTheme().palette.secondary.main,
@@ -182,8 +182,8 @@ function App() {
             <AppRouter />
           </MainLayout>
         </ErrorBoundary>
-      </EmotionTheme>
-    </ThemeProvider>
+      </EmotionThemeProvider>
+    </MuiThemeProvider>
   );
 }
 

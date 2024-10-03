@@ -6,6 +6,7 @@ export const ColorPalette = {
   purple: "#b624ff",
   red: "#ff3131",
   orange: "#ff9318",
+  orangeDark: "#ff9500",
 } as const;
 
 export const themeConfig: { [key: string]: { primaryColor: string; secondaryColor?: string } } = {

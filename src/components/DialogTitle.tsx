@@ -30,7 +30,7 @@ export const CustomDialogTitle = ({
         {icon && <IconWrapper>{icon}</IconWrapper>}
         <TextContainer>
           <Title>{title}</Title>
-          <SubTitle>{subTitle}</SubTitle>
+          {subTitle && <SubTitle>{subTitle}</SubTitle>}
         </TextContainer>
       </TitleContainer>
       <StyledDivider />

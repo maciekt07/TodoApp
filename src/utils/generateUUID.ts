@@ -5,7 +5,7 @@ export const generateUUID = (): UUID => {
   if (typeof crypto !== "undefined" && typeof crypto.randomUUID === "function") {
     return crypto.randomUUID();
   } else {
-    // crypto may fail with Vite --host due to limited crypto support in some dev environments.
+    // crypto may fail with Vite --host as it requires HTTPS for full functionality
     // Fallback to manual UUID generation
     return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, (c) => {
       const r = (Math.random() * 16) | 0;

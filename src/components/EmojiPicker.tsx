@@ -1,9 +1,17 @@
 import { useTheme } from "@emotion/react";
 import styled from "@emotion/styled";
-import { AddReaction, AutoAwesome, Edit, RemoveCircleOutline } from "@mui/icons-material";
 import {
+  AddReaction,
+  AutoAwesome,
+  Edit,
+  EmojiEmotions,
+  RemoveCircleOutline,
+} from "@mui/icons-material";
+import {
+  Alert,
   Avatar,
   Badge,
+  Box,
   Button,
   CircularProgress,
   Dialog,
@@ -295,58 +303,61 @@ export const CustomEmojiPicker = ({ emoji, setEmoji, color, name, type }: EmojiP
               onClose={toggleEmojiPicker}
               icon={<AddReaction />}
             />
-            {!isOnline &&
-              emojisStyle !== EmojiStyle.NATIVE && ( //TODO: design this better
-                <OfflineContainer>
-                  <span>
+            <DialogContent sx={{ p: 0, m: 0 }}>
+              {!isOnline && emojisStyle !== EmojiStyle.NATIVE && (
+                <Box sx={{ mx: "14px", mb: "16px" }}>
+                  <Alert severity="warning">
                     Emojis may not load correctly when offline. Try switching to the native emoji
                     style.
-                    <br />
-                    <Button
-                      variant="outlined"
-                      onClick={() => {
-                        setUser((prevUser) => ({
-                          ...prevUser,
-                          emojisStyle: EmojiStyle.NATIVE,
-                        }));
-                        setShowEmojiPicker(false);
-                      }}
-                    >
-                      Change Style
-                    </Button>
-                  </span>
-                </OfflineContainer>
+                  </Alert>
+                  <Button
+                    variant="outlined"
+                    color="warning"
+                    fullWidth
+                    sx={{ mt: "14px" }}
+                    onClick={() => {
+                      setUser((prevUser) => ({
+                        ...prevUser,
+                        emojisStyle: EmojiStyle.NATIVE,
+                      }));
+                      // setShowEmojiPicker(false);
+                    }}
+                  >
+                    <EmojiEmotions /> &nbsp; Switch to Native Emoji
+                  </Button>
+                </Box>
               )}
-            <EmojiPickerContainer>
-              <Suspense
-                fallback={
-                  !settings.simpleEmojiPicker && (
-                    <PickerLoader
-                      pickerTheme={emotionTheme.darkmode ? "dark" : "light"}
-                    ></PickerLoader>
-                  )
-                }
-              >
-                <EmojiPicker
-                  width="100vw"
-                  height="550px"
-                  reactionsDefaultOpen={
-                    settings.simpleEmojiPicker && getFrequentlyUsedEmojis().length !== 0
+              <EmojiPickerContainer>
+                <Suspense
+                  fallback={
+                    !settings.simpleEmojiPicker && (
+                      <PickerLoader
+                        pickerTheme={emotionTheme.darkmode ? "dark" : "light"}
+                      ></PickerLoader>
+                    )
                   }
-                  reactions={getFrequentlyUsedEmojis()}
-                  emojiStyle={emojisStyle}
-                  theme={emotionTheme.darkmode ? Theme.DARK : Theme.LIGHT}
-                  suggestedEmojisMode={SuggestionMode.FREQUENT}
-                  autoFocusSearch={false}
-                  onEmojiClick={handleEmojiClick}
-                  searchPlaceHolder="Search emoji"
-                  previewConfig={{
-                    defaultEmoji: "1f4dd",
-                    defaultCaption: `Choose the perfect emoji for your ${type}`,
-                  }}
-                />
-              </Suspense>
-            </EmojiPickerContainer>
+                >
+                  <EmojiPicker
+                    width="100vw"
+                    height="550px"
+                    reactionsDefaultOpen={
+                      settings.simpleEmojiPicker && getFrequentlyUsedEmojis().length !== 0
+                    }
+                    reactions={getFrequentlyUsedEmojis()}
+                    emojiStyle={emojisStyle}
+                    theme={emotionTheme.darkmode ? Theme.DARK : Theme.LIGHT}
+                    suggestedEmojisMode={SuggestionMode.FREQUENT}
+                    autoFocusSearch={false}
+                    onEmojiClick={handleEmojiClick}
+                    searchPlaceHolder="Search emoji"
+                    previewConfig={{
+                      defaultEmoji: "1f4dd",
+                      defaultCaption: `Choose the perfect emoji for your ${type}`,
+                    }}
+                  />
+                </Suspense>
+              </EmojiPickerContainer>
+            </DialogContent>
             <DialogActions>
               <DialogBtn onClick={toggleEmojiPicker}>Cancel</DialogBtn>
               {currentEmoji && (
@@ -373,7 +384,7 @@ const EmojiPickerContainer = styled(DialogContent)`
   display: flex;
   justify-content: center;
   align-items: center;
-  margin: 16px;
+  margin: 8px 16px;
   animation: ${fadeIn} 0.4s ease-in;
   padding: 0;
 `;
@@ -399,19 +410,6 @@ const EditBadge = styled(Avatar)`
   background: #9c9c9c81;
   backdrop-filter: blur(6px);
   cursor: pointer;
-`;
-
-const OfflineContainer = styled.div<{ width?: CSSProperties["width"] | undefined }>`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  max-width: ${({ width }) => width || "350px"};
-  margin: 6px auto -6px auto;
-  & span {
-    margin: 0;
-    font-size: 14px;
-    text-align: center;
-  }
 `;
 
 const PickerLoader = styled.div<{

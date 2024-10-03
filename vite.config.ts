@@ -14,6 +14,7 @@ export default defineConfig({
     react(),
     qrcode({ filter: (url) => url.startsWith("http://192.168.0.") }),
     VitePWA({
+      manifest,
       devOptions: {
         enabled: true,
         type: "module",
@@ -63,7 +64,6 @@ export default defineConfig({
         ],
       },
       includeAssets: ["**/*"],
-      manifest,
     }),
   ],
 });

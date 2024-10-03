@@ -32,7 +32,7 @@ import {
   TaskManagementContainer,
 } from "../styles";
 
-const ImportExport = () => {
+const Transfer = () => {
   const { user, setUser } = useContext(UserContext);
   const [selectedTasks, setSelectedTasks] = useStorageState<UUID[]>(
     [],
@@ -430,4 +430,4 @@ const ImportExport = () => {
   );
 };
 
-export default ImportExport;
+export default Transfer;

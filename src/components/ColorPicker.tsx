@@ -84,11 +84,6 @@ export const ColorPicker: React.FC<ColorPickerProps> = ({
     }
   }, [color, handleColorChange, theme.primary]);
 
-  const handleAccordionChange = (
-    _event: React.SyntheticEvent<Element, Event>,
-    isExpanded: boolean,
-  ) => setAccordionExpanded(isExpanded);
-
   const togglePopover = (index: number) => {
     const newPopoverOpen = [...popoverOpen];
     newPopoverOpen[index] = !newPopoverOpen[index];
@@ -170,9 +165,9 @@ export const ColorPicker: React.FC<ColorPickerProps> = ({
   return (
     <>
       <StyledAccordion
-        onChange={handleAccordionChange}
+        onChange={(_event, isExpanded) => setAccordionExpanded(isExpanded)}
         sx={{
-          width: width,
+          width,
         }}
       >
         <AccordionSummary

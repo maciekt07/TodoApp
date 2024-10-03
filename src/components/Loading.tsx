@@ -15,11 +15,7 @@ export const Loading = () => {
 
   return (
     <Container>
-      {showLoading && (
-        <>
-          <CircularProgress size={80} thickness={4} aria-label="loading" />
-        </>
-      )}
+      {showLoading && <CircularProgress size={80} thickness={4} aria-label="loading" />}
     </Container>
   );
 };

@@ -16,7 +16,7 @@ export const TaskContainer = styled.div<TaskComponentProps>`
   display: flex;
   align-items: center;
   padding: 16px 16px 16px 20px;
-  border-radius: 28px;
+  border-radius: 30px;
   margin-top: 14px;
   transition: 0.3s all !important;
   color: ${({ backgroundColor }) => getFontColor(backgroundColor)};

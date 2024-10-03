@@ -3,70 +3,39 @@ import {
   Cancel,
   Close,
   ContentCopy,
-  ContentCopyRounded,
   DeleteRounded,
   Done,
-  DownloadRounded,
   EditRounded,
-  IosShare,
   LaunchRounded,
   LinkRounded,
   Pause,
   PlayArrow,
   PushPinRounded,
-  QrCode2Rounded,
   RadioButtonChecked,
   RecordVoiceOver,
   RecordVoiceOverRounded,
 } from "@mui/icons-material";
-import {
-  Alert,
-  AlertTitle,
-  Avatar,
-  Box,
-  Button,
-  Chip,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  Divider,
-  IconButton,
-  InputAdornment,
-  Menu,
-  MenuItem,
-  Tab,
-  Tabs,
-  TextField,
-  Typography,
-} from "@mui/material";
+import { Divider, IconButton, Menu, MenuItem } from "@mui/material";
 import { Emoji, EmojiStyle } from "emoji-picker-react";
 import { useContext, useMemo, useState } from "react";
 import Marquee from "react-fast-marquee";
 import toast from "react-hot-toast";
-import QRCode from "react-qr-code";
 import { useNavigate } from "react-router-dom";
 import { BottomSheet } from "react-spring-bottom-sheet";
 import "react-spring-bottom-sheet/dist/style.css";
-import { CustomDialogTitle, TaskIcon } from "..";
+import { TaskIcon } from "..";
 import { UserContext } from "../../contexts/UserContext";
 import { useResponsiveDisplay } from "../../hooks/useResponsiveDisplay";
-import { DialogBtn } from "../../styles";
-import { Task, UUID } from "../../types/user";
-import {
-  calculateDateDifference,
-  generateUUID,
-  getFontColor,
-  saveQRCode,
-  showToast,
-  systemInfo,
-} from "../../utils";
+import { Task } from "../../types/user";
+import { calculateDateDifference, generateUUID, showToast } from "../../utils";
 import { useTheme } from "@emotion/react";
 import { TaskContext } from "../../contexts/TaskContext";
 import { ColorPalette } from "../../theme/themeConfig";
+import { ShareDialog } from "./ShareDialog";
 
 export const TaskMenu = () => {
   const { user, setUser } = useContext(UserContext);
-  const { tasks, name, settings, emojisStyle } = user;
+  const { tasks, settings, emojisStyle } = user;
   const {
     selectedTaskId,
     anchorEl,
@@ -78,7 +47,6 @@ export const TaskMenu = () => {
     handleCloseMoreMenu,
   } = useContext(TaskContext);
   const [showShareDialog, setShowShareDialog] = useState<boolean>(false);
-  const [shareTabVal, setShareTabVal] = useState<number>(0);
 
   const isMobile = useResponsiveDisplay();
   const n = useNavigate();
@@ -91,53 +59,6 @@ export const TaskMenu = () => {
   const redirectToTaskDetails = () => {
     const taskId = selectedTask?.id.toString().replace(".", "");
     n(`/task/${taskId}`);
-  };
-
-  const generateShareableLink = (taskId: UUID | null, userName: string): string => {
-    const task = tasks.find((task) => task.id === taskId);
-    // This removes id property from link as a new identifier is generated on the share page.
-    interface TaskToShare extends Omit<Task, "id"> {
-      id: undefined;
-    }
-
-    if (task) {
-      const taskToShare: TaskToShare = {
-        ...task,
-        sharedBy: undefined,
-        id: undefined,
-        category: settings.enableCategories ? task.category : undefined,
-      };
-      const encodedTask = encodeURIComponent(JSON.stringify(taskToShare));
-      const encodedUserName = encodeURIComponent(userName);
-      return `${window.location.href}share?task=${encodedTask}&userName=${encodedUserName}`;
-    }
-    return "";
-  };
-
-  const handleCopyToClipboard = async (): Promise<void> => {
-    const linkToCopy = generateShareableLink(selectedTaskId, name || "User");
-    try {
-      await navigator.clipboard.writeText(linkToCopy);
-      showToast("Copied link to clipboard.");
-    } catch (error) {
-      console.error("Error copying link to clipboard:", error);
-      showToast("Error copying link to clipboard", { type: "error" });
-    }
-  };
-
-  const handleShare = async (): Promise<void> => {
-    const linkToShare = generateShareableLink(selectedTaskId, name || "User");
-    if (navigator.share) {
-      try {
-        await navigator.share({
-          title: "Share Task",
-          text: `Check out this task: ${selectedTask.name}`,
-          url: linkToShare,
-        });
-      } catch (error) {
-        console.error("Error sharing link:", error);
-      }
-    }
   };
 
   const handleMarkAsDone = () => {
@@ -395,9 +316,6 @@ export const TaskMenu = () => {
     </div>
   );
 
-  const handleTabChange = (_event: React.SyntheticEvent, newValue: number) => {
-    setShareTabVal(newValue);
-  };
   return (
     <>
       {isMobile ? (
@@ -442,153 +360,16 @@ export const TaskMenu = () => {
           {menuItems}
         </Menu>
       )}
-      <Dialog
+      <ShareDialog
         open={showShareDialog}
         onClose={() => setShowShareDialog(false)}
-        PaperProps={{
-          style: {
-            borderRadius: "28px",
-            padding: "10px",
-            width: "560px",
-          },
-        }}
-      >
-        <CustomDialogTitle
-          title="Share Task"
-          subTitle="Share your task with others."
-          onClose={() => setShowShareDialog(false)}
-          icon={<IosShare />}
-        />
-        <DialogContent>
-          <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
-            <ShareTaskChip
-              translate="no"
-              label={selectedTask.name}
-              clr={selectedTask.color}
-              avatar={
-                selectedTask.emoji ? (
-                  <Avatar sx={{ background: "transparent", borderRadius: "0" }}>
-                    <Emoji
-                      unified={selectedTask.emoji || ""}
-                      emojiStyle={emojisStyle}
-                      size={
-                        emojisStyle === EmojiStyle.NATIVE
-                          ? systemInfo.os === "iOS" || systemInfo.os === "macOS"
-                            ? 24
-                            : 18
-                          : 24
-                      }
-                    />
-                  </Avatar>
-                ) : undefined
-              }
-            />
-          </div>
-          <Tabs value={shareTabVal} onChange={handleTabChange} sx={{ m: "8px 0" }}>
-            <StyledTab label="Link" icon={<LinkRounded />} />
-            <StyledTab label="QR Code" icon={<QrCode2Rounded />} />
-          </Tabs>
-          <CustomTabPanel value={shareTabVal} index={0}>
-            <ShareField
-              value={generateShareableLink(selectedTaskId, name || "User")}
-              fullWidth
-              variant="outlined"
-              label="Shareable Link"
-              InputProps={{
-                readOnly: true,
-                startAdornment: (
-                  <InputAdornment position="start">
-                    <LinkRounded sx={{ ml: "8px" }} />
-                  </InputAdornment>
-                ),
-                endAdornment: (
-                  <InputAdornment position="end">
-                    <Button
-                      onClick={() => {
-                        handleCopyToClipboard();
-                      }}
-                      sx={{ p: "12px", borderRadius: "14px", mr: "4px" }}
-                    >
-                      <ContentCopyRounded /> &nbsp; Copy
-                    </Button>
-                  </InputAdornment>
-                ),
-              }}
-              sx={{
-                mt: 3,
-              }}
-            />
-          </CustomTabPanel>
-          <CustomTabPanel value={shareTabVal} index={1}>
-            <Box
-              sx={{
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                marginTop: "22px",
-              }}
-            >
-              <QRCode
-                id="QRCodeShare"
-                value={generateShareableLink(selectedTaskId, name || "User")}
-                size={400}
-              />
-            </Box>
-            <Box
-              sx={{
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-              }}
-            >
-              <DownloadQrCodeBtn
-                variant="outlined"
-                onClick={() => saveQRCode(selectedTask.name || "")}
-              >
-                <DownloadRounded /> &nbsp; Download QR Code
-              </DownloadQrCodeBtn>
-            </Box>
-          </CustomTabPanel>
-          <Alert severity="info" sx={{ mt: "20px" }}>
-            <AlertTitle>Share Your Task</AlertTitle>
-            Copy the link to share manually or use the share button to send it via other apps. You
-            can also download the QR code for easy access.
-          </Alert>
-          {/* <Alert severity="warning" sx={{ mt: "8px" }}>
-            Anyone with access to this link will be able to view your name and task details.
-          </Alert> */}
-        </DialogContent>
-        <DialogActions>
-          <DialogBtn onClick={() => setShowShareDialog(false)}>Close</DialogBtn>
-          <DialogBtn onClick={handleShare}>
-            <IosShare sx={{ mb: "4px" }} /> &nbsp; Share
-          </DialogBtn>
-        </DialogActions>
-      </Dialog>
+        selectedTaskId={selectedTaskId}
+        selectedTask={selectedTask}
+      />
     </>
   );
 };
-interface TabPanelProps {
-  children?: React.ReactNode;
-  index: number;
-  value: number;
-}
-const CustomTabPanel = ({ children, value, index }: TabPanelProps) => {
-  return (
-    <div
-      role="tabpanel"
-      hidden={value !== index}
-      id={`share-tabpanel-${index}`}
-      aria-labelledby={`share-tab-${index}`}
-    >
-      {value === index && (
-        <Box>
-          <Typography>{children}</Typography>
-        </Box>
-      )}
-    </div>
-  );
-};
+
 const SheetHeader = styled.h3`
   display: flex;
   justify-content: center;
@@ -642,46 +423,3 @@ const ReadAloudControls = styled.div`
   margin-top: 16px;
   gap: 8px;
 `;
-
-const ShareField = styled(TextField)`
-  margin-top: 22px;
-  .MuiOutlinedInput-root {
-    border-radius: 14px;
-    padding: 2px;
-    transition: 0.3s all;
-  }
-`;
-
-const ShareTaskChip = styled(Chip)<{ clr: string }>`
-  background: ${({ clr }) => clr};
-  color: ${({ clr }) => getFontColor(clr)};
-  font-size: 14px;
-  padding: 18px 8px;
-  border-radius: 50px;
-  font-weight: 500;
-  margin-left: 6px;
-  @media (max-width: 768px) {
-    font-size: 16px;
-    padding: 20px 10px;
-  }
-`;
-
-const DownloadQrCodeBtn = styled(Button)`
-  padding: 12px 24px;
-  border-radius: 14px;
-  margin-top: 16px;
-  @media (max-width: 520px) {
-    margin-top: -2px;
-  }
-`;
-
-const StyledTab = styled(Tab)`
-  border-radius: 12px 12px 0 0;
-  width: 50%;
-  .MuiTabs-indicator {
-    border-radius: 24px;
-  }
-`;
-StyledTab.defaultProps = {
-  iconPosition: "start",
-};

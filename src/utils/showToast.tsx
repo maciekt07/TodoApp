@@ -1,4 +1,3 @@
-import styled from "@emotion/styled";
 import { Button } from "@mui/material";
 import { ReactNode } from "react";
 import toast, { Toast, ToastOptions, ToastType } from "react-hot-toast";
@@ -54,9 +53,14 @@ export const showToast = (
         {message}
         {dismissButton && (
           <div>
-            <DismissButton variant="outlined" onClick={() => toast.dismiss(t.id)}>
+            <Button
+              variant="outlined"
+              fullWidth
+              onClick={() => toast.dismiss(t.id)}
+              sx={{ mt: "8px", w: "100%", p: "12px 24px", fontSize: "16px", borderRadius: "16px" }}
+            >
               Dismiss
-            </DismissButton>
+            </Button>
           </div>
         )}
       </div>
@@ -65,12 +69,4 @@ export const showToast = (
       ...toastOptions, // Passes any additional toast options.
     },
   );
-
-  const DismissButton = styled(Button)`
-    width: 100%;
-    padding: 12px 24px;
-    border-radius: 16px;
-    margin-top: 8px;
-    font-size: 16px;
-  `;
 };

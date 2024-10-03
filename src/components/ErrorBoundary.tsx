@@ -65,7 +65,7 @@ class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoundarySta
     // This fixes issues with caching where dynamically imported modules fail to load due to changed asset names in new builds.
     if (
       error.message.includes("Failed to fetch dynamically imported") ||
-      error.message.includes("is not a valid JavaScript MIME type")
+      error.message.includes("is not a valid JavaScript")
     ) {
       showToast("Reloading page", { type: "loading" });
 

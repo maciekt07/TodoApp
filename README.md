@@ -115,6 +115,9 @@ To install and run the project locally, follow these steps:
 
 The app will now be running at [http://localhost:5173/](http://localhost:5173/).
 
+> [!TIP]
+> For mobile device testing, use `npm run dev:host` to preview the app on your local network.
+
 <a href="https://www.buymeacoffee.com/maciekt07" target="_blank">
 <img src="https://img.buymeacoffee.com/button-api/?text=Buy me a coffee&emoji=&slug=maciekt07&button_colour=1a1b27&font_colour=ffffff&font_family=Lato&outline_colour=ffffff&coffee_colour=FFDD00"></a>
 </a>
