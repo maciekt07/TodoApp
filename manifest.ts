@@ -33,7 +33,7 @@ const manifest: Partial<ManifestOptions> = {
     },
     {
       src: "pwa/logoMaskable.png",
-      sizes: "256x256",
+      sizes: "512x512",
       type: "image/png",
       purpose: "maskable",
     },
@@ -75,18 +75,18 @@ const manifest: Partial<ManifestOptions> = {
         },
       ],
     },
-    {
-      name: "Purge",
-      description: "Purge Tasks",
-      url: "/purge",
-      icons: [
-        {
-          src: "pwa/purge.png",
-          sizes: "192x192",
-          type: "image/png",
-        },
-      ],
-    },
+    // {
+    //   name: "Purge",
+    //   description: "Purge Tasks",
+    //   url: "/purge",
+    //   icons: [
+    //     {
+    //       src: "pwa/purge.png",
+    //       sizes: "192x192",
+    //       type: "image/png",
+    //     },
+    //   ],
+    // },
     {
       name: "Profile",
       description: "User Profile",
