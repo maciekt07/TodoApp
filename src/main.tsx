@@ -6,39 +6,26 @@ import { ORIGINAL_COLORS } from "ntc-ts";
 import { UserContextProvider } from "./contexts/UserProvider.tsx";
 import { registerSW } from "virtual:pwa-register";
 import { showToast } from "./utils/showToast.tsx";
-import toast from "react-hot-toast";
-import { Button } from "@mui/material";
-import { UpdateRounded } from "@mui/icons-material";
+import { updatePrompt } from "./utils/updatePrompt.tsx";
 
 // initialize ntc colors
 initColors(ORIGINAL_COLORS);
 
+// Show a prompt to update the app when a new version is available
 registerSW({
-  onNeedRefresh() {
-    // Show an alert to inform the user about the update
-    toast(
-      (t) => (
-        <div>
-          <div style={{ fontWeight: 700 }}>
-            A new version of the app is available. Reload to update?
-          </div>
-          <div style={{ display: "flex", justifyContent: "left", gap: "8px", marginTop: "12px" }}>
-            <Button fullWidth variant="contained" onClick={() => window.location.reload()}>
-              <UpdateRounded /> &nbsp; Reload
-            </Button>
-            <Button fullWidth variant="outlined" onClick={() => toast.dismiss(t.id)}>
-              Dismiss
-            </Button>
-          </div>
-        </div>
-      ),
-      { duration: 9999999, style: { border: "none" } },
-    );
+  onRegistered(r) {
+    if (r) {
+      updatePrompt(r);
+    }
   },
   onOfflineReady() {
-    console.log("App is ready to work offline.");
     showToast("App is ready to work offline.", { type: "success", duration: 2000 });
   },
+});
+
+// Listen for the `SKIP_WAITING` message and reload the page when the new SW takes over
+navigator.serviceWorker?.addEventListener("controllerchange", () => {
+  window.location.reload();
 });
 
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(

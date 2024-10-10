@@ -1,5 +1,5 @@
 import styled from "@emotion/styled";
-import { fadeIn, fadeInLeft, progressPulse, pulseAnimation } from "./keyframes.styled";
+import { fadeIn, fadeInLeft, progressPulse, pulseAnimation, scale } from "./keyframes.styled";
 import { Box, Button, CircularProgress, css } from "@mui/material";
 import { getFontColor, isDark } from "../utils";
 
@@ -128,7 +128,7 @@ export const AddButton = styled(Button)<{ animate?: boolean; glow: boolean }>`
     background-color: ${({ theme }) => theme.primary};
     backdrop-filter: blur(6px);
   }
-
+  animation: ${scale} 0.3s;
   ${({ animate, theme }) =>
     animate &&
     css`

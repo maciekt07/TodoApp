@@ -205,13 +205,11 @@ const Home = () => {
           </TasksCount>
         </TasksCountContainer>
       )}
-
       <Suspense fallback={<div>Loading...</div>}>
         <TaskProvider>
           <TasksList />
         </TaskProvider>
       </Suspense>
-
       {!isMobile && (
         <Tooltip title={tasks.length > 0 ? "Add New Task" : "Add Task"} placement="left">
           <AddButton

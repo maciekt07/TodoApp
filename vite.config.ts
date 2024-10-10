@@ -12,6 +12,7 @@ export default defineConfig({
   },
   plugins: [
     react(),
+    // Generate QR code for npm run dev:host
     qrcode({ filter: (url) => url.startsWith("http://192.168.0.") }),
     VitePWA({
       manifest,
@@ -19,7 +20,7 @@ export default defineConfig({
         enabled: true,
         type: "module",
       },
-      registerType: "autoUpdate",
+      registerType: "prompt",
       workbox: {
         // Use runtime caching for dynamic imports
         runtimeCaching: [
