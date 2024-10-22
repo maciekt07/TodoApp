@@ -50,7 +50,7 @@ function App() {
         } else if (userValue === undefined) {
           // Update only if the property is missing in user
           userObject[key] = defaultValue;
-          // Notify users about update
+          // Notify users about update in user object
           showToast(
             <div>
               Added new property to user object{" "}

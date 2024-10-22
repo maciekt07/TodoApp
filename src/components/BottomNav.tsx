@@ -155,7 +155,7 @@ const Container = styled(Box)`
 `;
 
 const StyledBottomNavigation = styled(BottomNavigation)<{ glow: boolean }>`
-  border-radius: 24px 24px 0 0;
+  /* border-radius: 24px 24px 0 0; */
   background: ${({ theme, glow }) => `${theme.palette.secondary.main}${glow ? "c8" : "e6"}`};
   backdrop-filter: blur(20px);
   margin: 0px 20px 0px -20px;

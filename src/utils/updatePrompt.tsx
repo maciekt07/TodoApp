@@ -1,4 +1,4 @@
-import { Button } from "@mui/material";
+import { Button, Stack, Typography } from "@mui/material";
 import { UpdateRounded } from "@mui/icons-material";
 import toast from "react-hot-toast";
 
@@ -11,43 +11,36 @@ import toast from "react-hot-toast";
 export const updatePrompt = (r: ServiceWorkerRegistration): void => {
   r.addEventListener("updatefound", () => {
     const newWorker = r.installing;
+
     if (newWorker) {
       newWorker.addEventListener("statechange", () => {
-        if (newWorker.state === "installed") {
-          if (navigator.serviceWorker.controller) {
-            toast(
-              (t) => (
-                <div>
-                  <div style={{ fontWeight: 700 }}>
-                    A new version of the app is available. Reload to update?
-                  </div>
-                  <div
-                    style={{
-                      display: "flex",
-                      justifyContent: "left",
-                      gap: "8px",
-                      marginTop: "12px",
+        if (newWorker.state === "installed" && navigator.serviceWorker.controller) {
+          toast(
+            (t) => (
+              <Stack spacing={2}>
+                <Typography variant="subtitle1" fontWeight={700}>
+                  A new version of the app is available. Reload to update?
+                </Typography>
+                <Stack direction="row" spacing={1}>
+                  <Button
+                    fullWidth
+                    variant="contained"
+                    onClick={() => {
+                      newWorker.postMessage({ type: "SKIP_WAITING" });
+                      toast.dismiss(t.id);
                     }}
+                    startIcon={<UpdateRounded />}
                   >
-                    <Button
-                      fullWidth
-                      variant="contained"
-                      onClick={() => {
-                        newWorker.postMessage({ type: "SKIP_WAITING" });
-                        toast.dismiss(t.id);
-                      }}
-                    >
-                      <UpdateRounded /> &nbsp; Reload
-                    </Button>
-                    <Button fullWidth variant="outlined" onClick={() => toast.dismiss(t.id)}>
-                      Dismiss
-                    </Button>
-                  </div>
-                </div>
-              ),
-              { duration: 9999999, style: { border: "none" } },
-            );
-          }
+                    Reload
+                  </Button>
+                  <Button fullWidth variant="outlined" onClick={() => toast.dismiss(t.id)}>
+                    Dismiss
+                  </Button>
+                </Stack>
+              </Stack>
+            ),
+            { duration: Infinity, style: { border: "none" } },
+          );
         }
       });
     }

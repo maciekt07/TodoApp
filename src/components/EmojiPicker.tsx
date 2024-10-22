@@ -135,7 +135,6 @@ export const CustomEmojiPicker = ({ emoji, setEmoji, color, name, type }: EmojiP
         }: ${name}. (For example: 🖥️ for coding, 📝 for writing, 🎨 for design, 📱 for mobile development) Please use the actual emoji, do not use shortcodes. Type 'none' if not applicable.`,
       );
       console.log("Full AI response:", response);
-
       // Map to replace emoji shortcodes with actual emojis due to AI occasionally returning shortcodes.
       const emojiMap: {
         [key: string]: string;
@@ -154,6 +153,7 @@ export const CustomEmojiPicker = ({ emoji, setEmoji, color, name, type }: EmojiP
         "☮": "✌️",
         "🎙": "🎙️",
         "🗣": "🗣️",
+        "✈": "✈️",
       };
       let emojiResponse = response.trim();
       if (emojiMap[emojiResponse]) {
@@ -359,12 +359,12 @@ export const CustomEmojiPicker = ({ emoji, setEmoji, color, name, type }: EmojiP
               </EmojiPickerContainer>
             </DialogContent>
             <DialogActions>
-              <DialogBtn onClick={toggleEmojiPicker}>Cancel</DialogBtn>
               {currentEmoji && (
                 <DialogBtn color="error" onClick={handleRemoveEmoji}>
                   <RemoveCircleOutline /> &nbsp; Remove Emoji
                 </DialogBtn>
               )}
+              <DialogBtn onClick={toggleEmojiPicker}>Cancel</DialogBtn>
             </DialogActions>
           </Dialog>
         </>

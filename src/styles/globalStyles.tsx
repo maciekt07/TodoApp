@@ -113,10 +113,15 @@ export const GlobalStyles = () => {
 
         .EmojiPickerReact {
           --epr-search-border-color: ${theme.primary} !important;
+          --epr-hover-bg-color-reduced-opacity: ${theme.primary + "64"} !important;
+          --epr-hover-bg-color: ${theme.primary} !important;
+          --epr-focus-bg-color: ${theme.primary + "64"} !important;
           --epr-dark-bg-color: ${ColorPalette.darkMode} !important;
           --epr-dark-category-label-bg-color: ${ColorPalette.darkMode + "d8"} !important;
-          --epr-skin-tone-picker-menu-color: ${ColorPalette.darkMode} !important;
-          --epr-emoji-variation-picker-bg-color: ${ColorPalette.darkMode} !important;
+          --epr-skin-tone-picker-menu-color: transparent !important;
+          --epr-emoji-variation-picker-bg-color: ${theme.darkmode
+            ? ColorPalette.darkMode
+            : ColorPalette.lightMode} !important;
           --epr-emoji-variation-picker-menu-color: ${ColorPalette.darkMode} !important;
           --epr-dark-search-input-bg-color-active: #313131 !important;
           --epr-dark-picker-border-color: #616161 !important;

@@ -100,9 +100,6 @@ export const ColorPicker: React.FC<ColorPickerProps> = ({
     setAddColorVal(selectedColor);
   };
 
-  const handlePickerChange = (e: React.ChangeEvent<HTMLInputElement>) =>
-    setAddColorVal(e.target.value as string);
-
   const ToastColorOptions = (color: string): Pick<ToastOptions, "iconTheme" | "style"> => {
     return {
       iconTheme: { primary: color, secondary: getFontColor(color) },
@@ -283,7 +280,7 @@ export const ColorPicker: React.FC<ColorPickerProps> = ({
               type="color"
               // list={systemInfo.os === "iOS" ? "color-list" : undefined}
               value={addColorVal}
-              onChange={handlePickerChange}
+              onChange={(e) => setAddColorVal(e.target.value as string)}
             />
             {/* <datalist id="color-list">
               <option value={theme.primary} />
@@ -386,7 +383,7 @@ const StyledInfo = styled.span<{ clr: string }>`
   opacity: 0.8;
   display: flex;
   align-items: center;
-  gap: 4px;
+  gap: 6px;
   margin-top: 8px;
   margin-left: 4px;
   font-size: 14px;

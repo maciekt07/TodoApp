@@ -74,6 +74,7 @@ export const TaskInfo = styled.div`
 export const TaskHeader = styled.div`
   display: flex;
   align-items: center;
+  gap: 6px;
 `;
 
 export const TaskName = styled.h3<{ done: boolean }>`
