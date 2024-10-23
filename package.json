@@ -1,9 +1,17 @@
 {
   "name": "todoapp",
-  "author": "github.com/maciekt07",
+  "author": {
+    "name": "Maciej Twaróg",
+    "url": "https://github.com/maciekt07"
+  },
   "private": true,
-  "version": "0.0.0",
   "type": "module",
+  "homepage": "https://react-cool-todo-app.netlify.app/",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/maciekt07/TodoApp.git"
+  },
+  "license": "MIT",
   "scripts": {
     "dev": "vite",
     "dev:host": "vite --host",

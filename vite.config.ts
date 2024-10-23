@@ -10,6 +10,9 @@ export default defineConfig({
   test: {
     globals: true,
   },
+  define: {
+    "process.env.BUILD_NUMBER": JSON.stringify(process.env.BUILD_NUMBER || "dev"),
+  },
   plugins: [
     react(),
     // Generate QR code for npm run dev:host
@@ -64,7 +67,7 @@ export default defineConfig({
           },
         ],
       },
-      includeAssets: ["**/*"],
+      includeAssets: ["**/*", "sw.js"],
     }),
   ],
 });
