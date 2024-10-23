@@ -73,9 +73,17 @@ Users can import and export tasks to/from JSON files. This feature allows users 
 
 ### 📴 Progressive Web App (PWA)
 
-This app is a Progressive Web App (PWA), which means it can be installed on your device, used even when you're offline and behave like a normal application with shortcuts and badges. It also features a custom update prompt to notify users when a new version is available, allowing for easy refresh to access the latest improvements.
+This app is a Progressive Web App (PWA), which means it can be installed on your device, used even when you're offline and behave like a normal application with shortcuts and badges.
 
 <img src="https://raw.githubusercontent.com/maciekt07/TodoApp/main/screenshots/pwaTaskBar.png" alt="taskbar" width="260px" />
+
+### 🔄 Update Prompt
+
+The app features a custom update prompt that notifies users when a new version is available, allowing for easy refresh to access the latest improvements.
+
+<!-- <img src="https://raw.githubusercontent.com/maciekt07/TodoApp/main/screenshots/UpdatePrompt.png" alt="update prompt" width="260px" /> -->
+
+<img src="screenshots/UpdatePrompt.png" alt="update prompt" width="260px" />
 
 ### 🔎 Additional Features
 
