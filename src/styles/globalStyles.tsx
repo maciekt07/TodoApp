@@ -31,6 +31,9 @@ export const GlobalStyles = () => {
           --rsbs-backdrop-bg: rgba(0, 0, 0, 0.3);
           --rsbs-bg: ${theme.darkmode ? "#383838" : "#ffffff"};
         }
+        input[type="datetime-local"]:placeholder-shown {
+          color: transparent !important;
+        }
         img {
           -webkit-user-select: none;
           -khtml-user-select: none;

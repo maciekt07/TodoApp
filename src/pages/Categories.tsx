@@ -297,7 +297,6 @@ const Categories = () => {
             type="category"
           />
           <CategoryInput
-            focused
             required
             label="Category name"
             placeholder="Enter category name"

@@ -32,6 +32,8 @@ const AddTask = () => {
     "sessionStorage",
   );
 
+  const [isDeadlineFocused, setIsDeadlineFocused] = useState<boolean>(false);
+
   const n = useNavigate();
 
   useEffect(() => {
@@ -140,7 +142,6 @@ const AddTask = () => {
           autoComplete="off"
           value={name}
           onChange={handleNameChange}
-          focused
           required
           error={nameError !== ""}
           helpercolor={nameError && ColorPalette.red}
@@ -153,7 +154,7 @@ const AddTask = () => {
           }
         />
         <StyledInput
-          label="Task Description (optional)"
+          label="Task Description"
           name="name"
           placeholder="Enter task description"
           autoComplete="off"
@@ -161,7 +162,6 @@ const AddTask = () => {
           onChange={handleDescriptionChange}
           multiline
           rows={4}
-          focused
           error={descriptionError !== ""}
           helpercolor={descriptionError && ColorPalette.red}
           helperText={
@@ -173,13 +173,15 @@ const AddTask = () => {
           }
         />
         <StyledInput
-          label="Task Deadline (optional)"
+          label="Task Deadline"
           name="name"
           placeholder="Enter deadline date"
           type="datetime-local"
           value={deadline}
           onChange={handleDeadlineChange}
-          focused
+          onFocus={() => setIsDeadlineFocused(true)}
+          onBlur={() => setIsDeadlineFocused(false)}
+          hidetext={(!deadline || deadline === "") && !isDeadlineFocused} // fix for label overlapping with input
           sx={{
             colorScheme: isDark(theme.secondary) ? "dark" : "light",
           }}

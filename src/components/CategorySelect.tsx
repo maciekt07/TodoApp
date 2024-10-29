@@ -199,9 +199,10 @@ const StyledSelect = styled(Select)<{ width?: CSSProperties["width"] }>`
   transition: 0.3s all;
   width: ${({ width }) => width || "100%"};
   color: white;
-  background: #ffffff18;
+  /* background: #ffffff18; */
   z-index: 999;
-  border: 1px solid #0000003a;
+  //  border: 1px solid #0000003a; TODO: match border with color picker border
+  border: none !important;
 `;
 
 const CategoriesMenu = styled(MenuItem)<{ clr: string; disable?: boolean }>`

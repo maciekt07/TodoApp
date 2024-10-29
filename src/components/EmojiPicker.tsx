@@ -176,17 +176,17 @@ export const CustomEmojiPicker = ({ emoji, setEmoji, color, name, type }: EmojiP
         });
         console.error("Invalid emoji.", unified);
       }
-
+    } catch (error) {
+      setIsAILoading(false);
+      console.error(error);
+      showToast(`${error}`, { type: "error" });
+    } finally {
       setIsAILoading(false);
       const end = new Date().getTime();
       console.log(
         `%cTook ${end - start}ms to generate.`,
         `color: ${end - start > 600 ? "orange" : "lime"}`,
       );
-    } catch (error) {
-      setIsAILoading(false);
-      console.error(error);
-      showToast(`${error}`, { type: "error" });
     }
   }
 
@@ -424,7 +424,7 @@ const PickerLoader = styled.div<{
   width: 100vw;
   padding: 8px;
   border-radius: 20px;
-  background: ${({ pickerTheme }) => (pickerTheme === "dark" ? "#222222" : "#ffffff")};
+  background: transparent;
   border: ${({ pickerTheme }) => `1px solid ${pickerTheme === "dark" ? "#151617" : "#e7e7e7"}`};
 `;
 

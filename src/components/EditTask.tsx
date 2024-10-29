@@ -10,7 +10,7 @@ import {
   Tooltip,
 } from "@mui/material";
 import { useContext, useEffect, useMemo, useState } from "react";
-import { CategorySelect, ColorPicker, CustomDialogTitle, CustomEmojiPicker } from ".";
+import { ColorPicker, CustomDialogTitle, CustomEmojiPicker } from ".";
 import { DESCRIPTION_MAX_LENGTH, TASK_NAME_MAX_LENGTH } from "../constants";
 import { UserContext } from "../contexts/UserContext";
 import { DialogBtn } from "../styles";
@@ -18,6 +18,7 @@ import { Category, Task } from "../types/user";
 import { showToast } from "../utils";
 import { useTheme } from "@emotion/react";
 import { ColorPalette } from "../theme/themeConfig";
+import { CategorySelect } from "./CategorySelect";
 
 interface EditTaskProps {
   open: boolean;

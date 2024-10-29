@@ -34,13 +34,13 @@ export const AddTaskButton = styled(Button)`
     color: ${({ theme }) => getFontColor(theme.secondary)};
   }
 `;
-export const StyledInput = styled(TextField)<{ helpercolor?: string }>`
+export const StyledInput = styled(TextField)<{ helpercolor?: string; hidetext?: boolean }>`
   margin: 12px;
   & .MuiOutlinedInput-root {
     border-radius: 16px;
     transition: 0.3s all;
     width: 400px;
-    color: ${({ theme }) => getFontColor(theme.secondary)};
+    color: ${({ theme, hidetext }) => (hidetext ? "transparent" : getFontColor(theme.secondary))};
   }
   .MuiFormHelperText-root {
     color: ${({ helpercolor, theme }) => helpercolor || getFontColor(theme.secondary)};

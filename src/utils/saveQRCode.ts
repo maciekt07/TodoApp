@@ -24,7 +24,6 @@ export const saveQRCode = (taskName: string) => {
 
     canvas.width = canvasWidth;
     canvas.height = canvasHeight;
-    canvas.style.borderRadius = "10px";
 
     ctx.fillStyle = "white";
     ctx.fillRect(0, 0, canvasWidth, canvasHeight);
