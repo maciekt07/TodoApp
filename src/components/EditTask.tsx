@@ -183,7 +183,7 @@ export const EditTask = ({ open, task, onClose, onSave }: EditTaskProps) => {
           label="Deadline date"
           name="deadline"
           type="datetime-local"
-          value={editedTask?.deadline || ""}
+          value={editedTask?.deadline || ""} // FIXME: deadline is not being displayed correctly
           onChange={handleInputChange}
           InputLabelProps={{ shrink: true }}
           sx={{

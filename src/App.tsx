@@ -10,9 +10,8 @@ import { useSystemTheme } from "./hooks/useSystemTheme";
 import MainLayout from "./layouts/MainLayout";
 import AppRouter from "./router";
 import { GlobalStyles } from "./styles";
-import { Themes, createCustomTheme } from "./theme/createTheme";
-import { ColorPalette } from "./theme/themeConfig";
-import { getFontColor, showToast } from "./utils";
+import { Themes, createCustomTheme, isDarkMode } from "./theme/createTheme";
+import { showToast } from "./utils";
 
 function App() {
   const { user, setUser } = useContext(UserContext);
@@ -148,21 +147,6 @@ function App() {
     return selectedTheme ? selectedTheme.MuiTheme : Themes[0].MuiTheme;
   }, [systemTheme, user.theme]);
 
-  const isDarkMode = (): boolean => {
-    switch (user.darkmode) {
-      case "light":
-        return false;
-      case "dark":
-        return true;
-      case "system":
-        return systemTheme === "dark";
-      case "auto":
-        return getFontColor(getMuiTheme().palette.secondary.main) === ColorPalette.fontLight;
-      default:
-        return false;
-    }
-  };
-
   // Update the theme color meta tag in the document's head based on the user's selected theme.
   useEffect(() => {
     document
@@ -175,14 +159,16 @@ function App() {
       theme={createCustomTheme(
         getMuiTheme().palette.primary.main,
         getMuiTheme().palette.secondary.main,
-        isDarkMode() ? "dark" : "light",
+        isDarkMode(user.darkmode, systemTheme, getMuiTheme().palette.secondary.main)
+          ? "dark"
+          : "light",
       )}
     >
       <EmotionThemeProvider
         theme={{
           primary: getMuiTheme().palette.primary.main,
           secondary: getMuiTheme().palette.secondary.main,
-          darkmode: isDarkMode(),
+          darkmode: isDarkMode(user.darkmode, systemTheme, getMuiTheme().palette.secondary.main),
         }}
       >
         <GlobalStyles />

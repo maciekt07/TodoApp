@@ -14,6 +14,7 @@ import {
   MenuItem,
   Select,
   SelectChangeEvent,
+  useTheme,
 } from "@mui/material";
 import { Emoji } from "emoji-picker-react";
 import { CSSProperties, useContext, useState } from "react";
@@ -24,6 +25,8 @@ import { UserContext } from "../contexts/UserContext";
 import type { Category, UUID } from "../types/user";
 import { getFontColor, showToast } from "../utils";
 import { ColorPalette } from "../theme/themeConfig";
+import { useSystemTheme } from "../hooks/useSystemTheme";
+import { isDarkMode } from "../theme/createTheme";
 
 interface CategorySelectProps {
   selectedCategories: Category[];
@@ -47,6 +50,8 @@ export const CategorySelect: React.FC<CategorySelectProps> = ({
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
   const n = useNavigate();
+  const muiTheme = useTheme();
+  const systemTheme = useSystemTheme();
 
   const handleCategoryChange = (event: SelectChangeEvent<unknown>): void => {
     const selectedCategoryIds = event.target.value as UUID[];
@@ -115,6 +120,9 @@ export const CategorySelect: React.FC<CategorySelectProps> = ({
               maxHeight: 450,
               zIndex: 999999,
               padding: "0px 8px",
+              background: isDarkMode(user.darkmode, systemTheme, muiTheme.palette.secondary.main)
+                ? "#2f2f2f"
+                : "#ffffff",
             },
           },
         }}
@@ -198,7 +206,7 @@ const StyledSelect = styled(Select)<{ width?: CSSProperties["width"] }>`
   border-radius: 16px !important;
   transition: 0.3s all;
   width: ${({ width }) => width || "100%"};
-  color: white;
+
   /* background: #ffffff18; */
   z-index: 999;
   //  border: 1px solid #0000003a; TODO: match border with color picker border
@@ -248,11 +256,11 @@ const HeaderMenuItem = styled(MenuItem)`
   font-weight: 500;
   position: sticky !important;
   top: 0;
-  backdrop-filter: blur(6px);
+  backdrop-filter: blur(8px);
   z-index: 99;
   pointer-events: none !important;
   cursor: default !important;
-  background: ${({ theme }) => (theme.darkmode ? "#2f2f2fc3" : "#ffffffc3")};
+  background: ${({ theme }) => (theme.darkmode ? "#2f2f2fd0" : "#ffffffd0")};
 `;
 
 const SelectedNames = styled.span`

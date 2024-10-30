@@ -11,6 +11,7 @@ import { useStorageState } from "../hooks/useStorageState";
 import { useTheme } from "@emotion/react";
 import { generateUUID, getFontColor, isDark, showToast } from "../utils";
 import { ColorPalette } from "../theme/themeConfig";
+import InputThemeProvider from "../contexts/InputThemeProvider";
 
 const AddTask = () => {
   const { user, setUser } = useContext(UserContext);
@@ -124,6 +125,8 @@ const AddTask = () => {
     itemsToRemove.map((item) => sessionStorage.removeItem(item));
   };
 
+  //TODO: adjust input hover border colors
+
   return (
     <>
       <TopBar title="Add New Task" />
@@ -135,80 +138,83 @@ const AddTask = () => {
           name={name}
           type="task"
         />
-        <StyledInput
-          label="Task Name"
-          name="name"
-          placeholder="Enter task name"
-          autoComplete="off"
-          value={name}
-          onChange={handleNameChange}
-          required
-          error={nameError !== ""}
-          helpercolor={nameError && ColorPalette.red}
-          helperText={
-            name === ""
-              ? undefined
-              : !nameError
-                ? `${name.length}/${TASK_NAME_MAX_LENGTH}`
-                : nameError
-          }
-        />
-        <StyledInput
-          label="Task Description"
-          name="name"
-          placeholder="Enter task description"
-          autoComplete="off"
-          value={description}
-          onChange={handleDescriptionChange}
-          multiline
-          rows={4}
-          error={descriptionError !== ""}
-          helpercolor={descriptionError && ColorPalette.red}
-          helperText={
-            description === ""
-              ? undefined
-              : !descriptionError
-                ? `${description.length}/${DESCRIPTION_MAX_LENGTH}`
-                : descriptionError
-          }
-        />
-        <StyledInput
-          label="Task Deadline"
-          name="name"
-          placeholder="Enter deadline date"
-          type="datetime-local"
-          value={deadline}
-          onChange={handleDeadlineChange}
-          onFocus={() => setIsDeadlineFocused(true)}
-          onBlur={() => setIsDeadlineFocused(false)}
-          hidetext={(!deadline || deadline === "") && !isDeadlineFocused} // fix for label overlapping with input
-          sx={{
-            colorScheme: isDark(theme.secondary) ? "dark" : "light",
-          }}
-          InputProps={{
-            startAdornment:
-              deadline && deadline !== "" ? (
-                <InputAdornment position="start">
-                  <Tooltip title="Clear">
-                    <IconButton color="error" onClick={() => setDeadline("")}>
-                      <CancelRounded />
-                    </IconButton>
-                  </Tooltip>
-                </InputAdornment>
-              ) : undefined,
-          }}
-        />
-        {user.settings.enableCategories !== undefined && user.settings.enableCategories && (
-          <div style={{ marginBottom: "14px" }}>
-            <br />
-            <CategorySelect
-              selectedCategories={selectedCategories}
-              onCategoryChange={(categories) => setSelectedCategories(categories)}
-              width="400px"
-              fontColor={getFontColor(theme.secondary)}
-            />
-          </div>
-        )}
+        {/* fix for input colors */}
+        <InputThemeProvider>
+          <StyledInput
+            label="Task Name"
+            name="name"
+            placeholder="Enter task name"
+            autoComplete="off"
+            value={name}
+            onChange={handleNameChange}
+            required
+            error={nameError !== ""}
+            helpercolor={nameError && ColorPalette.red}
+            helperText={
+              name === ""
+                ? undefined
+                : !nameError
+                  ? `${name.length}/${TASK_NAME_MAX_LENGTH}`
+                  : nameError
+            }
+          />
+          <StyledInput
+            label="Task Description"
+            name="name"
+            placeholder="Enter task description"
+            autoComplete="off"
+            value={description}
+            onChange={handleDescriptionChange}
+            multiline
+            rows={4}
+            error={descriptionError !== ""}
+            helpercolor={descriptionError && ColorPalette.red}
+            helperText={
+              description === ""
+                ? undefined
+                : !descriptionError
+                  ? `${description.length}/${DESCRIPTION_MAX_LENGTH}`
+                  : descriptionError
+            }
+          />
+          <StyledInput
+            label="Task Deadline"
+            name="name"
+            placeholder="Enter deadline date"
+            type="datetime-local"
+            value={deadline}
+            onChange={handleDeadlineChange}
+            onFocus={() => setIsDeadlineFocused(true)}
+            onBlur={() => setIsDeadlineFocused(false)}
+            hidetext={(!deadline || deadline === "") && !isDeadlineFocused} // fix for label overlapping with input
+            sx={{
+              colorScheme: isDark(theme.secondary) ? "dark" : "light",
+            }}
+            InputProps={{
+              startAdornment:
+                deadline && deadline !== "" ? (
+                  <InputAdornment position="start">
+                    <Tooltip title="Clear">
+                      <IconButton color="error" onClick={() => setDeadline("")}>
+                        <CancelRounded />
+                      </IconButton>
+                    </Tooltip>
+                  </InputAdornment>
+                ) : undefined,
+            }}
+          />
+          {user.settings.enableCategories !== undefined && user.settings.enableCategories && (
+            <div style={{ marginBottom: "14px" }}>
+              <br />
+              <CategorySelect
+                selectedCategories={selectedCategories}
+                onCategoryChange={(categories) => setSelectedCategories(categories)}
+                width="400px"
+                fontColor={getFontColor(theme.secondary)}
+              />
+            </div>
+          )}
+        </InputThemeProvider>
         <ColorPicker
           color={color}
           width="400px"

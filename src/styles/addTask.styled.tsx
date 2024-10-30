@@ -34,6 +34,7 @@ export const AddTaskButton = styled(Button)`
     color: ${({ theme }) => getFontColor(theme.secondary)};
   }
 `;
+
 export const StyledInput = styled(TextField)<{ helpercolor?: string; hidetext?: boolean }>`
   margin: 12px;
   & .MuiOutlinedInput-root {

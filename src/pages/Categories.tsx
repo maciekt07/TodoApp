@@ -30,6 +30,7 @@ import {
 } from "../styles";
 import { generateUUID, getFontColor, showToast } from "../utils";
 import { ColorPalette } from "../theme/themeConfig";
+import InputThemeProvider from "../contexts/InputThemeProvider";
 
 const NotFound = lazy(() => import("./NotFound"));
 
@@ -296,22 +297,23 @@ const Categories = () => {
             name={name}
             type="category"
           />
-          <CategoryInput
-            required
-            label="Category name"
-            placeholder="Enter category name"
-            value={name}
-            onChange={handleNameChange}
-            error={nameError !== ""}
-            helperText={
-              name == ""
-                ? undefined
-                : !nameError
-                  ? `${name.length}/${CATEGORY_NAME_MAX_LENGTH}`
-                  : nameError
-            }
-          />
-          {/* <Typography>Color</Typography> */}
+          <InputThemeProvider>
+            <CategoryInput
+              required
+              label="Category name"
+              placeholder="Enter category name"
+              value={name}
+              onChange={handleNameChange}
+              error={nameError !== ""}
+              helperText={
+                name == ""
+                  ? undefined
+                  : !nameError
+                    ? `${name.length}/${CATEGORY_NAME_MAX_LENGTH}`
+                    : nameError
+              }
+            />
+          </InputThemeProvider>
           <ColorPicker
             color={color}
             onColorChange={(color) => {
