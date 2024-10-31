@@ -1,7 +1,8 @@
 import styled from "@emotion/styled";
-import { Avatar, Button } from "@mui/material";
+import { Avatar, Button, css } from "@mui/material";
 import { getFontColor } from "../utils";
 import { CSSProperties } from "react";
+import { pulseAnimation } from "./keyframes.styled";
 
 export const DialogBtn = styled(Button)`
   padding: 10px 16px;
@@ -45,7 +46,11 @@ export const StyledLink = styled.a<{ clr?: string }>`
   }
 `;
 // linear-gradient(#A4AAB7, #868B95)
-export const UserAvatar = styled(Avatar)<{ hasimage: boolean; size: CSSProperties["height"] }>`
+export const UserAvatar = styled(Avatar)<{
+  hasimage: boolean;
+  size: CSSProperties["height"];
+  pulse?: boolean;
+}>`
   color: #ffffff;
   background: ${({ hasimage, theme }) =>
     hasimage ? "#ffffff1c" : theme.darkmode ? "#5e5e65" : "#8c919c"} !important;
@@ -54,6 +59,11 @@ export const UserAvatar = styled(Avatar)<{ hasimage: boolean; size: CSSPropertie
   width: ${({ size }) => size};
   height: ${({ size }) => size};
   font-size: ${({ size }) => `calc(${size} / 2)`};
+  ${({ pulse, theme }) =>
+    pulse &&
+    css`
+      animation: ${pulseAnimation(theme.darkmode ? "#5e5e65" : "#8c919c", 10)} 1.2s infinite;
+    `}
 `;
 
 UserAvatar.defaultProps = {
@@ -61,8 +71,15 @@ UserAvatar.defaultProps = {
   slotProps: { img: { loading: "lazy" } },
 };
 
+interface ColorElementProps {
+  clr: string;
+  secondClr?: string;
+  size?: string;
+  disableHover?: boolean;
+}
+
 // Styled button for color selection
-export const ColorElement = styled.button<{ clr: string; secondClr?: string; size?: string }>`
+export const ColorElement = styled.button<ColorElementProps>`
   background: ${({ clr, secondClr }) =>
     secondClr ? `linear-gradient(135deg, ${clr} 50%, ${secondClr} 50%)` : clr};
 
@@ -84,9 +101,10 @@ export const ColorElement = styled.button<{ clr: string; secondClr?: string; siz
   &:focus-visible {
     outline: 4px solid ${({ theme }) => theme.primary};
   }
+
   &:hover {
     /* transform: scale(1.05); */
-    box-shadow: 0 0 12px ${({ clr }) => clr};
+    box-shadow: ${({ clr, disableHover }) => (!disableHover ? `0 0 12px ${clr}` : "none")};
     /* outline: none; */
   }
 `;
@@ -97,4 +115,16 @@ export const PathName = styled.code`
   font-family: consolas !important;
   padding: 4px 6px;
   border-radius: 8px;
+`;
+
+export const PulseLabel = styled.div`
+  animation: ${({ theme }) => pulseAnimation(theme.primary, 8)} 1.2s infinite;
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  width: 16px;
+  height: 16px;
+  background: ${({ theme }) => theme.primary};
+  border-radius: 32px;
+  z-index: 1;
 `;

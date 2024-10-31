@@ -33,13 +33,18 @@ export const themeConfig: { [key: string]: { primaryColor: string; secondaryColo
     primaryColor: "#EC407A",
     secondaryColor: "#FCE4EC",
   },
-  "Ultra Pink": {
-    primaryColor: "#ff0090",
-    secondaryColor: "#ff94d1",
-  },
+  // "Ultra Pink": {
+  //   primaryColor: "#ff0090",
+  //   secondaryColor: "#ff94d1",
+  // },
+
   Cheesecake: {
     primaryColor: "#E14C94",
     secondaryColor: "#FDF0D5",
+  },
+  "Mystic Coral": {
+    primaryColor: "#ff7b9c",
+    secondaryColor: "#4a2333",
   },
   "Dark Orange": {
     primaryColor: "#FF5631",

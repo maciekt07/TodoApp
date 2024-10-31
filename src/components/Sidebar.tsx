@@ -189,6 +189,10 @@ export const ProfileSidebar = () => {
             src={(profilePicture as string) || undefined}
             alt={name || "User"}
             hasimage={profilePicture !== null}
+            pulse={
+              user.name === defaultUser.name &&
+              JSON.stringify(user.settings) === JSON.stringify(defaultUser.settings)
+            }
             size="52px"
             onError={() => {
               // This prevents the error handling from being called unnecessarily when offline
@@ -363,7 +367,10 @@ export const ProfileSidebar = () => {
             }}
           >
             <SettingsRounded /> &nbsp; Settings
-            {settings === defaultUser.settings && <PulseMenuLabel />}
+            {JSON.stringify(settings) === JSON.stringify(defaultUser.settings) &&
+              user.darkmode === defaultUser.darkmode &&
+              user.theme === defaultUser.theme &&
+              user.emojisStyle === defaultUser.emojisStyle && <PulseMenuLabel />}
           </SettingsMenuItem>
 
           <StyledDivider />
@@ -377,9 +384,7 @@ export const ProfileSidebar = () => {
                 {name ? name[0].toUpperCase() : undefined}
               </UserAvatar>
               <h4 style={{ margin: 0, fontWeight: 600 }}> {name || "User"}</h4>{" "}
-              {(name === null || name === "") &&
-                profilePicture === null &&
-                user.theme === defaultUser.theme && <PulseMenuLabel />}
+              {(name === null || name === "") && profilePicture === null && <PulseMenuLabel />}
             </ProfileMenuItem>
           </MenuLink>
 

@@ -5,7 +5,6 @@ import {
   Dialog,
   DialogActions,
   DialogContent,
-  Grid,
   IconButton,
   InputAdornment,
   TextField,
@@ -15,23 +14,19 @@ import { useContext, useEffect, useState } from "react";
 import styled from "@emotion/styled";
 import {
   AddAPhotoRounded,
-  CheckRounded,
   Delete,
   LinkRounded,
   Logout,
-  PersonalVideoRounded,
   SaveRounded,
   Settings,
   TodayRounded,
 } from "@mui/icons-material";
 import { PROFILE_PICTURE_MAX_LENGTH, USER_NAME_MAX_LENGTH } from "../constants";
 import { CustomDialogTitle, SettingsDialog, TopBar } from "../components";
-import { ColorElement, DialogBtn, UserAvatar } from "../styles";
+import { DialogBtn, UserAvatar } from "../styles";
 import { defaultUser } from "../constants/defaultUser";
 import { UserContext } from "../contexts/UserContext";
 import { timeAgo, getFontColor, showToast } from "../utils";
-import { useSystemTheme } from "../hooks/useSystemTheme";
-import { Themes } from "../theme/createTheme";
 import { ColorPalette } from "../theme/themeConfig";
 
 const UserProfile = () => {
@@ -42,8 +37,6 @@ const UserProfile = () => {
   const [openChangeImage, setOpenChangeImage] = useState<boolean>(false);
   const [logoutConfirmationOpen, setLogoutConfirmationOpen] = useState<boolean>(false);
   const [openSettings, setOpenSettings] = useState<boolean>(false);
-
-  const systemTheme = useSystemTheme();
 
   useEffect(() => {
     document.title = `Todo App - User ${name ? `(${name})` : ""}`;
@@ -159,68 +152,8 @@ const UserProfile = () => {
           </CreatedAtDate>
         </Tooltip>
 
-        <ThemePickerContainer
-          container
-          maxWidth="300px"
-          marginBottom="6px"
-          marginTop="1px"
-          display="flex"
-          justifyContent="left"
-          alignItems="center"
-          gap={1}
-        >
-          <Grid item>
-            <Tooltip title={`System (${systemTheme})`}>
-              <ColorElement
-                clr={systemTheme === "dark" || systemTheme === "unknown" ? "#3d3e59" : "#ffffff"}
-                style={{ transition: ".3s background" }}
-                size="40px"
-                onClick={() => {
-                  setUser((prevUser) => ({
-                    ...prevUser,
-                    theme: "system",
-                  }));
-                }}
-              >
-                <Badge badgeContent={user.theme === "system" ? <CheckIcon /> : undefined}>
-                  <PersonalVideoRounded
-                    sx={{ color: systemTheme === "dark" ? "white" : "black" }}
-                  />
-                </Badge>
-              </ColorElement>
-            </Tooltip>
-          </Grid>
-          {Themes.map((theme) => (
-            <Grid key={theme.name}>
-              <Tooltip title={theme.name[0].toUpperCase() + theme.name.replace(theme.name[0], "")}>
-                <ColorElement
-                  clr={theme.MuiTheme.palette.primary.main}
-                  secondClr={theme.MuiTheme.palette.secondary.main}
-                  aria-label={`Change theme - ${theme.name}`}
-                  size="40px"
-                  style={{
-                    border:
-                      user.theme === theme.name
-                        ? `3px solid ${theme.MuiTheme.palette.primary.main}`
-                        : "none",
-                  }}
-                  onClick={() => {
-                    setUser((prevUser) => ({
-                      ...prevUser,
-                      theme: theme.name,
-                    }));
-                  }}
-                >
-                  <Badge badgeContent={user.theme === theme.name ? <CheckIcon /> : undefined}>
-                    <div style={{ width: "24px", height: "24px" }} />
-                  </Badge>
-                </ColorElement>
-              </Tooltip>
-            </Grid>
-          ))}
-        </ThemePickerContainer>
         <TextField
-          sx={{ width: "300px" }}
+          sx={{ width: "300px", marginTop: "8px" }}
           label={name === null ? "Add Name" : "Change Name"}
           value={userName}
           onChange={(e) => setUserName(e.target.value)}
@@ -341,7 +274,7 @@ export default UserProfile;
 const Container = styled.div`
   margin: 0 auto;
   max-width: 400px;
-  padding: 64px 48px;
+  padding: 64px 38px;
   border-radius: 48px;
   box-shadow: 0px 4px 50px rgba(0, 0, 0, 0.25);
   background: ${({ theme }) => (theme.darkmode ? "#383838" : "#f5f5f5")};
@@ -360,21 +293,6 @@ const Container = styled.div`
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-`;
-
-const CheckIcon = styled(CheckRounded)`
-  font-size: 18px;
-  padding: 2px;
-  color: white;
-  background: #242427;
-  border-radius: 100px;
-`;
-
-const ThemePickerContainer = styled(Grid)`
-  background: ${({ theme }) => (theme.darkmode ? "#505050" : "#d9d9d9")};
-  padding: 10px;
-  border-radius: 32px;
-  overflow-y: auto;
 `;
 
 const SaveBtn = styled(Button)`
@@ -412,7 +330,7 @@ const CreatedAtDate = styled.span`
   font-style: italic;
   font-weight: 400;
   opacity: 0.8;
-  margin-top: -5px;
+  margin-top: -8px;
   margin-bottom: 2px;
   // fix for browser translate
   & font {

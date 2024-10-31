@@ -41,10 +41,11 @@ import { defaultUser } from "../constants/defaultUser";
 import { UserContext } from "../contexts/UserContext";
 import { useOnlineStatus } from "../hooks/useOnlineStatus";
 import { useSystemTheme } from "../hooks/useSystemTheme";
-import { DialogBtn } from "../styles";
+import { ColorElement, DialogBtn } from "../styles";
 import type { AppSettings, DarkModeOptions } from "../types/user";
 import { isDark, showToast, systemInfo } from "../utils";
 import { CustomDialogTitle } from "./DialogTitle";
+import { Themes } from "../theme/createTheme";
 
 interface SettingsProps {
   open: boolean;
@@ -257,6 +258,14 @@ export const SettingsDialog: React.FC<SettingsProps> = ({ open, onClose }) => {
     ? availableVoices.filter((voice) => voice.lang.startsWith(navigator.language))
     : availableVoices;
 
+  const handleAppThemeChange = (event: SelectChangeEvent<unknown>) => {
+    const selectedTheme = event.target.value as string;
+    setUser((prevUser) => ({
+      ...prevUser,
+      theme: selectedTheme,
+    }));
+  };
+
   return (
     <Dialog open={open} onClose={onClose}>
       <CustomDialogTitle
@@ -284,7 +293,50 @@ export const SettingsDialog: React.FC<SettingsProps> = ({ open, onClose }) => {
             </StyledSelect>
           </FormControl>
         </FormGroup>
-        {/* Select component to choose the emoji style */}
+
+        <FormGroup>
+          <FormControl>
+            <FormLabel>App Theme</FormLabel>
+            <StyledSelect
+              value={user.theme}
+              onChange={handleAppThemeChange}
+              IconComponent={ExpandMoreRounded}
+            >
+              <StyledMenuItem value="system">
+                <PersonalVideoRounded />
+                &nbsp; System ({systemTheme})
+              </StyledMenuItem>
+              {Themes.map((theme) => (
+                <StyledMenuItem key={theme.name} value={theme.name}>
+                  <ColorElement
+                    clr={theme.MuiTheme.palette.primary.main}
+                    secondClr={theme.MuiTheme.palette.secondary.main}
+                    aria-label={`Change theme - ${theme.name}`}
+                    size="28px"
+                    disableHover
+                  />
+                  &nbsp;
+                  {theme.name}
+                  {/* <div
+                    style={{
+                      marginLeft: "auto",
+                      display: "flex",
+                      alignItems: "center",
+                      opacity: 0.6,
+                    }}
+                  >
+                    {isDark(theme.MuiTheme.palette.secondary.main) ? (
+                      <DarkModeRounded />
+                    ) : (
+                      <LightModeRounded />
+                    )}
+                  </div> */}
+                </StyledMenuItem>
+              ))}
+            </StyledSelect>
+          </FormControl>
+        </FormGroup>
+
         <FormGroup>
           <FormControl>
             <FormLabel>Emoji Settings</FormLabel>
