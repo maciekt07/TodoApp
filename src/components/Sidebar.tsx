@@ -1,3 +1,4 @@
+import { keyframes, useTheme } from "@emotion/react";
 import styled from "@emotion/styled";
 import {
   AddRounded,
@@ -34,17 +35,16 @@ import {
 import React, { useContext, useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { CustomDialogTitle, SettingsDialog } from ".";
-import bmcLogo from "../assets/bmc-logo.svg";
 import bmcLogoLight from "../assets/bmc-logo-light.svg";
+import bmcLogo from "../assets/bmc-logo.svg";
 import logo from "../assets/logo256.png";
 import { defaultUser } from "../constants/defaultUser";
 import { UserContext } from "../contexts/UserContext";
 import { fetchBMCInfo } from "../services/bmcApi";
 import { fetchGitHubInfo } from "../services/githubApi";
 import { DialogBtn, UserAvatar, pulseAnimation, ring } from "../styles";
-import { showToast, systemInfo, timeAgo } from "../utils";
-import { keyframes, useTheme } from "@emotion/react";
 import { ColorPalette } from "../theme/themeConfig";
+import { showToast, systemInfo, timeAgo } from "../utils";
 
 export const ProfileSidebar = () => {
   const { user, setUser } = useContext(UserContext);

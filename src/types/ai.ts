@@ -1,25 +1,71 @@
 // types for window.ai experimental chrome api
 // https://docs.google.com/document/d/1VG8HIyz361zGduWgNG7R_R8Xkv0OOJ8b5C9QKeCjU0c/view#heading=h.z2j0iwg9yj7i
 
-export interface AI {
-  canCreateTextSession(): Promise<AIModelAvailability>;
-  createTextSession(options?: AITextSessionOptions): Promise<AITextSession>;
-  defaultTextSessionOptions(): Promise<AITextSessionOptions>;
+// interface WindowOrWorkerGlobalScope {
+//   readonly ai: AI;
+// }
+
+interface AI {
+  readonly languageModel: AILanguageModelFactory;
 }
 
-export interface AITextSession {
-  prompt(input: string): Promise<string>;
-  promptStreaming(input: string): ReadableStream<string>;
+interface AICreateMonitor extends EventTarget {
+  ondownloadprogress: (event: Event) => void;
+}
+
+type AICreateMonitorCallback = (monitor: AICreateMonitor) => void;
+
+type AICapabilityAvailability = "readily" | "after-download" | "no";
+
+interface AILanguageModelFactory {
+  create(options?: AILanguageModelCreateOptions): Promise<AILanguageModel>;
+  capabilities(): Promise<AILanguageModelCapabilities>;
+}
+
+export interface AILanguageModel extends EventTarget {
+  prompt(input: string, options?: AILanguageModelPromptOptions): Promise<string>;
+  promptStreaming(input: string, options?: AILanguageModelPromptOptions): ReadableStream;
+
+  countPromptTokens(input: string, options?: AILanguageModelPromptOptions): Promise<number>;
+  readonly maxTokens: number;
+  readonly tokensSoFar: number;
+  readonly tokensLeft: number;
+  readonly topK: number;
+  readonly temperature: number;
+
+  clone(): Promise<AILanguageModel>;
   destroy(): void;
 }
 
-export interface AITextSessionOptions {
-  topK: number;
-  temperature: number;
+interface AILanguageModelCapabilities {
+  readonly available: AICapabilityAvailability;
+
+  // Always null if available === "no"
+  readonly defaultTopK?: number;
+  readonly maxTopK?: number;
+  readonly defaultTemperature?: number;
 }
 
-export type AIModelAvailability = "readily" | "after-download" | "no";
+interface AILanguageModelCreateOptions {
+  signal?: AbortSignal;
+  monitor?: AICreateMonitorCallback;
 
+  systemPrompt?: string;
+  initialPrompts?: AILanguageModelPrompt[];
+  topK?: number;
+  temperature?: number;
+}
+
+interface AILanguageModelPrompt {
+  role: AILanguageModelPromptRole;
+  content: string;
+}
+
+interface AILanguageModelPromptOptions {
+  signal?: AbortSignal;
+}
+
+type AILanguageModelPromptRole = "system" | "user" | "assistant";
 declare global {
   interface Window {
     ai: AI;

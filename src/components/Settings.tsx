@@ -42,10 +42,10 @@ import { UserContext } from "../contexts/UserContext";
 import { useOnlineStatus } from "../hooks/useOnlineStatus";
 import { useSystemTheme } from "../hooks/useSystemTheme";
 import { ColorElement, DialogBtn } from "../styles";
+import { Themes } from "../theme/createTheme";
 import type { AppSettings, DarkModeOptions } from "../types/user";
 import { isDark, showToast, systemInfo } from "../utils";
 import { CustomDialogTitle } from "./DialogTitle";
-import { Themes } from "../theme/createTheme";
 
 interface SettingsProps {
   open: boolean;
@@ -312,25 +312,11 @@ export const SettingsDialog: React.FC<SettingsProps> = ({ open, onClose }) => {
                     clr={theme.MuiTheme.palette.primary.main}
                     secondClr={theme.MuiTheme.palette.secondary.main}
                     aria-label={`Change theme - ${theme.name}`}
-                    size="28px"
+                    size="24px"
                     disableHover
                   />
                   &nbsp;
                   {theme.name}
-                  {/* <div
-                    style={{
-                      marginLeft: "auto",
-                      display: "flex",
-                      alignItems: "center",
-                      opacity: 0.6,
-                    }}
-                  >
-                    {isDark(theme.MuiTheme.palette.secondary.main) ? (
-                      <DarkModeRounded />
-                    ) : (
-                      <LightModeRounded />
-                    )}
-                  </div> */}
                 </StyledMenuItem>
               ))}
             </StyledSelect>

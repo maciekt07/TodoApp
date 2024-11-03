@@ -36,8 +36,8 @@ import { DialogBtn, fadeIn } from "../styles";
 import { ColorPalette } from "../theme/themeConfig";
 import { getFontColor, showToast, systemInfo } from "../utils";
 import { CATEGORY_NAME_MAX_LENGTH, TASK_NAME_MAX_LENGTH } from "../constants";
-import { AITextSession } from "../types/ai";
 import { CustomDialogTitle } from "./DialogTitle";
+import { AILanguageModel } from "../types/ai";
 
 const EmojiPicker = lazy(() => import("emoji-picker-react"));
 interface EmojiPickerProps {
@@ -109,13 +109,15 @@ export const CustomEmojiPicker = ({ emoji, setEmoji, color, name, type }: EmojiP
   };
 
   const [isAILoading, setIsAILoading] = useState<boolean>(false);
-  const [session, setSession] = useState<AITextSession | null>(null);
+  const [session, setSession] = useState<AILanguageModel | null>(null);
 
   // Create Session on component mount for faster first load
   useEffect(() => {
     const createSession = async () => {
       if (window.ai) {
-        const session = await window.ai.createTextSession();
+        const session = await window.ai.languageModel.create({
+          initialPrompts: [{ role: "system", content: "Keep your answers short." }],
+        });
         setSession(session);
       }
     };
@@ -128,40 +130,22 @@ export const CustomEmojiPicker = ({ emoji, setEmoji, color, name, type }: EmojiP
     const start = new Date().getTime();
     setIsAILoading(true);
     try {
-      const sessionInstance: AITextSession = session || (await window.ai.createTextSession());
-      const response = await sessionInstance.prompt(
-        `Choose a single emoji that best represents the ${
-          type || "task"
-        }: ${name}. (For example: 🖥️ for coding, 📝 for writing, 🎨 for design, 📱 for mobile development) Please use the actual emoji, do not use shortcodes. Type 'none' if not applicable.`,
-      );
-      console.log("Full AI response:", response);
-      // Map to replace emoji shortcodes with actual emojis due to AI occasionally returning shortcodes.
-      const emojiMap: {
-        [key: string]: string;
-      } = {
-        ":joy:": "😄",
-        ":smile:": "😄",
-        ":heart:": "❤️",
-        "<3": "❤️",
-        ":sunglasses:": "😎",
-        ":thinking_head:": "🤔",
-        ":technology:": "💻",
-        ":tech:": "💻",
-        ":ml:": "🧠",
-        ":wave:": "👋",
-        ":O": "😮",
-        "☮": "✌️",
-        "🎙": "🎙️",
-        "🗣": "🗣️",
-        "✈": "✈️",
-      };
-      let emojiResponse = response.trim();
-      if (emojiMap[emojiResponse]) {
-        emojiResponse = emojiMap[emojiResponse];
-      }
+      const sessionInstance: AILanguageModel = session || (await window.ai.languageModel.create());
 
-      // Validate if userInput is a valid emoji
-      const emojiRegex = /[\p{Emoji}]/u;
+      // In the latest version of window.ai, responses can't be limited to a single emoji
+      const response = await sessionInstance.prompt(
+        `Help me choose an emoji that would be appropriate for the following task: ${name}`,
+      );
+
+      console.log("Full AI response:", response);
+
+      const emojiRegex = /[\p{Emoji}]/gu;
+      const x = response.trim().replace(/\*/g, "").match(emojiRegex) || [];
+
+      // Remove duplicates
+      const uniqueEmojis = [...new Set(x)]; // TODO: add feature to let users choose which emoji to use
+
+      const emojiResponse = uniqueEmojis[0];
 
       const unified = emojiToUnified(emojiResponse.replaceAll(":", ""));
       if (emojiRegex.test(emojiResponse)) {
@@ -178,6 +162,7 @@ export const CustomEmojiPicker = ({ emoji, setEmoji, color, name, type }: EmojiP
       }
     } catch (error) {
       setIsAILoading(false);
+      setCurrentEmoji(null);
       console.error(error);
       showToast(`${error}`, { type: "error" });
     } finally {
@@ -185,7 +170,7 @@ export const CustomEmojiPicker = ({ emoji, setEmoji, color, name, type }: EmojiP
       const end = new Date().getTime();
       console.log(
         `%cTook ${end - start}ms to generate.`,
-        `color: ${end - start > 600 ? "orange" : "lime"}`,
+        `color: ${end - start > 1500 ? "orange" : "lime"}`,
       );
     }
   }
