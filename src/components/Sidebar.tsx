@@ -275,7 +275,7 @@ export const ProfileSidebar = () => {
 
         <StyledDivider />
 
-        <MenuLink to="https://github.com/maciekt07/TodoApp">
+        <MenuLink to="https://github.com/Abra313/Todo-app">
           <StyledMenuItem translate="no">
             <GitHub /> &nbsp; Github{" "}
             {stars && (
@@ -291,7 +291,7 @@ export const ProfileSidebar = () => {
           </StyledMenuItem>
         </MenuLink>
 
-        <MenuLink to="https://github.com/maciekt07/TodoApp/issues/new">
+        <MenuLink to="https://github.com/Abra313/Todo app/issues/new">
           <StyledMenuItem>
             <BugReportRounded /> &nbsp; Report Issue{" "}
             {Boolean(issuesCount || issuesCount === 0) && (
@@ -398,9 +398,9 @@ export const ProfileSidebar = () => {
             <span style={{ marginLeft: "6px", marginRight: "4px" }}>by</span>
             <a
               style={{ textDecoration: "none", color: "inherit" }}
-              href="https://github.com/maciekt07"
+              href="https://github.com/Abra313"
             >
-              maciekt07
+              Abraham Taiwo (ejire )
             </a>
           </CreditsContainer>
           <CreditsContainer>
