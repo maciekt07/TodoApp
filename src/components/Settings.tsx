@@ -47,6 +47,43 @@ import type { AppSettings, DarkModeOptions } from "../types/user";
 import { isDark, showToast, systemInfo } from "../utils";
 import { CustomDialogTitle } from "./DialogTitle";
 
+// Array of available emoji styles with their labels
+const emojiStyles: { label: string; style: EmojiStyle }[] = [
+  { label: "Apple", style: EmojiStyle.APPLE },
+  { label: "Facebook, Messenger", style: EmojiStyle.FACEBOOK },
+  { label: "Twitter, Discord", style: EmojiStyle.TWITTER },
+  { label: "Google", style: EmojiStyle.GOOGLE },
+  { label: "Native", style: EmojiStyle.NATIVE },
+];
+
+// Array of available dark mode options
+const darkModeOptions: {
+  label: string;
+  mode: DarkModeOptions;
+  icon: JSX.Element;
+}[] = [
+  {
+    label: "Auto",
+    mode: "auto",
+    icon: <BrightnessAutoRounded />,
+  },
+  {
+    label: "System",
+    mode: "system",
+    icon: <PersonalVideoRounded />,
+  },
+  {
+    label: "Light",
+    mode: "light",
+    icon: <LightModeRounded />,
+  },
+  {
+    label: "Dark",
+    mode: "dark",
+    icon: <DarkModeRounded />,
+  },
+];
+
 interface SettingsProps {
   open: boolean;
   onClose: () => void;
@@ -70,43 +107,6 @@ export const SettingsDialog: React.FC<SettingsProps> = ({ open, onClose }) => {
   const isOnline = useOnlineStatus();
   const systemTheme = useSystemTheme();
   const theme = useTheme();
-
-  // Array of available emoji styles with their labels
-  const emojiStyles: { label: string; style: EmojiStyle }[] = [
-    { label: "Apple", style: EmojiStyle.APPLE },
-    { label: "Facebook, Messenger", style: EmojiStyle.FACEBOOK },
-    { label: "Twitter, Discord", style: EmojiStyle.TWITTER },
-    { label: "Google", style: EmojiStyle.GOOGLE },
-    { label: "Native", style: EmojiStyle.NATIVE },
-  ];
-
-  // Array of available dark mode options
-  const darkModeOptions: {
-    label: string;
-    mode: DarkModeOptions;
-    icon: JSX.Element;
-  }[] = [
-    {
-      label: "Auto",
-      mode: "auto",
-      icon: <BrightnessAutoRounded />,
-    },
-    {
-      label: "System",
-      mode: "system",
-      icon: <PersonalVideoRounded />,
-    },
-    {
-      label: "Light",
-      mode: "light",
-      icon: <LightModeRounded />,
-    },
-    {
-      label: "Dark",
-      mode: "dark",
-      icon: <DarkModeRounded />,
-    },
-  ];
 
   // function to get the flag emoji for a given country code
   const getFlagEmoji = (countryCode: string): string =>
@@ -367,7 +367,7 @@ export const SettingsDialog: React.FC<SettingsProps> = ({ open, onClose }) => {
                 </StyledMenuItem>
               ))}
             </StyledSelect>
-
+            {/* FIXME: tooltips in this dialog causes some ui glitches on Firefox */}
             <Tooltip title="Emoji picker will only show frequently used emojis">
               <FormGroup>
                 <StyledFormLabel

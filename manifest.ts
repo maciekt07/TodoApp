@@ -8,8 +8,7 @@ const manifest: Partial<ManifestOptions> = {
   start_url: "/",
   theme_color: "#7764E8",
   background_color: "#171D34",
-  description:
-    "Todo app with many features, including local storage, sharing tasks via link and more! Made by github.com/maciekt07",
+  description: "Todo app with many features, offline usage as a PWA. Made by github.com/maciekt07",
   icons: [
     {
       src: "/logo192.png",

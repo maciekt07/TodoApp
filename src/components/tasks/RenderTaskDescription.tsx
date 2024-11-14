@@ -8,7 +8,7 @@ import {
   X,
   YouTube,
 } from "@mui/icons-material";
-import { Tooltip } from "@mui/material";
+import { Tooltip, Zoom } from "@mui/material";
 import { memo, useContext } from "react";
 import { DESCRIPTION_SHORT_LENGTH, URL_REGEX } from "../../constants";
 import { useResponsiveDisplay } from "../../hooks/useResponsiveDisplay";
@@ -92,17 +92,21 @@ export const RenderTaskDescription = memo(
 
         return (
           <Tooltip
+            disableInteractive={false}
+            TransitionComponent={Zoom}
             title={
               <>
                 <span style={{ wordBreak: "break-all" }}>{part}</span>
                 {part.match(domainMappings[0].regex) && youtubeId(part) && !isMobile && (
-                  <YouTubeThumbnail>
-                    <img
-                      src={`https://i.ytimg.com/vi/${youtubeId(part)}/hqdefault.jpg`}
-                      alt="YouTube Thumbnail"
-                      loading="lazy"
-                    />
-                  </YouTubeThumbnail>
+                  <a href={part} target="_blank" rel="noreferrer">
+                    <YouTubeThumbnail>
+                      <img
+                        src={`https://i.ytimg.com/vi/${youtubeId(part)}/hqdefault.jpg`}
+                        alt="YouTube Thumbnail"
+                        loading="lazy"
+                      />
+                    </YouTubeThumbnail>
+                  </a>
                 )}
               </>
             }

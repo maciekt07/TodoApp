@@ -24,7 +24,6 @@ const AppRouter = (): ReactElement => {
         <Route path="/transfer" element={<Transfer />} />
         <Route path="/categories" element={<Categories />} />
         <Route path="/purge" element={<Purge />} />
-        <Route path="/loading" element={<Loading />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
     </Suspense>
