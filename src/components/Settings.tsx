@@ -36,7 +36,7 @@ import {
   Tooltip,
 } from "@mui/material";
 import { Emoji, EmojiStyle } from "emoji-picker-react";
-import { useContext, useEffect, useState } from "react";
+import { ComponentProps, ReactElement, useCallback, useContext, useEffect, useState } from "react";
 import { defaultUser } from "../constants/defaultUser";
 import { UserContext } from "../contexts/UserContext";
 import { useOnlineStatus } from "../hooks/useOnlineStatus";
@@ -145,19 +145,14 @@ export const SettingsDialog: React.FC<SettingsProps> = ({ open, onClose }) => {
   };
 
   // Handler for updating individual setting options
-  const handleSettingChange =
+  const handleSettingChange = useCallback(
     (name: keyof AppSettings) => (event: React.ChangeEvent<HTMLInputElement>) => {
       const isChecked = event.target.checked;
-      // cancel read aloud
-      if (name === "enableReadAloud") {
-        window.speechSynthesis.cancel();
-      }
-      if (name === "appBadge" && navigator.clearAppBadge && !isChecked) {
-        navigator.clearAppBadge();
-      }
+      if (name === "enableReadAloud") window.speechSynthesis.cancel();
+
+      // Update settings only if changed
       const updatedSettings: AppSettings = {
         ...userSettings,
-        voice: settings.voice, // Bug fix: reset voice to default when changing other settings
         [name]: isChecked,
       };
       setUserSettings(updatedSettings);
@@ -165,7 +160,9 @@ export const SettingsDialog: React.FC<SettingsProps> = ({ open, onClose }) => {
         ...prevUser,
         settings: updatedSettings,
       }));
-    };
+    },
+    [userSettings, setUser],
+  );
 
   // Handler for updating the selected emoji style
   const handleEmojiStyleChange = (event: SelectChangeEvent<unknown>) => {
@@ -367,8 +364,7 @@ export const SettingsDialog: React.FC<SettingsProps> = ({ open, onClose }) => {
                 </StyledMenuItem>
               ))}
             </StyledSelect>
-            {/* FIXME: tooltips in this dialog causes some ui glitches on Firefox */}
-            <Tooltip title="Emoji picker will only show frequently used emojis">
+            <CustomTooltip title="Emoji picker will only show frequently used emojis">
               <FormGroup>
                 <StyledFormLabel
                   sx={{ opacity: userSettings.simpleEmojiPicker ? 1 : 0.8 }}
@@ -381,9 +377,9 @@ export const SettingsDialog: React.FC<SettingsProps> = ({ open, onClose }) => {
                   label="Simple Emoji Picker"
                 />
               </FormGroup>
-            </Tooltip>
+            </CustomTooltip>
           </FormControl>
-          <Tooltip title="This will delete data about frequently used emojis">
+          <CustomTooltip title="This will delete data about frequently used emojis">
             <Button
               color="error"
               variant="outlined"
@@ -395,9 +391,8 @@ export const SettingsDialog: React.FC<SettingsProps> = ({ open, onClose }) => {
             >
               <DeleteRounded /> &nbsp; Clear Emoji Data
             </Button>
-          </Tooltip>
+          </CustomTooltip>
         </FormGroup>
-
         {/* Switch components to control different app settings */}
         <FormGroup>
           <FormLabel>App Settings</FormLabel>
@@ -608,6 +603,18 @@ export const SettingsDialog: React.FC<SettingsProps> = ({ open, onClose }) => {
       </DialogActions>
     </Dialog>
   );
+};
+
+interface CustomTooltipProps extends ComponentProps<typeof Tooltip> {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  children: ReactElement<any, any>; // default mui children type
+}
+
+const CustomTooltip = ({ children, ...props }: CustomTooltipProps) => {
+  // tooltips in this dialog causes some ui glitches on Firefox
+  const isFirefox = systemInfo.browser === "Firefox";
+
+  return !isFirefox ? <Tooltip {...props}>{children}</Tooltip> : children;
 };
 
 const Container = styled.div`
