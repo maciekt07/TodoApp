@@ -36,7 +36,7 @@ import {
   Tooltip,
 } from "@mui/material";
 import { Emoji, EmojiStyle } from "emoji-picker-react";
-import { ComponentProps, ReactElement, useCallback, useContext, useEffect, useState } from "react";
+import { ComponentProps, ReactElement, useContext, useEffect, useState } from "react";
 import { defaultUser } from "../constants/defaultUser";
 import { UserContext } from "../contexts/UserContext";
 import { useOnlineStatus } from "../hooks/useOnlineStatus";
@@ -145,14 +145,19 @@ export const SettingsDialog: React.FC<SettingsProps> = ({ open, onClose }) => {
   };
 
   // Handler for updating individual setting options
-  const handleSettingChange = useCallback(
+  const handleSettingChange =
     (name: keyof AppSettings) => (event: React.ChangeEvent<HTMLInputElement>) => {
       const isChecked = event.target.checked;
-      if (name === "enableReadAloud") window.speechSynthesis.cancel();
-
-      // Update settings only if changed
+      // cancel read aloud
+      if (name === "enableReadAloud") {
+        window.speechSynthesis.cancel();
+      }
+      if (name === "appBadge" && navigator.clearAppBadge && !isChecked) {
+        navigator.clearAppBadge();
+      }
       const updatedSettings: AppSettings = {
         ...userSettings,
+        voice: settings.voice, // Bug fix: reset voice to default when changing other settings
         [name]: isChecked,
       };
       setUserSettings(updatedSettings);
@@ -160,9 +165,7 @@ export const SettingsDialog: React.FC<SettingsProps> = ({ open, onClose }) => {
         ...prevUser,
         settings: updatedSettings,
       }));
-    },
-    [userSettings, setUser],
-  );
+    };
 
   // Handler for updating the selected emoji style
   const handleEmojiStyleChange = (event: SelectChangeEvent<unknown>) => {

@@ -30,6 +30,7 @@ import { Emoji, EmojiStyle } from "emoji-picker-react";
 import { DialogBtn } from "../../styles";
 import styled from "@emotion/styled";
 import QRCode from "react-qr-code";
+import LZString from "lz-string";
 
 interface ShareDialogProps {
   open: boolean;
@@ -58,9 +59,12 @@ export const ShareDialog = ({ open, onClose, selectedTaskId, selectedTask }: Sha
         id: undefined,
         category: settings.enableCategories ? task.category : undefined,
       };
-      const encodedTask = encodeURIComponent(JSON.stringify(taskToShare));
+
+      // Compress the task JSON
+      const compressedTask = LZString.compressToEncodedURIComponent(JSON.stringify(taskToShare));
       const encodedUserName = encodeURIComponent(userName);
-      return `${window.location.href}share?task=${encodedTask}&userName=${encodedUserName}`;
+
+      return `${window.location.href}share?task=${compressedTask}&userName=${encodedUserName}`;
     }
     return "";
   };

@@ -43,7 +43,7 @@
 
 Easily share your tasks with others using a link or QR code, with the option to download the QR code.
 
-**[Example Link](https://react-cool-todo-app.netlify.app/share?task=%7B%22done%22%3Afalse%2C%22pinned%22%3Atrue%2C%22name%22%3A%22Website%20Development%22%2C%22description%22%3A%22Create%20a%20landing%20page%20with%20React.js%20for%20client.%20https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3DbMknfKXIFA8%26t%3D23s%26ab_channel%3DfreeCodeCamp.org%22%2C%22emoji%22%3A%221f468-1f3fc-200d-1f4bb%22%2C%22color%22%3A%22%23b624ff%22%2C%22date%22%3A%222024-02-14T23%3A26%3A21.095Z%22%2C%22category%22%3A%5B%7B%22id%22%3A168712541746303%2C%22name%22%3A%22Coding%22%2C%22emoji%22%3A%221f5a5-fe0f%22%2C%22color%22%3A%22%236d12ff%22%7D%2C%7B%22id%22%3A2%2C%22name%22%3A%22Work%22%2C%22emoji%22%3A%221f3e2%22%2C%22color%22%3A%22%23248eff%22%7D%5D%2C%22deadline%22%3A%222024-05-31T16%3A20%22%2C%22lastSave%22%3A%222024-05-11T14%3A18%3A50.269Z%22%7D&userName=Maciej)**
+**[Example Link](https://react-cool-todo-app.netlify.app/share?task=N4IgJg9gdgpiBcAzAhgGwM4wDQgA4EspYwEAXAJwFdsQpkBbOeEAdRgCN19SYACAERgA3GKgi5GUUiBxgY6AMbl8uUvmgIQAYXIxkPXsl6pkUMIQDmvXMgt8A7twAWvAEp6FpAHQArdL0QIcl4FVHwYKS9eJ1JSXHR4AHpE+1SvAE8ISlJKdhgvBQh6FP0FJwB+IQBedgBZAGsoRABpAA0ASQAxAEEADgAyUiqAJgBmdH7kdgB9MtNYVCrEXRgtCDktBlwvIIsZEBh6CB98TQBGRAAWADZegFoL0cQFO+GABjewB6v2dn3CsTkTQAYnY12Gl0QiH2YH0TBA7whDzODwA7AAVM6jeCXS7wM7DLwAVlRAE4AFr-OEWILpBAAbVA+BI+NuqIJRMuZ1RN1Gb1GODojE0a3MUD2OEOx1OzAuROQRLuiBgb2hOABQRB1zABKhIAAvlgmSzhoKGPCWEF6vspSdzohRjBhv8IICQRDejA9fqALo4EzoUgAZWQIk0iMuyLRmOxuPxvS8pLeqMp+qAA&userName=Maciej)**
 
 <img src="https://raw.githubusercontent.com/maciekt07/TodoApp/main/screenshots/RecievedTask.png" width="300px" alt="Shared Task" />
 
