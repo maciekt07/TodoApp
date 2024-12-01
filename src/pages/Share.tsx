@@ -37,7 +37,7 @@ import {
 import { URL_REGEX, USER_NAME_MAX_LENGTH } from "../constants";
 import { CategoryBadge, CustomDialogTitle } from "../components";
 import Home from "./Home";
-
+import LZString from "lz-string";
 //FIXME: make everything type-safe
 const SharePage = () => {
   const { user, setUser } = useContext(UserContext);
@@ -51,35 +51,42 @@ const SharePage = () => {
   const [userName, setUserName] = useState<string>("");
   const [error, setError] = useState<boolean>(false);
   const [errorDetails, setErrorDetails] = useState<string | undefined>();
+
   const isHexColor = (value: string): boolean => /^#[0-9A-Fa-f]{6}$/.test(value);
 
   useEffect(() => {
+    const handleTaskData = (decodedTask: string) => {
+      const task: Task = { ...(JSON.parse(decodedTask) as Task), id: generateUUID() };
+
+      if (
+        !isHexColor(task.color) ||
+        (task.category && task.category.some((cat) => !isHexColor(cat.color)))
+      ) {
+        setError(true);
+        setErrorDetails("Invalid task or category color format.");
+        return;
+      }
+
+      setTaskData(task);
+    };
+
     if (taskParam) {
       try {
-        const decodedTask = decodeURIComponent(taskParam);
-        const task: Task = {
-          ...(JSON.parse(decodedTask) as Task),
-          id: generateUUID(),
-        };
-        if (!isHexColor(task.color)) {
-          setError(true);
-          setErrorDetails("Invalid task color format.");
-          return;
+        let decodedTask = decodeURIComponent(taskParam);
+
+        if (decodedTask.startsWith("{") || decodedTask.startsWith("[")) {
+          // old JSON format
+          handleTaskData(decodedTask);
+        } else {
+          // new compressed format
+          decodedTask = LZString.decompressFromEncodedURIComponent(decodedTask);
+          if (!decodedTask) throw new Error("Decompression failed.");
+          handleTaskData(decodedTask);
         }
-        if (task.category) {
-          task.category.forEach((taskCategory) => {
-            if (!isHexColor(taskCategory.color)) {
-              setError(true);
-              setErrorDetails("Invalid category color format.");
-              return;
-            }
-          });
-        }
-        setTaskData(task);
       } catch (error) {
         console.error("Error decoding task data:", error);
-        setErrorDetails("Error decoding task data." + error);
         setError(true);
+        setErrorDetails("Failed to decode task data. The link may be corrupted. " + error);
       }
     }
 

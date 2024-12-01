@@ -36,7 +36,7 @@ import {
   Tooltip,
 } from "@mui/material";
 import { Emoji, EmojiStyle } from "emoji-picker-react";
-import { useContext, useEffect, useState } from "react";
+import { ComponentProps, ReactElement, useContext, useEffect, useState } from "react";
 import { defaultUser } from "../constants/defaultUser";
 import { UserContext } from "../contexts/UserContext";
 import { useOnlineStatus } from "../hooks/useOnlineStatus";
@@ -46,6 +46,43 @@ import { Themes } from "../theme/createTheme";
 import type { AppSettings, DarkModeOptions } from "../types/user";
 import { isDark, showToast, systemInfo } from "../utils";
 import { CustomDialogTitle } from "./DialogTitle";
+
+// Array of available emoji styles with their labels
+const emojiStyles: { label: string; style: EmojiStyle }[] = [
+  { label: "Apple", style: EmojiStyle.APPLE },
+  { label: "Facebook, Messenger", style: EmojiStyle.FACEBOOK },
+  { label: "Twitter, Discord", style: EmojiStyle.TWITTER },
+  { label: "Google", style: EmojiStyle.GOOGLE },
+  { label: "Native", style: EmojiStyle.NATIVE },
+];
+
+// Array of available dark mode options
+const darkModeOptions: {
+  label: string;
+  mode: DarkModeOptions;
+  icon: JSX.Element;
+}[] = [
+  {
+    label: "Auto",
+    mode: "auto",
+    icon: <BrightnessAutoRounded />,
+  },
+  {
+    label: "System",
+    mode: "system",
+    icon: <PersonalVideoRounded />,
+  },
+  {
+    label: "Light",
+    mode: "light",
+    icon: <LightModeRounded />,
+  },
+  {
+    label: "Dark",
+    mode: "dark",
+    icon: <DarkModeRounded />,
+  },
+];
 
 interface SettingsProps {
   open: boolean;
@@ -70,43 +107,6 @@ export const SettingsDialog: React.FC<SettingsProps> = ({ open, onClose }) => {
   const isOnline = useOnlineStatus();
   const systemTheme = useSystemTheme();
   const theme = useTheme();
-
-  // Array of available emoji styles with their labels
-  const emojiStyles: { label: string; style: EmojiStyle }[] = [
-    { label: "Apple", style: EmojiStyle.APPLE },
-    { label: "Facebook, Messenger", style: EmojiStyle.FACEBOOK },
-    { label: "Twitter, Discord", style: EmojiStyle.TWITTER },
-    { label: "Google", style: EmojiStyle.GOOGLE },
-    { label: "Native", style: EmojiStyle.NATIVE },
-  ];
-
-  // Array of available dark mode options
-  const darkModeOptions: {
-    label: string;
-    mode: DarkModeOptions;
-    icon: JSX.Element;
-  }[] = [
-    {
-      label: "Auto",
-      mode: "auto",
-      icon: <BrightnessAutoRounded />,
-    },
-    {
-      label: "System",
-      mode: "system",
-      icon: <PersonalVideoRounded />,
-    },
-    {
-      label: "Light",
-      mode: "light",
-      icon: <LightModeRounded />,
-    },
-    {
-      label: "Dark",
-      mode: "dark",
-      icon: <DarkModeRounded />,
-    },
-  ];
 
   // function to get the flag emoji for a given country code
   const getFlagEmoji = (countryCode: string): string =>
@@ -367,8 +367,7 @@ export const SettingsDialog: React.FC<SettingsProps> = ({ open, onClose }) => {
                 </StyledMenuItem>
               ))}
             </StyledSelect>
-
-            <Tooltip title="Emoji picker will only show frequently used emojis">
+            <CustomTooltip title="Emoji picker will only show frequently used emojis">
               <FormGroup>
                 <StyledFormLabel
                   sx={{ opacity: userSettings.simpleEmojiPicker ? 1 : 0.8 }}
@@ -381,9 +380,9 @@ export const SettingsDialog: React.FC<SettingsProps> = ({ open, onClose }) => {
                   label="Simple Emoji Picker"
                 />
               </FormGroup>
-            </Tooltip>
+            </CustomTooltip>
           </FormControl>
-          <Tooltip title="This will delete data about frequently used emojis">
+          <CustomTooltip title="This will delete data about frequently used emojis">
             <Button
               color="error"
               variant="outlined"
@@ -395,9 +394,8 @@ export const SettingsDialog: React.FC<SettingsProps> = ({ open, onClose }) => {
             >
               <DeleteRounded /> &nbsp; Clear Emoji Data
             </Button>
-          </Tooltip>
+          </CustomTooltip>
         </FormGroup>
-
         {/* Switch components to control different app settings */}
         <FormGroup>
           <FormLabel>App Settings</FormLabel>
@@ -608,6 +606,18 @@ export const SettingsDialog: React.FC<SettingsProps> = ({ open, onClose }) => {
       </DialogActions>
     </Dialog>
   );
+};
+
+interface CustomTooltipProps extends ComponentProps<typeof Tooltip> {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  children: ReactElement<any, any>; // default mui children type
+}
+
+const CustomTooltip = ({ children, ...props }: CustomTooltipProps) => {
+  // tooltips in this dialog causes some ui glitches on Firefox
+  const isFirefox = systemInfo.browser === "Firefox";
+
+  return !isFirefox ? <Tooltip {...props}>{children}</Tooltip> : children;
 };
 
 const Container = styled.div`

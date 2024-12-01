@@ -140,10 +140,10 @@ export const CustomEmojiPicker = ({ emoji, setEmoji, color, name, type }: EmojiP
       console.log("Full AI response:", response);
 
       const emojiRegex = /[\p{Emoji}]/gu;
-      const x = response.trim().replace(/\*/g, "").match(emojiRegex) || [];
+      const extractedEmojis = response.trim().replace(/\*/g, "").match(emojiRegex) || [];
 
       // Remove duplicates
-      const uniqueEmojis = [...new Set(x)]; // TODO: add feature to let users choose which emoji to use
+      const uniqueEmojis = [...new Set(extractedEmojis)]; // TODO: add feature to let users choose which emoji to use
 
       const emojiResponse = uniqueEmojis[0];
 
@@ -164,7 +164,14 @@ export const CustomEmojiPicker = ({ emoji, setEmoji, color, name, type }: EmojiP
       setIsAILoading(false);
       setCurrentEmoji(null);
       console.error(error);
-      showToast(`${error}`, { type: "error" });
+      showToast(
+        <div>
+          <b>Falied to generate emoji.</b>
+          <br />
+          {String(error)}
+        </div>,
+        { type: "error", duration: 8000 },
+      );
     } finally {
       setIsAILoading(false);
       const end = new Date().getTime();

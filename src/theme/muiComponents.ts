@@ -1,4 +1,4 @@
-import type { Theme } from "@mui/material";
+import { type Theme } from "@mui/material";
 
 export const muiComponentsProps: Theme["components"] = {
   MuiTooltip: {

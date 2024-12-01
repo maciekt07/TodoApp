@@ -48,7 +48,7 @@ const Title = styled.h2`
   margin: 0 auto;
   text-align: center;
   padding: 4px 0 8px 0;
-  text-shadow: 0 0 24px #00000068;
+  /* text-shadow: 0 0 24px #00000068; */
 `;
 const BackBtn = styled(IconButton)`
   position: absolute;
