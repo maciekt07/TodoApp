@@ -1,5 +1,5 @@
 // types for window.ai experimental chrome api
-// https://docs.google.com/document/d/1VG8HIyz361zGduWgNG7R_R8Xkv0OOJ8b5C9QKeCjU0c/view#heading=h.z2j0iwg9yj7i
+// https://docs.google.com/document/d/1VG8HIyz361zGduWgNG7R_R8Xkv0OOJ8b5C9QKeCjU0c/view?tab=t.0#heading=h.3vqpk8wufne
 
 // interface WindowOrWorkerGlobalScope {
 //   readonly ai: AI;

@@ -26,7 +26,7 @@ import { MAX_COLORS_IN_LIST } from "../constants";
 import { UserContext } from "../contexts/UserContext";
 import { ColorElement, DialogBtn, scale } from "../styles";
 import { ColorPalette } from "../theme/themeConfig";
-import { getFontColor, showToast } from "../utils";
+import { getFontColor, isDark, showToast } from "../utils";
 import { CustomDialogTitle } from "./DialogTitle";
 
 interface ColorPickerProps {
@@ -163,6 +163,8 @@ export const ColorPicker: React.FC<ColorPickerProps> = ({
     <>
       <StyledAccordion
         onChange={(_event, isExpanded) => setAccordionExpanded(isExpanded)}
+        isExpanded={accordionExpanded}
+        fontColor={fontColor}
         sx={{
           width,
         }}
@@ -312,13 +314,29 @@ export const ColorPicker: React.FC<ColorPickerProps> = ({
   );
 };
 
-const StyledAccordion = styled(Accordion)`
-  background: #ffffff18;
+interface StyledAccordionProps {
+  isExpanded: boolean;
+  fontColor: CSSProperties["color"];
+}
+
+const StyledAccordion = styled(Accordion)<StyledAccordionProps>`
+  background: transparent;
   border-radius: 16px !important;
-  border: 1px solid #0000003a;
+  // match border with other inputs
+  border: ${({ fontColor }) =>
+    `1px solid ${isDark(fontColor as string) ? "rgba(0, 0, 0, 0.23)" : "rgb(255, 255, 255, 0.23)"}`};
   box-shadow: none;
   padding: 6px 0;
   margin: 8px 0;
+
+  &:hover {
+    border: ${({ theme, isExpanded, fontColor }) =>
+      isExpanded
+        ? `1px solid ${
+            isDark(fontColor as string) ? "rgba(0, 0, 0, 0.23)" : "rgba(255, 255, 255, 0.23)"
+          }`
+        : `1px solid ${theme.darkmode ? "#ffffff" : "#000000"}`};
+  }
 `;
 
 const AccordionPreview = styled.div<{ clr: string }>`

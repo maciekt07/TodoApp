@@ -115,9 +115,7 @@ export const CustomEmojiPicker = ({ emoji, setEmoji, color, name, type }: EmojiP
   useEffect(() => {
     const createSession = async () => {
       if (window.ai) {
-        const session = await window.ai.languageModel.create({
-          initialPrompts: [{ role: "system", content: "Keep your answers short." }],
-        });
+        const session = await window.ai.languageModel.create();
         setSession(session);
       }
     };
@@ -134,30 +132,82 @@ export const CustomEmojiPicker = ({ emoji, setEmoji, color, name, type }: EmojiP
 
       // In the latest version of window.ai, responses can't be limited to a single emoji
       const response = await sessionInstance.prompt(
-        `Help me choose an emoji that would be appropriate for the following task: ${name}`,
+        `Choose a single emoji that would be appropriate for the following task: ${name}.`,
       );
 
       console.log("Full AI response:", response);
 
-      const emojiRegex = /[\p{Emoji}]/gu;
+      // this doesn't split emojis into separate characters
+      const emojiRegex =
+        /(\p{Extended_Pictographic}|\p{Regional_Indicator}{2}|\uD83C[\uDDE6-\uDDFF]{2})/gu;
+
       const extractedEmojis = response.trim().replace(/\*/g, "").match(emojiRegex) || [];
 
       // Remove duplicates
       const uniqueEmojis = [...new Set(extractedEmojis)]; // TODO: add feature to let users choose which emoji to use
+      console.log("Unique Emojis:", uniqueEmojis);
 
-      const emojiResponse = uniqueEmojis[0];
+      if (uniqueEmojis.length === 0) {
+        setCurrentEmoji(null);
+        showToast(
+          <div>
+            <b>No emoji found.</b> <br /> Please try again with different {type} name.
+          </div>,
+          {
+            type: "error",
+          },
+        );
+        console.error("No emoji found.");
+        return;
+      }
+
+      let emojiResponse = uniqueEmojis[0];
+
+      // Check if the emoji needs to be replaced
+
+      const emojiMap: {
+        [key: string]: string;
+      } = {
+        ":joy:": "😄",
+        ":smile:": "😄",
+        ":heart:": "❤️",
+        "<3": "❤️",
+        ":sunglasses:": "😎",
+        ":thinking_head:": "🤔",
+        ":technology:": "💻",
+        ":tech:": "💻",
+        ":ml:": "🧠",
+        ":wave:": "👋",
+        ":O": "😮",
+        "☮": "✌️",
+        "🎙": "🎙️",
+        "🗣": "🗣️",
+        "✈": "✈️",
+        "🍽": "🍽️",
+        "⌨": "⌨️",
+        "🖱": "🖱️",
+      };
+      if (emojiResponse in emojiMap) {
+        emojiResponse = emojiMap[emojiResponse];
+        console.log("Emoji replaced with:", emojiResponse);
+      }
 
       const unified = emojiToUnified(emojiResponse.replaceAll(":", ""));
+      console.log("Emoji unified:", unified);
+
       if (emojiRegex.test(emojiResponse)) {
         setIsAILoading(false);
-
-        console.log("Emoji unified:", unified);
         setCurrentEmoji(unified);
       } else {
         setCurrentEmoji(null);
-        showToast(`Invalid emoji. Please try again with different ${type} name.`, {
-          type: "error",
-        });
+        showToast(
+          <div>
+            <b>Invalid emoji.</b> <br /> Please try again with different {type} name.
+          </div>,
+          {
+            type: "error",
+          },
+        );
         console.error("Invalid emoji.", unified);
       }
     } catch (error) {
@@ -182,11 +232,12 @@ export const CustomEmojiPicker = ({ emoji, setEmoji, color, name, type }: EmojiP
     }
   }
 
-  const emojiToUnified = (emoji: string): string =>
-    [...emoji]
-      .map((char) => (char ? (char.codePointAt(0)?.toString(16).toUpperCase() ?? "") : ""))
+  const emojiToUnified = (emoji: string): string => {
+    return Array.from(emoji)
+      .map((char) => char.codePointAt(0)?.toString(16).toUpperCase() || "")
       .join("-")
       .toLowerCase();
+  };
 
   // end of AI experimental feature code
 

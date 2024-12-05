@@ -102,18 +102,23 @@ export const CategorySelect: React.FC<CategorySelectProps> = ({
             />
           </Box>
         )}
-        renderValue={() => (
-          <Box sx={{ display: "flex", flexWrap: "wrap", gap: "4px 8px" }}>
-            {selectedCats.map((category) => (
-              <CategoryBadge
-                key={category.id}
-                category={category}
-                sx={{ cursor: "pointer" }}
-                glow={false}
-              />
-            ))}
-          </Box>
-        )}
+        displayEmpty
+        renderValue={() =>
+          selectedCats.length > 0 ? (
+            <Box sx={{ display: "flex", flexWrap: "wrap", gap: "4px 8px" }}>
+              {selectedCats.map((category) => (
+                <CategoryBadge
+                  key={category.id}
+                  category={category}
+                  sx={{ cursor: "pointer" }}
+                  glow={false}
+                />
+              ))}
+            </Box>
+          ) : (
+            <Box sx={{ color: fontColor }}>Select Categories</Box>
+          )
+        }
         MenuProps={{
           PaperProps: {
             style: {
@@ -209,7 +214,6 @@ const StyledSelect = styled(Select)<{ width?: CSSProperties["width"] }>`
 
   /* background: #ffffff18; */
   z-index: 999;
-  //  border: 1px solid #0000003a; TODO: match border with color picker border
   border: none !important;
 `;
 

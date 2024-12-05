@@ -319,7 +319,7 @@ const Categories = () => {
             onColorChange={(color) => {
               setColor(color);
             }}
-            width={360}
+            width={350}
             fontColor={getFontColor(theme.secondary)}
           />
           <AddCategoryButton
