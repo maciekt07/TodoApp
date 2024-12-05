@@ -7,9 +7,9 @@ import manifest from "./manifest";
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  test: {
-    globals: true,
-  },
+  // test: { // FIXME: fix this and remove vitest.config.ts
+  //   global: true,
+  // },
   plugins: [
     react(),
     // Generate QR code for npm run dev:host

@@ -14,7 +14,7 @@ import {
 } from "../components/tasks/tasks.styled";
 import { DialogBtn } from "../styles";
 import { useLocation, useNavigate } from "react-router-dom";
-import { useContext, useEffect, useState } from "react";
+import { JSX, useContext, useEffect, useState } from "react";
 import type { Task } from "../types/user";
 import {
   calculateDateDifference,

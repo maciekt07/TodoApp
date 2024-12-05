@@ -267,7 +267,7 @@ const HeaderMenuItem = styled(MenuItem)`
   background: ${({ theme }) => (theme.darkmode ? "#2f2f2fd0" : "#ffffffd0")};
 `;
 
-const SelectedNames = styled.span`
+const SelectedNames = styled.div`
   opacity: 0.9;
   font-size: 15px;
   word-break: break-all;

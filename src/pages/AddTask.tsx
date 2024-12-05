@@ -125,8 +125,6 @@ const AddTask = () => {
     itemsToRemove.map((item) => sessionStorage.removeItem(item));
   };
 
-  //TODO: adjust input hover border colors
-
   return (
     <>
       <TopBar title="Add New Task" />

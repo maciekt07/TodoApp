@@ -1,5 +1,5 @@
 import styled from "@emotion/styled";
-import { Box, Button } from "@mui/material";
+import { Box, Button, ButtonProps } from "@mui/material";
 import { getFontColor } from "../utils";
 import { Info } from "@mui/icons-material";
 
@@ -96,7 +96,11 @@ export const ManagementButtonsContainer = styled(Box)`
   gap: 24px;
 `;
 
-export const ManagementButton = styled(Button)`
+const UnstyledManagementButton = ({ ...props }: ButtonProps) => (
+  <Button variant="outlined" {...props} />
+);
+
+export const ManagementButton = styled(UnstyledManagementButton)`
   padding: 12px 18px;
   border-radius: 14px;
   width: 300px;
@@ -106,6 +110,3 @@ export const ManagementButton = styled(Button)`
     border-color: ${({ theme }) => getFontColor(theme.secondary) + "82"};
   }
 `;
-ManagementButton.defaultProps = {
-  variant: "outlined",
-};

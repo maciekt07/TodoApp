@@ -189,7 +189,9 @@ export const ColorPicker: React.FC<ColorPickerProps> = ({
                 <Grid item key={color}>
                   <Tooltip title={getColorName(color).name}>
                     <ColorElement
-                      ref={(element) => (colorElementRefs.current[index] = element)}
+                      ref={(element: HTMLButtonElement | null) => {
+                        colorElementRefs.current[index] = element;
+                      }}
                       id={`color-element-${index}`}
                       clr={color}
                       aria-label={`Select color - ${color}`}
@@ -328,7 +330,7 @@ const StyledAccordion = styled(Accordion)<StyledAccordionProps>`
   box-shadow: none;
   padding: 6px 0;
   margin: 8px 0;
-
+  // TODO: add selected primary color
   &:hover {
     border: ${({ theme, isExpanded, fontColor }) =>
       isExpanded

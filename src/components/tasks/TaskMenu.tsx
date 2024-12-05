@@ -17,7 +17,7 @@ import {
 } from "@mui/icons-material";
 import { Divider, IconButton, Menu, MenuItem } from "@mui/material";
 import { Emoji, EmojiStyle } from "emoji-picker-react";
-import { useContext, useMemo, useState } from "react";
+import { JSX, useContext, useMemo, useState } from "react";
 import Marquee from "react-fast-marquee";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";

@@ -45,10 +45,6 @@ export const TaskContainer = styled.div<TaskComponentProps>`
   }
 `;
 
-TaskContainer.defaultProps = {
-  className: "TaskContainer",
-};
-
 export const EmojiContainer = styled.span<{ clr: string }>`
   text-decoration: none;
   margin-right: 14px;

@@ -1,7 +1,7 @@
 import styled from "@emotion/styled";
 import { CloseRounded } from "@mui/icons-material";
 import { DialogTitle, Divider, IconButton } from "@mui/material";
-import { ComponentProps } from "react";
+import { ComponentProps, JSX } from "react";
 
 type MuiDialogTitleProps = ComponentProps<typeof DialogTitle>;
 

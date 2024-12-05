@@ -14,6 +14,7 @@ import {
   AccordionSummary,
   Alert,
   Button,
+  ButtonProps,
   Dialog,
   DialogActions,
   DialogContent,
@@ -243,17 +244,17 @@ const ErrorExpandIcon = styled(ExpandMoreRounded)`
   font-size: 32px;
 `;
 
-const StyledButton = styled(Button)`
+const UnstyledButton = ({ ...props }: ButtonProps) => (
+  <Button variant="outlined" size="large" {...props} />
+);
+
+const StyledButton = styled(UnstyledButton)`
   padding: 10px 30px;
   border-radius: 12px;
   @media (max-width: 768px) {
     width: 100%;
   }
 `;
-StyledButton.defaultProps = {
-  variant: "outlined",
-  size: "large",
-};
 
 const UserDataLabel = styled.p`
   font-size: 18px;

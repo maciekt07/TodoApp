@@ -472,6 +472,22 @@ const MenuLink = ({ to, children }: { to: string; children: React.ReactNode }) =
   );
 };
 
+const PulseMenuLabel = () => {
+  return (
+    <StyledPulseMenuLabel>
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
+        <FiberManualRecord style={{ fontSize: "16px" }} />
+      </div>
+    </StyledPulseMenuLabel>
+  );
+};
+
 const Container = styled.div`
   position: absolute;
   right: 16vw;
@@ -608,25 +624,11 @@ const StyledDivider = styled(Divider)`
   margin: 8px 4px;
 `;
 
-const PulseMenuLabel = styled(MenuLabel)`
+const StyledPulseMenuLabel = styled(MenuLabel)`
   animation: ${({ theme }) => pulseAnimation(theme.primary, 6)} 1.2s infinite;
   padding: 6px;
   margin-right: 4px;
 `;
-
-PulseMenuLabel.defaultProps = {
-  children: (
-    <div
-      style={{
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-      }}
-    >
-      <FiberManualRecord style={{ fontSize: "16px" }} />
-    </div>
-  ),
-};
 
 const LogoContainer = styled.div`
   display: flex;

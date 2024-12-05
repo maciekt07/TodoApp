@@ -9,7 +9,7 @@ import {
   YouTube,
 } from "@mui/icons-material";
 import { Tooltip, Zoom } from "@mui/material";
-import { memo, useContext } from "react";
+import { JSX, memo, useContext } from "react";
 import { DESCRIPTION_SHORT_LENGTH, URL_REGEX } from "../../constants";
 import { useResponsiveDisplay } from "../../hooks/useResponsiveDisplay";
 import { Task } from "../../types/user";

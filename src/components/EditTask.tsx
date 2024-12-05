@@ -7,6 +7,7 @@ import {
   IconButton,
   InputAdornment,
   TextField,
+  TextFieldProps,
   Tooltip,
 } from "@mui/material";
 import { useContext, useEffect, useMemo, useState } from "react";
@@ -260,12 +261,11 @@ export const EditTask = ({ open, task, onClose, onSave }: EditTaskProps) => {
   );
 };
 
-const StyledInput = styled(TextField)`
+const UnstyledTextField = ({ ...props }: TextFieldProps) => <TextField fullWidth {...props} />;
+
+const StyledInput = styled(UnstyledTextField)`
   margin: 14px 0;
   & .MuiInputBase-root {
     border-radius: 16px;
   }
 `;
-StyledInput.defaultProps = {
-  fullWidth: true,
-};

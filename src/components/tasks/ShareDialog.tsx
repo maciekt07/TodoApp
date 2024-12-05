@@ -14,6 +14,7 @@ import {
   DialogContent,
   InputAdornment,
   Tab,
+  TabProps,
   Tabs,
   TextField,
   Typography,
@@ -259,16 +260,16 @@ const QRCodeContainer = styled.div`
   margin-top: 22px;
 `;
 
-const StyledTab = styled(Tab)`
+const UnstyledTab = ({ ...props }: TabProps) => <Tab iconPosition="start" {...props} />;
+
+const StyledTab = styled(UnstyledTab)`
   border-radius: 12px 12px 0 0;
   width: 50%;
   .MuiTabs-indicator {
     border-radius: 24px;
   }
 `;
-StyledTab.defaultProps = {
-  iconPosition: "start",
-};
+
 const ShareField = styled(TextField)`
   margin-top: 22px;
   .MuiOutlinedInput-root {

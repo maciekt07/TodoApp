@@ -1,5 +1,5 @@
 import styled from "@emotion/styled";
-import { Avatar, Button, css } from "@mui/material";
+import { Avatar, AvatarProps, Button, css } from "@mui/material";
 import { getFontColor } from "../utils";
 import { CSSProperties } from "react";
 import { pulseAnimation } from "./keyframes.styled";
@@ -46,11 +46,18 @@ export const StyledLink = styled.a<{ clr?: string }>`
   }
 `;
 // linear-gradient(#A4AAB7, #868B95)
-export const UserAvatar = styled(Avatar)<{
+
+interface UserAvatarProps {
   hasimage: boolean;
   size: CSSProperties["height"];
   pulse?: boolean;
-}>`
+}
+
+const UnstyledAvatar = ({ ...props }: AvatarProps) => (
+  <Avatar translate={"no"} slotProps={{ img: { loading: "lazy" } }} {...props} />
+);
+
+export const UserAvatar = styled(UnstyledAvatar)<UserAvatarProps>`
   color: #ffffff;
   background: ${({ hasimage, theme }) =>
     hasimage ? "#ffffff1c" : theme.darkmode ? "#5e5e65" : "#8c919c"} !important;
@@ -65,11 +72,6 @@ export const UserAvatar = styled(Avatar)<{
       animation: ${pulseAnimation(theme.darkmode ? "#5e5e65" : "#8c919c", 10)} 1.2s infinite;
     `}
 `;
-
-UserAvatar.defaultProps = {
-  translate: "no",
-  slotProps: { img: { loading: "lazy" } },
-};
 
 interface ColorElementProps {
   clr: string;
