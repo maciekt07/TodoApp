@@ -125,6 +125,8 @@ export const CustomEmojiPicker = ({ emoji, setEmoji, color, name, type }: EmojiP
   // ‼ This feature works only in Chrome (Dev / Canary) version 127 or higher with some flags enabled
   // https://afficone.com/blog/window-ai-new-chrome-feature-api/
   async function useAI(): Promise<void> {
+    // TODO: make this a hook
+    // https://rebeccamdeprey.com/blog/a-react-hook-for-windowai-in-chrome
     const start = new Date().getTime();
     setIsAILoading(true);
     try {
