@@ -5,7 +5,7 @@
 //   readonly ai: AI;
 // }
 
-interface AI {
+export interface AI {
   readonly languageModel: AILanguageModelFactory;
 }
 
@@ -46,7 +46,7 @@ interface AILanguageModelCapabilities {
   readonly defaultTemperature?: number;
 }
 
-interface AILanguageModelCreateOptions {
+export interface AILanguageModelCreateOptions {
   signal?: AbortSignal;
   monitor?: AICreateMonitorCallback;
 

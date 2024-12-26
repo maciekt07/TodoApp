@@ -1,13 +1,13 @@
-import { useCallback, useContext, useEffect } from "react";
 import { ThemeProvider as EmotionThemeProvider } from "@emotion/react";
 import { DataObjectRounded, DeleteForeverRounded } from "@mui/icons-material";
 import { ThemeProvider as MuiThemeProvider, type Theme } from "@mui/material";
+import { useCallback, useContext, useEffect } from "react";
 import ErrorBoundary from "./components/ErrorBoundary";
+import MainLayout from "./layouts/MainLayout";
 import { CustomToaster } from "./components/Toaster";
 import { defaultUser } from "./constants/defaultUser";
 import { UserContext } from "./contexts/UserContext";
 import { useSystemTheme } from "./hooks/useSystemTheme";
-import MainLayout from "./layouts/MainLayout";
 import AppRouter from "./router";
 import { GlobalStyles } from "./styles";
 import { Themes, createCustomTheme, isDarkMode } from "./theme/createTheme";

@@ -1,14 +1,15 @@
 <p align="center">
 <img src="https://raw.githubusercontent.com/maciekt07/TodoApp/main/public/logo192.png" width="128px" />
 <h1>📝React.js Todo App</h1>
+<img src="https://raw.githubusercontent.com/maciekt07/TodoApp/main/screenshots/baner.png" />
 </p>
 
 ## [https://react-cool-todo-app.netlify.app/](https://react-cool-todo-app.netlify.app/)
 
 [![Netlify Status](https://api.netlify.com/api/v1/badges/e3b07d34-f0da-4280-9076-fd40eea893c6/deploy-status)](https://app.netlify.com/sites/react-cool-todo-app/deploys)
 ![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/maciekt07/TodoApp?color=%23b624ff)
+![GitHub created at ](https://img.shields.io/github/created-at/maciekt07/TodoApp?color=%23b624ff)
 ![GitHub last commit](https://img.shields.io/github/last-commit/maciekt07/TodoApp?color=%23b624ff)
-![GitHub License](https://img.shields.io/github/license/maciekt07/TodoApp?color=%23b624ff)
 
 <p align="center">
 <img src="https://raw.githubusercontent.com/maciekt07/TodoApp/main/screenshots/iPhone%20Mockup%20black.png" width="400px" />
@@ -83,9 +84,9 @@ The app features a custom update prompt that notifies users when a new version i
 
 <!-- <img src="https://raw.githubusercontent.com/maciekt07/TodoApp/main/screenshots/UpdatePrompt.png" alt="update prompt" width="260px" /> -->
 
-<img src="screenshots/UpdatePrompt.png" alt="update prompt" width="260px" />
+<img src="https://raw.githubusercontent.com/maciekt07/TodoApp/main/screenshots/UpdatePrompt.png" alt="update prompt" width="260px" />
 
-### 🔎 Additional Features
+### Additional Features
 
 - **📦 Local and session storage**: Save tasks locally and retain form data using session storage.
 - **🌐 Native Intl Integration:** Adapts to your language, timezone, and date preferences using the native `Intl` API.

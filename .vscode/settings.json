@@ -1,3 +1,6 @@
 {
-  "editor.defaultColorDecorators": true // Enable color decorators for .ts files
+  "editor.defaultColorDecorators": "auto",
+  "files.associations": {
+    "themeConfig.ts": "typescriptreact"
+  }
 }

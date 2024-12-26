@@ -22,9 +22,8 @@ import {
   TodayRounded,
 } from "@mui/icons-material";
 import { PROFILE_PICTURE_MAX_LENGTH, USER_NAME_MAX_LENGTH } from "../constants";
-import { CustomDialogTitle, SettingsDialog, TopBar } from "../components";
+import { CustomDialogTitle, LogoutDialog, SettingsDialog, TopBar } from "../components";
 import { DialogBtn, UserAvatar } from "../styles";
-import { defaultUser } from "../constants/defaultUser";
 import { UserContext } from "../contexts/UserContext";
 import { timeAgo, getFontColor, showToast } from "../utils";
 import { ColorPalette } from "../theme/themeConfig";
@@ -35,7 +34,7 @@ const UserProfile = () => {
   const [userName, setUserName] = useState<string>("");
   const [profilePictureURL, setProfilePictureURL] = useState<string>("");
   const [openChangeImage, setOpenChangeImage] = useState<boolean>(false);
-  const [logoutConfirmationOpen, setLogoutConfirmationOpen] = useState<boolean>(false);
+  const [openLogoutDialog, setOpenLogoutDialog] = useState<boolean>(false);
   const [openSettings, setOpenSettings] = useState<boolean>(false);
 
   useEffect(() => {
@@ -68,15 +67,6 @@ const UserProfile = () => {
   };
   const handleCloseImageDialog = () => {
     setOpenChangeImage(false);
-  };
-
-  const handleLogoutConfirmationClose = () => {
-    setLogoutConfirmationOpen(false);
-  };
-  const handleLogout = () => {
-    setUser(defaultUser);
-    handleLogoutConfirmationClose();
-    showToast("You have been successfully logged out");
   };
 
   const handleSaveImage = () => {
@@ -181,7 +171,7 @@ const UserProfile = () => {
           color="error"
           variant="outlined"
           sx={{ p: "12px 20px", borderRadius: "14px", marginTop: "8px" }}
-          onClick={() => setLogoutConfirmationOpen(true)}
+          onClick={() => setOpenLogoutDialog(true)}
         >
           <Logout />
           &nbsp; Logout
@@ -252,18 +242,7 @@ const UserProfile = () => {
           </DialogBtn>
         </DialogActions>
       </Dialog>
-      <Dialog open={logoutConfirmationOpen} onClose={handleLogoutConfirmationClose}>
-        <CustomDialogTitle title="Logout Confirmation" icon={<Logout />} />
-        <DialogContent>
-          Are you sure you want to logout? <b>Your tasks will not be saved.</b>
-        </DialogContent>
-        <DialogActions>
-          <DialogBtn onClick={handleLogoutConfirmationClose}>Cancel</DialogBtn>
-          <DialogBtn onClick={handleLogout} color="error">
-            <Logout /> &nbsp; Logout
-          </DialogBtn>
-        </DialogActions>
-      </Dialog>
+      <LogoutDialog open={openLogoutDialog} onClose={() => setOpenLogoutDialog(false)} />
       <SettingsDialog open={openSettings} onClose={() => setOpenSettings(false)} />
     </>
   );

@@ -1,6 +1,6 @@
 export { TasksList } from "./tasks/TasksList";
 export { ProfileSidebar } from "./Sidebar";
-export { EditTask } from "./EditTask";
+export { EditTask } from "./tasks/EditTask";
 export { TopBar } from "./TopBar";
 export { CustomEmojiPicker } from "./EmojiPicker";
 export { SettingsDialog } from "./Settings";
@@ -12,3 +12,4 @@ export { CategoryBadge } from "./CategoryBadge";
 export { TaskIcon } from "./TaskIcon";
 export { Loading } from "./Loading";
 export { CustomDialogTitle } from "./DialogTitle";
+export { LogoutDialog } from "./LogoutDialog";

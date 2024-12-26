@@ -11,25 +11,24 @@ import {
   Tooltip,
 } from "@mui/material";
 import { useContext, useEffect, useMemo, useState } from "react";
-import { ColorPicker, CustomDialogTitle, CustomEmojiPicker } from ".";
-import { DESCRIPTION_MAX_LENGTH, TASK_NAME_MAX_LENGTH } from "../constants";
-import { UserContext } from "../contexts/UserContext";
-import { DialogBtn } from "../styles";
-import { Category, Task } from "../types/user";
-import { showToast } from "../utils";
+import { ColorPicker, CustomDialogTitle, CustomEmojiPicker } from "..";
+import { DESCRIPTION_MAX_LENGTH, TASK_NAME_MAX_LENGTH } from "../../constants";
+import { UserContext } from "../../contexts/UserContext";
+import { DialogBtn } from "../../styles";
+import { Category, Task } from "../../types/user";
+import { showToast } from "../../utils";
 import { useTheme } from "@emotion/react";
-import { ColorPalette } from "../theme/themeConfig";
-import { CategorySelect } from "./CategorySelect";
+import { ColorPalette } from "../../theme/themeConfig";
+import { CategorySelect } from "../CategorySelect";
 
 interface EditTaskProps {
   open: boolean;
   task?: Task;
   onClose: () => void;
-  onSave: (editedTask: Task) => void;
 }
 
-export const EditTask = ({ open, task, onClose, onSave }: EditTaskProps) => {
-  const { user } = useContext(UserContext);
+export const EditTask = ({ open, task, onClose }: EditTaskProps) => {
+  const { user, setUser } = useContext(UserContext);
   const { settings } = user;
   const [editedTask, setEditedTask] = useState<Task | undefined>(task);
   const [emoji, setEmoji] = useState<string | null>(null);
@@ -75,7 +74,26 @@ export const EditTask = ({ open, task, onClose, onSave }: EditTaskProps) => {
   const handleSave = () => {
     document.body.style.overflow = "auto";
     if (editedTask && !nameError && !descriptionError) {
-      onSave(editedTask);
+      const updatedTasks = user.tasks.map((task) => {
+        if (task.id === editedTask.id) {
+          return {
+            ...task,
+            name: editedTask.name,
+            color: editedTask.color,
+            emoji: editedTask.emoji || undefined,
+            description: editedTask.description || undefined,
+            deadline: editedTask.deadline || undefined,
+            category: editedTask.category || undefined,
+            lastSave: new Date(),
+          };
+        }
+        return task;
+      });
+      setUser((prevUser) => ({
+        ...prevUser,
+        tasks: updatedTasks,
+      }));
+      onClose();
       showToast(
         <div>
           Task <b translate="no">{editedTask.name}</b> updated.

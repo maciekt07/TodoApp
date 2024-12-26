@@ -15,7 +15,7 @@ import {
 
 import { getRandomGreeting } from "../utils";
 import { Emoji } from "emoji-picker-react";
-import { Box, Tooltip, Typography } from "@mui/material";
+import { Box, CircularProgress, Tooltip, Typography } from "@mui/material";
 import { useOnlineStatus } from "../hooks/useOnlineStatus";
 import { AddRounded, TodayRounded, WifiOff } from "@mui/icons-material";
 import { UserContext } from "../contexts/UserContext";
@@ -205,7 +205,13 @@ const Home = () => {
           </TasksCount>
         </TasksCountContainer>
       )}
-      <Suspense fallback={<div>Loading...</div>}>
+      <Suspense
+        fallback={
+          <Box display="flex" justifyContent="center" alignItems="center">
+            <CircularProgress />
+          </Box>
+        }
+      >
         <TaskProvider>
           <TasksList />
         </TaskProvider>

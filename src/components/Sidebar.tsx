@@ -34,7 +34,7 @@ import {
 } from "@mui/material";
 import React, { useContext, useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { CustomDialogTitle, SettingsDialog } from ".";
+import { CustomDialogTitle, LogoutDialog, SettingsDialog } from ".";
 import bmcLogoLight from "../assets/bmc-logo-light.svg";
 import bmcLogo from "../assets/bmc-logo.svg";
 import logo from "../assets/logo256.png";
@@ -51,7 +51,7 @@ export const ProfileSidebar = () => {
   const { name, profilePicture, tasks, settings } = user;
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
-  const [logoutConfirmationOpen, setLogoutConfirmationOpen] = useState<boolean>(false);
+  const [openLogoutDialog, setOpenLogoutDialog] = useState<boolean>(false);
   const [openSettings, setOpenSettings] = useState<boolean>(false);
 
   const [stars, setStars] = useState<number | null>(null);
@@ -92,21 +92,6 @@ export const ProfileSidebar = () => {
 
   const handleClose = () => {
     setAnchorEl(null);
-  };
-
-  const handleLogoutConfirmationOpen = () => {
-    setLogoutConfirmationOpen(true);
-    setAnchorEl(null);
-  };
-
-  const handleLogoutConfirmationClose = () => {
-    setLogoutConfirmationOpen(false);
-  };
-
-  const handleLogout = () => {
-    setUser(defaultUser);
-    handleLogoutConfirmationClose();
-    showToast("You have been successfully logged out");
   };
 
   interface BeforeInstallPromptEvent extends Event {
@@ -355,7 +340,13 @@ export const ProfileSidebar = () => {
             </StyledMenuItem>
           )}
 
-        <StyledMenuItem onClick={handleLogoutConfirmationOpen} sx={{ color: "#ff4040 !important" }}>
+        <StyledMenuItem
+          onClick={() => {
+            handleClose();
+            setOpenLogoutDialog(true);
+          }}
+          sx={{ color: "#ff4040 !important" }}
+        >
           <Logout /> &nbsp; Logout
         </StyledMenuItem>
 
@@ -436,20 +427,8 @@ export const ProfileSidebar = () => {
           </DialogBtn>
         </DialogActions>
       </Dialog>
-
-      <Dialog open={logoutConfirmationOpen} onClose={handleLogoutConfirmationClose}>
-        <CustomDialogTitle title="Logout Confirmation" icon={<Logout />} />
-        <DialogContent>
-          Are you sure you want to logout? <b>Your tasks will not be saved.</b>
-        </DialogContent>
-        <DialogActions>
-          <DialogBtn onClick={handleLogoutConfirmationClose}>Cancel</DialogBtn>
-          <DialogBtn onClick={handleLogout} color="error">
-            <Logout /> &nbsp; Logout
-          </DialogBtn>
-        </DialogActions>
-      </Dialog>
-      <SettingsDialog open={openSettings} onClose={() => setOpenSettings(!openSettings)} />
+      <LogoutDialog open={openLogoutDialog} onClose={() => setOpenLogoutDialog(false)} />
+      <SettingsDialog open={openSettings} onClose={() => setOpenSettings(false)} />
     </Container>
   );
 };

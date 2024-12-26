@@ -88,6 +88,9 @@ const SharePage = () => {
         setError(true);
         setErrorDetails("Failed to decode task data. The link may be corrupted. " + error);
       }
+    } else {
+      setError(true);
+      setErrorDetails("No task data found in the link.");
     }
 
     if (userNameParam) {
@@ -186,6 +189,7 @@ const SharePage = () => {
       <Home />
       <Dialog
         open
+        fullWidth
         PaperProps={{
           style: {
             borderRadius: "24px",
@@ -198,7 +202,7 @@ const SharePage = () => {
           <>
             <CustomDialogTitle
               title="Recieved Task"
-              subTitle="You can now include this task in your list"
+              subTitle="You can now include it in your list."
               icon={<AddTaskRounded />}
             />
             <DialogContent>
@@ -330,20 +334,16 @@ const SharePage = () => {
         ) : (
           <>
             <CustomDialogTitle
-              title="Something went wrong"
-              subTitle="The shared task couldn't be processed."
+              title="Failed to recieve Task"
+              subTitle="This Task could not be processed."
               onClose={() => n("/")}
               icon={<ErrorRounded />}
             />
             <DialogContent>
-              <p>
-                Oops! Something went wrong while processing the shared task.{" "}
-                {errorDetails && (
-                  <b>
-                    <br /> {errorDetails}
-                  </b>
-                )}
-              </p>
+              <Alert severity="error">
+                <AlertTitle>Error: failed to process the task</AlertTitle>
+                {errorDetails}
+              </Alert>
             </DialogContent>
             <DialogActions>
               <DialogBtn onClick={() => n("/")}>Close</DialogBtn>
