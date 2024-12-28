@@ -202,7 +202,11 @@ export const EditTask = ({ open, task, onClose }: EditTaskProps) => {
           label="Deadline date"
           name="deadline"
           type="datetime-local"
-          value={editedTask?.deadline || ""} // FIXME: deadline is not being displayed correctly
+          value={
+            editedTask?.deadline //  use swedish locale because it gives the exact format the input need
+              ? new Date(editedTask.deadline).toLocaleString("sv").replace(" ", "T").slice(0, 16)
+              : ""
+          }
           onChange={handleInputChange}
           InputLabelProps={{ shrink: true }}
           sx={{

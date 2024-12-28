@@ -261,9 +261,14 @@ const HeaderMenuItem = styled(MenuItem)`
   position: sticky !important;
   top: 0;
   backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
   z-index: 99;
   pointer-events: none !important;
   cursor: default !important;
+  @-moz-document url-prefix() {
+    // firefox specific style since it doesnt add blur
+    background: ${({ theme }) => (theme.darkmode ? "#2f2f2ff0" : "#fffffff0")} !important;
+  }
   background: ${({ theme }) => (theme.darkmode ? "#2f2f2fd0" : "#ffffffd0")};
 `;
 
