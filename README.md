@@ -1,8 +1,10 @@
-<p align="center">
+<!-- <p align="center">
 <img src="https://raw.githubusercontent.com/maciekt07/TodoApp/main/public/logo192.png" width="128px" />
-<h1>📝React.js Todo App</h1>
+</p> -->
+
+# 📝React.js Todo App
+
 <img src="https://raw.githubusercontent.com/maciekt07/TodoApp/main/screenshots/baner.png" />
-</p>
 
 ## [https://react-cool-todo-app.netlify.app/](https://react-cool-todo-app.netlify.app/)
 
@@ -11,9 +13,9 @@
 ![GitHub created at ](https://img.shields.io/github/created-at/maciekt07/TodoApp?color=%23b624ff)
 ![GitHub last commit](https://img.shields.io/github/last-commit/maciekt07/TodoApp?color=%23b624ff)
 
-<p align="center">
+<!-- <p align="center">
 <img src="https://raw.githubusercontent.com/maciekt07/TodoApp/main/screenshots/iPhone%20Mockup%20black.png" width="400px" />
-</p>
+</p> -->
 
 ## 💻 Tech Stack
 
@@ -86,37 +88,6 @@ The app features a custom update prompt that notifies users when a new version i
 
 <img src="https://raw.githubusercontent.com/maciekt07/TodoApp/main/screenshots/UpdatePrompt.png" alt="update prompt" width="260px" />
 
-### Additional Features
-
-- **📦 Local and session storage**: Save tasks locally and retain form data using session storage.
-- **🌐 Native Intl Integration:** Adapts to your language, timezone, and date preferences using the native `Intl` API.
-- **🔍 Highlighted Links:** Automatically highlights links in task descriptions for easy identification.
-- **🌍 Browser Translation Support:** Seamlessly translate the entire page into different languages using your browser's translation feature, ensuring accessibility for users worldwide.
-- **🗂️ Customizable Categories:** Users can create and personalize task categories to suit their preferences.
-- **🗃️ Multi-Task Selection:** Option to select multiple tasks and perform actions on all of them at once.
-- **📱 Responsive Design:** Smooth experience across devices.
-- **😜 Custom Emojis**: The app features custom emojis and different emoji styles to choose from, including Apple, Facebook, Twitter, Google and Native.
-
-## 📷 Screenshots
-
-<img src="https://raw.githubusercontent.com/maciekt07/TodoApp/main/screenshots/ss1.png" width="300px" />
-
-<img src="https://raw.githubusercontent.com/maciekt07/TodoApp/main/screenshots/ss2.png" width="300px" />
-
-<img src="https://raw.githubusercontent.com/maciekt07/TodoApp/main/screenshots/ss3.png" width="300px" />
-
-<img src="https://raw.githubusercontent.com/maciekt07/TodoApp/main/screenshots/ss4.png" width="300px" />
-
-<img src="https://raw.githubusercontent.com/maciekt07/TodoApp/main/screenshots/ss5.png" width="300px" />
-
-<img src="https://raw.githubusercontent.com/maciekt07/TodoApp/main/screenshots/ss6.png" width="300px" />
-
-<img src="https://raw.githubusercontent.com/maciekt07/TodoApp/main/screenshots/sspc1.png" width="650px" />
-
-## 🚀 Performance
-
-<img src="https://raw.githubusercontent.com/maciekt07/TodoApp/main/screenshots/performance.png" width="600px" />
-
 ## 👨‍💻 Installation
 
 To install and run the project locally, follow these steps:
@@ -131,6 +102,25 @@ The app will now be running at [http://localhost:5173/](http://localhost:5173/).
 > [!TIP]
 > For mobile device testing, use `npm run dev:host` to preview the app on your local network.
 
-<a href="https://www.buymeacoffee.com/maciekt07" target="_blank">
-<img src="https://img.buymeacoffee.com/button-api/?text=Buy me a coffee&emoji=&slug=maciekt07&button_colour=1a1b27&font_colour=ffffff&font_family=Lato&outline_colour=ffffff&coffee_colour=FFDD00"></a>
-</a>
+## 📷 Screenshots
+
+<img src="https://raw.githubusercontent.com/maciekt07/TodoApp/main/screenshots/ss1.png" width="300px" />
+<img src="https://raw.githubusercontent.com/maciekt07/TodoApp/main/screenshots/ss2.png" width="300px" />
+
+<!-- <img src="https://raw.githubusercontent.com/maciekt07/TodoApp/main/screenshots/ss3.png" width="300px" />
+
+<img src="https://raw.githubusercontent.com/maciekt07/TodoApp/main/screenshots/ss4.png" width="300px" />
+
+<img src="https://raw.githubusercontent.com/maciekt07/TodoApp/main/screenshots/ss5.png" width="300px" />
+
+<img src="https://raw.githubusercontent.com/maciekt07/TodoApp/main/screenshots/ss6.png" width="300px" /> -->
+
+<img src="https://raw.githubusercontent.com/maciekt07/TodoApp/main/screenshots/sspc1.png" width="650px" />
+
+## 🚀 Performance
+
+<img src="https://raw.githubusercontent.com/maciekt07/TodoApp/main/screenshots/performance.png" width="600px" />
+
+## Credits
+
+Made with ❤️ by [maciekt07](https://github.com/maciekt07), licensed under [MIT](https://github.com/maciekt07/TodoApp/blob/main/LICENSE).
