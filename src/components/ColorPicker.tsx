@@ -330,7 +330,6 @@ const StyledAccordion = styled(Accordion)<StyledAccordionProps>`
   box-shadow: none;
   padding: 6px 0;
   margin: 8px 0;
-  // TODO: add selected primary color
   &:hover {
     border: ${({ theme, isExpanded, fontColor }) =>
       isExpanded

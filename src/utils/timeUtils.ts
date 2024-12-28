@@ -108,7 +108,12 @@ export const calculateDateDifference = (
       differenceHours > 0 ? differenceHours : differenceMinutes,
       differenceHours > 0 ? "hour" : "minute",
     );
-  } else if (targetDate.getDate() === currentDate.getDate() + 1) {
+  } else if (
+    difference > 0 &&
+    difference <= 86400000 &&
+    targetDate.getDate() !== currentDate.getDate()
+  ) {
+    // Ensure it's within 24 hours
     return new Intl.RelativeTimeFormat(userLocale, { numeric: "auto" }).format(1, "day");
   } else if (differenceDays <= 7) {
     const dayOfWeek = new Intl.DateTimeFormat(userLocale, { weekday: "long" }).format(date);
