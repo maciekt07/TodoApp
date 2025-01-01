@@ -141,8 +141,7 @@ export const TimeLeft = styled.span<{ done: boolean }>`
   transition: 0.3s all;
   font-size: 14px;
   margin: 4px 0;
-  font-weight: 500;
-  font-style: italic;
+  font-weight: 400;
   display: flex;
   backdrop-filter: none !important;
   // fix for browser translate

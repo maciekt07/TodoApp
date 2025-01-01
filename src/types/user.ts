@@ -19,7 +19,7 @@ export interface User {
   categories: Category[];
   colorList: string[];
   settings: AppSettings;
-  theme: string;
+  theme: "system" | (string & {});
   darkmode: DarkModeOptions;
 }
 

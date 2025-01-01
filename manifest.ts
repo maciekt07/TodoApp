@@ -8,7 +8,20 @@ const manifest: Partial<ManifestOptions> = {
   start_url: "/",
   theme_color: "#7764E8",
   background_color: "#171D34",
-  description: "Todo app with many features, offline usage as a PWA. Made by github.com/maciekt07",
+  description:
+    "Todo app with many features, including sharing tasks via link, theme customization and offline usage as a PWA. Made by github.com/maciekt07",
+  categories: ["productivity", "utilities", "lifestyle"],
+  edge_side_panel: {
+    preferred_width: 500,
+  },
+  file_handlers: [
+    {
+      action: "/transfer",
+      accept: {
+        "application/json": [".json"],
+      },
+    },
+  ],
   icons: [
     {
       src: "/logo192.png",
@@ -29,6 +42,7 @@ const manifest: Partial<ManifestOptions> = {
       src: "/logo512.png",
       sizes: "512x512",
       type: "image/png",
+      purpose: "any",
     },
     {
       src: "pwa/logoMaskable.png",

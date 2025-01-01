@@ -1,4 +1,4 @@
-import { useContext, useEffect, useRef, useState } from "react";
+import { useCallback, useContext, useEffect, useRef, useState } from "react";
 import Button from "@mui/material/Button";
 import Checkbox from "@mui/material/Checkbox";
 import { TopBar } from "../components";
@@ -91,167 +91,173 @@ const Transfer = () => {
     showToast(`Exported all tasks (${user.tasks.length})`);
   };
 
-  const handleImport = (taskFile: File) => {
-    const file = taskFile;
+  const handleImport = useCallback(
+    (taskFile: File) => {
+      const file = taskFile;
+      console.log(file);
 
-    if (file) {
-      if (file.type !== "application/json") {
-        showToast(
-          <div>
-            Incorrect file type {file.type !== "" && <span translate="no">{file.type}</span>}.
-            Please select a JSON file.
-          </div>,
-          { type: "error" },
-        );
-        return;
-      }
-
-      const reader = new FileReader();
-
-      reader.onload = (e: ProgressEvent<FileReader>) => {
-        try {
-          const importedTasks = JSON.parse(e.target?.result as string) as Task[];
-
-          if (!Array.isArray(importedTasks)) {
-            showToast("Imported file has an invalid structure.", { type: "error" });
-            return;
-          }
-
-          /**
-           * TODO: write separate util function to check if task is not invalid
-           */
-
-          // Check if any imported task property exceeds the maximum length
-          const invalidTasks = importedTasks.filter((task) => {
-            const isInvalid =
-              (task.name && task.name.length > TASK_NAME_MAX_LENGTH) ||
-              (task.description && task.description.length > DESCRIPTION_MAX_LENGTH) ||
-              (task.category &&
-                task.category.some((cat) => cat.name.length > CATEGORY_NAME_MAX_LENGTH));
-
-            return isInvalid;
-          });
-
-          if (invalidTasks.length > 0) {
-            const invalidTaskNames = invalidTasks.map((task) => task.name).join(", ");
-            console.error(
-              `These tasks cannot be imported due to exceeding maximum character lengths: ${invalidTaskNames}`,
-            );
-            showToast(
-              `These tasks cannot be imported due to exceeding maximum character lengths: ${invalidTaskNames}`,
-              { type: "error" },
-            );
-            return;
-          }
-
-          const isHexColor = (value: string): boolean => /^#[0-9A-Fa-f]{6}$/.test(value);
-
-          const isCategoryColorValid = (category: Category) =>
-            category.color && isHexColor(category.color);
-
-          const hasInvalidColors = importedTasks.some((task) => {
-            return (
-              (task.color && !isHexColor(task.color)) ||
-              (task.category && !task.category.every((cat) => isCategoryColorValid(cat)))
-            );
-          });
-
-          if (hasInvalidColors) {
-            showToast("Imported file contains tasks with invalid color formats.", {
-              type: "error",
-            });
-            return;
-          }
-
-          const maxFileSize = 50_000;
-          if (file.size > maxFileSize) {
-            showToast(`File size is too large (${file.size}/${maxFileSize})`, { type: "error" });
-            return;
-          }
-
-          // Update user.categories if imported categories don't exist
-          const updatedCategories = user.categories.slice(); // Create a copy of the existing categories
-
-          importedTasks.forEach((task) => {
-            if (task.category) {
-              task.category.forEach((importedCat) => {
-                const existingCategory = updatedCategories.find((cat) => cat.id === importedCat.id);
-
-                if (!existingCategory) {
-                  updatedCategories.push(importedCat);
-                } else {
-                  // Replace the existing category with the imported one if the ID matches
-                  Object.assign(existingCategory, importedCat);
-                }
-              });
-            } else {
-              console.log(`Task ${task.name} has no category`);
-            }
-          });
-
-          setUser((prevUser) => ({
-            ...prevUser,
-            categories: updatedCategories,
-          }));
-
-          const mergedTasks = [...user.tasks, ...importedTasks];
-          const uniqueTasks = mergedTasks.reduce((acc, task) => {
-            const existingTask = acc.find((t) => t.id === task.id);
-            if (existingTask) {
-              return acc.map((t) => (t.id === task.id ? task : t));
-            } else {
-              return [...acc, task];
-            }
-          }, [] as Task[]);
-
-          setUser((prevUser) => ({ ...prevUser, tasks: uniqueTasks }));
-
-          // Prepare the list of imported task names
-          const importedTaskNames = importedTasks.map((task) => task.name).join(", ");
-
-          // Display the alert with the list of imported task names
-          console.log(`Imported Tasks: ${importedTaskNames}`);
-
+      if (file) {
+        if (file.type !== "application/json") {
           showToast(
             <div>
-              Tasks Successfully Imported from <br />
-              <i translate="no" style={{ wordBreak: "break-all" }}>
-                {file.name}
-              </i>
-              <ul>
-                {importedTasks.map((task) => (
-                  <li key={task.id}>
-                    <ListContent>
-                      <Emoji unified={task.emoji || ""} size={20} emojiStyle={user.emojisStyle} />
-                      <span translate="no">{task.name}</span>
-                    </ListContent>
-                  </li>
-                ))}
-              </ul>
-            </div>,
-            { dismissButton: true, type: "blank" },
-          );
-
-          if (fileInputRef.current) {
-            fileInputRef.current.value = "";
-          }
-        } catch (error) {
-          console.error(`Error parsing the imported file ${file.name}:`, error);
-          showToast(
-            <div style={{ wordBreak: "break-all" }}>
-              Error parsing the imported file: <br /> <i>{file.name}</i>
+              Incorrect file type {file.type !== "" && <span translate="no">{file.type}</span>}.
+              Please select a JSON file.
             </div>,
             { type: "error" },
           );
-          if (fileInputRef.current) {
-            fileInputRef.current.value = "";
-          }
+          return;
         }
-      };
 
-      reader.readAsText(file);
-    }
-  };
+        const reader = new FileReader();
+
+        reader.onload = (e: ProgressEvent<FileReader>) => {
+          try {
+            const importedTasks = JSON.parse(e.target?.result as string) as Task[];
+
+            if (!Array.isArray(importedTasks)) {
+              showToast("Imported file has an invalid structure.", { type: "error" });
+              return;
+            }
+
+            /**
+             * TODO: write separate util function to check if task is not invalid
+             */
+
+            // Check if any imported task property exceeds the maximum length
+            const invalidTasks = importedTasks.filter((task) => {
+              const isInvalid =
+                (task.name && task.name.length > TASK_NAME_MAX_LENGTH) ||
+                (task.description && task.description.length > DESCRIPTION_MAX_LENGTH) ||
+                (task.category &&
+                  task.category.some((cat) => cat.name.length > CATEGORY_NAME_MAX_LENGTH));
+
+              return isInvalid;
+            });
+
+            if (invalidTasks.length > 0) {
+              const invalidTaskNames = invalidTasks.map((task) => task.name).join(", ");
+              console.error(
+                `These tasks cannot be imported due to exceeding maximum character lengths: ${invalidTaskNames}`,
+              );
+              showToast(
+                `These tasks cannot be imported due to exceeding maximum character lengths: ${invalidTaskNames}`,
+                { type: "error" },
+              );
+              return;
+            }
+
+            const isHexColor = (value: string): boolean => /^#[0-9A-Fa-f]{6}$/.test(value);
+
+            const isCategoryColorValid = (category: Category) =>
+              category.color && isHexColor(category.color);
+
+            const hasInvalidColors = importedTasks.some((task) => {
+              return (
+                (task.color && !isHexColor(task.color)) ||
+                (task.category && !task.category.every((cat) => isCategoryColorValid(cat)))
+              );
+            });
+
+            if (hasInvalidColors) {
+              showToast("Imported file contains tasks with invalid color formats.", {
+                type: "error",
+              });
+              return;
+            }
+
+            const maxFileSize = 50_000;
+            if (file.size > maxFileSize) {
+              showToast(`File size is too large (${file.size}/${maxFileSize})`, { type: "error" });
+              return;
+            }
+
+            // Update user.categories if imported categories don't exist
+            const updatedCategories = user.categories.slice(); // Create a copy of the existing categories
+
+            importedTasks.forEach((task) => {
+              if (task.category) {
+                task.category.forEach((importedCat) => {
+                  const existingCategory = updatedCategories.find(
+                    (cat) => cat.id === importedCat.id,
+                  );
+
+                  if (!existingCategory) {
+                    updatedCategories.push(importedCat);
+                  } else {
+                    // Replace the existing category with the imported one if the ID matches
+                    Object.assign(existingCategory, importedCat);
+                  }
+                });
+              } else {
+                console.log(`Task ${task.name} has no category`);
+              }
+            });
+
+            setUser((prevUser) => ({
+              ...prevUser,
+              categories: updatedCategories,
+            }));
+
+            const mergedTasks = [...user.tasks, ...importedTasks];
+            const uniqueTasks = mergedTasks.reduce((acc, task) => {
+              const existingTask = acc.find((t) => t.id === task.id);
+              if (existingTask) {
+                return acc.map((t) => (t.id === task.id ? task : t));
+              } else {
+                return [...acc, task];
+              }
+            }, [] as Task[]);
+
+            setUser((prevUser) => ({ ...prevUser, tasks: uniqueTasks }));
+
+            // Prepare the list of imported task names
+            const importedTaskNames = importedTasks.map((task) => task.name).join(", ");
+
+            // Display the alert with the list of imported task names
+            console.log(`Imported Tasks: ${importedTaskNames}`);
+
+            showToast(
+              <div>
+                Tasks Successfully Imported from <br />
+                <i translate="no" style={{ wordBreak: "break-all" }}>
+                  {file.name}
+                </i>
+                <ul>
+                  {importedTasks.map((task) => (
+                    <li key={task.id}>
+                      <ListContent>
+                        <Emoji unified={task.emoji || ""} size={20} emojiStyle={user.emojisStyle} />
+                        <span translate="no">{task.name}</span>
+                      </ListContent>
+                    </li>
+                  ))}
+                </ul>
+              </div>,
+              { dismissButton: true, type: "blank" },
+            );
+
+            if (fileInputRef.current) {
+              fileInputRef.current.value = "";
+            }
+          } catch (error) {
+            console.error(`Error parsing the imported file ${file.name}:`, error);
+            showToast(
+              <div style={{ wordBreak: "break-all" }}>
+                Error parsing the imported file: <br /> <i>{file.name}</i>
+              </div>,
+              { type: "error" },
+            );
+            if (fileInputRef.current) {
+              fileInputRef.current.value = "";
+            }
+          }
+        };
+
+        reader.readAsText(file);
+      }
+    },
+    [user.categories, user.emojisStyle, user.tasks, setUser],
+  );
 
   const handleImportFromLink = async (): Promise<void> => {
     try {
@@ -315,6 +321,22 @@ const Transfer = () => {
       handleImport(file);
     }
   };
+
+  // Experimental feature that allows the PWA to open JSON files directly from the file system
+  // and import tasks from the file when the app is launched with a JSON file.
+  useEffect(() => {
+    if (window.launchQueue && "setConsumer" in window.launchQueue) {
+      window.launchQueue.setConsumer((launchParams) => {
+        if (!launchParams.files?.length) return;
+
+        for (const fileHandle of launchParams.files) {
+          fileHandle.getFile().then((file) => {
+            handleImport(file);
+          });
+        }
+      });
+    }
+  }, [handleImport]);
 
   return (
     <>

@@ -125,28 +125,26 @@ export const CustomEmojiPicker = ({ emoji, setEmoji, color, name, type }: EmojiP
   // ‼ This feature works only in Chrome (Dev / Canary) version 127 or higher with some flags enabled
   // https://afficone.com/blog/window-ai-new-chrome-feature-api/
   async function useAI(): Promise<void> {
-    // TODO: make this a hook
-    // https://rebeccamdeprey.com/blog/a-react-hook-for-windowai-in-chrome
     const start = new Date().getTime();
     setIsAILoading(true);
     try {
       const sessionInstance: AILanguageModel = session || (await window.ai.languageModel.create());
 
-      // In the latest version of window.ai, responses can't be limited to a single emoji
+      // chrome://flags/#text-safety-classifier must be disabled to make this prompt work
       const response = await sessionInstance.prompt(
-        `Choose a single emoji that would be appropriate for the following task: ${name}.`,
+        `Pick one emoji that best fits the task: "${name}". Reply with the chosen emoji only, no text or explanation.`,
       );
 
       console.log("Full AI response:", response);
 
       // this doesn't split emojis into separate characters
       const emojiRegex =
-        /(\p{Extended_Pictographic}|\p{Regional_Indicator}{2}|\uD83C[\uDDE6-\uDDFF]{2})/gu;
+        /\p{RI}\p{RI}|\p{Emoji}(\p{EMod}+|\u{FE0F}\u{20E3}?|[\u{E0020}-\u{E007E}]+\u{E007F})?(\u{200D}\p{Emoji}(\p{EMod}+|\u{FE0F}\u{20E3}?|[\u{E0020}-\u{E007E}]+\u{E007F})?)+|\p{EPres}(\p{EMod}+|\u{FE0F}\u{20E3}?|[\u{E0020}-\u{E007E}]+\u{E007F})?|\p{Emoji}(\p{EMod}+|\u{FE0F}\u{20E3}?|[\u{E0020}-\u{E007E}]+\u{E007F})/gu;
 
       const extractedEmojis = response.trim().replace(/\*/g, "").match(emojiRegex) || [];
 
       // Remove duplicates
-      const uniqueEmojis = [...new Set(extractedEmojis)]; // TODO: add feature to let users choose which emoji to use
+      const uniqueEmojis = [...new Set(extractedEmojis)];
       console.log("Unique Emojis:", uniqueEmojis);
 
       if (uniqueEmojis.length === 0) {
@@ -274,6 +272,10 @@ export const CustomEmojiPicker = ({ emoji, setEmoji, color, name, type }: EmojiP
       );
     }
   };
+
+  useEffect(() => {
+    setShowEmojiPicker(false);
+  }, [user.settings.simpleEmojiPicker]);
 
   return (
     <>

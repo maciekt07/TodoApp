@@ -1,3 +1,4 @@
+//FIXME: refactor all of this
 /**
  * Converts a given date to a human-readable relative time string.
  *
