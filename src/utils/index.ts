@@ -1,5 +1,5 @@
 export { exportTasksToJson } from "./exportTasks";
-export { getFontColor, isDark } from "./colorUtils";
+export { getFontColor, isDark, isHexColor } from "./colorUtils";
 export { getRandomGreeting } from "./getRandomGreeting";
 export { systemInfo } from "./getSystemInfo";
 export { saveQRCode } from "./saveQRCode";

@@ -21,6 +21,7 @@ import {
   formatDate,
   generateUUID,
   getFontColor,
+  isHexColor,
   showToast,
   systemInfo,
 } from "../utils";
@@ -51,8 +52,6 @@ const SharePage = () => {
   const [userName, setUserName] = useState<string>("");
   const [error, setError] = useState<boolean>(false);
   const [errorDetails, setErrorDetails] = useState<string | undefined>();
-
-  const isHexColor = (value: string): boolean => /^#[0-9A-Fa-f]{6}$/.test(value);
 
   useEffect(() => {
     const handleTaskData = (decodedTask: string) => {

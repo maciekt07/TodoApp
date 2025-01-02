@@ -1,5 +1,21 @@
 import { ColorPalette } from "../../theme/themeConfig";
-import { getFontColor, isDark } from "../colorUtils";
+import { getFontColor, isDark, isHexColor } from "../colorUtils";
+
+describe("isHexColor", () => {
+  it("validates correct hex colors", () => {
+    expect(isHexColor("#FFFFFF")).toBe(true);
+    expect(isHexColor("#FFF")).toBe(true);
+    expect(isHexColor("#abc")).toBe(true);
+    expect(isHexColor("#123456")).toBe(true);
+  });
+
+  it("rejects incorrect hex colors", () => {
+    expect(isHexColor("FFFFFF")).toBe(false);
+    expect(isHexColor("#FFFF")).toBe(false);
+    expect(isHexColor("#GGGGGG")).toBe(false);
+    expect(isHexColor("#1234567")).toBe(false);
+  });
+});
 
 describe("getFontColor", () => {
   it("returns dark font color for bright backgrounds", () => {

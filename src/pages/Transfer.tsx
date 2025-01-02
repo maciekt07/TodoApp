@@ -11,7 +11,7 @@ import {
   IntegrationInstructionsRounded,
   Link,
 } from "@mui/icons-material";
-import { exportTasksToJson, showToast, systemInfo } from "../utils";
+import { exportTasksToJson, isHexColor, showToast, systemInfo } from "../utils";
 import { IconButton, Tooltip } from "@mui/material";
 import {
   CATEGORY_NAME_MAX_LENGTH,
@@ -145,8 +145,6 @@ const Transfer = () => {
               );
               return;
             }
-
-            const isHexColor = (value: string): boolean => /^#[0-9A-Fa-f]{6}$/.test(value);
 
             const isCategoryColorValid = (category: Category) =>
               category.color && isHexColor(category.color);

@@ -26,7 +26,7 @@ import { MAX_COLORS_IN_LIST } from "../constants";
 import { UserContext } from "../contexts/UserContext";
 import { ColorElement, DialogBtn, scale } from "../styles";
 import { ColorPalette } from "../theme/themeConfig";
-import { getFontColor, isDark, showToast } from "../utils";
+import { getFontColor, isDark, isHexColor, showToast } from "../utils";
 import { CustomDialogTitle } from "./DialogTitle";
 
 interface ColorPickerProps {
@@ -59,8 +59,6 @@ export const ColorPicker: React.FC<ColorPickerProps> = ({
   const colorElementRefs = useRef<Array<HTMLElement | null>>([]);
 
   const theme = useTheme();
-
-  const isHexColor = (value: string): boolean => /^#[0-9A-Fa-f]{6}$/.test(value);
 
   useEffect(() => {
     // Update the selected color when the color prop changes
