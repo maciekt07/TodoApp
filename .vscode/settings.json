@@ -1,6 +1,32 @@
 {
   "editor.defaultColorDecorators": "auto",
   "files.associations": {
-    "themeConfig.ts": "typescriptreact"
-  }
+    "themeConfig.ts": "typescriptreact" // make color picker visible in this file
+  },
+  // "material-icon-theme.files.associations": {
+  //   "*.styled.tsx": "palette"
+  // },
+  "material-icon-theme.files.customClones": [
+    {
+      "name": "emotion",
+      "base": "react",
+      "color": "pink-300",
+      "fileExtensions": ["styled.tsx"],
+      "fileNames": ["globalStyles.tsx"]
+    },
+    {
+      "name": "react",
+      "base": "typescript",
+      "color": "blue-500",
+      "fileNames": ["themeConfig.ts"]
+    }
+  ],
+  "material-icon-theme.folders.customClones": [
+    {
+      "name": "dev-dist",
+      "base": "dist",
+      "color": "green-800",
+      "folderNames": ["dev-dist"]
+    }
+  ]
 }
