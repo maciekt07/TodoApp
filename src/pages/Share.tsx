@@ -184,7 +184,7 @@ const SharePage = () => {
   };
 
   return (
-    <div>
+    <>
       <Home />
       <Dialog
         open
@@ -350,7 +350,7 @@ const SharePage = () => {
           </>
         )}
       </Dialog>
-    </div>
+    </>
   );
 };
 

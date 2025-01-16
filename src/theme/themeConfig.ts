@@ -22,10 +22,10 @@ export const themeConfig: { [key: string]: { primaryColor: string; secondaryColo
   Blue: {
     primaryColor: "#2a93d5",
   },
-  "Minty Fresh": {
-    primaryColor: "#26C6DA",
-    secondaryColor: "#E0F7FA",
-  },
+  // "Minty Fresh": {
+  //   primaryColor: "#26C6DA",
+  //   secondaryColor: "#E0F7FA",
+  // },
   Pink: {
     primaryColor: "#e5369a",
   },

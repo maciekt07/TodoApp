@@ -104,6 +104,8 @@ The app will now be running at [http://localhost:5173/](http://localhost:5173/).
 
 ## 📷 Screenshots
 
+<img src="https://raw.githubusercontent.com/maciekt07/TodoApp/main/screenshots/settings.png" width="500px" />
+
 <img src="https://raw.githubusercontent.com/maciekt07/TodoApp/main/screenshots/ss1.png" width="300px" />
 <img src="https://raw.githubusercontent.com/maciekt07/TodoApp/main/screenshots/ss2.png" width="300px" />
 

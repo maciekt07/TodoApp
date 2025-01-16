@@ -42,7 +42,7 @@ import { AILanguageModel } from "../types/ai";
 const EmojiPicker = lazy(() => import("emoji-picker-react"));
 interface EmojiPickerProps {
   emoji?: string;
-  setEmoji: Dispatch<SetStateAction<string | null>>;
+  setEmoji: Dispatch<SetStateAction<string | null>>; // TODO: use onEmojiChange instead
   color?: string;
   name?: string;
   type?: "task" | "category";

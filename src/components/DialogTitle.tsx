@@ -9,6 +9,7 @@ interface CustomDialogTitleProps extends MuiDialogTitleProps {
   title: string;
   subTitle?: string;
   icon?: JSX.Element;
+  removeDivider?: boolean;
   onClose?: () => void;
 }
 
@@ -16,6 +17,7 @@ export const CustomDialogTitle = ({
   title,
   subTitle,
   icon,
+  removeDivider,
   onClose,
   ...props
 }: CustomDialogTitleProps) => {
@@ -33,7 +35,7 @@ export const CustomDialogTitle = ({
           {subTitle && <SubTitle>{subTitle}</SubTitle>}
         </TextContainer>
       </TitleContainer>
-      <StyledDivider />
+      {!removeDivider && <StyledDivider />}
     </DialogTitle>
   );
 };

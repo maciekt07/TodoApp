@@ -265,9 +265,6 @@ const UnstyledTab = ({ ...props }: TabProps) => <Tab iconPosition="start" {...pr
 const StyledTab = styled(UnstyledTab)`
   border-radius: 12px 12px 0 0;
   width: 50%;
-  .MuiTabs-indicator {
-    border-radius: 24px;
-  }
 `;
 
 const ShareField = styled(TextField)`

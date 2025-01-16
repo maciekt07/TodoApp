@@ -151,6 +151,7 @@ export const GlobalStyles = () => {
         .epr-body,
         .MuiDialogContent-root,
         .MuiDrawer-paper,
+        .customScrollbar,
         textarea {
           ::-webkit-scrollbar {
             width: 8px;
@@ -215,10 +216,10 @@ export const GlobalStyles = () => {
         .MuiCircularProgress-circle {
           stroke-linecap: round !important;
         }
+        /* 
         .MuiTabs-indicator {
           border-radius: 24px !important;
-          height: 3px !important;
-        }
+        } */
         .MuiAccordion-root {
           &::before {
             display: none;
