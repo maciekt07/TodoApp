@@ -43,7 +43,7 @@ import {
 } from "@mui/material";
 import { Emoji, EmojiStyle } from "emoji-picker-react";
 import { useContext, useEffect, useState } from "react";
-import { CustomDialogTitle } from "..";
+import { CustomDialogTitle, TabGroupProvider, TabPanel } from "..";
 import { UserContext } from "../../contexts/UserContext";
 import CustomRadioGroup from "./CustomRadioGroup";
 import { useResponsiveDisplay } from "../../hooks/useResponsiveDisplay";
@@ -56,26 +56,28 @@ import { showToast, systemInfo } from "../../utils";
 import CustomSwitch from "./CustomSwitch";
 import { defaultUser } from "../../constants/defaultUser";
 
+const OPTION_ICON_SIZE = 32;
+
 const darkModeOptions: OptionItem<DarkModeOptions>[] = [
   {
     label: "Auto",
     value: "auto",
-    icon: <BrightnessAutoRounded sx={{ fontSize: "32px" }} />,
+    icon: <BrightnessAutoRounded sx={{ fontSize: OPTION_ICON_SIZE }} />,
   },
   {
     label: "System",
     value: "system",
-    icon: <PersonalVideoRounded sx={{ fontSize: "32px" }} />,
+    icon: <PersonalVideoRounded sx={{ fontSize: OPTION_ICON_SIZE }} />,
   },
   {
     label: "Light",
     value: "light",
-    icon: <LightModeRounded sx={{ fontSize: "32px" }} />,
+    icon: <LightModeRounded sx={{ fontSize: OPTION_ICON_SIZE }} />,
   },
   {
     label: "Dark",
     value: "dark",
-    icon: <DarkModeRounded sx={{ fontSize: "32px" }} />,
+    icon: <DarkModeRounded sx={{ fontSize: OPTION_ICON_SIZE }} />,
   },
 ];
 
@@ -88,7 +90,7 @@ const emojiStyles: OptionItem<EmojiStyle>[] = [
 ].map(({ label, value }) => ({
   label,
   value,
-  icon: <Emoji emojiStyle={value} unified="1f60e" size={32} />,
+  icon: <Emoji emojiStyle={value} unified="1f60e" size={OPTION_ICON_SIZE} />,
 }));
 
 interface SettingsProps {
@@ -162,12 +164,6 @@ export const SettingsDialog = ({ open, onClose }: SettingsProps) => {
   useEffect(() => {
     const availableVoices = getAvailableVoices();
     setAvailableVoices(availableVoices ?? []);
-
-    // const getStorageUsage = async () => {
-    //   const storageUsage = await navigator.storage.estimate();
-    //   setStorageUsage(storageUsage.usage);
-    // };
-    // getStorageUsage();
   }, []);
 
   // Ensure the voices are loaded before calling getAvailableVoices
@@ -175,6 +171,7 @@ export const SettingsDialog = ({ open, onClose }: SettingsProps) => {
     const availableVoices = getAvailableVoices();
     setAvailableVoices(availableVoices ?? []);
   };
+
   const handleVoiceChange = (event: SelectChangeEvent<unknown>) => {
     // Handle the selected voice
     const selectedVoice = availableVoices.find(
@@ -196,6 +193,7 @@ export const SettingsDialog = ({ open, onClose }: SettingsProps) => {
     (a, b) =>
       Number(b.lang.startsWith(navigator.language)) - Number(a.lang.startsWith(navigator.language)),
   );
+
   const getLanguageRegion = (lang: string) => {
     if (!lang) {
       // If lang is undefined or falsy, return an empty string
@@ -300,294 +298,272 @@ export const SettingsDialog = ({ open, onClose }: SettingsProps) => {
           className="customScrollbar"
           sx={{ flex: 1, p: 0, m: isMobile ? "0 12px" : "0 20px 0 20px", overflowY: "auto" }}
         >
-          <TabPanel value={tabValue} index={0}>
-            <TabHeading>Appearance</TabHeading>
-            <SectionHeading>Dark Mode Options</SectionHeading>
+          <TabGroupProvider name="settings">
+            <TabPanel value={tabValue} index={0}>
+              <TabHeading>Appearance</TabHeading>
+              <SectionHeading>Dark Mode Options</SectionHeading>
 
-            <CustomRadioGroup
-              options={darkModeOptions}
-              value={darkModeValue}
-              onChange={(val) => {
-                setDarkModeValue(val);
-                setUser((prevUser) => ({
-                  ...prevUser,
-                  darkmode: val,
-                }));
-              }}
-            />
-            <SectionHeading>Theme Selection</SectionHeading>
-            <StyledSelect
-              value={user.theme}
-              onChange={handleAppThemeChange}
-              IconComponent={ExpandMoreRounded}
-            >
-              <StyledMenuItem value="system">
-                <PersonalVideoRounded />
-                &nbsp; System ({systemTheme === "dark" ? Themes[0].name : Themes[1].name})
-              </StyledMenuItem>
-              {Themes.map((theme) => (
-                <StyledMenuItem key={theme.name} value={theme.name}>
-                  <ColorElement
-                    clr={theme.MuiTheme.palette.primary.main}
-                    secondClr={theme.MuiTheme.palette.secondary.main}
-                    aria-label={`Change theme - ${theme.name}`}
-                    size="24px"
-                    disableHover
-                  />
-                  &nbsp;
-                  {theme.name}
-                </StyledMenuItem>
-              ))}
-            </StyledSelect>
-            <CustomSwitch
-              settingKey="enableGlow"
-              header="Enable Glow Effect"
-              text="Activate a subtle glow effect on tasks to make them more visually"
-            />
-          </TabPanel>
-          <TabPanel value={tabValue} index={1}>
-            <TabHeading>General Settings</TabHeading>
-            <CustomSwitch
-              settingKey="enableCategories"
-              header="Enable Categories"
-              text="
-              Enable categories to organize your tasks. Disabling this will remove all categories and
-              ungroup your tasks."
-            />
-            <CustomSwitch
-              settingKey="appBadge"
-              header="App Badge"
-              text="Show a badge on the PWA icon to indicate the number of not done tasks."
-            />
-            <CustomSwitch
-              settingKey="doneToBottom"
-              header="Completed Tasks at Bottom"
-              text="Move completed tasks to the bottom of the list to keep your active tasks more visible."
-            />
-          </TabPanel>
-          <TabPanel value={tabValue} index={2}>
-            <TabHeading>Emoji Settings</TabHeading>
-            <SectionHeading>Emoji Style</SectionHeading>
-            <CustomRadioGroup
-              options={emojiStyles}
-              value={emojiStyleValue}
-              onChange={(val) => {
-                setEmojiStyleValue(val);
-                setUser((prevUser) => ({
-                  ...prevUser,
-                  emojisStyle: val,
-                }));
-              }}
-            />
-            <SectionHeading>Simple Emoji Picker</SectionHeading>
-            <CustomSwitch
-              settingKey="simpleEmojiPicker"
-              header="Enable simple emoji picker"
-              text="
-              Use a simple emoji picker with only recently used emojis. This will make the emoji picker load faster."
-            />
-
-            <SectionHeading>Emoji Data</SectionHeading>
-            <SectionDescription> Clear data about recently used emojis</SectionDescription>
-            <Button
-              variant="contained"
-              color="error"
-              onClick={() => {
-                localStorage.removeItem("epr_suggested");
-                showToast("Removed emoji data.");
-              }}
-            >
-              <DeleteRounded /> &nbsp; Clear Emoji Data
-            </Button>
-          </TabPanel>
-          <TabPanel value={tabValue} index={3}>
-            <TabHeading>Read Aloud Settings</TabHeading>
-            <SectionHeading>Play Sample</SectionHeading>
-            <Button
-              variant="contained"
-              onClick={() => {
-                window.speechSynthesis.cancel();
-                if (isSampleReading) {
-                  window.speechSynthesis.pause();
-                } else {
-                  const textToRead =
-                    "This is a sample text for testing the speech synthesis feature.";
-                  const utterance = new SpeechSynthesisUtterance(textToRead);
-                  const voices = window.speechSynthesis.getVoices();
-                  utterance.voice =
-                    voices.find((voice) => voice.name === user.settings.voice) || voices[0];
-
-                  utterance.volume = voiceVolume;
-                  utterance.rate = 1;
-
-                  utterance.onend = () => {
-                    setIsSampleReading(false);
-                  };
-
-                  window.speechSynthesis.speak(utterance);
-                }
-
-                setIsSampleReading((prev) => !prev);
-              }}
-            >
-              {isSampleReading ? <StopCircleRounded /> : <RecordVoiceOverRounded />} &nbsp; Play
-              Sample
-            </Button>
-
-            <SectionHeading>Voice Selection</SectionHeading>
-            {filteredVoices.length !== 0 ? (
-              <StyledSelect
-                value={user.settings.voice}
-                variant="outlined"
-                onChange={handleVoiceChange}
-                translate="no"
-                IconComponent={ExpandMoreRounded}
-                MenuProps={{
-                  PaperProps: {
-                    style: {
-                      maxHeight: 500,
-                      padding: "2px 6px",
-                    },
-                  },
+              <CustomRadioGroup
+                options={darkModeOptions}
+                value={darkModeValue}
+                onChange={(val) => {
+                  setDarkModeValue(val);
+                  setUser((prevUser) => ({
+                    ...prevUser,
+                    darkmode: val,
+                  }));
                 }}
+              />
+              <SectionHeading>Theme Selection</SectionHeading>
+              <StyledSelect
+                value={user.theme}
+                onChange={handleAppThemeChange}
+                IconComponent={ExpandMoreRounded}
               >
-                {filteredVoices.map((voice) => (
-                  <MenuItem
-                    key={voice.name}
-                    value={voice.name}
-                    translate="no"
-                    sx={{
-                      padding: "10px",
-                      borderRadius: "8px",
-                    }}
-                  >
-                    {voice.name.startsWith("Google") && <Google />}
-                    {voice.name.startsWith("Microsoft") && <Microsoft />} &nbsp;{" "}
-                    {/* Remove Google or Microsoft at the beginning and anything within parentheses */}
-                    {voice.name.replace(/^(Google|Microsoft)\s*|\([^()]*\)/gi, "")} &nbsp;
-                    {/* windows does not display flag emotes correctly */}
-                    {!/Windows NT 10/.test(navigator.userAgent) ? (
-                      <Chip
-                        sx={{ fontWeight: 500, padding: "4px" }}
-                        label={getLanguageRegion(voice.lang || "")}
-                        icon={
-                          <span style={{ fontSize: "16px" }}>
-                            {getFlagEmoji(voice.lang.split("-")[1] || "")}
-                          </span>
-                        }
-                      />
-                    ) : (
-                      <span style={{ fontWeight: 500 }}>{getLanguageRegion(voice.lang || "")}</span>
-                    )}
-                    {voice.default && systemInfo.os !== "iOS" && systemInfo.os !== "macOS" && (
-                      <span style={{ fontWeight: 600 }}>&nbsp;Default</span>
-                    )}
-                  </MenuItem>
+                <StyledMenuItem value="system">
+                  <PersonalVideoRounded />
+                  &nbsp; System ({systemTheme === "dark" ? Themes[0].name : Themes[1].name})
+                </StyledMenuItem>
+                {Themes.map((theme) => (
+                  <StyledMenuItem key={theme.name} value={theme.name}>
+                    <ColorElement
+                      clr={theme.MuiTheme.palette.primary.main}
+                      secondClr={theme.MuiTheme.palette.secondary.main}
+                      aria-label={`Change theme - ${theme.name}`}
+                      size="24px"
+                      disableHover
+                    />
+                    &nbsp;
+                    {theme.name}
+                  </StyledMenuItem>
                 ))}
               </StyledSelect>
-            ) : (
-              <NoVoiceStyles>
-                There are no voice styles available.
-                <Tooltip title="Refetch voices">
-                  <IconButton
-                    size="large"
-                    onClick={() => {
-                      setAvailableVoices(getAvailableVoices() ?? []);
-                    }}
-                  >
-                    <CachedRounded fontSize="large" />
-                  </IconButton>
-                </Tooltip>
-              </NoVoiceStyles>
-            )}
-            <SectionHeading>Voice Volume</SectionHeading>
-            <div style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
-              <VolumeSlider spacing={2} direction="row" alignItems="center">
-                <Tooltip title={voiceVolume ? "Mute" : "Unmute"} onClick={handleMuteClick}>
-                  <IconButton>
-                    {voiceVolume === 0 ? (
-                      <VolumeOff />
-                    ) : voiceVolume <= 0.4 ? (
-                      <VolumeDown />
-                    ) : (
-                      <VolumeUp />
-                    )}
-                  </IconButton>
-                </Tooltip>
-                <Slider
-                  sx={{
-                    width: "100%",
-                  }}
-                  value={voiceVolume}
-                  onChange={(_event, value) => setVoiceVolume(value as number)}
-                  onChangeCommitted={handleVoiceVolCommitChange}
-                  min={0}
-                  max={1}
-                  step={0.01}
-                  aria-label="Volume Slider"
-                  valueLabelFormat={() => {
-                    const vol = Math.floor(voiceVolume * 100);
-                    return vol === 0 ? "Muted" : vol + "%";
-                  }}
-                  valueLabelDisplay="auto"
-                />
-              </VolumeSlider>
-            </div>
-          </TabPanel>
-          <TabPanel value={tabValue} index={4}>
-            <TabHeading>About Todo App</TabHeading>
-            <Typography variant="body1" sx={{ mb: 2 }}>
-              📝 A simple todo app project made using React.js and MUI with many features, including
-              sharing tasks via link, theme customization and offline usage as a PWA.
-            </Typography>
-            <img
-              src="https://raw.githubusercontent.com/maciekt07/TodoApp/main/screenshots/baner.png"
-              style={{ width: "100%", height: "auto" }}
-              alt="Todo App Screenshot"
-            />
-            <Typography variant="caption" sx={{ display: "block", mt: 2 }}>
-              Created by <Link href="https://github.com/maciekt07">maciekt07</Link> <br />
-              Explore the project on GitHub:{" "}
-              <Link
-                href="https://github.com/maciekt07/TodoApp"
-                target="_blank"
-                rel="noopener noreferrer"
+              <CustomSwitch
+                settingKey="enableGlow"
+                header="Enable Glow Effect"
+                text="Activate a subtle glow effect on tasks to make them more visually"
+              />
+            </TabPanel>
+            <TabPanel value={tabValue} index={1}>
+              <TabHeading>General Settings</TabHeading>
+              <CustomSwitch
+                settingKey="enableCategories"
+                header="Enable Categories"
+                text="
+              Enable categories to organize your tasks. Disabling this will remove all categories and
+              ungroup your tasks."
+              />
+              <CustomSwitch
+                settingKey="appBadge"
+                header="App Badge"
+                text="Show a badge on the PWA icon to indicate the number of not done tasks."
+              />
+              <CustomSwitch
+                settingKey="doneToBottom"
+                header="Completed Tasks at Bottom"
+                text="Move completed tasks to the bottom of the list to keep your active tasks more visible."
+              />
+            </TabPanel>
+            <TabPanel value={tabValue} index={2}>
+              <TabHeading>Emoji Settings</TabHeading>
+              <SectionHeading>Emoji Style</SectionHeading>
+              <CustomRadioGroup
+                options={emojiStyles}
+                value={emojiStyleValue}
+                onChange={(val) => {
+                  setEmojiStyleValue(val);
+                  setUser((prevUser) => ({
+                    ...prevUser,
+                    emojisStyle: val,
+                  }));
+                }}
+              />
+              <SectionHeading>Simple Emoji Picker</SectionHeading>
+              <CustomSwitch
+                settingKey="simpleEmojiPicker"
+                header="Enable simple emoji picker"
+                text="
+              Use a simple emoji picker with only recently used emojis. This will make the emoji picker load faster."
+              />
+
+              <SectionHeading>Emoji Data</SectionHeading>
+              <SectionDescription> Clear data about recently used emojis</SectionDescription>
+              <Button
+                variant="contained"
+                color="error"
+                onClick={() => {
+                  localStorage.removeItem("epr_suggested");
+                  showToast("Removed emoji data.");
+                }}
               >
-                Todo App Repository
-              </Link>
-            </Typography>
-          </TabPanel>
+                <DeleteRounded /> &nbsp; Clear Emoji Data
+              </Button>
+            </TabPanel>
+            <TabPanel value={tabValue} index={3}>
+              <TabHeading>Read Aloud Settings</TabHeading>
+              <SectionHeading>Play Sample</SectionHeading>
+              <Button
+                variant="contained"
+                onClick={() => {
+                  window.speechSynthesis.cancel();
+                  if (isSampleReading) {
+                    window.speechSynthesis.pause();
+                  } else {
+                    const textToRead =
+                      "This is a sample text for testing the speech synthesis feature.";
+                    const utterance = new SpeechSynthesisUtterance(textToRead);
+                    const voices = window.speechSynthesis.getVoices();
+                    utterance.voice =
+                      voices.find((voice) => voice.name === user.settings.voice) || voices[0];
+
+                    utterance.volume = voiceVolume;
+                    utterance.rate = 1;
+
+                    utterance.onend = () => {
+                      setIsSampleReading(false);
+                    };
+
+                    window.speechSynthesis.speak(utterance);
+                  }
+
+                  setIsSampleReading((prev) => !prev);
+                }}
+              >
+                {isSampleReading ? <StopCircleRounded /> : <RecordVoiceOverRounded />} &nbsp; Play
+                Sample
+              </Button>
+
+              <SectionHeading>Voice Selection</SectionHeading>
+              {filteredVoices.length !== 0 ? (
+                <StyledSelect
+                  value={user.settings.voice}
+                  variant="outlined"
+                  onChange={handleVoiceChange}
+                  translate="no"
+                  IconComponent={ExpandMoreRounded}
+                  MenuProps={{
+                    PaperProps: {
+                      style: {
+                        maxHeight: 500,
+                        padding: "2px 6px",
+                      },
+                    },
+                  }}
+                >
+                  {filteredVoices.map((voice) => (
+                    <MenuItem
+                      key={voice.name}
+                      value={voice.name}
+                      translate="no"
+                      sx={{
+                        padding: "10px",
+                        borderRadius: "8px",
+                      }}
+                    >
+                      {voice.name.startsWith("Google") && <Google />}
+                      {voice.name.startsWith("Microsoft") && <Microsoft />} &nbsp;{" "}
+                      {/* Remove Google or Microsoft at the beginning and anything within parentheses */}
+                      {voice.name.replace(/^(Google|Microsoft)\s*|\([^()]*\)/gi, "")} &nbsp;
+                      {/* windows does not display flag emotes correctly */}
+                      {!/Windows NT 10/.test(navigator.userAgent) ? (
+                        <Chip
+                          sx={{ fontWeight: 500, padding: "4px" }}
+                          label={getLanguageRegion(voice.lang || "")}
+                          icon={
+                            <span style={{ fontSize: "16px" }}>
+                              {getFlagEmoji(voice.lang.split("-")[1] || "")}
+                            </span>
+                          }
+                        />
+                      ) : (
+                        <span style={{ fontWeight: 500 }}>
+                          {getLanguageRegion(voice.lang || "")}
+                        </span>
+                      )}
+                      {voice.default && systemInfo.os !== "iOS" && systemInfo.os !== "macOS" && (
+                        <span style={{ fontWeight: 600 }}>&nbsp;Default</span>
+                      )}
+                    </MenuItem>
+                  ))}
+                </StyledSelect>
+              ) : (
+                <NoVoiceStyles>
+                  There are no voice styles available.
+                  <Tooltip title="Refetch voices">
+                    <IconButton
+                      size="large"
+                      onClick={() => {
+                        setAvailableVoices(getAvailableVoices() ?? []);
+                      }}
+                    >
+                      <CachedRounded fontSize="large" />
+                    </IconButton>
+                  </Tooltip>
+                </NoVoiceStyles>
+              )}
+              <SectionHeading>Voice Volume</SectionHeading>
+              <div style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
+                <VolumeSlider spacing={2} direction="row" alignItems="center">
+                  <Tooltip title={voiceVolume ? "Mute" : "Unmute"} onClick={handleMuteClick}>
+                    <IconButton>
+                      {voiceVolume === 0 ? (
+                        <VolumeOff />
+                      ) : voiceVolume <= 0.4 ? (
+                        <VolumeDown />
+                      ) : (
+                        <VolumeUp />
+                      )}
+                    </IconButton>
+                  </Tooltip>
+                  <Slider
+                    sx={{
+                      width: "100%",
+                    }}
+                    value={voiceVolume}
+                    onChange={(_event, value) => setVoiceVolume(value as number)}
+                    onChangeCommitted={handleVoiceVolCommitChange}
+                    min={0}
+                    max={1}
+                    step={0.01}
+                    aria-label="Volume Slider"
+                    valueLabelFormat={() => {
+                      const vol = Math.floor(voiceVolume * 100);
+                      return vol === 0 ? "Muted" : vol + "%";
+                    }}
+                    valueLabelDisplay="auto"
+                  />
+                </VolumeSlider>
+              </div>
+            </TabPanel>
+            <TabPanel value={tabValue} index={4}>
+              <TabHeading>About Todo App</TabHeading>
+              <Typography variant="body1" sx={{ mb: 2 }}>
+                📝 A simple todo app project made using React.js and MUI with many features,
+                including sharing tasks via link, theme customization and offline usage as a PWA.
+              </Typography>
+              <img
+                src="https://raw.githubusercontent.com/maciekt07/TodoApp/main/screenshots/baner.png"
+                style={{ width: "100%", height: "auto" }}
+                alt="Todo App Screenshot"
+              />
+              <Typography variant="caption" sx={{ display: "block", mt: 2 }}>
+                Created by <Link href="https://github.com/maciekt07">maciekt07</Link> <br />
+                Explore the project on GitHub:{" "}
+                <Link
+                  href="https://github.com/maciekt07/TodoApp"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  Todo App Repository
+                </Link>
+              </Typography>
+            </TabPanel>
+          </TabGroupProvider>
         </Box>
       </DialogContent>
     </Dialog>
   );
 };
-
-interface TabPanelProps {
-  children?: React.ReactNode;
-  index: number;
-  value: number;
-}
-
-function TabPanel(props: TabPanelProps) {
-  const { children, value, index, ...other } = props;
-
-  return (
-    <div
-      role="tabpanel"
-      hidden={value !== index}
-      id={`vertical-tabpanel-${index}`}
-      aria-labelledby={`vertical-tab-${index}`}
-      {...other}
-    >
-      {value === index && (
-        <Box>
-          <Typography>{children}</Typography>
-        </Box>
-      )}
-    </div>
-  );
-}
 
 function a11yProps(index: number) {
   return {

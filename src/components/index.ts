@@ -13,3 +13,4 @@ export { TaskIcon } from "./TaskIcon";
 export { Loading } from "./Loading";
 export { CustomDialogTitle } from "./DialogTitle";
 export { LogoutDialog } from "./LogoutDialog";
+export { TabPanel, TabGroupProvider } from "./TabPanel";

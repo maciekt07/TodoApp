@@ -17,7 +17,6 @@ import {
   TabProps,
   Tabs,
   TextField,
-  Typography,
 } from "@mui/material";
 import { CustomDialogTitle } from "../DialogTitle";
 import {
@@ -32,6 +31,7 @@ import { DialogBtn } from "../../styles";
 import styled from "@emotion/styled";
 import QRCode from "react-qr-code";
 import LZString from "lz-string";
+import { TabGroupProvider, TabPanel } from "..";
 
 interface ShareDialogProps {
   open: boolean;
@@ -146,55 +146,57 @@ export const ShareDialog = ({ open, onClose, selectedTaskId, selectedTask }: Sha
           <StyledTab label="Link" icon={<LinkRounded />} />
           <StyledTab label="QR Code" icon={<QrCode2Rounded />} />
         </Tabs>
-        <CustomTabPanel value={shareTabVal} index={0}>
-          <ShareField
-            value={generateShareableLink(selectedTaskId, name || "User")}
-            fullWidth
-            variant="outlined"
-            label="Shareable Link"
-            InputProps={{
-              readOnly: true,
-              startAdornment: (
-                <InputAdornment position="start">
-                  <LinkRounded sx={{ ml: "8px" }} />
-                </InputAdornment>
-              ),
-              endAdornment: (
-                <InputAdornment position="end">
-                  <Button
-                    onClick={handleCopyToClipboard}
-                    sx={{ p: "12px", borderRadius: "14px", mr: "4px" }}
-                  >
-                    <ContentCopyRounded /> &nbsp; Copy
-                  </Button>
-                </InputAdornment>
-              ),
-            }}
-          />
-        </CustomTabPanel>
-        <CustomTabPanel value={shareTabVal} index={1}>
-          <QRCodeContainer>
-            <QRCode
-              id="QRCodeShare"
+        <TabGroupProvider name="share">
+          <TabPanel value={shareTabVal} index={0}>
+            <ShareField
               value={generateShareableLink(selectedTaskId, name || "User")}
-              size={400}
-            />
-          </QRCodeContainer>
-          <Box
-            sx={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-            }}
-          >
-            <DownloadQrCodeBtn
+              fullWidth
               variant="outlined"
-              onClick={() => saveQRCode(selectedTask.name || "")}
+              label="Shareable Link"
+              InputProps={{
+                readOnly: true,
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <LinkRounded sx={{ ml: "8px" }} />
+                  </InputAdornment>
+                ),
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <Button
+                      onClick={handleCopyToClipboard}
+                      sx={{ p: "12px", borderRadius: "14px", mr: "4px" }}
+                    >
+                      <ContentCopyRounded /> &nbsp; Copy
+                    </Button>
+                  </InputAdornment>
+                ),
+              }}
+            />
+          </TabPanel>
+          <TabPanel value={shareTabVal} index={1}>
+            <QRCodeContainer>
+              <QRCode
+                id="QRCodeShare"
+                value={generateShareableLink(selectedTaskId, name || "User")}
+                size={400}
+              />
+            </QRCodeContainer>
+            <Box
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
             >
-              <DownloadRounded /> &nbsp; Download QR Code
-            </DownloadQrCodeBtn>
-          </Box>
-        </CustomTabPanel>
+              <DownloadQrCodeBtn
+                variant="outlined"
+                onClick={() => saveQRCode(selectedTask.name || "")}
+              >
+                <DownloadRounded /> &nbsp; Download QR Code
+              </DownloadQrCodeBtn>
+            </Box>
+          </TabPanel>
+        </TabGroupProvider>
         <Alert severity="info" sx={{ mt: "20px" }}>
           <AlertTitle>Share Your Task</AlertTitle>
           Copy the link to share manually or use the share button to send it via other apps.
@@ -209,27 +211,7 @@ export const ShareDialog = ({ open, onClose, selectedTaskId, selectedTask }: Sha
     </Dialog>
   );
 };
-interface TabPanelProps {
-  children?: React.ReactNode;
-  index: number;
-  value: number;
-}
-const CustomTabPanel = ({ children, value, index }: TabPanelProps) => {
-  return (
-    <div
-      role="tabpanel"
-      hidden={value !== index}
-      id={`share-tabpanel-${index}`}
-      aria-labelledby={`share-tab-${index}`}
-    >
-      {value === index && (
-        <Box>
-          <Typography>{children}</Typography>
-        </Box>
-      )}
-    </div>
-  );
-};
+
 const ShareTaskChip = styled(Chip)<{ clr: string }>`
   background: ${({ clr }) => clr};
   color: ${({ clr }) => getFontColor(clr)};
