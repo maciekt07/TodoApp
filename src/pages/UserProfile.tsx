@@ -186,7 +186,7 @@ const UserProfile = () => {
         />
         <DialogContent>
           <TextField
-            autoFocus
+            // autoFocus
             label="Link to profile picture"
             placeholder="Enter link to profile picture..."
             sx={{ my: "8px", width: "100%" }}
@@ -211,6 +211,25 @@ const UserProfile = () => {
               ),
             }}
           />
+
+          {/*
+          
+        TODO: add feature to upload image from file and save it to IndexedDB
+          <Divider>
+            <span style={{ opacity: 0.8 }}>or</span>
+          </Divider>
+
+          <input accept="image/*" id="upload-pfp" type="file" style={{ display: "none" }} />
+          <label htmlFor="upload-pfp">
+            <Button
+              component="span"
+              variant="outlined"
+              fullWidth
+              sx={{ my: "8px" }}
+            >
+              <UploadRounded /> &nbsp; Upload from file
+            </Button>
+          </label> */}
 
           <br />
           {profilePicture !== null && (

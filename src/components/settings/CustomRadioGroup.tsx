@@ -38,6 +38,8 @@ const CustomRadioGroup = <T extends string>({
 
 export default CustomRadioGroup;
 
+// TODO: make options full width
+
 const StyledRadioGroup = styled(RadioGroup)`
   display: flex;
   flex-direction: row;
@@ -71,9 +73,9 @@ const StyledLabelBox = styled(Box)<{ selected: boolean }>`
   user-select: none;
   & .epr-emoji-native {
     width: unset !important;
-
     height: unset !important;
   }
+
   &:hover {
     background-color: ${({ theme, selected }) =>
       selected ? theme.primary : "rgba(0, 0, 0, 0.08)"};

@@ -1,4 +1,3 @@
-import styled from "@emotion/styled";
 import {
   BrightnessAutoRounded,
   CachedRounded,
@@ -29,13 +28,8 @@ import {
   IconButton,
   Link,
   MenuItem,
-  Select,
   SelectChangeEvent,
-  SelectProps,
   Slider,
-  Stack,
-  Tab,
-  TabProps,
   Tabs,
   Tooltip,
   Typography,
@@ -44,17 +38,27 @@ import {
 import { Emoji, EmojiStyle } from "emoji-picker-react";
 import { useContext, useEffect, useState } from "react";
 import { CustomDialogTitle, TabGroupProvider, TabPanel } from "..";
+import { defaultUser } from "../../constants/defaultUser";
 import { UserContext } from "../../contexts/UserContext";
-import CustomRadioGroup from "./CustomRadioGroup";
 import { useResponsiveDisplay } from "../../hooks/useResponsiveDisplay";
 import { useSystemTheme } from "../../hooks/useSystemTheme";
-import type { OptionItem } from "./settingsTypes";
 import { ColorElement } from "../../styles";
 import { Themes } from "../../theme/createTheme";
 import type { DarkModeOptions } from "../../types/user";
 import { showToast, systemInfo } from "../../utils";
+import CustomRadioGroup from "./CustomRadioGroup";
 import CustomSwitch from "./CustomSwitch";
-import { defaultUser } from "../../constants/defaultUser";
+import {
+  NoVoiceStyles,
+  SectionDescription,
+  SectionHeading,
+  StyledMenuItem,
+  StyledSelect,
+  StyledTab,
+  TabHeading,
+  VolumeSlider,
+} from "./settingsDialog.styled";
+import type { OptionItem } from "./settingsTypes";
 
 const OPTION_ICON_SIZE = 32;
 
@@ -133,6 +137,12 @@ export const SettingsDialog = ({ open, onClose }: SettingsProps) => {
       }
     }
   }, [muiTheme.palette.mode, muiTheme.palette.secondary.main, open, user.theme, user.darkmode]);
+
+  // Cancel speech synthesis when the voice settings are changed
+  useEffect(() => {
+    window.speechSynthesis.cancel();
+    setIsSampleReading(false);
+  }, [user.settings.voiceVolume, user.settings.voice]);
 
   const handleAppThemeChange = (event: SelectChangeEvent<unknown>) => {
     const selectedTheme = event.target.value as string;
@@ -302,7 +312,6 @@ export const SettingsDialog = ({ open, onClose }: SettingsProps) => {
             <TabPanel value={tabValue} index={0}>
               <TabHeading>Appearance</TabHeading>
               <SectionHeading>Dark Mode Options</SectionHeading>
-
               <CustomRadioGroup
                 options={darkModeOptions}
                 value={darkModeValue}
@@ -415,17 +424,13 @@ export const SettingsDialog = ({ open, onClose }: SettingsProps) => {
                     const voices = window.speechSynthesis.getVoices();
                     utterance.voice =
                       voices.find((voice) => voice.name === user.settings.voice) || voices[0];
-
                     utterance.volume = voiceVolume;
                     utterance.rate = 1;
-
                     utterance.onend = () => {
                       setIsSampleReading(false);
                     };
-
                     window.speechSynthesis.speak(utterance);
                   }
-
                   setIsSampleReading((prev) => !prev);
                 }}
               >
@@ -571,103 +576,3 @@ function a11yProps(index: number) {
     "aria-controls": `vertical-tabpanel-${index}`,
   };
 }
-const TabHeading = styled(Typography)`
-  font-size: 20px;
-  font-weight: 600;
-  margin-bottom: 12px;
-`;
-
-const SectionHeading = styled(Typography)`
-  font-size: 16px;
-  font-weight: 500;
-  margin-top: 16px;
-  margin-bottom: 4px;
-`;
-
-const SectionDescription = styled(Typography)`
-  font-size: 14px;
-  line-height: 1.5;
-  opacity: 0.7;
-  margin-bottom: 8px;
-`;
-
-const UnstyledTab = (props: TabProps) => {
-  const isMobile = useResponsiveDisplay();
-  return <Tab iconPosition={isMobile ? "top" : "start"} {...props} />;
-};
-
-const StyledTab = styled(UnstyledTab)`
-  justify-content: flex-start;
-  margin-right: 12px;
-  border-radius: 14px;
-  min-height: 0;
-  padding: 18px;
-  &.Mui-selected {
-    background-color: ${({ theme }) => theme.primary + "23"};
-  }
-  @media (max-width: 768px) {
-    margin-right: 0;
-    font-size: 13px;
-    min-height: 0;
-    padding: 10px 6px;
-    margin: 0;
-    border-radius: 0;
-  }
-`;
-
-const UnstyledSelect = (props: SelectProps) => {
-  const isMobile = useResponsiveDisplay();
-  return (
-    <Select
-      fullWidth
-      MenuProps={{
-        PaperProps: {
-          style: {
-            maxHeight: isMobile ? 400 : 220,
-            overflowY: "auto", // Make the dropdown scrollable if the content exceeds the height
-          },
-        },
-        anchorOrigin: {
-          vertical: "bottom",
-          horizontal: "left",
-        },
-        transformOrigin: {
-          vertical: "top",
-          horizontal: "left",
-        },
-      }}
-      {...props}
-    />
-  );
-};
-
-const StyledSelect = styled(UnstyledSelect)`
-  margin: 8px 0;
-`;
-
-const StyledMenuItem = styled(MenuItem)`
-  padding: 12px 20px;
-  border-radius: 12px;
-  margin: 0 8px;
-  display: flex;
-  gap: 6px;
-`;
-
-const NoVoiceStyles = styled.p`
-  display: flex;
-  align-items: center;
-  flex-direction: column;
-  gap: 6px;
-  opacity: 0.8;
-  font-weight: 500;
-  max-width: 330px;
-`;
-
-const VolumeSlider = styled(Stack)`
-  margin: 8px 0;
-  background: #afafaf2b;
-  padding: 12px 24px 12px 18px;
-  border-radius: 18px;
-  transition: 0.3s all;
-  width: 100%;
-`;
