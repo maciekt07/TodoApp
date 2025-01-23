@@ -21,7 +21,6 @@ export const exportTasksToJson = (selectedTasks: Task[]): void => {
   linkElement.href = url;
   linkElement.download = filename;
   linkElement.click();
-  console.log(`Exported tasks to ${filename}`);
   // Clean up the URL object
   window.URL.revokeObjectURL(url);
 };

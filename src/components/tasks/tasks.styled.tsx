@@ -17,7 +17,7 @@ export const TaskContainer = styled.div<TaskComponentProps>`
   align-items: center;
   padding: 16px 16px 16px 20px;
   border-radius: 30px;
-  margin-top: 14px;
+  margin-top: 12px;
   transition: 0.3s all !important;
   color: ${({ backgroundColor }) => getFontColor(backgroundColor)};
   background-color: ${({ backgroundColor, done }) => `${backgroundColor}${done ? "cc" : ""}`};
@@ -41,7 +41,7 @@ export const TaskContainer = styled.div<TaskComponentProps>`
 
   @media (max-width: 768px) {
     padding: 14px 14px 14px 18px;
-    margin-top: 12px;
+    margin-top: 10px;
   }
 `;
 
@@ -53,7 +53,7 @@ export const EmojiContainer = styled.span<{ clr: string }>`
   justify-content: center;
   background-color: ${({ clr }) => (clr === ColorPalette.fontDark ? "#4b4b4b6e" : "#dddddd9d")};
   font-size: 32px;
-  padding: 14px;
+  padding: 12px;
   width: 42px;
   height: 42px;
   border-radius: 18px;

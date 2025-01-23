@@ -100,7 +100,6 @@ export const CustomEmojiPicker = ({ emoji, setEmoji, color, name, type }: EmojiP
   const handleEmojiClick = (e: EmojiClickData) => {
     toggleEmojiPicker();
     setCurrentEmoji(e.unified);
-    console.log(e);
   };
 
   const handleRemoveEmoji = () => {

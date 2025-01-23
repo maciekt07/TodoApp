@@ -47,7 +47,7 @@ export const DropZone = styled.div<{ isDragging: boolean }>`
   padding: 32px 64px;
   text-align: center;
   max-width: 300px;
-  box-shadow: ${({ isDragging, theme }) => isDragging && `0 0 32px 0px ${theme.primary}`};
+  box-shadow: ${({ isDragging, theme }) => isDragging && `0 0 32px -2px ${theme.primary}`};
   transition: 0.3s all;
   & div {
     font-weight: 500;

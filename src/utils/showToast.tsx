@@ -42,7 +42,7 @@ export const showToast = (
     try {
       navigator.vibrate(vibrationPattern);
     } catch (err) {
-      console.log(err);
+      console.error(err);
     }
   }
 

@@ -1,7 +1,7 @@
 export const ColorPalette = {
   fontDark: "#101727",
   fontLight: "#f0f0f0",
-  darkMode: "#383838", // TODO: add dark and light mode colors
+  darkMode: "#383838",
   lightMode: "#ffffff",
   purple: "#b624ff",
   red: "#ff3131",
@@ -9,6 +9,7 @@ export const ColorPalette = {
   orangeDark: "#ff9500",
 } as const;
 
+// TODO: update themes
 export const themeConfig: { [key: string]: { primaryColor: string; secondaryColor?: string } } = {
   Purple: {
     // Default dark theme
@@ -22,10 +23,6 @@ export const themeConfig: { [key: string]: { primaryColor: string; secondaryColo
   Blue: {
     primaryColor: "#2a93d5",
   },
-  // "Minty Fresh": {
-  //   primaryColor: "#26C6DA",
-  //   secondaryColor: "#E0F7FA",
-  // },
   Pink: {
     primaryColor: "#e5369a",
   },
@@ -33,11 +30,6 @@ export const themeConfig: { [key: string]: { primaryColor: string; secondaryColo
     primaryColor: "#EC407A",
     secondaryColor: "#FCE4EC",
   },
-  // "Ultra Pink": {
-  //   primaryColor: "#ff0090",
-  //   secondaryColor: "#ff94d1",
-  // },
-
   Cheesecake: {
     primaryColor: "#E14C94",
     secondaryColor: "#FDF0D5",
@@ -58,5 +50,4 @@ export const themeConfig: { [key: string]: { primaryColor: string; secondaryColo
     primaryColor: "#00e952",
     secondaryColor: "#011926",
   },
-  // Add new themes here
 };

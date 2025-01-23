@@ -144,6 +144,12 @@ export const SettingsDialog = ({ open, onClose }: SettingsProps) => {
     setIsSampleReading(false);
   }, [user.settings.voiceVolume, user.settings.voice]);
 
+  const handleDialogClose = () => {
+    window.speechSynthesis.cancel();
+    setIsSampleReading(false);
+    onClose();
+  };
+
   const handleAppThemeChange = (event: SelectChangeEvent<unknown>) => {
     const selectedTheme = event.target.value as string;
     setUser((prevUser) => ({
@@ -260,7 +266,7 @@ export const SettingsDialog = ({ open, onClose }: SettingsProps) => {
   return (
     <Dialog
       open={open}
-      onClose={onClose}
+      onClose={handleDialogClose}
       maxWidth="md"
       fullWidth
       fullScreen={isMobile}
@@ -278,7 +284,7 @@ export const SettingsDialog = ({ open, onClose }: SettingsProps) => {
         icon={<SettingsRounded />}
         title="Settings"
         subTitle="Manage Your settings and preferences"
-        onClose={onClose}
+        onClose={handleDialogClose}
         removeDivider
       />
       <Divider sx={{ mb: 2 }} />

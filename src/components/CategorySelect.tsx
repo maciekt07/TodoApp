@@ -18,7 +18,7 @@ import {
 } from "@mui/material";
 import { Emoji } from "emoji-picker-react";
 import { CSSProperties, useContext, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { CategoryBadge } from ".";
 import { MAX_CATEGORIES_IN_TASK } from "../constants";
 import { UserContext } from "../contexts/UserContext";
@@ -49,7 +49,6 @@ export const CategorySelect: React.FC<CategorySelectProps> = ({
   const [selectedCats, setSelectedCats] = useState<Category[]>(selectedCategories);
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
-  const n = useNavigate();
   const muiTheme = useTheme();
   const systemTheme = useSystemTheme();
 
@@ -179,15 +178,11 @@ export const CategorySelect: React.FC<CategorySelectProps> = ({
         ) : (
           <NoCategories disableTouchRipple>
             <p>You don't have any categories</p>
-            <Button
-              fullWidth
-              variant="outlined"
-              onClick={() => {
-                n("/categories");
-              }}
-            >
-              <AddRounded /> &nbsp; Add Category
-            </Button>
+            <Link to="/categories" style={{ width: "100%" }}>
+              <Button fullWidth variant="outlined">
+                <AddRounded /> &nbsp; Create Category
+              </Button>
+            </Link>
           </NoCategories>
         )}
 

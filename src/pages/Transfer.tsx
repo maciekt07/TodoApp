@@ -94,7 +94,6 @@ const Transfer = () => {
   const handleImport = useCallback(
     (taskFile: File) => {
       const file = taskFile;
-      console.log(file);
 
       if (file) {
         if (file.type !== "application/json") {
@@ -186,8 +185,6 @@ const Transfer = () => {
                     Object.assign(existingCategory, importedCat);
                   }
                 });
-              } else {
-                console.log(`Task ${task.name} has no category`);
               }
             });
 
