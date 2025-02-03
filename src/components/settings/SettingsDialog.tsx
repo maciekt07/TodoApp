@@ -151,7 +151,7 @@ export const SettingsDialog = ({ open, onClose }: SettingsProps) => {
   // Function to get the available speech synthesis voices
   // https://developer.mozilla.org/en-US/docs/Web/API/SpeechSynthesis
   const getAvailableVoices = (): SpeechSynthesisVoice[] => {
-    const voices = window.speechSynthesis.getVoices();
+    const voices = window.speechSynthesis?.getVoices() ?? [];
     const voiceInfoArray: SpeechSynthesisVoice[] = [];
     for (const voice of voices) {
       voiceInfoArray.push(voice);
@@ -171,10 +171,12 @@ export const SettingsDialog = ({ open, onClose }: SettingsProps) => {
   }, []);
 
   // Ensure the voices are loaded before calling getAvailableVoices
-  window.speechSynthesis.onvoiceschanged = () => {
-    const availableVoices = getAvailableVoices();
-    setAvailableVoices(availableVoices ?? []);
-  };
+  if (window.speechSynthesis){
+    window.speechSynthesis.onvoiceschanged = () => {
+      const availableVoices = getAvailableVoices();
+      setAvailableVoices(availableVoices ?? []);
+    };
+  }
   const handleVoiceChange = (event: SelectChangeEvent<unknown>) => {
     // Handle the selected voice
     const selectedVoice = availableVoices.find(
