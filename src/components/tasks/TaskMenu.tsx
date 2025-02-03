@@ -138,7 +138,7 @@ export const TaskMenu = () => {
 
   //https://developer.mozilla.org/en-US/docs/Web/API/SpeechSynthesis
   const handleReadAloud = () => {
-    const voices = window.speechSynthesis.getVoices();
+    const voices = window.speechSynthesis.getVoices() ?? [];
     const voice = voices.find((voice) => voice.name === settings.voice);
     const voiceName = voices.find((voice) => voice.name === settings.voice);
     const voiceVolume = settings.voiceVolume;
@@ -273,10 +273,13 @@ export const TaskMenu = () => {
         <LaunchRounded /> &nbsp; Task details
       </StyledMenuItem>
 
-      {settings.enableReadAloud && (
+      {settings.enableReadAloud && "speechSynthesis" in window && (
         <StyledMenuItem
           onClick={handleReadAloud}
-          disabled={window.speechSynthesis.speaking || window.speechSynthesis.pending}
+          disabled={
+            window.speechSynthesis &&
+            (window.speechSynthesis.speaking || window.speechSynthesis.pending)
+          }
         >
           <RecordVoiceOverRounded /> &nbsp; Read Aloud
         </StyledMenuItem>

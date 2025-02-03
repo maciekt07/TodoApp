@@ -19,6 +19,8 @@ import {
   VolumeUp,
 } from "@mui/icons-material";
 import {
+  Alert,
+  AlertTitle,
   Box,
   Button,
   Chip,
@@ -140,12 +142,16 @@ export const SettingsDialog = ({ open, onClose }: SettingsProps) => {
 
   // Cancel speech synthesis when the voice settings are changed
   useEffect(() => {
-    window.speechSynthesis.cancel();
     setIsSampleReading(false);
+    if (window.speechSynthesis) {
+      window.speechSynthesis.cancel();
+    }
   }, [user.settings.voiceVolume, user.settings.voice]);
 
   const handleDialogClose = () => {
-    window.speechSynthesis.cancel();
+    if (window.speechSynthesis) {
+      window.speechSynthesis.cancel();
+    }
     setIsSampleReading(false);
     onClose();
   };
@@ -169,7 +175,10 @@ export const SettingsDialog = ({ open, onClose }: SettingsProps) => {
   // Function to get the available speech synthesis voices
   // https://developer.mozilla.org/en-US/docs/Web/API/SpeechSynthesis
   const getAvailableVoices = (): SpeechSynthesisVoice[] => {
-    const voices = window.speechSynthesis.getVoices();
+    if (!window.speechSynthesis) {
+      return [];
+    }
+    const voices = window.speechSynthesis.getVoices() ?? [];
     const voiceInfoArray: SpeechSynthesisVoice[] = [];
     for (const voice of voices) {
       voiceInfoArray.push(voice);
@@ -183,10 +192,12 @@ export const SettingsDialog = ({ open, onClose }: SettingsProps) => {
   }, []);
 
   // Ensure the voices are loaded before calling getAvailableVoices
-  window.speechSynthesis.onvoiceschanged = () => {
-    const availableVoices = getAvailableVoices();
-    setAvailableVoices(availableVoices ?? []);
-  };
+  if (window.speechSynthesis) {
+    window.speechSynthesis.onvoiceschanged = () => {
+      const availableVoices = getAvailableVoices();
+      setAvailableVoices(availableVoices ?? []);
+    };
+  }
 
   const handleVoiceChange = (event: SelectChangeEvent<unknown>) => {
     // Handle the selected voice
@@ -416,10 +427,18 @@ export const SettingsDialog = ({ open, onClose }: SettingsProps) => {
             </TabPanel>
             <TabPanel value={tabValue} index={3}>
               <TabHeading>Read Aloud Settings</TabHeading>
+              {!("speechSynthesis" in window) && (
+                <Alert severity="error">
+                  <AlertTitle>Speech Synthesis Not Supported</AlertTitle>
+                  Your browser does not support built in text-to-speech.
+                </Alert>
+              )}
               <SectionHeading>Play Sample</SectionHeading>
               <Button
                 variant="contained"
+                disabled={!("speechSynthesis" in window)}
                 onClick={() => {
+                  if (!("speechSynthesis" in window)) return;
                   window.speechSynthesis.cancel();
                   if (isSampleReading) {
                     window.speechSynthesis.pause();
@@ -427,7 +446,7 @@ export const SettingsDialog = ({ open, onClose }: SettingsProps) => {
                     const textToRead =
                       "This is a sample text for testing the speech synthesis feature.";
                     const utterance = new SpeechSynthesisUtterance(textToRead);
-                    const voices = window.speechSynthesis.getVoices();
+                    const voices = window.speechSynthesis.getVoices() ?? [];
                     utterance.voice =
                       voices.find((voice) => voice.name === user.settings.voice) || voices[0];
                     utterance.volume = voiceVolume;
@@ -449,6 +468,7 @@ export const SettingsDialog = ({ open, onClose }: SettingsProps) => {
                 <StyledSelect
                   value={user.settings.voice}
                   variant="outlined"
+                  disabled={!("speechSynthesis" in window)}
                   onChange={handleVoiceChange}
                   translate="no"
                   IconComponent={ExpandMoreRounded}

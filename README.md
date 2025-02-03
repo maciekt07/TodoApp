@@ -84,8 +84,6 @@ This app is a Progressive Web App (PWA), which means it can be installed on your
 
 The app features a custom update prompt that notifies users when a new version is available, allowing for easy refresh to access the latest improvements.
 
-<!-- <img src="https://raw.githubusercontent.com/maciekt07/TodoApp/main/screenshots/UpdatePrompt.png" alt="update prompt" width="260px" /> -->
-
 <img src="https://raw.githubusercontent.com/maciekt07/TodoApp/main/screenshots/UpdatePrompt.png" alt="update prompt" width="260px" />
 
 ## 👨‍💻 Installation
@@ -109,9 +107,9 @@ The app will now be running at [http://localhost:5173/](http://localhost:5173/).
 <img src="https://raw.githubusercontent.com/maciekt07/TodoApp/main/screenshots/ss1.png" width="300px" />
 <img src="https://raw.githubusercontent.com/maciekt07/TodoApp/main/screenshots/ss2.png" width="300px" />
 
-<!-- <img src="https://raw.githubusercontent.com/maciekt07/TodoApp/main/screenshots/ss3.png" width="300px" />
+<img src="https://raw.githubusercontent.com/maciekt07/TodoApp/main/screenshots/ss3.png" width="300px" />
 
-<img src="https://raw.githubusercontent.com/maciekt07/TodoApp/main/screenshots/ss4.png" width="300px" />
+<!-- <img src="https://raw.githubusercontent.com/maciekt07/TodoApp/main/screenshots/ss4.png" width="300px" />
 
 <img src="https://raw.githubusercontent.com/maciekt07/TodoApp/main/screenshots/ss5.png" width="300px" />
 
