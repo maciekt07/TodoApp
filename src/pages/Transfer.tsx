@@ -162,9 +162,21 @@ const Transfer = () => {
               return;
             }
 
-            const maxFileSize = 50_000;
+            const maxFileSize = 6 * 1024 * 1024; //MB
             if (file.size > maxFileSize) {
-              showToast(`File size is too large (${file.size}/${maxFileSize})`, { type: "error" });
+              const formatMB = new Intl.NumberFormat("en-US", {
+                style: "unit",
+                unit: "megabyte",
+                maximumFractionDigits: 2,
+              });
+
+              const fileSizeMB = file.size / (1024 * 1024);
+              const maxSizeMB = maxFileSize / (1024 * 1024);
+
+              showToast(
+                `File size is too large (${formatMB.format(fileSizeMB)}/${formatMB.format(maxSizeMB)})`,
+                { type: "error" },
+              );
               return;
             }
 

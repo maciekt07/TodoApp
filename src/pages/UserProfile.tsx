@@ -5,6 +5,7 @@ import {
   Dialog,
   DialogActions,
   DialogContent,
+  Divider,
   IconButton,
   InputAdornment,
   TextField,
@@ -20,12 +21,13 @@ import {
   SaveRounded,
   Settings,
   TodayRounded,
+  UploadRounded,
 } from "@mui/icons-material";
 import { PROFILE_PICTURE_MAX_LENGTH, USER_NAME_MAX_LENGTH } from "../constants";
 import { CustomDialogTitle, LogoutDialog, SettingsDialog, TopBar } from "../components";
 import { DialogBtn, UserAvatar } from "../styles";
 import { UserContext } from "../contexts/UserContext";
-import { timeAgo, getFontColor, showToast } from "../utils";
+import { timeAgo, getFontColor, showToast, getProfilePicture, generateUUID } from "../utils";
 import { ColorPalette } from "../theme/themeConfig";
 
 const UserProfile = () => {
@@ -37,6 +39,16 @@ const UserProfile = () => {
   const [openLogoutDialog, setOpenLogoutDialog] = useState<boolean>(false);
   const [openSettings, setOpenSettings] = useState<boolean>(false);
 
+  const [avatarSrc, setAvatarSrc] = useState<string | null>(null);
+
+  useEffect(() => {
+    const loadProfilePicture = async () => {
+      const picture = await getProfilePicture(profilePicture);
+      setAvatarSrc(picture);
+    };
+    loadProfilePicture();
+  }, [profilePicture]);
+
   useEffect(() => {
     document.title = `Todo App - User ${name ? `(${name})` : ""}`;
   }, [name]);
@@ -44,20 +56,7 @@ const UserProfile = () => {
   const handleSaveName = () => {
     if (userName.length <= USER_NAME_MAX_LENGTH && userName !== name) {
       setUser({ ...user, name: userName });
-
-      showToast(
-        <div>
-          Changed user name
-          {userName && (
-            <>
-              {" "}
-              to <b translate="no">{userName}</b>
-            </>
-          )}
-          .
-        </div>,
-      );
-
+      showToast("Updated user name");
       setUserName("");
     }
   };
@@ -67,20 +66,128 @@ const UserProfile = () => {
   };
   const handleCloseImageDialog = () => {
     setOpenChangeImage(false);
+    setProfilePictureURL("");
   };
 
-  const handleSaveImage = () => {
+  const handleSaveImageLink = () => {
+    // TODO: remove image from indexedDB if it exists
     if (
       profilePictureURL.length <= PROFILE_PICTURE_MAX_LENGTH &&
       profilePictureURL.startsWith("https://")
     ) {
       handleCloseImageDialog();
+      setProfilePictureURL("");
       setUser((prevUser) => ({
         ...prevUser,
         profilePicture: profilePictureURL,
       }));
       showToast("Changed profile picture.");
     }
+  };
+
+  useEffect(() => {
+    // init IndexedDB
+    const request = indexedDB.open("profilePictureDB", 1);
+
+    request.onerror = () => {
+      console.error("Error opening IndexedDB");
+    };
+
+    request.onupgradeneeded = (event) => {
+      const db = (event.target as IDBOpenDBRequest).result;
+      if (!db.objectStoreNames.contains("pictures")) {
+        db.createObjectStore("pictures");
+      }
+    };
+  }, []);
+
+  const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    if (!file.type.startsWith("image/")) {
+      showToast("Please upload an image file.");
+      return;
+    }
+
+    const maxFileSize = 6 * 1024 * 1024; //MB
+    if (file.size > maxFileSize) {
+      const formatMB = new Intl.NumberFormat("en-US", {
+        style: "unit",
+        unit: "megabyte",
+        maximumFractionDigits: 2,
+      });
+
+      const fileSizeMB = file.size / (1024 * 1024);
+      const maxSizeMB = maxFileSize / (1024 * 1024);
+
+      showToast(
+        `File size is too large (${formatMB.format(fileSizeMB)}/${formatMB.format(maxSizeMB)})`,
+        { type: "error" },
+      );
+      return;
+    }
+
+    try {
+      // convert to base64
+      const base64 = await new Promise<string>((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onloadend = () => resolve(reader.result as string);
+        reader.onerror = reject;
+        reader.readAsDataURL(file);
+      });
+
+      // store in IndexedDB
+      const request = indexedDB.open("profilePictureDB", 1);
+
+      request.onsuccess = (event) => {
+        const db = (event.target as IDBOpenDBRequest).result;
+        const transaction = db.transaction(["pictures"], "readwrite");
+        const store = transaction.objectStore("pictures");
+
+        const putRequest = store.put(base64, "profilePicture");
+
+        putRequest.onsuccess = () => {
+          setUser((prevUser) => ({
+            ...prevUser,
+            // we cant store base64 directly in localStorage because it may cause performance issues
+            profilePicture: "LOCAL_FILE_" + generateUUID(), // add uuid so image would update
+          }));
+
+          handleCloseImageDialog();
+          showToast(`Profile picture updated successfully.`);
+        };
+
+        putRequest.onerror = () => {
+          showToast("Failed to save profile picture.");
+        };
+      };
+    } catch (error) {
+      console.error("Error uploading file:", error);
+      showToast("Failed to upload profile picture.");
+    }
+  };
+
+  const handleDeleteImage = () => {
+    const request = indexedDB.open("profilePictureDB", 1);
+
+    request.onsuccess = (event) => {
+      const db = (event.target as IDBOpenDBRequest).result;
+      const transaction = db.transaction(["pictures"], "readwrite");
+      const store = transaction.objectStore("pictures");
+
+      const deleteRequest = store.delete("profilePicture");
+
+      deleteRequest.onsuccess = () => {
+        setUser({ ...user, profilePicture: null });
+        handleCloseImageDialog();
+        showToast("Deleted profile image.");
+      };
+
+      deleteRequest.onerror = () => {
+        showToast("Failed to delete profile picture.");
+      };
+    };
   };
 
   return (
@@ -120,7 +227,7 @@ const UserProfile = () => {
           >
             <UserAvatar
               onClick={handleOpenImageDialog}
-              src={profilePicture || undefined}
+              src={avatarSrc || undefined}
               hasimage={profilePicture !== null}
               style={{ cursor: "pointer" }}
               size="96px"
@@ -158,7 +265,7 @@ const UserProfile = () => {
                   ? "New username matches old one."
                   : ""
           }
-          autoComplete="nickname"
+          autoComplete="given-name"
         />
 
         <SaveBtn
@@ -194,7 +301,7 @@ const UserProfile = () => {
             onChange={(e) => {
               setProfilePictureURL(e.target.value);
             }}
-            onKeyDown={(e) => e.key === "Enter" && handleSaveImage()}
+            onKeyDown={(e) => e.key === "Enter" && handleSaveImageLink()}
             error={profilePictureURL.length > PROFILE_PICTURE_MAX_LENGTH}
             helperText={
               profilePictureURL.length > PROFILE_PICTURE_MAX_LENGTH
@@ -212,40 +319,36 @@ const UserProfile = () => {
             }}
           />
 
-          {/*
-          
-        TODO: add feature to upload image from file and save it to IndexedDB
-          <Divider>
+          <StyledDivider>
             <span style={{ opacity: 0.8 }}>or</span>
-          </Divider>
+          </StyledDivider>
 
-          <input accept="image/*" id="upload-pfp" type="file" style={{ display: "none" }} />
+          <input
+            accept="image/*"
+            id="upload-pfp"
+            type="file"
+            style={{ display: "none" }}
+            onChange={handleFileUpload}
+          />
           <label htmlFor="upload-pfp">
-            <Button
-              component="span"
-              variant="outlined"
-              fullWidth
-              sx={{ my: "8px" }}
-            >
+            <Button component="span" variant="contained" fullWidth sx={{ my: "8px" }}>
               <UploadRounded /> &nbsp; Upload from file
             </Button>
-          </label> */}
+          </label>
 
-          <br />
           {profilePicture !== null && (
-            <Button
-              fullWidth
-              onClick={() => {
-                handleCloseImageDialog();
-                showToast("Deleted profile image.");
-                setUser({ ...user, profilePicture: null });
-              }}
-              color="error"
-              variant="outlined"
-              sx={{ margin: "16px 0", p: "12px 20px", borderRadius: "14px" }}
-            >
-              <Delete /> &nbsp; Delete Image
-            </Button>
+            <>
+              <Divider sx={{ my: "12px" }} />
+              <Button
+                fullWidth
+                onClick={handleDeleteImage}
+                color="error"
+                variant="outlined"
+                sx={{ my: "8px" }}
+              >
+                <Delete /> &nbsp; Remove Profile Picture
+              </Button>
+            </>
           )}
         </DialogContent>
         <DialogActions>
@@ -255,7 +358,7 @@ const UserProfile = () => {
               profilePictureURL.length > PROFILE_PICTURE_MAX_LENGTH ||
               !profilePictureURL.startsWith("https://")
             }
-            onClick={handleSaveImage}
+            onClick={handleSaveImageLink}
           >
             <SaveRounded /> &nbsp; Save
           </DialogBtn>
@@ -333,5 +436,12 @@ const CreatedAtDate = styled.span`
   // fix for browser translate
   & font {
     margin: 0 1px;
+  }
+`;
+
+const StyledDivider = styled(Divider)`
+  &::before,
+  &::after {
+    border-color: ${({ theme }) => (theme.darkmode ? "#ffffff83" : "#00000083")};
   }
 `;

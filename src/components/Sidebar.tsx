@@ -44,7 +44,7 @@ import { fetchBMCInfo } from "../services/bmcApi";
 import { fetchGitHubInfo } from "../services/githubApi";
 import { DialogBtn, UserAvatar, pulseAnimation, ring } from "../styles";
 import { ColorPalette } from "../theme/themeConfig";
-import { showToast, systemInfo, timeAgo } from "../utils";
+import { getProfilePicture, showToast, systemInfo, timeAgo } from "../utils";
 
 export const ProfileSidebar = () => {
   const { user, setUser } = useContext(UserContext);
@@ -85,6 +85,16 @@ export const ProfileSidebar = () => {
     fetchBMC();
     fetchRepoInfo();
   }, []);
+
+  const [avatarSrc, setAvatarSrc] = useState<string | null>(null);
+
+  useEffect(() => {
+    const loadProfilePicture = async () => {
+      const picture = await getProfilePicture(profilePicture);
+      setAvatarSrc(picture);
+    };
+    loadProfilePicture();
+  }, [profilePicture]);
 
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
@@ -171,7 +181,7 @@ export const ProfileSidebar = () => {
           sx={{ zIndex: 1 }}
         >
           <UserAvatar
-            src={(profilePicture as string) || undefined}
+            src={avatarSrc || undefined}
             alt={name || "User"}
             hasimage={profilePicture !== null}
             pulse={
@@ -368,7 +378,7 @@ export const ProfileSidebar = () => {
           <MenuLink to="/user">
             <ProfileMenuItem translate={name ? "no" : "yes"} onClick={handleClose}>
               <UserAvatar
-                src={(profilePicture as string) || undefined}
+                src={avatarSrc || undefined}
                 hasimage={profilePicture !== null}
                 size="44px"
               >
