@@ -1,5 +1,5 @@
 import styled from "@emotion/styled";
-import { fadeIn, fadeInLeft, progressPulse, pulseAnimation, scale } from "./keyframes.styled";
+import { fadeIn, progressPulse, pulseAnimation, scale } from "./keyframes.styled";
 import { Box, Button, CircularProgress, css } from "@mui/material";
 import { getFontColor, isDark } from "../utils";
 
@@ -14,17 +14,6 @@ export const GreetingHeader = styled.div`
   @media (max-width: 550px) {
     font-size: 22px;
   }
-`;
-
-export const GreetingText = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  font-size: 16px;
-  margin-top: 4px;
-  margin-left: 8px;
-  font-style: italic;
-  animation: ${fadeInLeft} 0.5s ease-in-out;
 `;
 
 export const TasksCountContainer = styled.div`
