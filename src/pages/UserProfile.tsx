@@ -293,7 +293,6 @@ const UserProfile = () => {
         />
         <DialogContent>
           <TextField
-            // autoFocus
             label="Link to profile picture"
             placeholder="Enter link to profile picture..."
             sx={{ my: "8px", width: "100%" }}

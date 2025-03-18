@@ -1,7 +1,7 @@
 type OperatingSystem = "Windows" | "macOS" | "Linux" | "iOS" | "Android" | "Unknown";
 type Browser = "Chrome" | "Firefox" | "Safari" | "Edge" | "Unknown";
 
-const userAgent = window.navigator.userAgent;
+const userAgent = navigator.userAgent;
 
 const getOperatingSystem = (): OperatingSystem => {
   if (/Windows NT/i.test(userAgent)) return "Windows";

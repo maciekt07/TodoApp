@@ -47,7 +47,7 @@ import { useSystemTheme } from "../../hooks/useSystemTheme";
 import { ColorElement } from "../../styles";
 import { Themes } from "../../theme/createTheme";
 import type { DarkModeOptions } from "../../types/user";
-import { showToast, systemInfo } from "../../utils";
+import { getFontColor, showToast, systemInfo } from "../../utils";
 import CustomRadioGroup from "./CustomRadioGroup";
 import CustomSwitch from "./CustomSwitch";
 import {
@@ -437,6 +437,7 @@ export const SettingsDialog = ({ open, onClose }: SettingsProps) => {
               <Button
                 variant="contained"
                 disabled={!("speechSynthesis" in window)}
+                sx={{ color: getFontColor(muiTheme.palette.primary.main), mt: "8px" }}
                 onClick={() => {
                   if (!("speechSynthesis" in window)) return;
                   window.speechSynthesis.cancel();
