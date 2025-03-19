@@ -23,6 +23,11 @@
     "build": "tsc && vite build",
     "preview": "vite preview"
   },
+  "overrides": {
+    "react-spring-bottom-sheet": {
+      "react": "19.0.0"
+    }
+  },
   "dependencies": {
     "@emotion/css": "^11.13.5",
     "@emotion/react": "^11.14.0",

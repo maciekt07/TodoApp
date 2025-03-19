@@ -19,6 +19,12 @@
       "base": "typescript",
       "color": "blue-500",
       "fileNames": ["themeConfig.ts"]
+    },
+    {
+      "name": "import",
+      "base": "json",
+      "color": "yellow-900",
+      "fileNames": ["example-import.json"]
     }
   ],
   "material-icon-theme.folders.customClones": [

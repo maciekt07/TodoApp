@@ -463,7 +463,7 @@ export const SettingsDialog = ({ open, onClose }: SettingsProps) => {
                 {isSampleReading ? <StopCircleRounded /> : <RecordVoiceOverRounded />} &nbsp; Play
                 Sample
               </Button>
-
+              {/* FIXME: ‼ On macOS multiple voices share the same name across different languages, preventing proper selection. */}
               <SectionHeading>Voice Selection</SectionHeading>
               {filteredVoices.length !== 0 ? (
                 <StyledSelect
