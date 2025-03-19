@@ -16,6 +16,26 @@ import { Task } from "../../types/user";
 import { DescriptionLink, ShowMoreBtn, YouTubeThumbnail } from "./tasks.styled";
 import { TaskContext } from "../../contexts/TaskContext";
 
+interface DomainMappings {
+  regex: RegExp;
+  domainName?: string;
+  icon: JSX.Element;
+}
+
+const domainMappings: DomainMappings[] = [
+  { regex: /(m\.)?youtu(\.be|be\.com)/, domainName: "Youtube", icon: <YouTube /> },
+  {
+    regex: /(twitter\.com|x\.com)/,
+    domainName: "X",
+    icon: <X sx={{ fontSize: "18px" }} />,
+  },
+  { regex: /github\.com/, domainName: "Github", icon: <GitHub sx={{ fontSize: "20px" }} /> },
+  { regex: /reddit\.com/, domainName: "Reddit", icon: <Reddit /> },
+  { regex: /linkedin\.com/, domainName: "LinkedIn", icon: <LinkedIn /> },
+  { regex: /localhost/, icon: <Language /> },
+  { regex: /.*/, icon: <Link /> }, // Default icon for other domains
+];
+
 interface RenderTaskDescriptionProps {
   task: Task;
 }
@@ -39,26 +59,6 @@ export const RenderTaskDescription = memo(
       isExpanded || hasLinks ? description : description.slice(0, DESCRIPTION_SHORT_LENGTH);
 
     const parts = highlightedDescription.split(URL_REGEX);
-
-    interface DomainMappings {
-      regex: RegExp;
-      domainName?: string;
-      icon: JSX.Element;
-    }
-
-    const domainMappings: DomainMappings[] = [
-      { regex: /(m\.)?youtu(\.be|be\.com)/, domainName: "Youtube", icon: <YouTube /> },
-      {
-        regex: /(twitter\.com|x\.com)/,
-        domainName: "X",
-        icon: <X sx={{ fontSize: "18px" }} />,
-      },
-      { regex: /github\.com/, domainName: "Github", icon: <GitHub sx={{ fontSize: "20px" }} /> },
-      { regex: /reddit\.com/, domainName: "Reddit", icon: <Reddit /> },
-      { regex: /linkedin\.com/, domainName: "LinkedIn", icon: <LinkedIn /> },
-      { regex: /localhost/, icon: <Language /> },
-      { regex: /.*/, icon: <Link /> }, // Default icon for other domains
-    ];
 
     const descriptionWithLinks = parts.map((part, index) => {
       if (index % 2 === 0) {

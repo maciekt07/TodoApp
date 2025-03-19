@@ -242,11 +242,13 @@ export const TaskMenu = () => {
 
     // Set up event listener for the end of speech
     utterThis.onend = () => {
+      //FIXME: this event doesnt trigger for sone voices
       // Close the menu
       handleCloseMoreMenu();
       // Hide the toast when speech ends
       toast.dismiss(SpeechToastId);
     };
+
     if (voiceVolume > 0) {
       window.speechSynthesis.speak(utterThis);
     }

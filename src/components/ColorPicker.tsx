@@ -169,7 +169,6 @@ export const ColorPicker: React.FC<ColorPickerProps> = ({
       >
         <AccordionSummary
           expandIcon={<ExpandMoreRounded sx={{ color: fontColor || ColorPalette.fontLight }} />}
-          sx={{ fontWeight: 500 }}
         >
           <SummaryContent clr={fontColor || ColorPalette.fontLight}>
             {!accordionExpanded && <AccordionPreview clr={selectedColor} />}
@@ -351,6 +350,7 @@ const SummaryContent = styled.div<{ clr: string }>`
   align-items: center;
   gap: 12px;
   color: ${({ clr }) => clr};
+  font-size: 16px;
 `;
 
 const ToastColorPreview = styled(AccordionPreview)`
