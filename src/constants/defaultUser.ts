@@ -20,7 +20,7 @@ export const defaultUser: User = {
     enableGlow: true,
     simpleEmojiPicker: false,
     enableReadAloud: "speechSynthesis" in window,
-    voice: "Google UK English Male",
+    voice: "Microsoft Mark - English (United States)::en-US",
     appBadge: false,
     voiceVolume: 0.6,
   },

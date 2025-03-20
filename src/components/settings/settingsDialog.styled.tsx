@@ -1,5 +1,14 @@
 import styled from "@emotion/styled";
-import { MenuItem, Select, SelectProps, Stack, Tab, TabProps, Typography } from "@mui/material";
+import {
+  ListSubheader,
+  MenuItem,
+  Select,
+  SelectProps,
+  Stack,
+  Tab,
+  TabProps,
+  Typography,
+} from "@mui/material";
 import { useResponsiveDisplay } from "../../hooks/useResponsiveDisplay";
 
 const UnstyledSelect = (props: SelectProps) => {
@@ -101,4 +110,9 @@ export const VolumeSlider = styled(Stack)`
   border-radius: 18px;
   transition: 0.3s all;
   width: 100%;
+`;
+
+export const StyledListSubheader = styled(ListSubheader)`
+  background-color: ${({ theme }) => (theme.darkmode ? "#2e2e2e" : "#ffffff")};
+  font-weight: 600;
 `;

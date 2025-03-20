@@ -139,12 +139,12 @@ export const TaskMenu = () => {
   //https://developer.mozilla.org/en-US/docs/Web/API/SpeechSynthesis
   const handleReadAloud = () => {
     const voices = window.speechSynthesis.getVoices() ?? [];
-    const voice = voices.find((voice) => voice.name === settings.voice);
-    const voiceName = voices.find((voice) => voice.name === settings.voice);
+    const voice = voices.find((voice) => voice.name === settings.voice.split("::")[0]);
     const voiceVolume = settings.voiceVolume;
-    const taskName = selectedTask?.name || "";
-    const taskDescription =
-      selectedTask?.description?.replace(/((?:https?):\/\/[^\s/$.?#].[^\s]*)/gi, "") || ""; // remove links from description
+    const taskName = selectedTask.name ? selectedTask.name + ". " : "";
+    const taskDescription = selectedTask?.description
+      ? selectedTask?.description?.replace(/((?:https?):\/\/[^\s/$.?#].[^\s]*)/gi, "") + ". "
+      : ""; // remove links from description
     // Read task date in voice language
     const taskDate = new Intl.DateTimeFormat(voice ? voice.lang : navigator.language, {
       dateStyle: "full",
@@ -158,12 +158,12 @@ export const TaskMenu = () => {
         )}`
       : "";
 
-    const textToRead = `${taskName}. ${taskDescription}. Date: ${taskDate}${taskDeadline}`;
+    const textToRead = `${taskName}${taskDescription}Date: ${taskDate}${taskDeadline}`;
 
     const utterThis: SpeechSynthesisUtterance = new SpeechSynthesisUtterance(textToRead);
 
-    if (voiceName) {
-      utterThis.voice = voiceName;
+    if (voice) {
+      utterThis.voice = voice;
     }
 
     if (voiceVolume) {
@@ -242,7 +242,6 @@ export const TaskMenu = () => {
 
     // Set up event listener for the end of speech
     utterThis.onend = () => {
-      //FIXME: this event doesnt trigger for sone voices
       // Close the menu
       handleCloseMoreMenu();
       // Hide the toast when speech ends

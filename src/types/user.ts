@@ -70,6 +70,10 @@ export interface AppSettings {
   simpleEmojiPicker: boolean;
   enableReadAloud: boolean;
   appBadge: boolean;
-  voice: string;
+  /**
+   * Voice property in the format 'name::lang' to ensure uniqueness on macOS/iOS,
+   * where multiple voices can share the same name.
+   */
+  voice: `${string}::${string}`;
   voiceVolume: number;
 }

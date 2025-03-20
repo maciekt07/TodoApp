@@ -47,7 +47,7 @@ import { useResponsiveDisplay } from "../../hooks/useResponsiveDisplay";
 import { useSystemTheme } from "../../hooks/useSystemTheme";
 import { ColorElement } from "../../styles";
 import { Themes } from "../../theme/createTheme";
-import type { DarkModeOptions } from "../../types/user";
+import type { AppSettings, DarkModeOptions } from "../../types/user";
 import { getFontColor, showToast, systemInfo } from "../../utils";
 import CustomRadioGroup from "./CustomRadioGroup";
 import CustomSwitch from "./CustomSwitch";
@@ -55,6 +55,7 @@ import {
   NoVoiceStyles,
   SectionDescription,
   SectionHeading,
+  StyledListSubheader,
   StyledMenuItem,
   StyledSelect,
   StyledTab,
@@ -204,30 +205,51 @@ export const SettingsDialog = ({ open, onClose }: SettingsProps) => {
   }
 
   const handleVoiceChange = (event: SelectChangeEvent<unknown>) => {
-    // Handle the selected voice
-    const selectedVoice = availableVoices.find(
-      (voice) => voice.name === (event.target.value as string),
-    );
-    if (selectedVoice) {
+    const voice = event.target.value as AppSettings["voice"];
+    if (voice) {
       // Update the user settings with the selected voice
       setUser((prevUser) => ({
         ...prevUser,
         settings: {
           ...prevUser.settings,
-          voice: selectedVoice.name,
+          voice,
         },
       }));
     }
   };
 
-  const filteredVoices = availableVoices.sort(
-    (a, b) =>
-      Number(b.lang.startsWith(navigator.language)) - Number(a.lang.startsWith(navigator.language)),
-  );
+  const filteredVoices = availableVoices
+    .filter(
+      // remove duplicate voices as iOS/macOS tend to duplicate them for some reason
+      (value, index, self) =>
+        index ===
+        self.findIndex(
+          (v) =>
+            v.lang === value.lang &&
+            v.default === value.default &&
+            v.localService === value.localService &&
+            v.name === value.name &&
+            v.voiceURI === value.voiceURI,
+        ),
+    )
+    .sort((a, b) => {
+      // prioritize voices matching user language
+      const aIsFromCountry = a.lang.startsWith(navigator.language);
+      const bIsFromCountry = b.lang.startsWith(navigator.language);
+
+      if (aIsFromCountry && !bIsFromCountry) {
+        return -1;
+      }
+      if (!aIsFromCountry && bIsFromCountry) {
+        return 1;
+      }
+
+      // If both or neither match navigator.language, sort alphabetically by lang
+      return a.lang.localeCompare(b.lang);
+    });
 
   const getLanguageRegion = (lang: string) => {
     if (!lang) {
-      // If lang is undefined or falsy, return an empty string
       return "";
     }
     const langParts = lang.split("-");
@@ -250,7 +272,6 @@ export const SettingsDialog = ({ open, onClose }: SettingsProps) => {
     _event: Event | React.SyntheticEvent<Element, Event>,
     value: number | number[],
   ) => {
-    // Update user settings with the new voice volume
     setUser((prevUser) => ({
       ...prevUser,
       settings: {
@@ -262,7 +283,6 @@ export const SettingsDialog = ({ open, onClose }: SettingsProps) => {
 
   // Function to handle mute/unmute button click
   const handleMuteClick = () => {
-    // Retrieve the current voice volume from user settings
     const vol = voiceVolume;
     // Save the previous voice volume before muting
     setPrevVoiceVol(vol);
@@ -453,7 +473,8 @@ export const SettingsDialog = ({ open, onClose }: SettingsProps) => {
                     const utterance = new SpeechSynthesisUtterance(textToRead);
                     const voices = window.speechSynthesis.getVoices() ?? [];
                     utterance.voice =
-                      voices.find((voice) => voice.name === user.settings.voice) || voices[0];
+                      voices.find((voice) => voice.name === user.settings.voice.split("::")[0]) ||
+                      voices[0];
                     utterance.volume = voiceVolume;
                     utterance.rate = 1;
                     utterance.onend = () => {
@@ -467,7 +488,6 @@ export const SettingsDialog = ({ open, onClose }: SettingsProps) => {
                 {isSampleReading ? <StopCircleRounded /> : <RecordVoiceOverRounded />} &nbsp; Play
                 Sample
               </Button>
-              {/* FIXME: ‼ On macOS multiple voices share the same name across different languages, preventing proper selection. */}
               <SectionHeading>Voice Selection</SectionHeading>
               {filteredVoices.length !== 0 ? (
                 <StyledSelect
@@ -481,54 +501,87 @@ export const SettingsDialog = ({ open, onClose }: SettingsProps) => {
                     PaperProps: {
                       style: {
                         maxHeight: 500,
-                        padding: "2px 6px",
+                        padding: "0px 6px",
                       },
                     },
                   }}
                 >
-                  {filteredVoices.map((voice) => (
-                    <MenuItem
-                      key={voice.name}
-                      value={voice.name}
-                      translate="no"
-                      disabled={voice.localService === false && !isOnline}
-                      sx={{
-                        padding: "10px",
-                        borderRadius: "8px",
-                      }}
-                    >
-                      {voice.name.startsWith("Google") && <Google />}
-                      {voice.name.startsWith("Microsoft") && <Microsoft />} &nbsp;{" "}
-                      {/* Remove Google or Microsoft at the beginning and anything within parentheses */}
-                      {voice.name.replace(/^(Google|Microsoft)\s*|\([^()]*\)/gi, "")} &nbsp;
-                      {/* windows does not display flag emotes correctly */}
-                      {!/Windows NT 10/.test(navigator.userAgent) ? (
-                        <Chip
-                          sx={{ fontWeight: 500, padding: "4px" }}
-                          label={getLanguageRegion(voice.lang || "")}
-                          icon={
-                            <span style={{ fontSize: "16px" }}>
-                              {getFlagEmoji(voice.lang.split("-")[1] || "")}
-                            </span>
-                          }
-                        />
-                      ) : (
-                        <span style={{ fontWeight: 500 }}>
-                          {getLanguageRegion(voice.lang || "")}
-                        </span>
-                      )}
-                      {voice.default && systemInfo.os !== "iOS" && systemInfo.os !== "macOS" && (
-                        <span style={{ fontWeight: 600 }}>&nbsp;Default</span>
-                      )}
-                      {!isOnline && (
-                        <span style={{ marginLeft: "auto", display: "flex", alignItems: "center" }}>
-                          {voice.localService === false && (
+                  {(() => {
+                    // group voices by language match
+                    const matchingLanguageVoices = filteredVoices.filter((voice) =>
+                      voice.lang.startsWith(navigator.language),
+                    );
+                    const otherVoices = filteredVoices.filter(
+                      (voice) => !voice.lang.startsWith(navigator.language),
+                    );
+
+                    // function to render a voice item consistently
+                    const renderVoiceItem = (voice: SpeechSynthesisVoice) => (
+                      <MenuItem
+                        key={`${voice.name}::${voice.lang}`}
+                        value={`${voice.name}::${voice.lang}`}
+                        translate="no"
+                        disabled={voice.localService === false && !isOnline}
+                        sx={{ padding: "10px", borderRadius: "8px" }}
+                      >
+                        {voice.name.startsWith("Google") && <Google />}
+                        {voice.name.startsWith("Microsoft") && <Microsoft />} &nbsp;
+                        {voice.name.replace(/^(Google|Microsoft)\s*|\([^()]*\)/gi, "")} &nbsp;
+                        {!/Windows NT 10/.test(navigator.userAgent) ? (
+                          <Chip
+                            sx={{ fontWeight: 500, padding: "4px" }}
+                            label={getLanguageRegion(voice.lang || "")}
+                            icon={
+                              <span style={{ fontSize: "16px" }}>
+                                {getFlagEmoji(voice.lang.split("-")[1] || "")}
+                              </span>
+                            }
+                          />
+                        ) : (
+                          <span style={{ fontWeight: 500 }}>
+                            {getLanguageRegion(voice.lang || "")}
+                          </span>
+                        )}
+                        {voice.default && systemInfo.os !== "iOS" && systemInfo.os !== "macOS" && (
+                          <span style={{ fontWeight: 600 }}>&nbsp;Default</span>
+                        )}
+                        {!isOnline && voice.localService === false && (
+                          <span style={{ marginLeft: "auto" }}>
                             <CloudOffRounded sx={{ fontSize: "18px" }} />
-                          )}
-                        </span>
-                      )}
-                    </MenuItem>
-                  ))}
+                          </span>
+                        )}
+                      </MenuItem>
+                    );
+
+                    // create voice groups with headers
+                    const createVoiceGroup = (
+                      voices: SpeechSynthesisVoice[],
+                      headerText: string,
+                      headerId: string,
+                    ) => {
+                      if (voices.length === 0) return [];
+
+                      return [
+                        <StyledListSubheader
+                          key={headerId}
+                          sx={{ zIndex: 1, position: "sticky", top: 0 }}
+                        >
+                          {headerText}
+                        </StyledListSubheader>,
+                        ...voices.map(renderVoiceItem),
+                      ];
+                    };
+
+                    // return all menu items
+                    return [
+                      ...createVoiceGroup(
+                        matchingLanguageVoices,
+                        `Your Language (${getLanguageRegion(navigator.language)})`,
+                        "header-matching",
+                      ),
+                      ...createVoiceGroup(otherVoices, "Other Languages", "header-other"),
+                    ];
+                  })()}
                 </StyledSelect>
               ) : (
                 <NoVoiceStyles>
@@ -587,17 +640,6 @@ export const SettingsDialog = ({ open, onClose }: SettingsProps) => {
             </TabPanel>
             <TabPanel value={tabValue} index={4}>
               <TabHeading>About Todo App</TabHeading>
-              {/* {JSON.stringify(
-                availableVoices.map((voice) => ({
-                  voiceURI: voice.voiceURI,
-                  name: voice.name,
-                  lang: voice.lang,
-                  localService: voice.localService,
-                  default: voice.default,
-                })),
-                null,
-                2,
-              )} */}
               <Typography variant="body1" sx={{ mb: 2 }}>
                 📝 A simple todo app project made using React.js and MUI with many features,
                 including sharing tasks via link, theme customization and offline usage as a PWA.
