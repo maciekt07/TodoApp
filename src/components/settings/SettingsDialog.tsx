@@ -1,6 +1,7 @@
 import {
   BrightnessAutoRounded,
   CachedRounded,
+  CloudOffRounded,
   DarkModeRounded,
   DeleteRounded,
   EmojiEmotionsRounded,
@@ -61,6 +62,8 @@ import {
   VolumeSlider,
 } from "./settingsDialog.styled";
 import type { OptionItem } from "./settingsTypes";
+import baner from "../../assets/baner.png";
+import { useOnlineStatus } from "../../hooks/useOnlineStatus";
 
 const OPTION_ICON_SIZE = 32;
 
@@ -119,6 +122,7 @@ export const SettingsDialog = ({ open, onClose }: SettingsProps) => {
   const isMobile = useResponsiveDisplay();
   const muiTheme = useTheme();
   const systemTheme = useSystemTheme();
+  const isOnline = useOnlineStatus();
 
   const handleTabChange = (_event: React.SyntheticEvent, newValue: number) => {
     setTabValue(newValue);
@@ -487,6 +491,7 @@ export const SettingsDialog = ({ open, onClose }: SettingsProps) => {
                       key={voice.name}
                       value={voice.name}
                       translate="no"
+                      disabled={voice.localService === false && !isOnline}
                       sx={{
                         padding: "10px",
                         borderRadius: "8px",
@@ -515,6 +520,13 @@ export const SettingsDialog = ({ open, onClose }: SettingsProps) => {
                       {voice.default && systemInfo.os !== "iOS" && systemInfo.os !== "macOS" && (
                         <span style={{ fontWeight: 600 }}>&nbsp;Default</span>
                       )}
+                      {!isOnline && (
+                        <span style={{ marginLeft: "auto", display: "flex", alignItems: "center" }}>
+                          {voice.localService === false && (
+                            <CloudOffRounded sx={{ fontSize: "18px" }} />
+                          )}
+                        </span>
+                      )}
                     </MenuItem>
                   ))}
                 </StyledSelect>
@@ -532,6 +544,12 @@ export const SettingsDialog = ({ open, onClose }: SettingsProps) => {
                     </IconButton>
                   </Tooltip>
                 </NoVoiceStyles>
+              )}
+              {!isOnline && availableVoices.some((voice) => voice.localService === false) && (
+                <Alert severity="warning" sx={{ mt: "8px" }}>
+                  <AlertTitle>Offline Mode</AlertTitle>
+                  You are currently offline. Some Voices may require an internet connection to work.
+                </Alert>
               )}
               <SectionHeading>Voice Volume</SectionHeading>
               <div style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
@@ -569,12 +587,23 @@ export const SettingsDialog = ({ open, onClose }: SettingsProps) => {
             </TabPanel>
             <TabPanel value={tabValue} index={4}>
               <TabHeading>About Todo App</TabHeading>
+              {/* {JSON.stringify(
+                availableVoices.map((voice) => ({
+                  voiceURI: voice.voiceURI,
+                  name: voice.name,
+                  lang: voice.lang,
+                  localService: voice.localService,
+                  default: voice.default,
+                })),
+                null,
+                2,
+              )} */}
               <Typography variant="body1" sx={{ mb: 2 }}>
                 📝 A simple todo app project made using React.js and MUI with many features,
                 including sharing tasks via link, theme customization and offline usage as a PWA.
               </Typography>
               <img
-                src="https://raw.githubusercontent.com/maciekt07/TodoApp/main/screenshots/baner.png"
+                src={baner}
                 style={{ width: "100%", height: "auto" }}
                 alt="Todo App Screenshot"
               />
