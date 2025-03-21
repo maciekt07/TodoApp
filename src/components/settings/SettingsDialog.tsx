@@ -2,6 +2,7 @@ import {
   BrightnessAutoRounded,
   CachedRounded,
   CloudOffRounded,
+  CloudQueueRounded,
   DarkModeRounded,
   DeleteRounded,
   EmojiEmotionsRounded,
@@ -169,14 +170,6 @@ export const SettingsDialog = ({ open, onClose }: SettingsProps) => {
     }));
   };
 
-  // function to get the flag emoji for a given country code
-  const getFlagEmoji = (countryCode: string): string =>
-    typeof countryCode === "string"
-      ? String.fromCodePoint(
-          ...[...countryCode.toUpperCase()].map((x) => 0x1f1a5 + x.charCodeAt(0)),
-        )
-      : "";
-
   // Function to get the available speech synthesis voices
   // https://developer.mozilla.org/en-US/docs/Web/API/SpeechSynthesis
   const getAvailableVoices = (): SpeechSynthesisVoice[] => {
@@ -218,7 +211,7 @@ export const SettingsDialog = ({ open, onClose }: SettingsProps) => {
     }
   };
 
-  const filteredVoices = availableVoices
+  const filteredVoices: SpeechSynthesisVoice[] = availableVoices
     .filter(
       // remove duplicate voices as iOS/macOS tend to duplicate them for some reason
       (value, index, self) =>
@@ -298,6 +291,19 @@ export const SettingsDialog = ({ open, onClose }: SettingsProps) => {
     setVoiceVolume(newVoiceVolume);
   };
 
+  const getFlagUnicodes = (countryCode: string): string => {
+    // get the last part of the country code (PL from pl-PL)
+    const region = countryCode.split("-").pop()?.toUpperCase().slice(0, 2);
+
+    if (!region || region.length !== 2) {
+      throw new Error("Invalid country code format");
+    }
+    // convert each letter into a regional indicator symbol
+    const [codePointA, codePointB] = [...region].map((char) => char.charCodeAt(0) - 0x41 + 0x1f1e6);
+
+    return `${codePointA.toString(16)}-${codePointB.toString(16)}`;
+  };
+
   return (
     <Dialog
       open={open}
@@ -305,13 +311,15 @@ export const SettingsDialog = ({ open, onClose }: SettingsProps) => {
       maxWidth="md"
       fullWidth
       fullScreen={isMobile}
-      PaperProps={{
-        style: {
-          padding: isMobile ? "12px 0" : "12px",
-          borderRadius: isMobile ? 0 : "24px",
-          minWidth: "400px",
-          maxHeight: isMobile ? undefined : "500px",
-          overflow: "hidden",
+      slotProps={{
+        paper: {
+          style: {
+            padding: isMobile ? "12px 0" : "12px",
+            borderRadius: isMobile ? 0 : "24px",
+            minWidth: "400px",
+            maxHeight: isMobile ? undefined : "500px",
+            overflow: "hidden",
+          },
         },
       }}
     >
@@ -524,30 +532,38 @@ export const SettingsDialog = ({ open, onClose }: SettingsProps) => {
                         disabled={voice.localService === false && !isOnline}
                         sx={{ padding: "10px", borderRadius: "8px" }}
                       >
-                        {voice.name.startsWith("Google") && <Google />}
-                        {voice.name.startsWith("Microsoft") && <Microsoft />} &nbsp;
-                        {voice.name.replace(/^(Google|Microsoft)\s*|\([^()]*\)/gi, "")} &nbsp;
-                        {!/Windows NT 10/.test(navigator.userAgent) ? (
-                          <Chip
-                            sx={{ fontWeight: 500, padding: "4px" }}
-                            label={getLanguageRegion(voice.lang || "")}
-                            icon={
-                              <span style={{ fontSize: "16px" }}>
-                                {getFlagEmoji(voice.lang.split("-")[1] || "")}
-                              </span>
-                            }
-                          />
-                        ) : (
-                          <span style={{ fontWeight: 500 }}>
-                            {getLanguageRegion(voice.lang || "")}
-                          </span>
-                        )}
+                        {voice.name.startsWith("Google") && <Google sx={{ mr: "8px" }} />}
+                        {voice.name.startsWith("Microsoft") && <Microsoft sx={{ mr: "8px" }} />}
+                        {voice.name.replace(/^(Google|Microsoft)\s*|\([^()]*\)/gi, "")}
+                        <Chip
+                          sx={{ fontWeight: 500, padding: "4px", ml: "8px" }}
+                          label={getLanguageRegion(voice.lang || "")}
+                          icon={
+                            <span
+                              style={{ fontSize: "16px", alignItems: "center", display: "flex" }}
+                            >
+                              <Emoji
+                                unified={getFlagUnicodes(voice.lang)}
+                                emojiStyle={user.emojisStyle}
+                                size={18}
+                              />
+                            </span>
+                          }
+                        />
                         {voice.default && systemInfo.os !== "iOS" && systemInfo.os !== "macOS" && (
-                          <span style={{ fontWeight: 600 }}>&nbsp;Default</span>
+                          <span style={{ fontWeight: 600 }}>&nbsp; Default</span>
                         )}
-                        {!isOnline && voice.localService === false && (
-                          <span style={{ marginLeft: "auto" }}>
-                            <CloudOffRounded sx={{ fontSize: "18px" }} />
+                        {voice.localService === false && (
+                          <span
+                            style={{ marginLeft: "auto", display: "flex", alignItems: "center" }}
+                          >
+                            {!isOnline ? (
+                              <CloudOffRounded sx={{ fontSize: "18px" }} />
+                            ) : (
+                              <Tooltip title="Requires Internet Connection" placement="left">
+                                <CloudQueueRounded sx={{ fontSize: "18px" }} />
+                              </Tooltip>
+                            )}
                           </span>
                         )}
                       </MenuItem>
