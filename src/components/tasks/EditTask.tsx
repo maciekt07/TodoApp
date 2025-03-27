@@ -137,11 +137,13 @@ export const EditTask = ({ open, task, onClose }: EditTaskProps) => {
       onClose={() => {
         onClose();
       }}
-      PaperProps={{
-        style: {
-          borderRadius: "24px",
-          padding: "12px",
-          maxWidth: "600px",
+      slotProps={{
+        paper: {
+          style: {
+            borderRadius: "24px",
+            padding: "12px",
+            maxWidth: "600px",
+          },
         },
       }}
     >
@@ -203,38 +205,43 @@ export const EditTask = ({ open, task, onClose }: EditTaskProps) => {
           name="deadline"
           type="datetime-local"
           value={
-            editedTask?.deadline //  use swedish locale because it gives the exact format the input need
+            editedTask?.deadline
               ? new Date(editedTask.deadline).toLocaleString("sv").replace(" ", "T").slice(0, 16)
               : ""
           }
           onChange={handleInputChange}
-          InputLabelProps={{ shrink: true }}
+          slotProps={{
+            inputLabel: {
+              shrink: true,
+            },
+            input: {
+              startAdornment: editedTask?.deadline ? (
+                <InputAdornment position="start">
+                  <Tooltip title="Clear">
+                    <IconButton
+                      color="error"
+                      onClick={() => {
+                        setEditedTask((prevTask) => ({
+                          ...(prevTask as Task),
+                          deadline: undefined,
+                        }));
+                      }}
+                    >
+                      <CancelRounded />
+                    </IconButton>
+                  </Tooltip>
+                </InputAdornment>
+              ) : undefined,
+            },
+          }}
           sx={{
             colorScheme: theme.darkmode ? "dark" : "light",
             " & .MuiInputBase-root": {
               transition: ".3s all",
             },
           }}
-          InputProps={{
-            startAdornment: editedTask?.deadline ? (
-              <InputAdornment position="start">
-                <Tooltip title="Clear">
-                  <IconButton
-                    color="error"
-                    onClick={() => {
-                      setEditedTask((prevTask) => ({
-                        ...(prevTask as Task),
-                        deadline: undefined,
-                      }));
-                    }}
-                  >
-                    <CancelRounded />
-                  </IconButton>
-                </Tooltip>
-              </InputAdornment>
-            ) : undefined,
-          }}
         />
+
         {settings.enableCategories !== undefined && settings.enableCategories && (
           <CategorySelect
             fontColor={theme.darkmode ? ColorPalette.fontLight : ColorPalette.fontDark}

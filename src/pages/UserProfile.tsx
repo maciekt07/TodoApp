@@ -309,12 +309,14 @@ const UserProfile = () => {
             }
             autoComplete="url"
             type="url"
-            InputProps={{
-              startAdornment: (
-                <InputAdornment position="start">
-                  <LinkRounded />
-                </InputAdornment>
-              ),
+            slotProps={{
+              input: {
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <LinkRounded />
+                  </InputAdornment>
+                ),
+              },
             }}
           />
 

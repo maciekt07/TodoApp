@@ -189,11 +189,13 @@ const SharePage = () => {
       <Dialog
         open
         fullWidth
-        PaperProps={{
-          style: {
-            borderRadius: "24px",
-            padding: " 10px 6px",
-            width: "100% !important",
+        slotProps={{
+          paper: {
+            style: {
+              borderRadius: "24px",
+              padding: " 10px 6px",
+              width: "100% !important",
+            },
           },
         }}
       >

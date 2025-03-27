@@ -335,11 +335,13 @@ export const CustomEmojiPicker = ({ emoji, setEmoji, color, name, type }: EmojiP
           <Dialog
             open={showEmojiPicker}
             onClose={toggleEmojiPicker}
-            PaperProps={{
-              style: {
-                padding: "12px",
-                borderRadius: "24px",
-                minWidth: "400px",
+            slotProps={{
+              paper: {
+                style: {
+                  padding: "12px",
+                  borderRadius: "24px",
+                  minWidth: "400px",
+                },
               },
             }}
           >

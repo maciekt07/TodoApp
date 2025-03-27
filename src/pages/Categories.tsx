@@ -332,11 +332,13 @@ const Categories = () => {
         <Dialog
           open={openDeleteDialog}
           onClose={() => setOpenDeleteDialog(false)}
-          PaperProps={{
-            style: {
-              borderRadius: "24px",
-              padding: "12px",
-              maxWidth: "600px",
+          slotProps={{
+            paper: {
+              style: {
+                borderRadius: "24px",
+                padding: "12px",
+                maxWidth: "600px",
+              },
             },
           }}
         >
@@ -366,11 +368,13 @@ const Categories = () => {
         <Dialog
           open={openEditDialog}
           onClose={handleEditDimiss}
-          PaperProps={{
-            style: {
-              borderRadius: "24px",
-              padding: "12px",
-              minWidth: "350px",
+          slotProps={{
+            paper: {
+              style: {
+                borderRadius: "24px",
+                padding: "12px",
+                minWidth: "350px",
+              },
             },
           }}
         >

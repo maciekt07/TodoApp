@@ -21,3 +21,4 @@ const getBrowser = (): Browser => {
 };
 
 export const systemInfo = { os: getOperatingSystem(), browser: getBrowser() };
+export const isAppleDevice = /iPhone|iPad|iPod|Macintosh/i.test(navigator.userAgent);

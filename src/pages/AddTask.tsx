@@ -188,19 +188,22 @@ const AddTask = () => {
             sx={{
               colorScheme: isDark(theme.secondary) ? "dark" : "light",
             }}
-            InputProps={{
-              startAdornment:
-                deadline && deadline !== "" ? (
-                  <InputAdornment position="start">
-                    <Tooltip title="Clear">
-                      <IconButton color="error" onClick={() => setDeadline("")}>
-                        <CancelRounded />
-                      </IconButton>
-                    </Tooltip>
-                  </InputAdornment>
-                ) : undefined,
+            slotProps={{
+              input: {
+                startAdornment:
+                  deadline && deadline !== "" ? (
+                    <InputAdornment position="start">
+                      <Tooltip title="Clear">
+                        <IconButton color="error" onClick={() => setDeadline("")}>
+                          <CancelRounded />
+                        </IconButton>
+                      </Tooltip>
+                    </InputAdornment>
+                  ) : undefined,
+              },
             }}
           />
+
           {user.settings.enableCategories !== undefined && user.settings.enableCategories && (
             <div style={{ marginBottom: "14px" }}>
               <br />
