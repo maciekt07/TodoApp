@@ -1,7 +1,8 @@
 import styled from "@emotion/styled";
 import { getFontColor } from "../utils";
-import { fadeIn } from "./keyframes.styled";
-import { Button, TextField } from "@mui/material";
+import { fadeIn, scale } from "./keyframes.styled";
+import { Button, css, TextField } from "@mui/material";
+import { StarOutlineRounded, StarRounded } from "@mui/icons-material";
 
 export const CategoriesContainer = styled.div`
   display: flex;
@@ -16,31 +17,11 @@ export const CategoryElementsContainer = styled.div`
   flex-direction: column;
   align-items: center;
   max-height: 350px;
-  background: ${({ theme }) => getFontColor(theme.secondary)}1a;
+  background: ${({ theme }) => (theme.darkmode ? "#0000005a" : "#acacac5a")};
   overflow-y: auto;
   overflow-x: hidden;
   padding: 24px 18px;
-  border-radius: 18px 0 0 18px;
-  /* Custom Scrollbar Styles */
-  ::-webkit-scrollbar {
-    width: 8px;
-    border-radius: 4px;
-    background-color: ${({ theme }) => getFontColor(theme.secondary) + "15"};
-  }
-
-  ::-webkit-scrollbar-thumb {
-    background-color: ${({ theme }) => getFontColor(theme.secondary) + "30"};
-    border-radius: 4px;
-  }
-
-  ::-webkit-scrollbar-thumb:hover {
-    background-color: ${({ theme }) => getFontColor(theme.secondary) + "50"};
-  }
-
-  ::-webkit-scrollbar-track {
-    border-radius: 4px;
-    background-color: ${({ theme }) => getFontColor(theme.secondary) + "15"};
-  }
+  border-radius: 18px;
 `;
 
 export const AddContainer = styled.div`
@@ -55,7 +36,8 @@ export const CategoryElement = styled.div<{ clr: string }>`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  width: 350px;
+  max-width: 400px;
+  width: 400px;
   margin: 6px 0;
   padding: 12px;
   border-radius: 18px;
@@ -73,16 +55,16 @@ export const CategoryContent = styled.div`
 `;
 
 export const ActionButton = styled.div`
-  background: #ffffffcd;
+  /* background: #ffffffcd; */
+  background: ${({ theme }) => (theme.darkmode ? "#000000cd" : "#ffffffcd")};
   border-radius: 100%;
-  margin: 0 4px;
 `;
 export const CategoryInput = styled(TextField)`
   margin: 12px;
 
   .MuiOutlinedInput-root {
     border-radius: 16px;
-    width: 350px;
+    width: 400px;
     color: ${({ theme }) => getFontColor(theme.secondary)};
   }
   & .MuiFormHelperText-root {
@@ -110,7 +92,7 @@ export const AddCategoryButton = styled(Button)`
   cursor: pointer;
   transition: 0.3s all;
   margin: 20px;
-  width: 350px;
+  width: 400px;
   text-transform: capitalize;
   &:hover {
     box-shadow: 0px 0px 24px 0px ${({ theme }) => theme.primary + "80"};
@@ -122,4 +104,16 @@ export const AddCategoryButton = styled(Button)`
     opacity: 0.7;
     color: white;
   }
+`;
+
+const StarIconStyles = css`
+  animation: ${scale} 0.2s ease-in;
+`;
+
+export const StarChecked = styled(StarRounded)`
+  ${StarIconStyles}
+`;
+
+export const StarUnchecked = styled(StarOutlineRounded)`
+  ${StarIconStyles}
 `;

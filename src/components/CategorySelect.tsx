@@ -4,6 +4,7 @@ import {
   EditRounded,
   ExpandMoreRounded,
   RadioButtonChecked,
+  StarRounded,
 } from "@mui/icons-material";
 import {
   Box,
@@ -15,6 +16,7 @@ import {
   Select,
   SelectChangeEvent,
   useTheme,
+  ListSubheader,
 } from "@mui/material";
 import { Emoji } from "emoji-picker-react";
 import { CSSProperties, useContext, useState } from "react";
@@ -45,7 +47,7 @@ export const CategorySelect: React.FC<CategorySelectProps> = ({
   fontColor,
 }) => {
   const { user } = useContext(UserContext);
-  const { categories, emojisStyle } = user;
+  const { categories, emojisStyle, favoriteCategories } = user;
   const [selectedCats, setSelectedCats] = useState<Category[]>(selectedCategories);
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
@@ -66,6 +68,14 @@ export const CategorySelect: React.FC<CategorySelectProps> = ({
     setSelectedCats(selectedCategories);
     onCategoryChange?.(selectedCategories);
   };
+
+  // group categories by favorite status
+  const favoriteCats = categories.filter(
+    (cat) => favoriteCategories && favoriteCategories.includes(cat.id),
+  );
+  const otherCats = categories.filter(
+    (cat) => !favoriteCategories || !favoriteCategories.includes(cat.id),
+  );
 
   return (
     <FormControl sx={{ width: width || "100%" }}>
@@ -131,34 +141,8 @@ export const CategorySelect: React.FC<CategorySelectProps> = ({
           },
         }}
       >
-        <HeaderMenuItem disabled>
-          <div style={{ display: "flex", flexDirection: "column", gap: "2px" }}>
-            <b>
-              Select Categories{" "}
-              <span
-                style={{
-                  transition: ".3s color",
-                  color: selectedCats.length >= MAX_CATEGORIES_IN_TASK ? "#f34141" : "currentcolor",
-                }}
-              >
-                {categories.length > 3 && <span>(max {MAX_CATEGORIES_IN_TASK})</span>}
-              </span>
-            </b>
-            {selectedCats.length > 0 && (
-              <SelectedNames>
-                Selected:{" "}
-                {selectedCats.length > 0 &&
-                  new Intl.ListFormat("en", {
-                    style: "long",
-                    type: "conjunction",
-                  }).format(selectedCats.map((category) => category.name))}
-              </SelectedNames>
-            )}
-          </div>
-        </HeaderMenuItem>
-
-        {categories && categories.length > 0 ? (
-          categories.map((category) => (
+        {(() => {
+          const renderCategoryItem = (category: Category) => (
             <CategoriesMenu
               key={category.id}
               value={category.id}
@@ -174,28 +158,86 @@ export const CategorySelect: React.FC<CategorySelectProps> = ({
               &nbsp;
               {category.name}
             </CategoriesMenu>
-          ))
-        ) : (
-          <NoCategories disableTouchRipple>
-            <p>You don't have any categories</p>
-            <Link to="/categories" style={{ width: "100%" }}>
-              <Button fullWidth variant="outlined">
-                <AddRounded /> &nbsp; Create Category
-              </Button>
-            </Link>
-          </NoCategories>
-        )}
+          );
+          const createCategoryGroup = (
+            cats: Category[],
+            headerText: React.ReactElement | string,
+            headerId: string,
+          ) => {
+            if (cats.length === 0) return [];
 
-        {categories && categories.length > 0 && (
-          <div style={{ margin: "8px" }}>
-            <Divider sx={{ mb: "12px", mt: "16px" }} />
-            <Link to="/categories">
-              <Button fullWidth variant="outlined" sx={{ mb: "8px", mt: "2px" }}>
-                <EditRounded /> &nbsp; Modify Categories
-              </Button>
-            </Link>
-          </div>
-        )}
+            return [
+              <StyledListSubheader key={headerId}>{headerText}</StyledListSubheader>,
+              ...cats.map(renderCategoryItem),
+            ];
+          };
+
+          if (categories && categories.length > 0) {
+            return [
+              <HeaderMenuItem key="header-info" disabled>
+                <div style={{ display: "flex", flexDirection: "column", gap: "2px" }}>
+                  <b>
+                    Select Categories{" "}
+                    <span
+                      style={{
+                        transition: ".3s color",
+                        color:
+                          selectedCats.length >= MAX_CATEGORIES_IN_TASK
+                            ? "#f34141"
+                            : "currentcolor",
+                      }}
+                    >
+                      {categories.length > 3 && <span>(max {MAX_CATEGORIES_IN_TASK})</span>}
+                    </span>
+                  </b>
+                  <SelectedNames>
+                    Selected:{" "}
+                    {selectedCats.length > 0 ? (
+                      new Intl.ListFormat("en", {
+                        style: "long",
+                        type: "conjunction",
+                      }).format(selectedCats.map((category) => category.name))
+                    ) : (
+                      <span style={{ fontStyle: "italic" }}>none</span>
+                    )}
+                  </SelectedNames>
+                </div>
+              </HeaderMenuItem>,
+              ...createCategoryGroup(
+                favoriteCats,
+                <>
+                  <StarRounded color="warning" sx={{ fontSize: "18px" }} />
+                  &nbsp;Favorite Categories
+                </>,
+                "header-favorites",
+              ),
+              ...createCategoryGroup(
+                otherCats,
+                favoriteCats.length > 0 ? "Other Categories" : "",
+                "header-others",
+              ),
+              <div key="footer" style={{ margin: "8px" }}>
+                <Divider sx={{ mb: "12px", mt: "16px" }} />
+                <Link to="/categories">
+                  <Button fullWidth variant="outlined" sx={{ mb: "8px", mt: "2px" }}>
+                    <EditRounded /> &nbsp; Modify Categories
+                  </Button>
+                </Link>
+              </div>,
+            ];
+          } else {
+            return [
+              <NoCategories key="no-categories" disableTouchRipple>
+                <p>You don't have any categories</p>
+                <Link to="/categories" style={{ width: "100%" }}>
+                  <Button fullWidth variant="outlined">
+                    <AddRounded /> &nbsp; Create Category
+                  </Button>
+                </Link>
+              </NoCategories>,
+            ];
+          }
+        })()}
       </StyledSelect>
     </FormControl>
   );
@@ -211,7 +253,6 @@ const StyledSelect = styled(Select)<{ width?: CSSProperties["width"] }>`
   z-index: 999;
   border: none !important;
 `;
-
 const CategoriesMenu = styled(MenuItem)<{ clr: string; disable?: boolean }>`
   padding: 12px 16px;
   border-radius: 16px;
@@ -249,22 +290,16 @@ const CategoriesMenu = styled(MenuItem)<{ clr: string; disable?: boolean }>`
     }
   }
 `;
-
 const HeaderMenuItem = styled(MenuItem)`
   opacity: 1 !important;
   font-weight: 500;
   position: sticky !important;
   top: 0;
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
   z-index: 99;
   pointer-events: none !important;
   cursor: default !important;
-  @-moz-document url-prefix() {
-    // firefox specific style since it doesnt add blur
-    background: ${({ theme }) => (theme.darkmode ? "#2f2f2ff0" : "#fffffff0")} !important;
-  }
-  background: ${({ theme }) => (theme.darkmode ? "#2f2f2fd0" : "#ffffffd0")};
+  background-color: ${({ theme }) => (theme.darkmode ? "#2e2e2e" : "#ffffff")};
+  line-height: 20px;
 `;
 
 const SelectedNames = styled.div`
@@ -291,4 +326,15 @@ const NoCategories = styled(MenuItem)`
   &:hover {
     background: transparent !important;
   }
+`;
+
+const StyledListSubheader = styled(ListSubheader)`
+  background-color: ${({ theme }) => (theme.darkmode ? "#2e2e2e" : "#ffffff")};
+  font-weight: 600;
+  position: sticky;
+  z-index: 1;
+  top: 54px;
+  line-height: 26px;
+  display: flex;
+  align-items: center;
 `;

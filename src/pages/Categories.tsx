@@ -27,6 +27,8 @@ import {
   CategoryInput,
   DialogBtn,
   EditNameInput,
+  StarChecked,
+  StarUnchecked,
 } from "../styles";
 import { generateUUID, getFontColor, showToast } from "../utils";
 import { ColorPalette } from "../theme/themeConfig";
@@ -208,6 +210,15 @@ const Categories = () => {
     }
   };
 
+  const handleAddToFavorites = (category: Category) => {
+    setUser((prevUser) => ({
+      ...prevUser,
+      favoriteCategories: prevUser.favoriteCategories.includes(category.id)
+        ? prevUser.favoriteCategories.filter((id) => id !== category.id)
+        : [...prevUser.favoriteCategories, category.id],
+    }));
+  };
+
   if (!user.settings.enableCategories) {
     return <NotFound message="Categories are not enabled." />;
   }
@@ -251,7 +262,16 @@ const Categories = () => {
                       </Tooltip>
                     )}
                   </CategoryContent>
-                  <div style={{ display: "flex", gap: "4px" }}>
+                  <div style={{ display: "flex", gap: "6px" }}>
+                    <ActionButton>
+                      <IconButton color="warning" onClick={() => handleAddToFavorites(category)}>
+                        {user.favoriteCategories.includes(category.id) ? (
+                          <StarChecked color="warning" />
+                        ) : (
+                          <StarUnchecked color="disabled" />
+                        )}
+                      </IconButton>
+                    </ActionButton>
                     <ActionButton>
                       <IconButton
                         color="primary"
@@ -268,8 +288,11 @@ const Categories = () => {
                         color="error"
                         onClick={() => {
                           setSelectedCategoryId(category.id);
-                          if (totalTasksCount > 0) {
-                            // Open delete dialog if there are tasks associated to catagory
+                          if (
+                            totalTasksCount > 0 ||
+                            user.favoriteCategories.includes(category.id)
+                          ) {
+                            // Open delete dialog if there are tasks associated to catagory or if it's a favorite
                             setOpenDeleteDialog(true);
                           } else {
                             // If no associated tasks, directly handle deletion
@@ -319,7 +342,7 @@ const Categories = () => {
             onColorChange={(color) => {
               setColor(color);
             }}
-            width={350}
+            width={400}
             fontColor={getFontColor(theme.secondary)}
           />
           <AddCategoryButton

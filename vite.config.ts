@@ -10,6 +10,9 @@ export default defineConfig({
   test: {
     globals: true,
   },
+  optimizeDeps: {
+    exclude: ["@vite-pwa/assets-generator"],
+  },
   plugins: [
     react(),
     // Generate QR code for npm run dev:host

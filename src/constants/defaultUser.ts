@@ -24,7 +24,6 @@ export const defaultUser: User = {
     appBadge: false,
     voiceVolume: 0.6,
   },
-
   categories: [
     { id: "857f0db6-43b2-43eb-8143-ec4e26472516", name: "Home", emoji: "1f3e0", color: "#1fff44" },
     { id: "0292cba5-f6e2-41c4-b5a7-c59a0aaecfe3", name: "Work", emoji: "1f3e2", color: "#248eff" },
@@ -47,6 +46,7 @@ export const defaultUser: User = {
       color: "#ff8e24",
     },
   ],
+  favoriteCategories: [],
   colorList: [
     "#FF69B4",
     "#FF22B4",

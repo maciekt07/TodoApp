@@ -17,6 +17,7 @@ export interface User {
   emojisStyle: EmojiStyle;
   tasks: Task[];
   categories: Category[];
+  favoriteCategories: UUID[];
   colorList: string[];
   settings: AppSettings;
   theme: "system" | (string & {});

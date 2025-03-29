@@ -578,12 +578,7 @@ export const SettingsDialog = ({ open, onClose }: SettingsProps) => {
                       if (voices.length === 0) return [];
 
                       return [
-                        <StyledListSubheader
-                          key={headerId}
-                          sx={{ zIndex: 1, position: "sticky", top: 0 }}
-                        >
-                          {headerText}
-                        </StyledListSubheader>,
+                        <StyledListSubheader key={headerId}>{headerText}</StyledListSubheader>,
                         ...voices.map(renderVoiceItem),
                       ];
                     };

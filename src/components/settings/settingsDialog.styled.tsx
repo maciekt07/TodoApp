@@ -115,4 +115,7 @@ export const VolumeSlider = styled(Stack)`
 export const StyledListSubheader = styled(ListSubheader)`
   background-color: ${({ theme }) => (theme.darkmode ? "#2e2e2e" : "#ffffff")};
   font-weight: 600;
+  position: sticky;
+  z-index: 1;
+  top: 0;
 `;
