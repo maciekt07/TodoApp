@@ -86,6 +86,17 @@ The app features a custom update prompt that notifies users when a new version i
 
 <img src="https://raw.githubusercontent.com/maciekt07/TodoApp/main/screenshots/UpdatePrompt.png" alt="update prompt" width="260px" />
 
+### 📱 Custom Splash Screens
+
+The app automatically generates custom splash screens for various iOS and iPadOS devices in both light and dark modes. These splash screens provide a smooth, native-like launch experience when the app is opened as a PWA.
+
+<img src="screenshots/SplashScreen.png" alt="Splash Screen Example" width="300px" />
+
+To generate splash screens:
+
+- Development: `npm run generate-splash:dev`
+- Production: `npm run generate-splash:prod` (automatically runs during build)
+
 ## 👨‍💻 Installation
 
 To install and run the project locally, follow these steps:

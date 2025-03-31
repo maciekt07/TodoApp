@@ -3,9 +3,7 @@
   "files.associations": {
     "themeConfig.ts": "typescriptreact" // make color picker visible in this file
   },
-  // "material-icon-theme.files.associations": {
-  //   "*.styled.tsx": "palette"
-  // },
+
   "material-icon-theme.files.customClones": [
     {
       "name": "emotion",
@@ -27,12 +25,19 @@
       "fileNames": ["example-import.json"]
     }
   ],
+
   "material-icon-theme.folders.customClones": [
     {
       "name": "dev-dist",
       "base": "dist",
       "color": "green-800",
       "folderNames": ["dev-dist"]
+    },
+    {
+      "name": "splash-screens",
+      "base": "images",
+      "color": "purple-300",
+      "folderNames": ["splash-screens"]
     }
   ]
 }

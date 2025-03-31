@@ -12,9 +12,6 @@ dist
 dist-ssr
 *.local
 
-# Local PWA dist folder
-dev-dist
-
 # Editor directories and files
 !.vscode/extensions.json
 .vs
@@ -25,3 +22,9 @@ dev-dist
 *.njsproj
 *.sln
 *.sw?
+
+# Local PWA dist folder
+dev-dist
+
+# DEV Auto-generated PWA splash screens
+public/splash-screens

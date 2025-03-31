@@ -333,8 +333,8 @@ const StyledListSubheader = styled(ListSubheader)`
   font-weight: 600;
   position: sticky;
   z-index: 1;
-  top: 54px;
-  line-height: 26px;
+  top: 52px;
+  line-height: 28px;
   display: flex;
   align-items: center;
 `;
