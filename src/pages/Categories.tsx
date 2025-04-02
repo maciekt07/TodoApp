@@ -75,6 +75,7 @@ const Categories = () => {
   }, [selectedCategoryId, user.categories]);
 
   const handleDelete = (categoryId: UUID | undefined) => {
+    // TODO: remove from favs
     if (categoryId) {
       const categoryName =
         user.categories.find((category) => category.id === categoryId)?.name || "";

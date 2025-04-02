@@ -90,7 +90,7 @@ The app features a custom update prompt that notifies users when a new version i
 
 The app automatically generates custom splash screens for various iOS and iPadOS devices in both light and dark modes. These splash screens provide a smooth, native-like launch experience when the app is opened as a PWA.
 
-<img src="screenshots/SplashScreen.png" alt="Splash Screen Example" width="300px" />
+<img src="screenshots/SplashScreen.png" alt="Splash Screen Example" width="450px" />
 
 To generate splash screens:
 

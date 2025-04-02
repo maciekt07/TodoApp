@@ -146,24 +146,24 @@ const devices = [
     ratio: 3,
     name: "iPhone_8_Plus__iPhone_7_Plus__iPhone_6s_Plus__iPhone_6_Plus",
   },
-  // iPhone 8 / 7 / 6s / 6 / 4.7" iPhone SE
-  {
-    cssWidth: 375,
-    cssHeight: 667,
-    pxWidth: 750,
-    pxHeight: 1334,
-    ratio: 2,
-    name: "iPhone_8__iPhone_7__iPhone_6s__iPhone_6__4.7__iPhone_SE",
-  },
-  // 4" iPhone SE / iPod touch 5th gen+
-  {
-    cssWidth: 320,
-    cssHeight: 568,
-    pxWidth: 640,
-    pxHeight: 1136,
-    ratio: 2,
-    name: "4__iPhone_SE__iPod_touch_5th_generation_and_later",
-  },
+  // // iPhone 8 / 7 / 6s / 6 / 4.7" iPhone SE
+  // {
+  //   cssWidth: 375,
+  //   cssHeight: 667,
+  //   pxWidth: 750,
+  //   pxHeight: 1334,
+  //   ratio: 2,
+  //   name: "iPhone_8__iPhone_7__iPhone_6s__iPhone_6__4.7__iPhone_SE",
+  // },
+  // // 4" iPhone SE / iPod touch 5th gen+
+  // {
+  //   cssWidth: 320,
+  //   cssHeight: 568,
+  //   pxWidth: 640,
+  //   pxHeight: 1136,
+  //   ratio: 2,
+  //   name: "4__iPhone_SE__iPod_touch_5th_generation_and_later",
+  // },
   // 13" iPad Pro M4
   {
     cssWidth: 1032,
