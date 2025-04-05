@@ -92,10 +92,7 @@ The app automatically generates custom splash screens for various iOS and iPadOS
 
 <img src="screenshots/SplashScreen.png" alt="Splash Screen Example" width="450px" />
 
-To generate splash screens:
-
-- Development: `npm run generate-splash:dev`
-- Production: `npm run generate-splash:prod` (automatically runs during build)
+To generate splash screens: `npm run generate-splash`
 
 ## 👨‍💻 Installation
 

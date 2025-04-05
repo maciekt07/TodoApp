@@ -20,10 +20,9 @@
     "lint:fix": "eslint . --fix",
     "prettier": "prettier --write \"**/*.{ts,tsx,md,json,html}\"",
     "format": "npm run lint:fix && npm run prettier",
-    "generate-splash:dev": "node scripts/generateSplashScreens.mjs --mode=dev && prettier --write index.html",
-    "generate-splash:prod": "node scripts/generateSplashScreens.mjs --mode=prod",
+    "generate-splash": "node scripts/generateSplashScreens.mjs && prettier --write index.html",
     "generate-splash:cleanup": "node scripts/generateSplashScreens.mjs --mode=cleanup && prettier --write index.html",
-    "build": "tsc && vite build && npm run generate-splash:prod",
+    "build": "tsc && vite build",
     "preview": "vite preview",
     "preview:host": "vite preview --host"
   },

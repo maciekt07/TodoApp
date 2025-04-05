@@ -5,13 +5,17 @@ import { fileURLToPath } from "url";
 //TODO: improve performance
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
-const mode = process.argv.find((arg) => arg.startsWith("--mode="))?.split("=")[1] || "dev";
+const mode = process.argv.find((arg) => arg.startsWith("--mode="))?.split("=")[1] || "default";
+
+if (mode !== "default" && mode !== "cleanup") {
+  console.error("Invalid mode. Use --mode=default or --mode=cleanup");
+  process.exit(1);
+}
 
 const startTime = performance.now();
 
 const prefix = "[Splash Generator]";
 
-// dev cleanup
 if (mode === "cleanup") {
   // remove splash-screens directory
   const splashDir = path.join(__dirname, "../public/splash-screens");
@@ -37,10 +41,7 @@ if (mode === "cleanup") {
 }
 
 /** @type {string} output dir path for splash screens */
-const outputDir = path.join(
-  __dirname,
-  mode === "dev" ? "../public/splash-screens" : "../dist/splash-screens",
-);
+const outputDir = path.join(__dirname, "../public/splash-screens");
 if (!fs.existsSync(outputDir)) fs.mkdirSync(outputDir, { recursive: true });
 
 /**
@@ -443,7 +444,7 @@ const generateLinkTags = () =>
  * @returns {void}
  */
 const updateIndexHtml = () => {
-  const indexPath = path.join(__dirname, mode === "dev" ? "../index.html" : "../dist/index.html");
+  const indexPath = path.join(__dirname, "../index.html");
   let indexHtml = fs.readFileSync(indexPath, "utf8");
 
   // remove all existing splash screen links
@@ -464,9 +465,7 @@ const updateIndexHtml = () => {
   ].join("");
 
   fs.writeFileSync(indexPath, newHtml);
-  console.log(
-    `${prefix} Updated ${mode === "dev" ? "index.html" : "dist/index.html"} successfully`,
-  );
+  console.log(`${prefix} Updated index.html successfully`);
 };
 
 (async () => {

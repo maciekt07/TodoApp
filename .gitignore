@@ -25,6 +25,3 @@ dist-ssr
 
 # Local PWA dist folder
 dev-dist
-
-# DEV Auto-generated PWA splash screens
-public/splash-screens
