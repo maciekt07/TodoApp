@@ -6,7 +6,9 @@ import { UserContext } from "../../contexts/UserContext";
 interface CustomSwitchProps {
   header: string;
   text?: string;
-  settingKey: Exclude<keyof Omit<User["settings"], "voice" | "voiceVolume">, undefined>;
+  settingKey: keyof {
+    [K in keyof User["settings"] as User["settings"][K] extends boolean ? K : never]: never;
+  }; // get boolean keys only
 }
 
 const CustomSwitch: React.FC<CustomSwitchProps> = ({ header, text, settingKey }) => {

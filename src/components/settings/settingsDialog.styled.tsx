@@ -93,7 +93,7 @@ export const StyledMenuItem = styled(MenuItem)`
   gap: 6px;
 `;
 
-export const NoVoiceStyles = styled.p`
+export const NoVoiceStyles = styled.div`
   display: flex;
   align-items: center;
   flex-direction: column;
@@ -101,6 +101,7 @@ export const NoVoiceStyles = styled.p`
   opacity: 0.8;
   font-weight: 500;
   max-width: 330px;
+  margin: 0 auto;
 `;
 
 export const VolumeSlider = styled(Stack)`

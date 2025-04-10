@@ -35,6 +35,7 @@ export function TabPanel({ children, value, index, ...other }: TabPanelProps) {
       hidden={value !== index}
       id={`${name}-tabpanel-${index}`}
       aria-labelledby={`${name}-tab-${index}`}
+      style={{ overflowX: "hidden" }}
       {...other}
     >
       {value === index && (
