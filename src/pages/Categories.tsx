@@ -1,15 +1,22 @@
 import { Emoji } from "emoji-picker-react";
 import { lazy, useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { ColorPicker, CustomDialogTitle, CustomEmojiPicker, TopBar } from "../components";
-import type { Category, UUID } from "../types/user";
-import { useTheme } from "@emotion/react";
-import { Delete, DeleteRounded, Edit, SaveRounded } from "@mui/icons-material";
 import {
+  CategoryBadge,
+  ColorPicker,
+  CustomDialogTitle,
+  CustomEmojiPicker,
+  TopBar,
+} from "../components";
+import type { Category, Task, UUID } from "../types/user";
+import { useTheme } from "@emotion/react";
+import { Delete, DeleteRounded, Edit, ExpandMoreRounded, SaveRounded } from "@mui/icons-material";
+import {
+  AccordionDetails,
+  AccordionSummary,
   Dialog,
   DialogActions,
   DialogContent,
-  DialogTitle,
   IconButton,
   Tooltip,
 } from "@mui/material";
@@ -20,6 +27,7 @@ import {
   ActionButton,
   AddCategoryButton,
   AddContainer,
+  AssociatedTasksAccordion,
   CategoriesContainer,
   CategoryContent,
   CategoryElement,
@@ -75,11 +83,13 @@ const Categories = () => {
   }, [selectedCategoryId, user.categories]);
 
   const handleDelete = (categoryId: UUID | undefined) => {
-    // TODO: remove from favs
     if (categoryId) {
       const categoryName =
         user.categories.find((category) => category.id === categoryId)?.name || "";
       const updatedCategories = user.categories.filter((category) => category.id !== categoryId);
+      // Remove from favorite categories
+      const updatedFavoriteCategories = user.favoriteCategories.filter((id) => id !== categoryId);
+
       // Remove the category from tasks that have it associated
       const updatedTasks = user.tasks.map((task) => {
         const updatedCategoryList = task.category?.filter((category) => category.id !== categoryId);
@@ -92,6 +102,7 @@ const Categories = () => {
       setUser({
         ...user,
         categories: updatedCategories,
+        favoriteCategories: updatedFavoriteCategories,
         tasks: updatedTasks,
       });
 
@@ -218,6 +229,10 @@ const Categories = () => {
         ? prevUser.favoriteCategories.filter((id) => id !== category.id)
         : [...prevUser.favoriteCategories, category.id],
     }));
+  };
+
+  const getAssociatedTasks = (categoryId: UUID): Task[] => {
+    return user.tasks.filter((task) => task.category?.some((cat) => cat.id === categoryId));
   };
 
   if (!user.settings.enableCategories) {
@@ -353,26 +368,40 @@ const Categories = () => {
             Create Category
           </AddCategoryButton>
         </AddContainer>
-        <Dialog
-          open={openDeleteDialog}
-          onClose={() => setOpenDeleteDialog(false)}
-          slotProps={{
-            paper: {
-              style: {
-                borderRadius: "24px",
-                padding: "12px",
-                maxWidth: "600px",
-              },
-            },
-          }}
-        >
-          <DialogTitle>
-            Confirm deletion of{" "}
-            <b>{user.categories.find((cat) => cat.id === selectedCategoryId)?.name}</b>
-          </DialogTitle>
+        <Dialog open={openDeleteDialog} onClose={() => setOpenDeleteDialog(false)}>
+          <CustomDialogTitle
+            title="Delete this category?"
+            subTitle="This action cannot be undone."
+            icon={<DeleteRounded />}
+            onClose={() => setOpenDeleteDialog(false)}
+          />
 
           <DialogContent>
-            This will remove the category from your list and associated tasks.
+            {selectedCategoryId && (
+              <CategoryBadge
+                glow={false}
+                category={user.categories.find((cat) => cat.id === selectedCategoryId)!}
+                sx={{ width: "100%", height: "100%", margin: "0 auto", borderRadius: "12px" }}
+              />
+            )}
+            {getAssociatedTasks(selectedCategoryId!).length > 0 && (
+              <AssociatedTasksAccordion>
+                <AccordionSummary expandIcon={<ExpandMoreRounded />}>
+                  <span style={{ fontWeight: 600 }}>
+                    {`Associated Tasks (${getAssociatedTasks(selectedCategoryId!).length})`}
+                  </span>
+                </AccordionSummary>
+                <AccordionDetails sx={{ p: 0, m: 0 }}>
+                  <ul>
+                    {user.tasks
+                      .filter((task) => task.category?.some((cat) => cat.id === selectedCategoryId))
+                      .map((task) => (
+                        <li key={task.id}>{task.name}</li>
+                      ))}
+                  </ul>
+                </AccordionDetails>
+              </AssociatedTasksAccordion>
+            )}
           </DialogContent>
 
           <DialogActions>

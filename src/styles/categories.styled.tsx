@@ -1,7 +1,7 @@
 import styled from "@emotion/styled";
 import { getFontColor } from "../utils";
 import { fadeIn, scale } from "./keyframes.styled";
-import { Button, css, TextField } from "@mui/material";
+import { Accordion, Button, css, TextField } from "@mui/material";
 import { StarOutlineRounded, StarRounded } from "@mui/icons-material";
 
 export const CategoriesContainer = styled.div`
@@ -104,6 +104,14 @@ export const AddCategoryButton = styled(Button)`
     opacity: 0.7;
     color: white;
   }
+`;
+
+export const AssociatedTasksAccordion = styled(Accordion)`
+  margin: 16px 0;
+  background: transparent;
+  box-shadow: none;
+  border: 2px solid ${({ theme }) => `${theme.darkmode ? "#ffffff" : "#000000"}5a`};
+  border-radius: 12px !important;
 `;
 
 const StarIconStyles = css`
