@@ -183,7 +183,7 @@ export const ColorPicker: React.FC<ColorPickerProps> = ({
           <Grid container maxWidth={width || 400}>
             <Grid container spacing={1} maxWidth={width || 400} m={1}>
               {[theme.primary, ...colorList].map((color, index) => (
-                <Grid item key={color}>
+                <Grid key={color}>
                   <Tooltip title={getColorName(color).name}>
                     <ColorElement
                       ref={(element: HTMLButtonElement | null) => {
@@ -246,7 +246,7 @@ export const ColorPicker: React.FC<ColorPickerProps> = ({
                 </Grid>
               ))}
               <Tooltip title="Add new color">
-                <Grid item>
+                <Grid>
                   <ColorElement
                     clr="transparent"
                     style={{ border: "2px solid", color: fontColor || ColorPalette.fontLight }}

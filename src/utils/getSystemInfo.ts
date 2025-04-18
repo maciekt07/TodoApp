@@ -20,5 +20,22 @@ const getBrowser = (): Browser => {
   return "Unknown";
 };
 
-export const systemInfo = { os: getOperatingSystem(), browser: getBrowser() };
-export const isAppleDevice = /iPhone|iPad|iPod|Macintosh/i.test(navigator.userAgent);
+const isAppleDevice: boolean = /iPhone|iPad|iPod|Macintosh/i.test(navigator.userAgent);
+
+interface NavigatorStandalone extends Navigator {
+  standalone?: boolean;
+}
+
+export const systemInfo = {
+  os: getOperatingSystem(),
+  browser: getBrowser(),
+  isAppleDevice,
+
+  // evaluated at access time to handle auto launch without refresh like on windows
+  get isPWA() {
+    return (
+      window.matchMedia?.("(display-mode: standalone)")?.matches ||
+      (navigator as NavigatorStandalone).standalone === true
+    );
+  },
+};

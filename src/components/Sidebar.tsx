@@ -145,15 +145,16 @@ export const ProfileSidebar = () => {
       deferredPrompt.prompt();
       deferredPrompt.userChoice.then((choiceResult) => {
         if (choiceResult.outcome === "accepted") {
-          if ("setAppBadge" in navigator) {
-            setUser((prevUser) => ({
-              ...prevUser,
-              settings: {
-                ...prevUser.settings,
-                appBadge: true,
-              },
-            }));
-          }
+          // if ("setAppBadge" in navigator) {
+          //   setUser((prevUser) => ({
+          //     ...prevUser,
+          //     settings: {
+          //       ...prevUser.settings,
+          //       appBadge: true,
+          //     },
+          //   }));
+          // }
+
           // Show a dialog to inform the user that the app is now running as a PWA on Windows
           if (systemInfo.os === "Windows") {
             setOpenInstalledDialog(true);

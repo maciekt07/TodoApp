@@ -1,7 +1,7 @@
 import { useContext, useState } from "react";
 import type { Task, UUID } from "../../types/user";
 import { UserContext } from "../../contexts/UserContext";
-import { saveQRCode, showToast, systemInfo, getFontColor, isAppleDevice } from "../../utils";
+import { saveQRCode, showToast, systemInfo, getFontColor } from "../../utils";
 import {
   Alert,
   AlertTitle,
@@ -51,7 +51,7 @@ export const ShareDialog = ({ open, onClose, selectedTaskId, selectedTask }: Sha
   const tabs: { label: string; icon: React.ReactElement; disabled?: boolean }[] = [
     { label: "Link", icon: <LinkRounded /> },
     { label: "QR Code", icon: <QrCode2Rounded /> },
-    ...(isAppleDevice ? [{ label: "Calendar", icon: <CalendarTodayRounded /> }] : []),
+    ...(systemInfo.isAppleDevice ? [{ label: "Calendar", icon: <CalendarTodayRounded /> }] : []),
   ];
 
   const generateShareableLink = (taskId: UUID | null, userName: string): string => {
@@ -256,7 +256,7 @@ export const ShareDialog = ({ open, onClose, selectedTaskId, selectedTask }: Sha
               </DownloadQrCodeBtn>
             </Box>
           </TabPanel>
-          {isAppleDevice && (
+          {systemInfo.isAppleDevice && (
             <TabPanel value={shareTabVal} index={2}>
               <Box
                 sx={{

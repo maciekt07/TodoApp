@@ -408,14 +408,15 @@ export const SettingsDialog = ({ open, onClose }: SettingsProps) => {
                 settingKey="enableCategories"
                 header="Enable Categories"
                 text="
-              Enable categories to organize your tasks. Disabling this will remove all categories and
-              ungroup your tasks."
+              Enable categories to organize your tasks."
               />
-              <CustomSwitch
-                settingKey="appBadge"
-                header="App Badge"
-                text="Show a badge on the PWA icon to indicate the number of not done tasks."
-              />
+              {systemInfo.isPWA && "setAppBadge" in navigator && (
+                <CustomSwitch
+                  settingKey="appBadge"
+                  header="App Badge"
+                  text="Show a badge on the PWA icon to indicate the number of not done tasks."
+                />
+              )}
               <CustomSwitch
                 settingKey="doneToBottom"
                 header="Completed Tasks at Bottom"
