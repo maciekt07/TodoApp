@@ -44,11 +44,11 @@
 
 ### 🔗 Share Tasks by Link or QR Code
 
-Easily share your tasks with others using a link or QR code, with the option to download the QR code.
+Easily share your tasks with others using a link or QR code.
 
-**[Example Link](https://react-cool-todo-app.netlify.app/share?task=N4IgJg9gdgpiBcAzAhgGwM4wDQgA4EspYwEAXAJwFdsQpkBbOeEAdRgCN19SYACAERgA3GKgi5GUUiBxgY6AMbl8uUvmgIQAYXIxkPXsl6pkUMIQDmvXMgt8A7twAWvAEp6FpAHQArdL0QIcl4FVHwYKS9eJ1JSXHR4AHpE+1SvAE8ISlJKdhgvBQh6FP0FJwB+IQBedgBZAGsoRABpAA0ASQAxAEEADgAyUiqAJgBmdH7kdgB9MtNYVCrEXRgtCDktBlwvIIsZEBh6CB98TQBGRAAWADZegFoL0cQFO+GABjewB6v2dn3CsTkTQAYnY12Gl0QiH2YH0TBA7whDzODwA7AAVM6jeCXS7wM7DLwAVlRAE4AFr-OEWILpBAAbVA+BI+NuqIJRMuZ1RN1Gb1GODojE0a3MUD2OEOx1OzAuROQRLuiBgb2hOABQRB1zABKhIAAvlgmSzhoKGPCWEF6vspSdzohRjBhv8IICQRDejA9fqALo4EzoUgAZWQIk0iMuyLRmOxuPxvS8pLeqMp+qAA&userName=Maciej)**
+**[Example Link](https://react-cool-todo-app.netlify.app/share?task=N4IgJg9gdgpiBcAzAhgGwM4wDQgA4EspYwEAXAJwFdsQpkBbOeEAdRgCN19SYACAERgA3GKgi5GUUiBxgY6AMbl8uUvmgIQAYXIxkPXsl6pkUMIQDmvXMgt8A7twAWvAEp6FpAHQArdL0QIcl4FVHwYKS9eJ1JSXHR4AHpE+1SvAE8ISlJKdhgvBQh6FP0FJwB+IQBedgBZAGsoRABpAA0ASQAxAEEADgAyUiqAJgBmdH7kdgB9MtNYVCrEXRgtCDktBlwvIIsZEBh6CB98TQBGRABOMDOAWgvRxAVb4YAGV7B7xAAWdnZ9wpiciaADE7AAbMNvohEPswPomCA3sMAKy3V7fF6vAAqrzO8DOl3gr3BXleAHZRgAtOF6MBhWCaZFojEvUa4-FnXrE15k940nAKBEWILpBAAbVA+BIzFew0uwwU7GQaMQ4Jgw1u3zOCkx7BRyHJtwUKMuyFeyGQMAUiBgo32dEYmhYQXq+0Ox1OzAeGoBECBoKhvRgMJAAF8sFKZWdwb1yWdUdryd9waMyaMcI7EWtzFA9jgPSdzogDaqYK9YYL-UFQeCbsNQ2GALo4EzoUgAZWQIiZcpZmLeHPgb3go15oxR1PDQA&userName=Maciej)**
 
-<img src="https://raw.githubusercontent.com/maciekt07/TodoApp/main/screenshots/RecievedTask.png" width="300px" alt="Shared Task" />
+<img src="https://raw.githubusercontent.com/maciekt07/TodoApp/main/screenshots/ShareDialog.png" width="300px" alt="Shared Task" />
 
 ### 🤖 AI Emoji Suggestions
 

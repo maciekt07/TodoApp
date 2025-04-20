@@ -38,11 +38,10 @@ export const BottomNav = (): JSX.Element | null => {
 
   // useEffect hook to set the active button based on the current route
   useEffect(() => {
-    const pathParts = location.pathname.split("/"); // Split the pathname by '/'
+    const pathParts = location.pathname.split("/");
     if (pathParts[1] === "task") {
-      setValue(0); // If the user is on a task page, set the value to 0
+      setValue(0);
     } else {
-      // Handle other routes as before
       switch (location.pathname) {
         case "/categories":
           setValue(1);
@@ -65,7 +64,6 @@ export const BottomNav = (): JSX.Element | null => {
     }
   }, [location.pathname]);
 
-  // If it's a mobile device, don't render the navigation bar.
   if (!isMobile) {
     return null;
   }
