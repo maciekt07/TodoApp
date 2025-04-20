@@ -6,14 +6,18 @@ interface ToastProps extends ToastOptions {
   disableClickDismiss?: boolean;
   disableVibrate?: boolean;
   dismissButton?: boolean;
-  type?: ToastType;
+  type?: ToastType; // TODO: add info and warning custom types
 }
 
 /**
- * Function to display a toast notification.
- * @param message - The message to display in the toast notification.
- * @param type - The type of toast notification to display.
- * @param toastOptions - Additional options to configure the toast notification.
+ * Function to display a toast notification with optional vibration, click-to-dismiss, and dismiss button features..
+ * @param {string | ReactNode} message - The message to show.
+ * @param {ToastProps} [options] - Optional settings for the toast.
+ * @param {'success' | 'error' | 'loading' | 'blank' | 'custom'} [options.type] - Type of toast. Defaults to 'success'.
+ * @param {boolean} [options.disableClickDismiss] - clicking the toast won't close it.
+ * @param {boolean} [options.disableVibrate] - disables device vibration.
+ * @param {boolean} [options.dismissButton] - adds a "Dismiss" button inside the toast.
+ * @param {ToastOptions} [options.toastOptions] - Additional options for `react-hot-toast`.
  * @returns {void}
  */
 

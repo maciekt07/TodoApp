@@ -1,42 +1,13 @@
-import { Alert, AlertTitle, Dialog, DialogActions, DialogContent, Tooltip } from "@mui/material";
-import {
-  DescriptionLink,
-  EmojiContainer,
-  Pinned,
-  RingAlarm,
-  TaskContainer,
-  TaskDate,
-  TaskDescription,
-  TaskHeader,
-  TaskInfo,
-  TaskName,
-  TimeLeft,
-} from "../components/tasks/tasks.styled";
+import { Alert, AlertTitle, Dialog, DialogActions, DialogContent } from "@mui/material";
 import { DialogBtn } from "../styles";
 import { useLocation, useNavigate } from "react-router-dom";
-import { JSX, useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import type { Task } from "../types/user";
-import {
-  calculateDateDifference,
-  formatDate,
-  generateUUID,
-  getFontColor,
-  isHexColor,
-  showToast,
-  systemInfo,
-} from "../utils";
-import { Emoji, EmojiStyle } from "emoji-picker-react";
+import { generateUUID, isHexColor, showToast } from "../utils";
 import { UserContext } from "../contexts/UserContext";
-import {
-  AddTaskRounded,
-  DoNotDisturbAltRounded,
-  DoneRounded,
-  ErrorRounded,
-  LinkOff,
-  PushPinRounded,
-} from "@mui/icons-material";
+import { AddTaskRounded, DoNotDisturbAltRounded, ErrorRounded } from "@mui/icons-material";
 import { URL_REGEX, USER_NAME_MAX_LENGTH } from "../constants";
-import { CategoryBadge, CustomDialogTitle } from "../components";
+import { CustomDialogTitle, TaskItem } from "../components";
 import Home from "./Home";
 import LZString from "lz-string";
 //FIXME: make everything type-safe
@@ -152,37 +123,6 @@ const SharePage = () => {
     }
   };
 
-  // Renders the task description with optional hyperlink parsing and text highlighting.
-  const renderTaskDescription = (task: Task): JSX.Element | null => {
-    if (!task || !task.description) {
-      return null;
-    }
-
-    const { description, color } = task;
-
-    const parts = description.split(URL_REGEX);
-
-    const descriptionWithLinks = parts.map((part, index) => {
-      if (index % 2 === 0) {
-        return part;
-      } else {
-        // Store link part in state
-        const url = new URL(part);
-        return (
-          <Tooltip title={part} key={index}>
-            <DescriptionLink clr={color} disabled>
-              <div>
-                <LinkOff sx={{ fontSize: "24px" }} /> {url.hostname}
-              </div>
-            </DescriptionLink>
-          </Tooltip>
-        );
-      }
-    });
-
-    return <div>{descriptionWithLinks}</div>;
-  };
-
   return (
     <>
       <Home />
@@ -208,96 +148,16 @@ const SharePage = () => {
             />
             <DialogContent>
               <p style={{ fontSize: "16px", marginLeft: "6px" }}>
-                <b translate="no">{userName}</b> shared you a task.
+                <b translate={userName === "User" ? "yes" : "no"}>{userName}</b> shared you a task.
               </p>
-              <TaskContainer
-                done={taskData.done}
-                backgroundColor={taskData.color}
-                style={{ maxWidth: "600px", opacity: 1, padding: "16px 22px" }}
-              >
-                {taskData.emoji || taskData.done ? (
-                  <EmojiContainer clr={getFontColor(taskData.color)}>
-                    {taskData.done ? (
-                      <DoneRounded fontSize="large" />
-                    ) : user.emojisStyle === EmojiStyle.NATIVE ? (
-                      <div>
-                        <Emoji
-                          size={systemInfo.os === "iOS" ? 48 : 36}
-                          unified={taskData.emoji || ""}
-                          emojiStyle={EmojiStyle.NATIVE}
-                        />
-                      </div>
-                    ) : (
-                      <Emoji
-                        size={48}
-                        unified={taskData.emoji || ""}
-                        emojiStyle={user.emojisStyle}
-                      />
-                    )}
-                  </EmojiContainer>
-                ) : null}
-                <TaskInfo translate="no" style={{ marginRight: "14px" }}>
-                  {taskData.pinned && (
-                    <Pinned translate="yes">
-                      <PushPinRounded fontSize="small" /> &nbsp; Pinned
-                    </Pinned>
-                  )}
-                  <TaskHeader style={{ gap: "6px" }}>
-                    <TaskName done={taskData.done}>{taskData.name}</TaskName>
-                    <Tooltip
-                      title={new Intl.DateTimeFormat(navigator.language, {
-                        dateStyle: "full",
-                        timeStyle: "medium",
-                      }).format(new Date(taskData.date))}
-                    >
-                      <TaskDate>{formatDate(new Date(taskData.date))}</TaskDate>
-                    </Tooltip>
-                  </TaskHeader>
-                  <TaskDescription done={taskData.done}>
-                    {renderTaskDescription(taskData)}
-                  </TaskDescription>
-                  {taskData.deadline && (
-                    <TimeLeft done={taskData.done}>
-                      <RingAlarm
-                        fontSize="small"
-                        animate={new Date() > new Date(taskData.deadline) && !taskData.done}
-                        sx={{
-                          color: `${getFontColor(taskData.color)} !important`,
-                        }}
-                      />
-                      &nbsp;Deadline:&nbsp;
-                      {new Date(taskData.deadline).toLocaleDateString()} {" • "}
-                      {new Date(taskData.deadline).toLocaleTimeString()}
-                      {!taskData.done && (
-                        <>
-                          {" • "}
-                          {calculateDateDifference(new Date(taskData.deadline))}
-                        </>
-                      )}
-                    </TimeLeft>
-                  )}
-                  <div
-                    style={{
-                      display: "flex",
-                      flexWrap: "wrap",
-                      gap: "4px 6px",
-                      justifyContent: "left",
-                      alignItems: "center",
-                    }}
-                  >
-                    {taskData.category &&
-                      taskData.category.map((category) => (
-                        <div key={category.id}>
-                          <CategoryBadge
-                            category={category}
-                            borderclr={getFontColor(taskData.color)}
-                          />
-                        </div>
-                      ))}
-                  </div>
-                </TaskInfo>
-              </TaskContainer>
-              {taskData && taskData.description && taskData.description.match(URL_REGEX) ? (
+              <TaskItem
+                task={taskData}
+                features={{
+                  enableLinks: false,
+                  enableGlow: false,
+                }}
+              />
+              {taskData && taskData.description && taskData.description.match(URL_REGEX) && (
                 <Alert sx={{ mt: "20px" }} severity="warning">
                   <AlertTitle>This task contains the following links:</AlertTitle>{" "}
                   {(() => {
@@ -316,7 +176,7 @@ const SharePage = () => {
                     return null;
                   })()}
                 </Alert>
-              ) : null}
+              )}
             </DialogContent>
             <DialogActions>
               <DialogBtn color="error" onClick={() => n("/")}>

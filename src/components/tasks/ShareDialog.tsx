@@ -1,14 +1,12 @@
 import { useContext, useState } from "react";
-import type { Task, UUID } from "../../types/user";
+import type { Task } from "../../types/user";
 import { UserContext } from "../../contexts/UserContext";
-import { saveQRCode, showToast, systemInfo, getFontColor } from "../../utils";
+import { saveQRCode, showToast, systemInfo } from "../../utils";
 import {
   Alert,
   AlertTitle,
-  Avatar,
   Box,
   Button,
-  Chip,
   Dialog,
   DialogActions,
   DialogContent,
@@ -18,7 +16,7 @@ import {
   Tabs,
   TextField,
 } from "@mui/material";
-import { CustomDialogTitle } from "../DialogTitle";
+import { CustomDialogTitle, TaskItem } from "..";
 import {
   Apple,
   CalendarTodayRounded,
@@ -28,7 +26,6 @@ import {
   LinkRounded,
   QrCode2Rounded,
 } from "@mui/icons-material";
-import { Emoji, EmojiStyle } from "emoji-picker-react";
 import { DialogBtn } from "../../styles";
 import styled from "@emotion/styled";
 import QRCode from "react-qr-code";
@@ -38,13 +35,12 @@ import { TabGroupProvider, TabPanel } from "..";
 interface ShareDialogProps {
   open: boolean;
   onClose: () => void;
-  selectedTaskId: UUID | null;
   selectedTask: Task;
 }
 
-export const ShareDialog = ({ open, onClose, selectedTaskId, selectedTask }: ShareDialogProps) => {
+export const ShareDialog = ({ open, onClose, selectedTask }: ShareDialogProps) => {
   const { user } = useContext(UserContext);
-  const { tasks, settings, name, emojisStyle } = user;
+  const { settings, name } = user;
 
   const [shareTabVal, setShareTabVal] = useState<number>(0);
 
@@ -54,8 +50,7 @@ export const ShareDialog = ({ open, onClose, selectedTaskId, selectedTask }: Sha
     ...(systemInfo.isAppleDevice ? [{ label: "Calendar", icon: <CalendarTodayRounded /> }] : []),
   ];
 
-  const generateShareableLink = (taskId: UUID | null, userName: string): string => {
-    const task = tasks.find((task) => task.id === taskId);
+  const generateShareableLink = (task: Task, userName: string): string => {
     // This removes id property from link as a new identifier is generated on the share page.
     interface TaskToShare extends Omit<Task, "id"> {
       id: undefined;
@@ -79,7 +74,7 @@ export const ShareDialog = ({ open, onClose, selectedTaskId, selectedTask }: Sha
   };
 
   const handleCopyToClipboard = async (): Promise<void> => {
-    const linkToCopy = generateShareableLink(selectedTaskId, name || "User");
+    const linkToCopy = generateShareableLink(selectedTask, name || "User");
     try {
       await navigator.clipboard.writeText(linkToCopy);
       showToast("Copied link to clipboard.");
@@ -90,7 +85,7 @@ export const ShareDialog = ({ open, onClose, selectedTaskId, selectedTask }: Sha
   };
 
   const handleShare = async (): Promise<void> => {
-    const linkToShare = generateShareableLink(selectedTaskId, name || "User");
+    const linkToShare = generateShareableLink(selectedTask, name || "User");
     if (navigator.share) {
       try {
         await navigator.share({
@@ -167,27 +162,11 @@ export const ShareDialog = ({ open, onClose, selectedTaskId, selectedTask }: Sha
         icon={<IosShare />}
       />
       <DialogContent>
-        <ShareTaskChip
-          translate="no"
-          label={selectedTask.name}
-          clr={selectedTask.color}
-          avatar={
-            selectedTask.emoji ? (
-              <Avatar sx={{ background: "transparent", borderRadius: "0" }}>
-                <Emoji
-                  unified={selectedTask.emoji || ""}
-                  emojiStyle={emojisStyle}
-                  size={
-                    emojisStyle === EmojiStyle.NATIVE
-                      ? systemInfo.os === "iOS" || systemInfo.os === "macOS"
-                        ? 24
-                        : 18
-                      : 24
-                  }
-                />
-              </Avatar>
-            ) : undefined
-          }
+        <TaskItem
+          task={selectedTask}
+          features={{
+            enableGlow: false,
+          }}
         />
         <Tabs
           value={shareTabVal}
@@ -207,7 +186,7 @@ export const ShareDialog = ({ open, onClose, selectedTaskId, selectedTask }: Sha
         <TabGroupProvider name="share">
           <TabPanel value={shareTabVal} index={0}>
             <ShareField
-              value={generateShareableLink(selectedTaskId, name || "User")}
+              value={generateShareableLink(selectedTask, name || "User")}
               fullWidth
               variant="outlined"
               label="Shareable Link"
@@ -237,7 +216,7 @@ export const ShareDialog = ({ open, onClose, selectedTaskId, selectedTask }: Sha
             <QRCodeContainer>
               <QRCode
                 id="QRCodeShare"
-                value={generateShareableLink(selectedTaskId, name || "User")}
+                value={generateShareableLink(selectedTask, name || "User")}
                 size={400}
               />
             </QRCodeContainer>
@@ -290,20 +269,6 @@ export const ShareDialog = ({ open, onClose, selectedTaskId, selectedTask }: Sha
     </Dialog>
   );
 };
-
-const ShareTaskChip = styled(Chip)<{ clr: string }>`
-  background: ${({ clr }) => clr};
-  color: ${({ clr }) => getFontColor(clr)};
-  font-size: 14px;
-  padding: 18px 8px;
-  border-radius: 50px;
-  font-weight: 500;
-  margin-left: 6px;
-  @media (max-width: 768px) {
-    font-size: 16px;
-    padding: 20px 10px;
-  }
-`;
 
 const DownloadQrCodeBtn = styled(Button)`
   padding: 12px 24px;

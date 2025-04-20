@@ -66,7 +66,7 @@ export const StyledCategoryBadge = styled(Chip)<StyledBadgeProps>`
   }
 
   &:focus-visible {
-    opacity: 0.8;
+    opacity: 0.5;
     background-color: ${({ backgroundclr }) => backgroundclr};
   }
 
@@ -83,7 +83,7 @@ export const StyledCategoryBadge = styled(Chip)<StyledBadgeProps>`
     }
 
     &:hover {
-      opacity: 0.8;
+      color: ${({ backgroundclr }) => getFontColor(backgroundclr || "")};
     }
   }
 `;

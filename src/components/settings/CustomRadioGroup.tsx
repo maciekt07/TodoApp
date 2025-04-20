@@ -27,7 +27,9 @@ const CustomRadioGroup = <T extends string>({
               sx={{ border: "1px solid", borderColor: "divider" }}
             >
               <Typography fontSize="28px">{option.icon}</Typography>
-              <StyledLabel variant="body2">{option.label}</StyledLabel>
+              <StyledLabel translate="no" variant="body2">
+                {option.label}
+              </StyledLabel>
             </StyledLabelBox>
           }
         />

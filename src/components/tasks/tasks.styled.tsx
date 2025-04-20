@@ -5,6 +5,8 @@ import { fadeIn, ring, scale } from "../../styles/keyframes.styled";
 import { ColorPalette } from "../../theme/themeConfig";
 import { getFontColor, isDark, systemInfo } from "../../utils";
 
+// TODO: move EmojiContainer to top on smaller screens, fix text spacing
+
 interface TaskComponentProps {
   backgroundColor: string;
   done: boolean;
@@ -59,6 +61,14 @@ export const EmojiContainer = styled.span<{ clr: string }>`
   border-radius: 18px;
   overflow: hidden;
   text-overflow: ellipsis;
+`;
+
+export const TaskCategoriesContainer = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 6px;
+  justify-content: left;
+  align-items: center;
 `;
 
 export const TaskInfo = styled.div`
@@ -139,14 +149,26 @@ export const TasksContainer = styled.main`
 export const TimeLeft = styled.span<{ done: boolean }>`
   text-decoration: ${({ done }) => (done ? "line-through" : "none")};
   transition: 0.3s all;
-  font-size: 14px;
+  font-size: 16px;
   margin: 4px 0;
   font-weight: 400;
   display: flex;
   backdrop-filter: none !important;
+  @media (max-width: 768px) {
+    font-size: 14px;
+  }
   // fix for browser translate
   & font {
     margin: 0 1px;
+  }
+`;
+
+export const SharedByContainer = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  @media (max-width: 768px) {
+    font-size: 14px;
   }
 `;
 
@@ -255,7 +277,7 @@ export const HighlightedText = styled.span`
   transition: 0.3s all;
 `;
 
-export const DescriptionLink = styled(Button)<{ clr: string }>`
+export const StyledDescriptionLink = styled(Button)<{ clr: string }>`
   margin: 0;
   color: ${({ clr }) => getFontColor(clr)};
   padding: 0 4px;
@@ -277,28 +299,28 @@ export const DescriptionLink = styled(Button)<{ clr: string }>`
   }
 `;
 
-export const YouTubeThumbnail = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-top: 6px;
-  & img {
-    width: 300px;
-    height: 160px;
-    border-radius: 12px;
-    margin-bottom: 6px;
-    object-fit: cover;
-    object-position: 100%;
-    opacity: 0.9;
-  }
-  @media (max-width: 768px) {
-    & img {
-      width: 150px;
-      height: 80px;
-    }
-    justify-content: left;
-  }
-`;
+// export const YouTubeThumbnail = styled.div`
+//   display: flex;
+//   align-items: center;
+//   justify-content: center;
+//   margin-top: 6px;
+//   & img {
+//     width: 300px;
+//     height: 160px;
+//     border-radius: 12px;
+//     margin-bottom: 6px;
+//     object-fit: cover;
+//     object-position: 100%;
+//     opacity: 0.9;
+//   }
+//   @media (max-width: 768px) {
+//     & img {
+//       width: 150px;
+//       height: 80px;
+//     }
+//     justify-content: left;
+//   }
+// `;
 
 export const SearchInput = styled(TextField)`
   margin: 8px 0 0 0;

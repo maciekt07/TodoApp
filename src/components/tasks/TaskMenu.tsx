@@ -367,7 +367,6 @@ export const TaskMenu = () => {
       <ShareDialog
         open={showShareDialog}
         onClose={() => setShowShareDialog(false)}
-        selectedTaskId={selectedTaskId}
         selectedTask={selectedTask}
       />
     </>

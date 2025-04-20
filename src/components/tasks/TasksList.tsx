@@ -5,12 +5,9 @@ import {
   Delete,
   DeleteRounded,
   DoneAll,
-  DoneRounded,
-  Link,
-  MoreVert,
-  PushPinRounded,
-  RadioButtonChecked,
   Search,
+  RadioButtonChecked,
+  MoreVert,
 } from "@mui/icons-material";
 import {
   Dialog,
@@ -20,10 +17,8 @@ import {
   InputAdornment,
   Tooltip,
 } from "@mui/material";
-import { Emoji, EmojiStyle } from "emoji-picker-react";
-import { useCallback, useContext, useEffect, useMemo, useState } from "react";
-import { CategoryBadge, CustomDialogTitle, EditTask, TaskIcon, TaskMenu } from "..";
-import { URL_REGEX } from "../../constants";
+import { useCallback, useContext, useEffect, useMemo, useState, memo } from "react";
+import { CategoryBadge, CustomDialogTitle, EditTask, TaskItem } from "..";
 import { TaskContext } from "../../contexts/TaskContext";
 import { UserContext } from "../../contexts/UserContext";
 import { useCtrlS } from "../../hooks/useCtrlS";
@@ -32,40 +27,36 @@ import { useStorageState } from "../../hooks/useStorageState";
 import { DialogBtn } from "../../styles";
 import { ColorPalette } from "../../theme/themeConfig";
 import type { Category, Task, UUID } from "../../types/user";
+import { getFontColor, showToast } from "../../utils";
 import {
-  calculateDateDifference,
-  formatDate,
-  getFontColor,
-  showToast,
-  systemInfo,
-} from "../../utils";
-import { RenderTaskDescription } from "./RenderTaskDescription";
-import {
-  CategoriesListContainer,
-  EmojiContainer,
   NoTasks,
-  Pinned,
-  RadioChecked,
-  RadioUnchecked,
   RingAlarm,
   SearchClear,
   SearchInput,
   SelectedTasksContainer,
-  StyledRadio,
-  TaskContainer,
-  TaskDate,
-  TaskDescription,
-  TaskHeader,
-  TaskInfo,
-  TaskName,
   TasksContainer,
-  TimeLeft,
+  CategoriesListContainer,
 } from "./tasks.styled";
+import { TaskMenu } from "./TaskMenu";
+import { TaskIcon } from "../TaskIcon";
+
+const TaskMenuButton = memo(
+  ({ task, onClick }: { task: Task; onClick: (event: React.MouseEvent<HTMLElement>) => void }) => (
+    <IconButton
+      aria-label="Task Menu"
+      aria-controls="task-menu"
+      aria-haspopup="true"
+      onClick={onClick}
+      sx={{ color: getFontColor(task.color) }}
+    >
+      <MoreVert />
+    </IconButton>
+  ),
+);
 
 /**
  * Component to display a list of tasks.
  */
-
 export const TasksList: React.FC = () => {
   const { user, setUser } = useContext(UserContext);
   const {
@@ -89,6 +80,8 @@ export const TasksList: React.FC = () => {
   } = useContext(TaskContext);
   const open = Boolean(anchorEl);
 
+  const [taskToDelete, setTaskToDelete] = useState<Task | null>(null);
+
   const [deleteSelectedOpen, setDeleteSelectedOpen] = useState<boolean>(false);
   const [categories, setCategories] = useState<Category[] | undefined>(undefined);
   const [selectedCatId, setSelectedCatId] = useStorageState<UUID | undefined>(
@@ -111,10 +104,6 @@ export const TasksList: React.FC = () => {
       }),
     [],
   );
-
-  const selectedTask = useMemo(() => {
-    return user.tasks.find((task) => task.id === selectedTaskId) || ({} as Task);
-  }, [user.tasks, selectedTaskId]);
 
   // Handler for clicking the more options button in a task
   const handleClick = (event: React.MouseEvent<HTMLElement>, taskId: UUID) => {
@@ -172,8 +161,6 @@ export const TasksList: React.FC = () => {
   const orderedTasks = useMemo(() => reorderTasks(user.tasks), [user.tasks, reorderTasks]);
 
   const confirmDeleteTask = () => {
-    // Deletes the selected task
-
     if (selectedTaskId) {
       const updatedTasks = user.tasks.filter((task) => task.id !== selectedTaskId);
       setUser((prevUser) => ({
@@ -184,12 +171,20 @@ export const TasksList: React.FC = () => {
       setDeleteDialogOpen(false);
       showToast(
         <div>
-          Deleted Task -{" "}
-          <b translate="no">{user.tasks.find((task) => task.id === selectedTaskId)?.name}</b>
+          Deleted Task - <b translate="no">{taskToDelete?.name}</b>
         </div>,
       );
+      setTaskToDelete(null);
     }
   };
+
+  useEffect(() => {
+    if (selectedTaskId && deleteDialogOpen) {
+      const task = user.tasks.find((t) => t.id === selectedTaskId);
+      setTaskToDelete(task || null);
+    }
+  }, [selectedTaskId, deleteDialogOpen, user.tasks]);
+
   const cancelDeleteTask = () => {
     // Cancels the delete task operation
     setDeleteDialogOpen(false);
@@ -355,6 +350,7 @@ export const TasksList: React.FC = () => {
                   selectedCatId !== cat.id ? setSelectedCatId(cat.id) : setSelectedCatId(undefined)
                 }
                 onDelete={selectedCatId === cat.id ? () => setSelectedCatId(undefined) : undefined}
+                deleteIcon={<CancelRounded />}
                 sx={{
                   boxShadow: "none",
                   display:
@@ -424,147 +420,30 @@ export const TasksList: React.FC = () => {
         )}
         {user.tasks.length !== 0 ? (
           orderedTasks.map((task) => (
-            <TaskContainer
+            <TaskItem
               key={task.id}
-              id={task.id.toString()}
-              // open the task menu on right click
-              onContextMenu={(e) => {
-                e.preventDefault();
-                handleClick(e, task.id);
+              task={task}
+              features={{
+                enableLinks: true,
+                enableGlow: user.settings.enableGlow,
+                enableSelection: true,
               }}
-              backgroundColor={task.color}
-              glow={user.settings.enableGlow}
-              done={task.done}
+              selection={{
+                selectedIds: multipleSelectedTasks,
+                onSelect: handleSelectTask,
+                onDeselect: (taskId) =>
+                  setMultipleSelectedTasks((prevTasks) => prevTasks.filter((id) => id !== taskId)),
+              }}
+              onContextMenu={(e: React.MouseEvent<Element>) => {
+                e.preventDefault();
+                handleClick(e as unknown as React.MouseEvent<HTMLElement>, task.id);
+              }}
+              actions={
+                <TaskMenuButton task={task} onClick={(event) => handleClick(event, task.id)} />
+              }
               blur={selectedTaskId !== task.id && open && !isMobile}
-            >
-              {multipleSelectedTasks.length > 0 && (
-                <StyledRadio
-                  clr={getFontColor(task.color)}
-                  checked={multipleSelectedTasks.includes(task.id)}
-                  icon={<RadioUnchecked />}
-                  checkedIcon={<RadioChecked />}
-                  onChange={() => {
-                    if (multipleSelectedTasks.includes(task.id)) {
-                      setMultipleSelectedTasks((prevTasks) =>
-                        prevTasks.filter((id) => id !== task.id),
-                      );
-                    } else {
-                      handleSelectTask(task.id);
-                    }
-                  }}
-                />
-              )}
-              {task.emoji || task.done ? (
-                <EmojiContainer
-                  clr={getFontColor(task.color)}
-                  // onDoubleClick={() => handleSelectTask(task.id)}
-                >
-                  {task.done ? (
-                    <DoneRounded fontSize="large" />
-                  ) : (
-                    <Emoji
-                      size={
-                        user.emojisStyle === EmojiStyle.NATIVE
-                          ? systemInfo.os === "iOS" || systemInfo.os === "macOS"
-                            ? 50
-                            : 38
-                          : 46
-                      }
-                      unified={task.emoji || ""}
-                      emojiStyle={user.emojisStyle}
-                      lazyLoad
-                    />
-                  )}
-                </EmojiContainer>
-              ) : null}
-              <TaskInfo translate="no">
-                {task.pinned && (
-                  <Pinned translate="yes">
-                    <PushPinRounded fontSize="small" /> &nbsp; Pinned
-                  </Pinned>
-                )}
-                <TaskHeader>
-                  <TaskName done={task.done}>{highlightMatchingText(task.name)}</TaskName>
-                  <Tooltip
-                    title={new Intl.DateTimeFormat(navigator.language, {
-                      dateStyle: "full",
-                      timeStyle: "medium",
-                    }).format(new Date(task.date))}
-                  >
-                    <TaskDate>{formatDate(new Date(task.date))}</TaskDate>
-                  </Tooltip>
-                </TaskHeader>
-
-                <TaskDescription done={task.done}>
-                  <RenderTaskDescription task={task} />
-                </TaskDescription>
-
-                {task.deadline && (
-                  <Tooltip
-                    title={new Intl.DateTimeFormat(navigator.language, {
-                      dateStyle: "full",
-                      timeStyle: "medium",
-                    }).format(new Date(task.deadline))}
-                    placement="bottom-start"
-                  >
-                    <TimeLeft done={task.done} translate="yes">
-                      <RingAlarm
-                        fontSize="small"
-                        animate={new Date() > new Date(task.deadline) && !task.done}
-                        sx={{
-                          color: `${getFontColor(task.color)} !important`,
-                        }}
-                      />{" "}
-                      &nbsp;
-                      {new Date(task.deadline).toLocaleDateString()} {" • "}
-                      {new Date(task.deadline).toLocaleTimeString()}
-                      {!task.done && (
-                        <>
-                          {" • "}
-                          {calculateDateDifference(new Date(task.deadline))}
-                        </>
-                      )}
-                    </TimeLeft>
-                  </Tooltip>
-                )}
-                {task.sharedBy && (
-                  <div
-                    translate="yes"
-                    style={{ opacity: 0.8, display: "flex", alignItems: "center", gap: "4px" }}
-                  >
-                    <Link /> Shared by{" "}
-                    <span translate={task.sharedBy === "User" ? "yes" : "no"}>{task.sharedBy}</span>
-                  </div>
-                )}
-                <div
-                  style={{
-                    display: "flex",
-                    flexWrap: "wrap",
-                    gap: "4px 6px",
-                    justifyContent: "left",
-                    alignItems: "center",
-                  }}
-                >
-                  {task.category &&
-                    user.settings.enableCategories &&
-                    task.category.map((category) => (
-                      <div key={category.id}>
-                        <CategoryBadge category={category} borderclr={getFontColor(task.color)} />
-                      </div>
-                    ))}
-                </div>
-              </TaskInfo>
-              <IconButton
-                aria-label="Task Menu"
-                aria-controls={open ? "task-menu" : undefined}
-                aria-haspopup="true"
-                aria-expanded={open ? "true" : undefined}
-                onClick={(event) => handleClick(event, task.id)}
-                sx={{ color: getFontColor(task.color) }}
-              >
-                <MoreVert />
-              </IconButton>
-            </TaskContainer>
+              textHighlighter={highlightMatchingText}
+            />
           ))
         ) : (
           <NoTasks>
@@ -598,47 +477,19 @@ export const TasksList: React.FC = () => {
       </TasksContainer>
       <Dialog open={deleteDialogOpen} onClose={cancelDeleteTask}>
         <CustomDialogTitle
-          title="Delete task"
-          subTitle="Confirm to delete task"
+          title="Delete Task"
+          subTitle="Are you sure you want to delete this task?"
           onClose={cancelDeleteTask}
           icon={<Delete />}
         />
         <DialogContent>
-          {selectedTask !== undefined && (
-            <>
-              {selectedTask.emoji && (
-                <p
-                  style={{
-                    display: "flex",
-                    justifyContent: "left",
-                    alignItems: "center",
-                    gap: "6px",
-                  }}
-                >
-                  <b>Emoji:</b>{" "}
-                  <Emoji size={28} emojiStyle={user.emojisStyle} unified={selectedTask.emoji} />
-                </p>
-              )}
-              <p>
-                <b>Task Name:</b> <span translate="no">{selectedTask.name}</span>
-              </p>
-              {selectedTask.description && (
-                <p>
-                  <b>Task Description:</b>{" "}
-                  <span translate="no">
-                    {selectedTask.description.replace(URL_REGEX, "[link]")}
-                  </span>
-                </p>
-              )}
-              {selectedTask.category?.[0]?.name && (
-                <p>
-                  <b>{selectedTask.category.length > 1 ? "Categories" : "Category"}:</b>{" "}
-                  <span translate="no">
-                    {listFormat.format(selectedTask.category.map((cat) => cat.name))}
-                  </span>
-                </p>
-              )}
-            </>
+          {taskToDelete && (
+            <TaskItem
+              task={taskToDelete}
+              features={{
+                enableGlow: false,
+              }}
+            />
           )}
         </DialogContent>
         <DialogActions>
@@ -646,7 +497,7 @@ export const TasksList: React.FC = () => {
             Cancel
           </DialogBtn>
           <DialogBtn onClick={confirmDeleteTask} color="error">
-            <DeleteRounded /> &nbsp; Delete
+            <DeleteRounded /> &nbsp; Confirm Delete
           </DialogBtn>
         </DialogActions>
       </Dialog>
