@@ -9,6 +9,7 @@ import {
   ExpandMoreRounded,
   Google,
   InfoRounded,
+  Inventory2Rounded,
   LightModeRounded,
   Microsoft,
   PaletteRounded,
@@ -29,6 +30,8 @@ import {
   Dialog,
   DialogContent,
   Divider,
+  FormGroup,
+  FormLabel,
   IconButton,
   Link,
   MenuItem,
@@ -120,6 +123,7 @@ export const SettingsDialog = ({ open, onClose }: SettingsProps) => {
   const [voiceVolume, setVoiceVolume] = useState<number>(user.settings.voiceVolume);
   const [prevVoiceVol, setPrevVoiceVol] = useState<number>(user.settings.voiceVolume);
   const [isSampleReading, setIsSampleReading] = useState<boolean>(false);
+  const [storageUsage, setStorageUsage] = useState<number | undefined>(undefined);
 
   const isMobile = useResponsiveDisplay();
   const muiTheme = useTheme();
@@ -187,6 +191,12 @@ export const SettingsDialog = ({ open, onClose }: SettingsProps) => {
   useEffect(() => {
     const availableVoices = getAvailableVoices();
     setAvailableVoices(availableVoices ?? []);
+
+    const getStorageUsage = async () => {
+      const storageUsage = await navigator.storage.estimate();
+      setStorageUsage(storageUsage.usage);
+    };
+    getStorageUsage();
   }, []);
 
   // Ensure the voices are loaded before calling getAvailableVoices
@@ -672,6 +682,21 @@ export const SettingsDialog = ({ open, onClose }: SettingsProps) => {
                   Todo App Repository
                 </Link>
               </Typography>
+              {storageUsage !== undefined && storageUsage !== 0 && (
+                <>
+                  <Divider sx={{ my: 1 }} />
+                  <FormGroup>
+                    <FormLabel sx={{ display: "flex", alignItems: "center", gap: "6px" }}>
+                      <Inventory2Rounded sx={{ fontSize: "18px" }} />
+                      Storage Usage
+                    </FormLabel>
+                    <Box sx={{ mt: "2px" }}>
+                      {storageUsage ? `${(storageUsage / 1024 / 1024).toFixed(2)} MB` : "0 MB"}
+                      {systemInfo.os === "iOS" && " / 50 MB"}
+                    </Box>
+                  </FormGroup>
+                </>
+              )}
             </TabPanel>
           </TabGroupProvider>
         </Box>

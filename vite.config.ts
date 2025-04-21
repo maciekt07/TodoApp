@@ -75,6 +75,14 @@ export default defineConfig({
               },
             },
           },
+          // dont cache emojis for now since they take a lot of space
+          {
+            urlPattern: /^https:\/\/cdn\.jsdelivr\.net\/npm\/emoji-datasource/i,
+            handler: "NetworkOnly",
+            options: {
+              cacheName: "emoji-datasource-skip-cache",
+            },
+          },
           // Cache for application scripts, styles, and fonts
           {
             urlPattern: ({ request }) =>

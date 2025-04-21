@@ -7,9 +7,28 @@ import { UserContextProvider } from "./contexts/UserProvider.tsx";
 import { registerSW } from "virtual:pwa-register";
 import { showToast } from "./utils/showToast.tsx";
 import { updatePrompt } from "./utils/updatePrompt.tsx";
+import { CircularProgress } from "@mui/material";
+import toast from "react-hot-toast";
 
 // initialize ntc colors
 initColors(ORIGINAL_COLORS);
+
+const offlinePreparationCount = parseInt(
+  // prevent toast from showing infinitely on older versions of the app
+  localStorage.getItem("offlinePreparationCount") || "0",
+  10,
+);
+
+if (offlinePreparationCount < 3 && !localStorage.getItem("initialCachingComplete")) {
+  showToast("Preparing app for offline use...", {
+    duration: 30_000,
+    type: "blank",
+    id: "initial-offline-preparation",
+    icon: <CircularProgress size={20} thickness={4} />,
+  });
+
+  localStorage.setItem("offlinePreparationCount", (offlinePreparationCount + 1).toString());
+}
 
 // Show a prompt to update the app when a new version is available
 registerSW({
@@ -19,7 +38,12 @@ registerSW({
     }
   },
   onOfflineReady() {
-    showToast("App is ready to work offline.", { type: "success", duration: 2000 });
+    toast.dismiss("initial-offline-preparation");
+
+    if (!localStorage.getItem("initialCachingComplete")) {
+      showToast("App is ready to work offline.", { type: "success", duration: 2000 });
+      localStorage.setItem("initialCachingComplete", "true");
+    }
   },
 });
 

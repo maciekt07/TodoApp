@@ -402,7 +402,7 @@ const generateSplashScreens = async () => {
             path: path.join(outputDir, fileName),
             optimizeForSpeed: true,
             type: fileType.replace(".", ""),
-            quality: fileType === ".jpeg" ? 70 : undefined,
+            quality: fileType === ".jpeg" ? 80 : undefined,
           });
           console.log(`${prefix} Generated: ${fileName}`);
         }
