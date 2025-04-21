@@ -9,9 +9,10 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 const mode = process.argv.find((arg) => arg.startsWith("--mode="))?.split("=")[1] || "default";
 
-// TODO: compress PNG images since they all are getting cached
+// FIXME: compress PNG images since they all are getting cached
+// the current splash-screens in .png are too large for safari pwa 50mb limit
 /** @type {'.png' | '.jpeg'} */ // .jpeg technically works and its way easier to compress but its not recommended for splash screens
-const fileType = ".png";
+const fileType = ".jpeg";
 
 if (mode !== "default" && mode !== "cleanup") {
   console.error("Invalid mode. Use --mode=default or --mode=cleanup");
@@ -401,7 +402,7 @@ const generateSplashScreens = async () => {
             path: path.join(outputDir, fileName),
             optimizeForSpeed: true,
             type: fileType.replace(".", ""),
-            quality: fileType === ".jpeg" ? 80 : undefined,
+            quality: fileType === ".jpeg" ? 70 : undefined,
           });
           console.log(`${prefix} Generated: ${fileName}`);
         }

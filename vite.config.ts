@@ -124,7 +124,7 @@ export default defineConfig({
           },
         ],
       },
-      includeAssets: ["**/*"],
+      includeAssets: ["**/*", "sw.js"],
     }),
   ],
 });
