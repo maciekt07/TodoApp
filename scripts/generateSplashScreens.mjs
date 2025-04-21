@@ -2,10 +2,16 @@ import puppeteer from "puppeteer";
 import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
-//TODO: improve performance
+
+// A script to generate splash screens for iOS/iPadOS devices from a html template.
+
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 const mode = process.argv.find((arg) => arg.startsWith("--mode="))?.split("=")[1] || "default";
+
+// TODO: compress PNG images since they all are getting cached
+/** @type {'.png' | '.jpeg'} */ // .jpeg technically works and its way easier to compress but its not recommended for splash screens
+const fileType = ".png";
 
 if (mode !== "default" && mode !== "cleanup") {
   console.error("Invalid mode. Use --mode=default or --mode=cleanup");
@@ -390,8 +396,13 @@ const generateSplashScreens = async () => {
           await page.setViewport({ width, height, deviceScaleFactor: 1 });
           await page.setContent(generateHTMLContent({ width, height, mode, orientation }));
 
-          const fileName = `${device.name}_${mode}_${orientation}.png`;
-          await page.screenshot({ path: path.join(outputDir, fileName) });
+          const fileName = `${device.name}_${mode}_${orientation}${fileType}`;
+          await page.screenshot({
+            path: path.join(outputDir, fileName),
+            optimizeForSpeed: true,
+            type: fileType.replace(".", ""),
+            quality: fileType === ".jpeg" ? 80 : undefined,
+          });
           console.log(`${prefix} Generated: ${fileName}`);
         }
       }
@@ -414,27 +425,27 @@ const generateLinkTags = () =>
     and (device-height: ${device.cssHeight}px)
     and (-webkit-device-pixel-ratio: ${device.ratio})
     and (orientation: portrait)
-  " href="/splash-screens/${device.name}_light_portrait.png">
+  " href="/splash-screens/${device.name}_light_portrait${fileType}">
   <link rel="apple-touch-startup-image" media="
     (prefers-color-scheme: dark)
     and (device-width: ${device.cssWidth}px)
     and (device-height: ${device.cssHeight}px)
     and (-webkit-device-pixel-ratio: ${device.ratio})
     and (orientation: portrait)
-  " href="/splash-screens/${device.name}_dark_portrait.png">
+  " href="/splash-screens/${device.name}_dark_portrait${fileType}">
   <link rel="apple-touch-startup-image" media="
     screen and (device-width: ${device.cssWidth}px)
     and (device-height: ${device.cssHeight}px)
     and (-webkit-device-pixel-ratio: ${device.ratio})
     and (orientation: landscape)
-  " href="/splash-screens/${device.name}_light_landscape.png">
+  " href="/splash-screens/${device.name}_light_landscape${fileType}">
   <link rel="apple-touch-startup-image" media="
     (prefers-color-scheme: dark)
     and (device-width: ${device.cssWidth}px)
     and (device-height: ${device.cssHeight}px)
     and (-webkit-device-pixel-ratio: ${device.ratio})
     and (orientation: landscape)
-  " href="/splash-screens/${device.name}_dark_landscape.png">
+  " href="/splash-screens/${device.name}_dark_landscape${fileType}">
 `,
     )
     .join("\n");
