@@ -170,6 +170,48 @@ export const TaskItem = memo(
             </Tooltip>
           )}
 
+          {task.startDate && (
+            <Tooltip
+              title={new Intl.DateTimeFormat(navigator.language, {
+                dateStyle: "full",
+                timeStyle: "medium",
+              }).format(new Date(task.startDate))}
+              placement="bottom-start"
+            >
+              <TimeLeft done={task.done} translate="yes">
+                <RingAlarm
+                  fontSize="small"
+                  sx={{
+                    color: `${getFontColor(task.color)} !important`,
+                  }}
+                />{" "}
+                &nbsp; Start: {new Date(task.startDate).toLocaleDateString()} {" • "}
+                {new Date(task.startDate).toLocaleTimeString()}
+              </TimeLeft>
+            </Tooltip>
+          )}
+
+          {task.endDate && (
+            <Tooltip
+              title={new Intl.DateTimeFormat(navigator.language, {
+                dateStyle: "full",
+                timeStyle: "medium",
+              }).format(new Date(task.endDate))}
+              placement="bottom-start"
+            >
+              <TimeLeft done={task.done} translate="yes">
+                <RingAlarm
+                  fontSize="small"
+                  sx={{
+                    color: `${getFontColor(task.color)} !important`,
+                  }}
+                />{" "}
+                &nbsp; End: {new Date(task.endDate).toLocaleDateString()} {" • "}
+                {new Date(task.endDate).toLocaleTimeString()}
+              </TimeLeft>
+            </Tooltip>
+          )}
+
           <PriorityContainer translate="yes">
             <FlagRounded fontSize="small" /> &nbsp; Priority: {task.priority ?? "None"}
           </PriorityContainer>

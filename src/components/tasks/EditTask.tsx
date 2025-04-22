@@ -66,6 +66,7 @@ export const EditTask = ({ open, task, onClose }: EditTaskProps) => {
   // Event handler for input changes in the form fields.
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
+    console.log(name, value);
 
     // Update the editedTask state with the changed value.
     setEditedTask((prevTask) => ({
@@ -89,6 +90,8 @@ export const EditTask = ({ open, task, onClose }: EditTaskProps) => {
             category: editedTask.category || undefined,
             lastSave: new Date(),
             priority: editedTask.priority,
+            startDate: editedTask.startDate || undefined,
+            endDate: editedTask.endDate || undefined,
           };
         }
         return task;
@@ -235,6 +238,90 @@ export const EditTask = ({ open, task, onClose }: EditTaskProps) => {
                         setEditedTask((prevTask) => ({
                           ...(prevTask as Task),
                           deadline: undefined,
+                        }));
+                      }}
+                    >
+                      <CancelRounded />
+                    </IconButton>
+                  </Tooltip>
+                </InputAdornment>
+              ) : undefined,
+            },
+          }}
+          sx={{
+            colorScheme: theme.darkmode ? "dark" : "light",
+            " & .MuiInputBase-root": {
+              transition: ".3s all",
+            },
+          }}
+        />
+
+        <StyledInput
+          label="Start Date"
+          name="startDate"
+          type="datetime-local"
+          value={
+            editedTask?.startDate
+              ? new Date(editedTask.startDate).toLocaleString("sv").replace(" ", "T").slice(0, 16)
+              : ""
+          }
+          onChange={handleInputChange}
+          slotProps={{
+            inputLabel: {
+              shrink: true,
+            },
+            input: {
+              startAdornment: editedTask?.startDate ? (
+                <InputAdornment position="start">
+                  <Tooltip title="Clear">
+                    <IconButton
+                      color="error"
+                      onClick={() => {
+                        setEditedTask((prevTask) => ({
+                          ...(prevTask as Task),
+                          startDate: undefined,
+                        }));
+                      }}
+                    >
+                      <CancelRounded />
+                    </IconButton>
+                  </Tooltip>
+                </InputAdornment>
+              ) : undefined,
+            },
+          }}
+          sx={{
+            colorScheme: theme.darkmode ? "dark" : "light",
+            " & .MuiInputBase-root": {
+              transition: ".3s all",
+            },
+          }}
+        />
+
+        <StyledInput
+          label="End Date"
+          name="endDate"
+          type="datetime-local"
+          value={
+            editedTask?.endDate
+              ? new Date(editedTask.endDate).toLocaleString("sv").replace(" ", "T").slice(0, 16)
+              : ""
+          }
+          onChange={handleInputChange}
+          slotProps={{
+            inputLabel: {
+              shrink: true,
+            },
+            input: {
+              startAdornment: editedTask?.endDate ? (
+                <InputAdornment position="start">
+                  <Tooltip title="Clear">
+                    <IconButton
+                      color="error"
+                      onClick={() => {
+                        setEditedTask((prevTask) => ({
+                          ...(prevTask as Task),
+                          endDate: undefined,
                         }));
                       }}
                     >
