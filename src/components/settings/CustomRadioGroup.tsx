@@ -9,6 +9,8 @@ interface CustomRadioGroupProps<T> {
   onChange: (value: T) => void;
 }
 
+// TODO: add disable prop
+
 const CustomRadioGroup = <T extends string>({
   options,
   value,

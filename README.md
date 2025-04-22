@@ -62,7 +62,7 @@ Code: [src/components/EmojiPicker.tsx](https://github.com/maciekt07/TodoApp/blob
 
 Users can choose several app color themes and choose between light and dark mode.
 
-<img src="https://raw.githubusercontent.com/maciekt07/TodoApp/main/screenshots/ColorThemes.png" width="200px" alt="Color Themes" />
+<img src="https://raw.githubusercontent.com/maciekt07/TodoApp/main/screenshots/settings.png" width="500px" />
 
 ### 🗣️ Task Reading Aloud
 
@@ -76,7 +76,7 @@ Users can import and export tasks to/from JSON files. This feature allows users 
 
 ### 📴 Progressive Web App (PWA)
 
-This app is a Progressive Web App (PWA), which means it can be installed on your device, used even when you're offline and behave like a normal application with shortcuts and badges.
+This app is a Progressive Web App (PWA), which means it can be installed on your device, **used even when you're offline** and behave like a normal application with shortcuts and badges.
 
 <img src="https://raw.githubusercontent.com/maciekt07/TodoApp/main/screenshots/pwaTaskBar.png" alt="taskbar" width="260px" />
 
@@ -109,8 +109,6 @@ The app will now be running at [http://localhost:5173/](http://localhost:5173/).
 > For mobile device testing, use `npm run dev:host` to preview the app on your local network.
 
 ## 📷 Screenshots
-
-<img src="https://raw.githubusercontent.com/maciekt07/TodoApp/main/screenshots/settings.png" width="500px" />
 
 <img src="https://raw.githubusercontent.com/maciekt07/TodoApp/main/screenshots/ss1.png" width="300px" />
 <img src="https://raw.githubusercontent.com/maciekt07/TodoApp/main/screenshots/ss2.png" width="300px" />

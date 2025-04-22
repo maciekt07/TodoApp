@@ -4,19 +4,22 @@ import react from "@vitejs/plugin-react";
 import { VitePWA } from "vite-plugin-pwa";
 import { qrcode } from "vite-plugin-qrcode";
 import manifest from "./manifest";
+import { StrategyName } from "workbox-build/build/types";
 
+const isDev = process.env.NODE_ENV !== "production";
+// Dev: avoid API spam and hitting rate limits | Prod: fast loads with background updates
+const apiCacheStrategy: StrategyName = isDev ? "CacheFirst" : "StaleWhileRevalidate";
+console.log(apiCacheStrategy);
 // https://vitejs.dev/config/
 export default defineConfig({
   test: {
     globals: true,
   },
-  optimizeDeps: {
-    exclude: ["@vite-pwa/assets-generator"],
-  },
   plugins: [
     react(),
     // Generate QR code for npm run dev:host
     qrcode({ filter: (url) => url.startsWith("http://192.168.0.") }),
+    // https://vite-pwa-org.netlify.app/
     VitePWA({
       manifest,
       devOptions: {
@@ -25,13 +28,14 @@ export default defineConfig({
       },
       registerType: "prompt",
       workbox: {
-        globPatterns: ["**/*.{js,css,html,svg,png,webmanifest}"],
+        // iOS handles splash screens offline automatically no need to precache
+        globPatterns: ["**/*.{js,css,html,svg,png,webmanifest}", "!splash-screens/*"],
         // Use runtime caching for dynamic imports and external resources
         runtimeCaching: [
           // Cache for Github API
           {
             urlPattern: /^https:\/\/api\.github\.com\/repos\/[^/]+\/[^/]+/i,
-            handler: "StaleWhileRevalidate",
+            handler: apiCacheStrategy,
             options: {
               cacheName: "github-api-cache",
               expiration: {
@@ -46,7 +50,7 @@ export default defineConfig({
           // Cache for Buy Me a Coffee API
           {
             urlPattern: /^https:\/\/img\.buymeacoffee\.com\/button-api\/\?&slug=[^&]+$/i,
-            handler: "StaleWhileRevalidate",
+            handler: apiCacheStrategy,
             options: {
               cacheName: "bmc-html-cache",
               expiration: {
@@ -59,6 +63,8 @@ export default defineConfig({
             },
           },
           // Cache for Google Fonts
+          // FIXME: On first offline launch after install and precache, fonts don't load (fallback to system font).
+          //        After launching the app once online, they load fine offline.
           {
             urlPattern: ({ url }) =>
               url.href.startsWith("https://fonts.googleapis.com/") ||
@@ -75,7 +81,8 @@ export default defineConfig({
               },
             },
           },
-          // dont cache emojis for now since they take a lot of space
+          // DON'T cache emojis for now since they take a lot of space
+          //TODO: find a way to only cache the ones used by user
           {
             urlPattern: /^https:\/\/cdn\.jsdelivr\.net\/npm\/emoji-datasource/i,
             handler: "NetworkOnly",
@@ -83,6 +90,15 @@ export default defineConfig({
               cacheName: "emoji-datasource-skip-cache",
             },
           },
+          // DON'T cache iOS splash screens
+          {
+            urlPattern: ({ url }) => url.pathname.startsWith("/splash-screens/"),
+            handler: "NetworkOnly",
+            options: {
+              cacheName: "splash-screens-no-cache",
+            },
+          },
+
           // Cache for application scripts, styles, and fonts
           {
             urlPattern: ({ request }) =>
@@ -132,7 +148,7 @@ export default defineConfig({
           },
         ],
       },
-      includeAssets: ["**/*", "sw.js"],
+      includeAssets: ["**/*", "sw.js", "!splash-screens/**/*"],
     }),
   ],
 });

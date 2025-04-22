@@ -557,6 +557,7 @@ const StyledMenuItem = styled(MenuItem)`
   }
 
   &:hover {
+    // FIXME: animations dont work anymore
     & svg[data-testid="GitHubIcon"] {
       transform: rotateY(${2 * Math.PI}rad);
     }

@@ -21,7 +21,7 @@ const offlinePreparationCount = parseInt(
 
 if (offlinePreparationCount < 3 && !localStorage.getItem("initialCachingComplete")) {
   showToast("Preparing app for offline use...", {
-    duration: 30_000,
+    duration: Infinity,
     type: "blank",
     id: "initial-offline-preparation",
     icon: <CircularProgress size={20} thickness={4} />,
@@ -41,7 +41,7 @@ registerSW({
     toast.dismiss("initial-offline-preparation");
 
     if (!localStorage.getItem("initialCachingComplete")) {
-      showToast("App is ready to work offline.", { type: "success", duration: 2000 });
+      showToast("App is ready to work offline.", { type: "success" });
       localStorage.setItem("initialCachingComplete", "true");
     }
   },

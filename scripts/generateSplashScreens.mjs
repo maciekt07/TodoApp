@@ -9,8 +9,7 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 const mode = process.argv.find((arg) => arg.startsWith("--mode="))?.split("=")[1] || "default";
 
-// FIXME: compress PNG images since they all are getting cached
-// the current splash-screens in .png are too large for safari pwa 50mb limit
+// TODO: compress PNG images
 /** @type {'.png' | '.jpeg'} */ // .jpeg technically works and its way easier to compress but its not recommended for splash screens
 const fileType = ".jpeg";
 
