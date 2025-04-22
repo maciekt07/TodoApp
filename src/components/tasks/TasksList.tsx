@@ -8,6 +8,9 @@ import {
   Search,
   RadioButtonChecked,
   MoreVert,
+  ArrowDownward,
+  ArrowUpward,
+  Sort,
 } from "@mui/icons-material";
 import {
   Dialog,
@@ -16,6 +19,9 @@ import {
   IconButton,
   InputAdornment,
   Tooltip,
+  Button,
+  Menu,
+  MenuItem,
 } from "@mui/material";
 import { useCallback, useContext, useEffect, useMemo, useState, memo } from "react";
 import { CategoryBadge, CustomDialogTitle, EditTask, TaskItem } from "..";
@@ -105,6 +111,36 @@ export const TasksList: React.FC = () => {
     [],
   );
 
+  const [sortBy, setSortBy] = useStorageState<string | null>(null, "taskSortBy", "localStorage");
+  const [sortDirection, setSortDirection] = useStorageState<"asc" | "desc">(
+    "asc",
+    "taskSortDirection",
+    "localStorage",
+  );
+  const [sortMenuAnchorEl, setSortMenuAnchorEl] = useState<null | HTMLElement>(null);
+  const sortMenuOpen = Boolean(sortMenuAnchorEl);
+
+  // Add these handler functions
+  const handleSortMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
+    setSortMenuAnchorEl(event.currentTarget);
+  };
+
+  const handleSortMenuClose = () => {
+    setSortMenuAnchorEl(null);
+  };
+
+  const handleSortChange = (sortOption: string) => {
+    if (sortBy === sortOption) {
+      // Toggle direction if clicking the same option
+      setSortDirection(sortDirection === "asc" ? "desc" : "asc");
+    } else {
+      // Set new sort option with default ascending direction
+      setSortBy(sortOption);
+      setSortDirection("asc");
+    }
+    handleSortMenuClose();
+  };
+
   // Handler for clicking the more options button in a task
   const handleClick = (event: React.MouseEvent<HTMLElement>, taskId: UUID) => {
     setAnchorEl(event.currentTarget);
@@ -126,11 +162,9 @@ export const TasksList: React.FC = () => {
 
   const reorderTasks = useCallback(
     (tasks: Task[]): Task[] => {
-      // Separate tasks into pinned and unpinned
       let pinnedTasks = tasks.filter((task) => task.pinned);
       let unpinnedTasks = tasks.filter((task) => !task.pinned);
 
-      // Filter tasks based on the selected category
       if (selectedCatId !== undefined) {
         const categoryFilter = (task: Task) =>
           task.category?.some((category) => category.id === selectedCatId) ?? false;
@@ -138,7 +172,6 @@ export const TasksList: React.FC = () => {
         pinnedTasks = pinnedTasks.filter(categoryFilter);
       }
 
-      // Filter tasks based on the search input
       const searchLower = search.toLowerCase();
       const searchFilter = (task: Task) =>
         task.name.toLowerCase().includes(searchLower) ||
@@ -146,7 +179,38 @@ export const TasksList: React.FC = () => {
       unpinnedTasks = unpinnedTasks.filter(searchFilter);
       pinnedTasks = pinnedTasks.filter(searchFilter);
 
-      // Move done tasks to bottom if the setting is enabled
+      if (sortBy) {
+        const sortTasks = (tasksToSort: Task[]) => {
+          return [...tasksToSort].sort((a, b) => {
+            let comparison = 0;
+
+            if (sortBy === "priority") {
+              const priorityA = a.priority;
+              const priorityB = b.priority;
+              if (priorityA === "High") comparison = -1;
+              else if (priorityB === "High") comparison = 1;
+              else if (priorityA === "Medium" && priorityB === "Low") comparison = -1;
+              else if (priorityA === "Low" && priorityB === "Medium") comparison = 1;
+            } else if (sortBy === "startDate") {
+              if (!a.startDate && !b.startDate) comparison = 0;
+              else if (!a.startDate) comparison = 1;
+              else if (!b.startDate) comparison = -1;
+              else comparison = new Date(a.startDate).getTime() - new Date(b.startDate).getTime();
+            } else if (sortBy === "endDate") {
+              if (!a.endDate && !b.endDate) comparison = 0;
+              else if (!a.endDate) comparison = 1;
+              else if (!b.endDate) comparison = -1;
+              else comparison = new Date(a.endDate).getTime() - new Date(b.endDate).getTime();
+            }
+
+            return sortDirection === "desc" ? -comparison : comparison;
+          });
+        };
+
+        pinnedTasks = sortTasks(pinnedTasks);
+        unpinnedTasks = sortTasks(unpinnedTasks);
+      }
+
       if (user.settings?.doneToBottom) {
         const doneTasks = unpinnedTasks.filter((task) => task.done);
         const notDoneTasks = unpinnedTasks.filter((task) => !task.done);
@@ -155,7 +219,7 @@ export const TasksList: React.FC = () => {
 
       return [...pinnedTasks, ...unpinnedTasks];
     },
-    [search, selectedCatId, user.settings],
+    [search, selectedCatId, user.settings, sortBy, sortDirection],
   );
 
   const orderedTasks = useMemo(() => reorderTasks(user.tasks), [user.tasks, reorderTasks]);
@@ -283,47 +347,142 @@ export const TasksList: React.FC = () => {
     <>
       <TaskMenu />
       <TasksContainer>
-        {user.tasks.length > 0 && (
-          <SearchInput
-            focused
-            color="primary"
-            placeholder="Search for task..."
-            autoComplete="off"
-            value={search}
-            onChange={(e) => {
-              setSearch(e.target.value);
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            marginBottom: "10px",
+          }}
+        >
+          {user.tasks.length > 0 && (
+            <SearchInput
+              focused
+              color="primary"
+              placeholder="Search for task..."
+              autoComplete="off"
+              value={search}
+              onChange={(e) => {
+                setSearch(e.target.value);
+              }}
+              slotProps={{
+                input: {
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <Search sx={{ color: "white" }} />
+                    </InputAdornment>
+                  ),
+                  endAdornment: search ? (
+                    <InputAdornment position="end">
+                      <SearchClear
+                        color={
+                          orderedTasks.length === 0 && user.tasks.length > 0 ? "error" : "default"
+                        }
+                        onClick={() => setSearch("")}
+                      >
+                        <Close
+                          sx={{
+                            color:
+                              orderedTasks.length === 0 && user.tasks.length > 0
+                                ? `${ColorPalette.red} !important`
+                                : "white",
+                            transition: ".3s all",
+                          }}
+                        />
+                      </SearchClear>
+                    </InputAdornment>
+                  ) : undefined,
+                },
+              }}
+              sx={{ flex: 1, marginRight: "10px" }}
+            />
+          )}
+
+          {user.tasks.length > 0 && (
+            <Tooltip title="Sort tasks">
+              <Button
+                variant="outlined"
+                size="large"
+                startIcon={<Sort />}
+                endIcon={
+                  sortBy ? sortDirection === "asc" ? <ArrowUpward /> : <ArrowDownward /> : null
+                }
+                onClick={handleSortMenuOpen}
+                sx={{
+                  color: "white",
+                  borderColor: "rgba(255,255,255,0.3)",
+                  minWidth: "120px",
+                  ml: "20px",
+                  justifyContent: "space-between",
+                }}
+              >
+                {sortBy ? sortBy.charAt(0).toUpperCase() + sortBy.slice(1) : "Sort"}
+              </Button>
+            </Tooltip>
+          )}
+
+          <Menu
+            anchorEl={sortMenuAnchorEl}
+            open={sortMenuOpen}
+            onClose={handleSortMenuClose}
+            anchorOrigin={{
+              vertical: "bottom",
+              horizontal: "right",
             }}
-            slotProps={{
-              input: {
-                startAdornment: (
-                  <InputAdornment position="start">
-                    <Search sx={{ color: "white" }} />
-                  </InputAdornment>
-                ),
-                endAdornment: search ? (
-                  <InputAdornment position="end">
-                    <SearchClear
-                      color={
-                        orderedTasks.length === 0 && user.tasks.length > 0 ? "error" : "default"
-                      }
-                      onClick={() => setSearch("")}
-                    >
-                      <Close
-                        sx={{
-                          color:
-                            orderedTasks.length === 0 && user.tasks.length > 0
-                              ? `${ColorPalette.red} !important`
-                              : "white",
-                          transition: ".3s all",
-                        }}
-                      />
-                    </SearchClear>
-                  </InputAdornment>
-                ) : undefined,
-              },
+            transformOrigin={{
+              vertical: "top",
+              horizontal: "right",
             }}
-          />
-        )}
+          >
+            <MenuItem
+              onClick={() => handleSortChange("priority")}
+              sx={{
+                backgroundColor: sortBy === "priority" ? "rgba(25, 118, 210, 0.08)" : undefined,
+                fontWeight: sortBy === "priority" ? "bold" : "normal",
+              }}
+            >
+              Priority
+              {sortBy === "priority" && (
+                <span style={{ marginLeft: "8px" }}>{sortDirection === "asc" ? "↑" : "↓"}</span>
+              )}
+            </MenuItem>
+            <MenuItem
+              onClick={() => handleSortChange("startDate")}
+              sx={{
+                backgroundColor: sortBy === "startDate" ? "rgba(25, 118, 210, 0.08)" : undefined,
+                fontWeight: sortBy === "startDate" ? "bold" : "normal",
+              }}
+            >
+              Start Date
+              {sortBy === "startDate" && (
+                <span style={{ marginLeft: "8px" }}>{sortDirection === "asc" ? "↑" : "↓"}</span>
+              )}
+            </MenuItem>
+            <MenuItem
+              onClick={() => handleSortChange("endDate")}
+              sx={{
+                backgroundColor: sortBy === "endDate" ? "rgba(25, 118, 210, 0.08)" : undefined,
+                fontWeight: sortBy === "endDate" ? "bold" : "normal",
+              }}
+            >
+              End Date
+              {sortBy === "endDate" && (
+                <span style={{ marginLeft: "8px" }}>{sortDirection === "asc" ? "↑" : "↓"}</span>
+              )}
+            </MenuItem>
+            {sortBy && (
+              <MenuItem
+                onClick={() => {
+                  setSortBy(null);
+                  handleSortMenuClose();
+                }}
+                sx={{ color: "red" }}
+              >
+                Clear Sort
+              </MenuItem>
+            )}
+          </Menu>
+        </div>
         {categories !== undefined && categories?.length > 0 && user.settings.enableCategories && (
           <CategoriesListContainer>
             {categories?.map((cat) => (
