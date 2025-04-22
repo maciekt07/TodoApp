@@ -120,6 +120,10 @@ const TaskDetails = () => {
                 </TableData>
               </TableRow>
             )}
+            <TableRow>
+              <TableHeader>Priority:</TableHeader>
+              <TableData>{task.priority}</TableData>
+            </TableRow>
           </tbody>
         </TaskTable>
       </Container>

@@ -1,4 +1,4 @@
-import { Category, Task } from "../types/user";
+import { Category, Task, TaskPriority } from "../types/user";
 import { useState, useEffect, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { AddTaskButton, Container, StyledInput } from "../styles";
@@ -12,6 +12,8 @@ import { useTheme } from "@emotion/react";
 import { generateUUID, getFontColor, isDark, showToast } from "../utils";
 import { ColorPalette } from "../theme/themeConfig";
 import InputThemeProvider from "../contexts/InputThemeProvider";
+import { PrioritySelect } from "../components/PrioritySelect";
+// import { StartEndDate } from "../components/StartEndDate";
 
 const AddTask = () => {
   const { user, setUser } = useContext(UserContext);
@@ -32,6 +34,21 @@ const AddTask = () => {
     "categories",
     "sessionStorage",
   );
+  const [selectedPriority, setSelectedPriority] = useStorageState<TaskPriority>(
+    "Low",
+    "priority",
+    "sessionStorage",
+  );
+  // const [startDate, setStartDate] = useStorageState<Date | undefined>(
+  //   undefined,
+  //   "startDate",
+  //   "sessionStorage",
+  // );
+  // const [endDate, setEndDate] = useStorageState<Date | undefined>(
+  //   undefined,
+  //   "endDate",
+  //   "sessionStorage",
+  // );
 
   const [isDeadlineFocused, setIsDeadlineFocused] = useState<boolean>(false);
 
@@ -103,6 +120,7 @@ const AddTask = () => {
       date: new Date(),
       deadline: deadline !== "" ? new Date(deadline) : undefined,
       category: selectedCategories ? selectedCategories : [],
+      priority: selectedPriority,
     };
 
     setUser((prevUser) => ({
@@ -215,6 +233,22 @@ const AddTask = () => {
               />
             </div>
           )}
+
+          <PrioritySelect
+            width={"400px"}
+            selectedPriority={selectedPriority}
+            onPriorityChange={setSelectedPriority}
+            fontColor={getFontColor(theme.secondary)}
+          />
+          {/* 
+          <StartEndDate
+            startDate={startDate || new Date()}
+            endDate={endDate || new Date()}
+            onChange={(start, end) => {
+              setStartDate(start);
+              setEndDate(end);
+            }}
+          /> */}
         </InputThemeProvider>
         <ColorPicker
           color={color}

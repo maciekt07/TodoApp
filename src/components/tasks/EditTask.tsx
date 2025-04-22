@@ -15,11 +15,12 @@ import { ColorPicker, CustomDialogTitle, CustomEmojiPicker } from "..";
 import { DESCRIPTION_MAX_LENGTH, TASK_NAME_MAX_LENGTH } from "../../constants";
 import { UserContext } from "../../contexts/UserContext";
 import { DialogBtn } from "../../styles";
-import { Category, Task } from "../../types/user";
+import { Category, Task, TaskPriority } from "../../types/user";
 import { showToast } from "../../utils";
 import { useTheme } from "@emotion/react";
 import { ColorPalette } from "../../theme/themeConfig";
 import { CategorySelect } from "../CategorySelect";
+import { PrioritySelect } from "../PrioritySelect";
 
 interface EditTaskProps {
   open: boolean;
@@ -33,6 +34,7 @@ export const EditTask = ({ open, task, onClose }: EditTaskProps) => {
   const [editedTask, setEditedTask] = useState<Task | undefined>(task);
   const [emoji, setEmoji] = useState<string | null>(null);
   const [selectedCategories, setSelectedCategories] = useState<Category[]>([]);
+  const [selectedPriority, setSelectedPriority] = useState<TaskPriority>("Low");
 
   const theme = useTheme();
 
@@ -58,6 +60,7 @@ export const EditTask = ({ open, task, onClose }: EditTaskProps) => {
   useEffect(() => {
     setEditedTask(task);
     setSelectedCategories(task?.category as Category[]);
+    setSelectedPriority(task?.priority as TaskPriority);
   }, [task]);
 
   // Event handler for input changes in the form fields.
@@ -85,6 +88,7 @@ export const EditTask = ({ open, task, onClose }: EditTaskProps) => {
             deadline: editedTask.deadline || undefined,
             category: editedTask.category || undefined,
             lastSave: new Date(),
+            priority: editedTask.priority,
           };
         }
         return task;
@@ -114,6 +118,13 @@ export const EditTask = ({ open, task, onClose }: EditTaskProps) => {
       category: (selectedCategories as Category[]) || undefined,
     }));
   }, [selectedCategories]);
+
+  useEffect(() => {
+    setEditedTask((prevTask) => ({
+      ...(prevTask as Task),
+      priority: selectedPriority,
+    }));
+  }, [selectedPriority]);
 
   useEffect(() => {
     const handleBeforeUnload = (e: BeforeUnloadEvent) => {
@@ -249,6 +260,12 @@ export const EditTask = ({ open, task, onClose }: EditTaskProps) => {
             onCategoryChange={(categories) => setSelectedCategories(categories)}
           />
         )}
+
+        <PrioritySelect
+          selectedPriority={selectedPriority}
+          onPriorityChange={setSelectedPriority}
+          fontColor={theme.darkmode ? ColorPalette.fontLight : ColorPalette.fontDark}
+        />
         <div
           style={{
             display: "flex",

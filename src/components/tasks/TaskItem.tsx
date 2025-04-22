@@ -1,6 +1,6 @@
 import { memo, useContext } from "react";
 import { Emoji } from "emoji-picker-react";
-import { DoneRounded, PushPinRounded, Link } from "@mui/icons-material";
+import { DoneRounded, PushPinRounded, Link, FlagRounded } from "@mui/icons-material";
 import { Tooltip } from "@mui/material";
 import type { Task, UUID } from "../../types/user";
 import {
@@ -19,6 +19,7 @@ import {
   RadioUnchecked,
   TaskCategoriesContainer,
   SharedByContainer,
+  PriorityContainer,
 } from "./tasks.styled";
 import { calculateDateDifference, formatDate, getFontColor, systemInfo } from "../../utils";
 import { RenderTaskDescription } from "./RenderTaskDescription";
@@ -168,6 +169,10 @@ export const TaskItem = memo(
               </TimeLeft>
             </Tooltip>
           )}
+
+          <PriorityContainer translate="yes">
+            <FlagRounded fontSize="small" /> &nbsp; Priority: {task.priority ?? "None"}
+          </PriorityContainer>
 
           {task.sharedBy && (
             <SharedByContainer translate="yes">
