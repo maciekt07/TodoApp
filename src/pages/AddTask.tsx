@@ -1,4 +1,4 @@
-import { Category, Task } from "../types/user";
+import { Category, Task, TaskPriority } from "../types/user";
 import { useState, useEffect, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { AddTaskButton, Container, StyledInput } from "../styles";
@@ -12,6 +12,7 @@ import { useTheme } from "@emotion/react";
 import { generateUUID, getFontColor, isDark, showToast } from "../utils";
 import { ColorPalette } from "../theme/themeConfig";
 import InputThemeProvider from "../contexts/InputThemeProvider";
+import { PrioritySelect } from "../components/PrioritySelect";
 
 const AddTask = () => {
   const { user, setUser } = useContext(UserContext);
@@ -32,8 +33,25 @@ const AddTask = () => {
     "categories",
     "sessionStorage",
   );
+  const [selectedPriority, setSelectedPriority] = useStorageState<TaskPriority>(
+    "Low",
+    "priority",
+    "sessionStorage",
+  );
+  const [startDate, setStartDate] = useStorageState<Date | undefined>(
+    undefined,
+    "startDate",
+    "sessionStorage",
+  );
+  const [endDate, setEndDate] = useStorageState<Date | undefined>(
+    undefined,
+    "endDate",
+    "sessionStorage",
+  );
 
   const [isDeadlineFocused, setIsDeadlineFocused] = useState<boolean>(false);
+  const [isStartDateFocused, setIsStartDateFocused] = useState<boolean>(false);
+  const [isEndDateFocused, setIsEndDateFocused] = useState<boolean>(false);
 
   const n = useNavigate();
 
@@ -103,6 +121,9 @@ const AddTask = () => {
       date: new Date(),
       deadline: deadline !== "" ? new Date(deadline) : undefined,
       category: selectedCategories ? selectedCategories : [],
+      priority: selectedPriority,
+      startDate: startDate,
+      endDate: endDate,
     };
 
     setUser((prevUser) => ({
@@ -121,7 +142,17 @@ const AddTask = () => {
       },
     );
 
-    const itemsToRemove = ["name", "color", "description", "emoji", "deadline", "categories"];
+    const itemsToRemove = [
+      "name",
+      "color",
+      "description",
+      "emoji",
+      "deadline",
+      "categories",
+      "priority",
+      "startDate",
+      "endDate",
+    ];
     itemsToRemove.map((item) => sessionStorage.removeItem(item));
   };
 
@@ -203,6 +234,62 @@ const AddTask = () => {
               },
             }}
           />
+          <StyledInput
+            label="Start Date"
+            name="startDate"
+            placeholder="Enter start date"
+            type="datetime-local"
+            onFocus={() => setIsStartDateFocused(true)}
+            onBlur={() => setIsStartDateFocused(false)}
+            hidetext={(!startDate || startDate === undefined) && !isStartDateFocused}
+            value={startDate ? new Date(startDate).toISOString().slice(0, 16) : ""}
+            onChange={(e) => setStartDate(e.target.value ? new Date(e.target.value) : undefined)}
+            sx={{
+              colorScheme: isDark(theme.secondary) ? "dark" : "light",
+              marginBottom: "14px",
+            }}
+            slotProps={{
+              input: {
+                startAdornment: startDate ? (
+                  <InputAdornment position="start">
+                    <Tooltip title="Clear">
+                      <IconButton color="error" onClick={() => setStartDate(undefined)}>
+                        <CancelRounded />
+                      </IconButton>
+                    </Tooltip>
+                  </InputAdornment>
+                ) : undefined,
+              },
+            }}
+          />
+
+          <StyledInput
+            label="End Date"
+            name="endDate"
+            placeholder="Enter end date"
+            type="datetime-local"
+            onFocus={() => setIsEndDateFocused(true)}
+            onBlur={() => setIsEndDateFocused(false)}
+            hidetext={(!endDate || endDate === undefined) && !isEndDateFocused}
+            value={endDate ? new Date(endDate).toISOString().slice(0, 16) : ""}
+            onChange={(e) => setEndDate(e.target.value ? new Date(e.target.value) : undefined)}
+            sx={{
+              colorScheme: isDark(theme.secondary) ? "dark" : "light",
+            }}
+            slotProps={{
+              input: {
+                startAdornment: endDate ? (
+                  <InputAdornment position="start">
+                    <Tooltip title="Clear">
+                      <IconButton color="error" onClick={() => setEndDate(undefined)}>
+                        <CancelRounded />
+                      </IconButton>
+                    </Tooltip>
+                  </InputAdornment>
+                ) : undefined,
+              },
+            }}
+          />
 
           {user.settings.enableCategories !== undefined && user.settings.enableCategories && (
             <div style={{ marginBottom: "14px" }}>
@@ -215,6 +302,13 @@ const AddTask = () => {
               />
             </div>
           )}
+
+          <PrioritySelect
+            width={"400px"}
+            selectedPriority={selectedPriority}
+            onPriorityChange={setSelectedPriority}
+            fontColor={getFontColor(theme.secondary)}
+          />
         </InputThemeProvider>
         <ColorPicker
           color={color}

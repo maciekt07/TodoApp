@@ -7,6 +7,8 @@ export type UUID = ReturnType<typeof crypto.randomUUID>;
 
 export type DarkModeOptions = "system" | "auto" | "light" | "dark";
 
+export type TaskPriority = "Low" | "Medium" | "High";
+
 /**
  * Represents a user in the application.
  */
@@ -40,6 +42,9 @@ export interface Task {
   category?: Category[];
   lastSave?: Date;
   sharedBy?: string;
+  priority: TaskPriority;
+  startDate?: Date;
+  endDate?: Date;
 }
 
 // export type Emoji = Omit<

@@ -15,11 +15,12 @@ import { ColorPicker, CustomDialogTitle, CustomEmojiPicker } from "..";
 import { DESCRIPTION_MAX_LENGTH, TASK_NAME_MAX_LENGTH } from "../../constants";
 import { UserContext } from "../../contexts/UserContext";
 import { DialogBtn } from "../../styles";
-import { Category, Task } from "../../types/user";
+import { Category, Task, TaskPriority } from "../../types/user";
 import { showToast } from "../../utils";
 import { useTheme } from "@emotion/react";
 import { ColorPalette } from "../../theme/themeConfig";
 import { CategorySelect } from "../CategorySelect";
+import { PrioritySelect } from "../PrioritySelect";
 
 interface EditTaskProps {
   open: boolean;
@@ -33,6 +34,7 @@ export const EditTask = ({ open, task, onClose }: EditTaskProps) => {
   const [editedTask, setEditedTask] = useState<Task | undefined>(task);
   const [emoji, setEmoji] = useState<string | null>(null);
   const [selectedCategories, setSelectedCategories] = useState<Category[]>([]);
+  const [selectedPriority, setSelectedPriority] = useState<TaskPriority>("Low");
 
   const theme = useTheme();
 
@@ -58,11 +60,13 @@ export const EditTask = ({ open, task, onClose }: EditTaskProps) => {
   useEffect(() => {
     setEditedTask(task);
     setSelectedCategories(task?.category as Category[]);
+    setSelectedPriority(task?.priority as TaskPriority);
   }, [task]);
 
   // Event handler for input changes in the form fields.
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
+    console.log(name, value);
 
     // Update the editedTask state with the changed value.
     setEditedTask((prevTask) => ({
@@ -85,6 +89,9 @@ export const EditTask = ({ open, task, onClose }: EditTaskProps) => {
             deadline: editedTask.deadline || undefined,
             category: editedTask.category || undefined,
             lastSave: new Date(),
+            priority: editedTask.priority,
+            startDate: editedTask.startDate || undefined,
+            endDate: editedTask.endDate || undefined,
           };
         }
         return task;
@@ -114,6 +121,13 @@ export const EditTask = ({ open, task, onClose }: EditTaskProps) => {
       category: (selectedCategories as Category[]) || undefined,
     }));
   }, [selectedCategories]);
+
+  useEffect(() => {
+    setEditedTask((prevTask) => ({
+      ...(prevTask as Task),
+      priority: selectedPriority,
+    }));
+  }, [selectedPriority]);
 
   useEffect(() => {
     const handleBeforeUnload = (e: BeforeUnloadEvent) => {
@@ -242,6 +256,90 @@ export const EditTask = ({ open, task, onClose }: EditTaskProps) => {
           }}
         />
 
+        <StyledInput
+          label="Start Date"
+          name="startDate"
+          type="datetime-local"
+          value={
+            editedTask?.startDate
+              ? new Date(editedTask.startDate).toLocaleString("sv").replace(" ", "T").slice(0, 16)
+              : ""
+          }
+          onChange={handleInputChange}
+          slotProps={{
+            inputLabel: {
+              shrink: true,
+            },
+            input: {
+              startAdornment: editedTask?.startDate ? (
+                <InputAdornment position="start">
+                  <Tooltip title="Clear">
+                    <IconButton
+                      color="error"
+                      onClick={() => {
+                        setEditedTask((prevTask) => ({
+                          ...(prevTask as Task),
+                          startDate: undefined,
+                        }));
+                      }}
+                    >
+                      <CancelRounded />
+                    </IconButton>
+                  </Tooltip>
+                </InputAdornment>
+              ) : undefined,
+            },
+          }}
+          sx={{
+            colorScheme: theme.darkmode ? "dark" : "light",
+            " & .MuiInputBase-root": {
+              transition: ".3s all",
+            },
+          }}
+        />
+
+        <StyledInput
+          label="End Date"
+          name="endDate"
+          type="datetime-local"
+          value={
+            editedTask?.endDate
+              ? new Date(editedTask.endDate).toLocaleString("sv").replace(" ", "T").slice(0, 16)
+              : ""
+          }
+          onChange={handleInputChange}
+          slotProps={{
+            inputLabel: {
+              shrink: true,
+            },
+            input: {
+              startAdornment: editedTask?.endDate ? (
+                <InputAdornment position="start">
+                  <Tooltip title="Clear">
+                    <IconButton
+                      color="error"
+                      onClick={() => {
+                        setEditedTask((prevTask) => ({
+                          ...(prevTask as Task),
+                          endDate: undefined,
+                        }));
+                      }}
+                    >
+                      <CancelRounded />
+                    </IconButton>
+                  </Tooltip>
+                </InputAdornment>
+              ) : undefined,
+            },
+          }}
+          sx={{
+            colorScheme: theme.darkmode ? "dark" : "light",
+            " & .MuiInputBase-root": {
+              transition: ".3s all",
+            },
+          }}
+        />
+
         {settings.enableCategories !== undefined && settings.enableCategories && (
           <CategorySelect
             fontColor={theme.darkmode ? ColorPalette.fontLight : ColorPalette.fontDark}
@@ -249,6 +347,12 @@ export const EditTask = ({ open, task, onClose }: EditTaskProps) => {
             onCategoryChange={(categories) => setSelectedCategories(categories)}
           />
         )}
+
+        <PrioritySelect
+          selectedPriority={selectedPriority}
+          onPriorityChange={setSelectedPriority}
+          fontColor={theme.darkmode ? ColorPalette.fontLight : ColorPalette.fontDark}
+        />
         <div
           style={{
             display: "flex",

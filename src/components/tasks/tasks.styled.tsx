@@ -359,3 +359,12 @@ export const RingAlarm = styled(Alarm)<{ animate?: boolean }>`
       animation: ${ring} ${ringAnimation};
     `}
 `;
+
+export const PriorityContainer = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  @media (max-width: 768px) {
+    font-size: 14px;
+  }
+`;

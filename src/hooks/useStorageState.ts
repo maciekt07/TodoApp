@@ -15,25 +15,26 @@ export function useStorageState<T>(
   key: string,
   storageType: StorageType = "localStorage",
 ): [T, React.Dispatch<React.SetStateAction<T>>] {
-  const storage = window[storageType];
+  const isBrowser = typeof window !== "undefined";
+  const storage = isBrowser ? window[storageType] : null;
 
-  // Initialize state with the stored value or the default value
   const [value, setValue] = useState<T>(() => {
+    if (!isBrowser || !storage) return defaultValue;
+
     const storedValue = storage.getItem(key);
-    return storedValue !== null && storedValue !== undefined && storedValue !== "undefined"
+    return storedValue !== null && storedValue !== "undefined"
       ? JSON.parse(storedValue)
       : defaultValue;
   });
 
-  // Update storage whenever the key or value changes
   useEffect(() => {
+    if (!isBrowser || !storage) return;
     storage.setItem(key, JSON.stringify(value));
   }, [key, value, storage]);
 
-  // This allows to synchronize localStorage between tabs in real time
-
-  // Listen for storage events and update state if the key matches
   useEffect(() => {
+    if (!isBrowser) return;
+
     const handleStorageChange = (event: StorageEvent) => {
       if (event.key === key && event.newValue !== null && event.key !== "") {
         setValue(JSON.parse(event.newValue));
@@ -41,12 +42,8 @@ export function useStorageState<T>(
     };
 
     window.addEventListener("storage", handleStorageChange);
-
-    return () => {
-      window.removeEventListener("storage", handleStorageChange);
-    };
+    return () => window.removeEventListener("storage", handleStorageChange);
   }, [key]);
 
-  // Return the state value and update function
   return [value, setValue];
 }
