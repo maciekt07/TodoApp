@@ -19,27 +19,31 @@ import {
   DialogContent,
   Tooltip,
 } from "@mui/material";
-import { Emoji, EmojiClickData, EmojiStyle, SuggestionMode, Theme } from "emoji-picker-react";
+import EmojiPicker, {
+  Emoji,
+  EmojiClickData,
+  EmojiStyle,
+  SuggestionMode,
+  Theme,
+} from "emoji-picker-react";
 import {
   CSSProperties,
   Dispatch,
   SetStateAction,
   Suspense,
-  lazy,
   useContext,
   useEffect,
   useState,
 } from "react";
+import { CATEGORY_NAME_MAX_LENGTH, TASK_NAME_MAX_LENGTH } from "../constants";
 import { UserContext } from "../contexts/UserContext";
 import { useOnlineStatus } from "../hooks/useOnlineStatus";
 import { DialogBtn, fadeIn } from "../styles";
 import { ColorPalette } from "../theme/themeConfig";
-import { getFontColor, showToast, systemInfo } from "../utils";
-import { CATEGORY_NAME_MAX_LENGTH, TASK_NAME_MAX_LENGTH } from "../constants";
-import { CustomDialogTitle } from "./DialogTitle";
 import { AILanguageModel } from "../types/ai";
+import { getFontColor, showToast, systemInfo } from "../utils";
+import { CustomDialogTitle } from "./DialogTitle";
 
-const EmojiPicker = lazy(() => import("emoji-picker-react"));
 interface EmojiPickerProps {
   emoji?: string;
   setEmoji: Dispatch<SetStateAction<string | null>>; // TODO: use onEmojiChange instead

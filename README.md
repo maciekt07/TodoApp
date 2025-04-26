@@ -19,6 +19,8 @@
 
 ## 💻 Tech Stack
 
+## 💻 Tech Stack
+
 <ul style="display: flex; flex-direction: column; gap:10px;">
   <li style="vertical-align: middle;">
     <img src="https://go-skill-icons.vercel.app/api/icons?i=react" alt="react" width="24" style="vertical-align: middle; margin-right: 4px;" /> React
@@ -58,9 +60,9 @@ Code: [src/components/EmojiPicker.tsx](https://github.com/maciekt07/TodoApp/blob
 
 <img src="https://raw.githubusercontent.com/maciekt07/TodoApp/main/screenshots/emoji-ai.gif" alt="AI Emoji" width="360px" style="border-radius:12px" />
 
-### 🎨 Color Themes
+### 🎨 Color Themes & Dark Mode
 
-Users can choose several app color themes and choose between light and dark mode.
+Choose from various color themes and toggle between light and dark modes to suit your preferences.
 
 <img src="https://raw.githubusercontent.com/maciekt07/TodoApp/main/screenshots/settings.png" width="500px" />
 
@@ -76,7 +78,7 @@ Users can import and export tasks to/from JSON files. This feature allows users 
 
 ### 📴 Progressive Web App (PWA)
 
-This app is a Progressive Web App (PWA), which means it can be installed on your device, **used even when you're offline** and behave like a normal application with shortcuts and badges.
+This app is a Progressive Web App (PWA), which means it can be installed on your device, **used even when you're offline** and behave like a native app with shortcuts and app badges.
 
 <img src="https://raw.githubusercontent.com/maciekt07/TodoApp/main/screenshots/pwaTaskBar.png" alt="taskbar" width="260px" />
 

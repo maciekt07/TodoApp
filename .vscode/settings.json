@@ -23,6 +23,12 @@
       "base": "json",
       "color": "yellow-900",
       "fileNames": ["example-import.json"]
+    },
+    {
+      "name": "workbox",
+      "base": "typescript",
+      "color": "orange-400",
+      "fileNames": ["workbox.config.ts"]
     }
   ],
 

@@ -9,9 +9,8 @@ export const ColorPalette = {
   orangeDark: "#ff9500",
 } as const;
 
-// TODO: update themes
 export const themeConfig: { [key: string]: { primaryColor: string; secondaryColor?: string } } = {
-  Purple: {
+  "Dark Purple": {
     // Default dark theme
     primaryColor: ColorPalette.purple,
   },
@@ -20,11 +19,21 @@ export const themeConfig: { [key: string]: { primaryColor: string; secondaryColo
     primaryColor: ColorPalette.purple,
     secondaryColor: "#edeef6",
   },
-  Blue: {
-    primaryColor: "#2a93d5",
+  "Dark Blue": {
+    primaryColor: "#106cff",
+    secondaryColor: "#090815",
   },
-  Pink: {
+  "Light Blue": {
+    primaryColor: "#278ad2",
+    secondaryColor: "#dddaf6",
+  },
+  "Dark Pink": {
+    primaryColor: "#f2369d",
+    secondaryColor: "#191218",
+  },
+  "Light Pink": {
     primaryColor: "#e5369a",
+    secondaryColor: "#ffe3ff",
   },
   "Blush Blossom": {
     primaryColor: "#EC407A",

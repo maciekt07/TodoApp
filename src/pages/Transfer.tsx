@@ -87,6 +87,10 @@ const Transfer = () => {
   };
 
   const handleExportAll = () => {
+    if (user.tasks.length === 0) {
+      showToast("No tasks to export", { type: "error" });
+      return;
+    }
     exportTasksToJson(user.tasks);
     showToast(`Exported all tasks (${user.tasks.length})`);
   };

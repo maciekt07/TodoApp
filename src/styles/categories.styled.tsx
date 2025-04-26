@@ -44,6 +44,9 @@ export const CategoryElement = styled.div<{ clr: string }>`
   background: ${({ clr }) => clr};
   color: ${({ clr }) => getFontColor(clr)};
   animation: ${fadeIn} 0.5s ease-in-out;
+  @media (max-width: 768px) {
+    width: 360px;
+  }
 `;
 
 export const CategoryContent = styled.div`

@@ -7,7 +7,7 @@ import { getFontColor } from "../utils";
 interface TopBarProps {
   title: string;
 }
-
+//TODO: make it full width
 /**
  * Component for displaying a top bar with a title and a back button.
  * @param {string} title - Title of page

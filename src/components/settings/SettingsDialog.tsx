@@ -10,6 +10,7 @@ import {
   Google,
   InfoRounded,
   Inventory2Rounded,
+  KeyboardCommandKeyRounded,
   LightModeRounded,
   Microsoft,
   PaletteRounded,
@@ -43,7 +44,7 @@ import {
   useTheme,
 } from "@mui/material";
 import { Emoji, EmojiStyle } from "emoji-picker-react";
-import { useContext, useEffect, useState } from "react";
+import { JSX, useContext, useEffect, useState } from "react";
 import { CustomDialogTitle, TabGroupProvider, TabPanel } from "..";
 import { defaultUser } from "../../constants/defaultUser";
 import { UserContext } from "../../contexts/UserContext";
@@ -69,6 +70,7 @@ import {
 import type { OptionItem } from "./settingsTypes";
 import baner from "../../assets/baner.png";
 import { useOnlineStatus } from "../../hooks/useOnlineStatus";
+import { ShortcutItem } from "./ShortcutItem";
 
 const OPTION_ICON_SIZE = 32;
 
@@ -106,6 +108,15 @@ const emojiStyles: OptionItem<EmojiStyle>[] = [
   value,
   icon: <Emoji emojiStyle={value} unified="1f60e" size={OPTION_ICON_SIZE} />,
 }));
+
+const tabsOptions: { icon: JSX.Element; label: string }[] = [
+  { icon: <PaletteRounded />, label: "Appearance" },
+  { icon: <SettingsRounded />, label: "General" },
+  { icon: <EmojiEmotionsRounded />, label: "Emoji" },
+  { icon: <RecordVoiceOverRounded />, label: "Read Aloud" },
+  { icon: <KeyboardCommandKeyRounded />, label: "Shortcuts" },
+  { icon: <InfoRounded />, label: "About" },
+];
 
 interface SettingsProps {
   open: boolean;
@@ -353,13 +364,7 @@ export const SettingsDialog = ({ open, onClose }: SettingsProps) => {
             borderColor: "divider",
           }}
         >
-          {[
-            { icon: <PaletteRounded />, label: "Appearance" },
-            { icon: <SettingsRounded />, label: "General" },
-            { icon: <EmojiEmotionsRounded />, label: "Emoji" },
-            { icon: <RecordVoiceOverRounded />, label: "Read Aloud" },
-            { icon: <InfoRounded />, label: "About" },
-          ].map((tab, index) => (
+          {tabsOptions.map((tab, index) => (
             <StyledTab icon={tab.icon} label={tab.label} {...a11yProps(index)} key={index} />
           ))}
         </Tabs>
@@ -367,8 +372,8 @@ export const SettingsDialog = ({ open, onClose }: SettingsProps) => {
           className="customScrollbar"
           sx={{ flex: 1, p: 0, m: isMobile ? "0 12px" : "0 20px 0 20px", overflowY: "auto" }}
         >
-          <TabGroupProvider name="settings">
-            <TabPanel value={tabValue} index={0}>
+          <TabGroupProvider value={tabValue} name="settings">
+            <TabPanel index={0}>
               <TabHeading>Appearance</TabHeading>
               <SectionHeading>Dark Mode Options</SectionHeading>
               <CustomRadioGroup
@@ -409,10 +414,10 @@ export const SettingsDialog = ({ open, onClose }: SettingsProps) => {
               <CustomSwitch
                 settingKey="enableGlow"
                 header="Enable Glow Effect"
-                text="Activate a subtle glow effect on tasks to make them more visually"
+                text="Add a soft glow to tasks for better visibility."
               />
             </TabPanel>
-            <TabPanel value={tabValue} index={1}>
+            <TabPanel index={1}>
               <TabHeading>General Settings</TabHeading>
               <CustomSwitch
                 settingKey="enableCategories"
@@ -433,7 +438,7 @@ export const SettingsDialog = ({ open, onClose }: SettingsProps) => {
                 text="Move completed tasks to the bottom of the list to keep your active tasks more visible."
               />
             </TabPanel>
-            <TabPanel value={tabValue} index={2}>
+            <TabPanel index={2}>
               <TabHeading>Emoji Settings</TabHeading>
               <SectionHeading>Emoji Style</SectionHeading>
               <CustomRadioGroup
@@ -447,6 +452,12 @@ export const SettingsDialog = ({ open, onClose }: SettingsProps) => {
                   }));
                 }}
               />
+              {!isOnline && (
+                <Alert severity="warning" sx={{ mt: "8px" }}>
+                  <AlertTitle>Offline Mode</AlertTitle>
+                  You are currently offline. Non-native emoji styles may not load.
+                </Alert>
+              )}
               <SectionHeading>Simple Emoji Picker</SectionHeading>
               <CustomSwitch
                 settingKey="simpleEmojiPicker"
@@ -468,7 +479,7 @@ export const SettingsDialog = ({ open, onClose }: SettingsProps) => {
                 <DeleteRounded /> &nbsp; Clear Emoji Data
               </Button>
             </TabPanel>
-            <TabPanel value={tabValue} index={3}>
+            <TabPanel index={3}>
               <TabHeading>Read Aloud Settings</TabHeading>
               {!("speechSynthesis" in window) && (
                 <Alert severity="error">
@@ -660,11 +671,26 @@ export const SettingsDialog = ({ open, onClose }: SettingsProps) => {
                 </VolumeSlider>
               </div>
             </TabPanel>
-            <TabPanel value={tabValue} index={4}>
+            <TabPanel index={4}>
+              {/* TODO: add shortcut more shortcuts and custom hook */}
+              <TabHeading>Keyboard Shortcuts</TabHeading>
+              <ShortcutItem
+                name="Quick Export"
+                description="Save all tasks and download as JSON file"
+                keys={["Ctrl", "S"]}
+              />
+              {/* <ShortcutItem
+                name="Quick Search"
+                description="Focus search input"
+                keys={["Ctrl", "/"]}
+              /> */}
+            </TabPanel>
+            <TabPanel index={5}>
               <TabHeading>About Todo App</TabHeading>
               <Typography variant="body1" sx={{ mb: 2 }}>
                 📝 A simple todo app project made using React.js and MUI with many features,
-                including sharing tasks via link, theme customization and offline usage as a PWA.
+                including sharing tasks via link, theme customization and offline usage as a
+                Progressive Web App (PWA).
               </Typography>
               <img
                 src={baner}
@@ -701,6 +727,29 @@ export const SettingsDialog = ({ open, onClose }: SettingsProps) => {
           </TabGroupProvider>
         </Box>
       </DialogContent>
+      {isMobile && (
+        <Box
+          sx={{
+            position: "fixed",
+            bottom: "32px",
+            left: "50%",
+            transform: "translateX(-50%)",
+          }}
+        >
+          <Button
+            variant="contained"
+            sx={{
+              p: "16px 64px",
+              fontSize: "16px",
+              fontWeight: 600,
+              borderRadius: "999px",
+            }}
+            onClick={handleDialogClose}
+          >
+            Close
+          </Button>
+        </Box>
+      )}
     </Dialog>
   );
 };

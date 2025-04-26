@@ -24,11 +24,12 @@ import {
   UploadRounded,
 } from "@mui/icons-material";
 import { PROFILE_PICTURE_MAX_LENGTH, USER_NAME_MAX_LENGTH } from "../constants";
-import { CustomDialogTitle, LogoutDialog, SettingsDialog, TopBar } from "../components";
+import { CustomDialogTitle, LogoutDialog, TopBar } from "../components";
 import { DialogBtn, UserAvatar } from "../styles";
 import { UserContext } from "../contexts/UserContext";
 import { timeAgo, getFontColor, showToast, getProfilePicture, generateUUID } from "../utils";
 import { ColorPalette } from "../theme/themeConfig";
+import { SettingsDialog } from "../components/settings/SettingsDialog";
 
 const UserProfile = () => {
   const { user, setUser } = useContext(UserContext);

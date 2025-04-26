@@ -80,8 +80,8 @@ export const StyledTab = styled(UnstyledTab)`
     font-size: 13px;
     min-height: 0;
     padding: 10px 6px;
-    margin: 0;
-    border-radius: 0;
+    margin: 0 8px;
+    border-radius: 14px;
   }
 `;
 

@@ -183,8 +183,8 @@ export const ShareDialog = ({ open, onClose, selectedTask }: ShareDialogProps) =
             />
           ))}
         </Tabs>
-        <TabGroupProvider name="share">
-          <TabPanel value={shareTabVal} index={0}>
+        <TabGroupProvider name="share" value={shareTabVal}>
+          <TabPanel index={0}>
             <ShareField
               value={generateShareableLink(selectedTask, name || "User")}
               fullWidth
@@ -212,7 +212,7 @@ export const ShareDialog = ({ open, onClose, selectedTask }: ShareDialogProps) =
               }}
             />
           </TabPanel>
-          <TabPanel value={shareTabVal} index={1}>
+          <TabPanel index={1}>
             <QRCodeContainer>
               <QRCode
                 id="QRCodeShare"
@@ -236,7 +236,7 @@ export const ShareDialog = ({ open, onClose, selectedTask }: ShareDialogProps) =
             </Box>
           </TabPanel>
           {systemInfo.isAppleDevice && (
-            <TabPanel value={shareTabVal} index={2}>
+            <TabPanel index={2}>
               <Box
                 sx={{
                   mt: "22px",

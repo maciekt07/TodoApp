@@ -36,9 +36,11 @@ import {
   SelectedTasksContainer,
   TasksContainer,
   CategoriesListContainer,
+  TaskNotFound,
 } from "./tasks.styled";
 import { TaskMenu } from "./TaskMenu";
 import { TaskIcon } from "../TaskIcon";
+import { useToasterStore } from "react-hot-toast";
 
 const TaskMenuButton = memo(
   ({ task, onClick }: { task: Task; onClick: (event: React.MouseEvent<HTMLElement>) => void }) => (
@@ -241,17 +243,29 @@ export const TasksList: React.FC = () => {
     setCategoryCounts(counts);
   }, [user.tasks, search, setCategories, setCategoryCounts, orderedTasks]);
 
+  const { toasts } = useToasterStore();
+
   const checkOverdueTasks = useCallback(
     (tasks: Task[]) => {
       if (location.pathname === "/share") {
         return;
       }
 
-      const overdueTasks = tasks.filter((task) => {
-        return task.deadline && new Date() > new Date(task.deadline) && !task.done;
-      });
+      const overdueTasks = tasks.filter(
+        (task) => task.deadline && new Date() > new Date(task.deadline) && !task.done,
+      );
 
       if (overdueTasks.length > 0) {
+        const hasOverdueToastAlready = toasts.some(
+          // prevent duplicate toasts to be shown when switching pages
+          //TODO: move this to showToast.tsx
+          (toast) => toast.id === "overdue-tasks" && toast.visible,
+        );
+
+        if (hasOverdueToastAlready) {
+          return;
+        }
+
         const taskNames = overdueTasks.map((task) => task.name);
 
         showToast(
@@ -260,6 +274,7 @@ export const TasksList: React.FC = () => {
             {listFormat.format(taskNames)}
           </div>,
           {
+            id: "overdue-tasks",
             type: "error",
             disableVibrate: true,
             duration: 3400,
@@ -272,7 +287,7 @@ export const TasksList: React.FC = () => {
         );
       }
     },
-    [listFormat, user.settings],
+    [listFormat, user.settings, toasts],
   );
 
   useEffect(() => {
@@ -452,23 +467,16 @@ export const TasksList: React.FC = () => {
             Click on the <span>+</span> button to add one
           </NoTasks>
         )}
-        {search && orderedTasks.length === 0 && user.tasks.length > 0 && (
-          <div
-            style={{
-              textAlign: "center",
-              fontSize: "20px",
-              opacity: 0.9,
-              marginTop: "18px",
-            }}
-          >
+        {search && orderedTasks.length === 0 && user.tasks.length > 0 ? (
+          <TaskNotFound>
             <b>No tasks found</b>
             <br />
             Try searching with different keywords.
             <div style={{ marginTop: "14px" }}>
               <TaskIcon scale={0.8} />
             </div>
-          </div>
-        )}
+          </TaskNotFound>
+        ) : null}
         <EditTask
           open={editModalOpen}
           task={user.tasks.find((task) => task.id === selectedTaskId)}

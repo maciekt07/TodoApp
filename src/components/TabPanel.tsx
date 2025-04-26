@@ -1,33 +1,33 @@
 import { Box, Typography } from "@mui/material";
 import React, { createContext, ReactNode, useContext } from "react";
 
-const TabGroupContext = createContext<string | undefined>(undefined);
+const TabGroupContext = createContext<{ name: string; value: number } | undefined>(undefined);
 
 interface TabGroupProviderProps {
   name: string;
+  value: number;
   children: ReactNode;
 }
 
-export const TabGroupProvider: React.FC<TabGroupProviderProps> = ({ name, children }) => {
-  return <TabGroupContext.Provider value={name}>{children}</TabGroupContext.Provider>;
+export const TabGroupProvider: React.FC<TabGroupProviderProps> = ({ name, value, children }) => {
+  return <TabGroupContext.Provider value={{ name, value }}>{children}</TabGroupContext.Provider>;
 };
 
-const useTabGroupName = () => {
-  const name = useContext(TabGroupContext);
-  if (!name) {
+const useTabGroupContext = () => {
+  const context = useContext(TabGroupContext);
+  if (!context) {
     throw new Error("TabPanel must be used within a TabGroupProvider.");
   }
-  return name;
+  return context;
 };
 
 interface TabPanelProps extends React.HTMLAttributes<HTMLDivElement> {
   children?: ReactNode;
   index: number;
-  value: number;
 }
 
-export function TabPanel({ children, value, index, ...other }: TabPanelProps) {
-  const name = useTabGroupName();
+export function TabPanel({ children, index, ...other }: TabPanelProps) {
+  const { name, value } = useTabGroupContext();
 
   return (
     <div

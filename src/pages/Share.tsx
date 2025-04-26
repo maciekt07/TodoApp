@@ -7,7 +7,8 @@ import { generateUUID, isHexColor, showToast } from "../utils";
 import { UserContext } from "../contexts/UserContext";
 import { AddTaskRounded, DoNotDisturbAltRounded, ErrorRounded } from "@mui/icons-material";
 import { URL_REGEX, USER_NAME_MAX_LENGTH } from "../constants";
-import { CustomDialogTitle, TaskItem } from "../components";
+import { CustomDialogTitle } from "../components";
+import { TaskItem } from "../components/tasks/TaskItem";
 import Home from "./Home";
 import LZString from "lz-string";
 //FIXME: make everything type-safe

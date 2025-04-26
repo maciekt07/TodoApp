@@ -137,6 +137,14 @@ export const NoTasks = styled.div`
   }
 `;
 
+export const TaskNotFound = styled.div`
+  text-align: center;
+  font-size: 20px;
+  opacity: 0.9;
+  margin-top: 18px;
+  animation: ${fadeIn} 0.5s ease-in;
+`;
+
 export const TasksContainer = styled.main`
   display: flex;
   justify-content: center;

@@ -273,7 +273,7 @@ export const ProfileSidebar = () => {
 
         <MenuLink to="https://github.com/maciekt07/TodoApp">
           <StyledMenuItem translate="no">
-            <GitHub /> &nbsp; Github{" "}
+            <GitHub className="GitHubIcon" /> &nbsp; Github{" "}
             {stars && (
               <Tooltip title={`${stars} stars on Github`}>
                 <MenuLabel clr="#ff9d00">
@@ -289,7 +289,7 @@ export const ProfileSidebar = () => {
 
         <MenuLink to="https://github.com/maciekt07/TodoApp/issues/new">
           <StyledMenuItem>
-            <BugReportRounded /> &nbsp; Report Issue{" "}
+            <BugReportRounded className="BugReportRoundedIcon" /> &nbsp; Report Issue{" "}
             {Boolean(issuesCount || issuesCount === 0) && (
               <Tooltip title={`${issuesCount} open issues`}>
                 <MenuLabel clr="#3bb61c">
@@ -325,7 +325,11 @@ export const ProfileSidebar = () => {
 
         {supportsPWA && !isAppInstalled && (
           <StyledMenuItem onClick={installPWA}>
-            {systemInfo.os === "Android" ? <InstallMobileRounded /> : <InstallDesktopRounded />}
+            {systemInfo.os === "Android" ? (
+              <InstallMobileRounded />
+            ) : (
+              <InstallDesktopRounded className="InstallDesktopRoundedIcon" />
+            )}
             &nbsp; Install App
           </StyledMenuItem>
         )}
@@ -358,7 +362,7 @@ export const ProfileSidebar = () => {
           }}
           sx={{ color: "#ff4040 !important" }}
         >
-          <Logout /> &nbsp; Logout
+          <Logout className="LogoutIcon" /> &nbsp; Logout
         </StyledMenuItem>
 
         <ProfileOptionsBottom>
@@ -557,19 +561,18 @@ const StyledMenuItem = styled(MenuItem)`
   }
 
   &:hover {
-    // FIXME: animations dont work anymore
-    & svg[data-testid="GitHubIcon"] {
+    & svg.GitHubIcon {
       transform: rotateY(${2 * Math.PI}rad);
     }
-    & svg[data-testid="BugReportRoundedIcon"] {
+    & svg.BugReportRoundedIcon {
       transform: rotate(45deg) scale(1.1) translateY(-10%);
     }
 
-    & svg[data-testid="InstallDesktopRoundedIcon"] {
+    & svg.InstallDesktopRoundedIcon {
       animation: ${InstallAppAnimation} 0.8s ease-in alternate;
     }
 
-    & svg[data-testid="LogoutIcon"] {
+    & svg.LogoutIcon {
       animation: ${LogoutAnimation} 0.5s ease-in alternate;
     }
 
