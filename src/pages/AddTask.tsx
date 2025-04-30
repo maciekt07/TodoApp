@@ -1,9 +1,9 @@
 import { Category, Task } from "../types/user";
 import { useState, useEffect, useContext } from "react";
 import { useNavigate } from "react-router-dom";
-import { AddTaskButton, Container, StyledInput } from "../styles";
+import { AddTaskButton, Container, StyledInput, CustomSwitch } from "../styles";
 import { AddTaskRounded, CancelRounded } from "@mui/icons-material";
-import { IconButton, InputAdornment, Tooltip } from "@mui/material";
+import { IconButton, InputAdornment, Tooltip, FormControlLabel } from "@mui/material";
 import { DESCRIPTION_MAX_LENGTH, TASK_NAME_MAX_LENGTH } from "../constants";
 import { CategorySelect, ColorPicker, TopBar, CustomEmojiPicker } from "../components";
 import { UserContext } from "../contexts/UserContext";
@@ -34,6 +34,12 @@ const AddTask = () => {
   );
 
   const [isDeadlineFocused, setIsDeadlineFocused] = useState<boolean>(false);
+
+  const [isImportant, setisimportant] = useStorageState<boolean>(
+    false,
+    "isImportant",
+    "sessionStorage",
+  );
 
   const n = useNavigate();
 
@@ -96,6 +102,7 @@ const AddTask = () => {
       id: generateUUID(),
       done: false,
       pinned: false,
+      isimportant: isImportant,
       name,
       description: description !== "" ? description : undefined,
       emoji: emoji ? emoji : undefined,
@@ -104,6 +111,7 @@ const AddTask = () => {
       deadline: deadline !== "" ? new Date(deadline) : undefined,
       category: selectedCategories ? selectedCategories : [],
     };
+    console.log("New Task: ", newTask);
 
     setUser((prevUser) => ({
       ...prevUser,
@@ -202,6 +210,16 @@ const AddTask = () => {
                   ) : undefined,
               },
             }}
+          />
+          <FormControlLabel
+            control={
+              <CustomSwitch
+                checked={isImportant}
+                onChange={(e) => setisimportant(e.target.checked)}
+                customcolor={color}
+              />
+            }
+            label="Important"
           />
 
           {user.settings.enableCategories !== undefined && user.settings.enableCategories && (
