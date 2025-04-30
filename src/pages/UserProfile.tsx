@@ -29,7 +29,6 @@ import { DialogBtn, UserAvatar } from "../styles";
 import { UserContext } from "../contexts/UserContext";
 import { timeAgo, getFontColor, showToast, getProfilePicture, generateUUID } from "../utils";
 import { ColorPalette } from "../theme/themeConfig";
-import { SettingsDialog } from "../components/settings/SettingsDialog";
 
 const UserProfile = () => {
   const { user, setUser } = useContext(UserContext);
@@ -38,8 +37,6 @@ const UserProfile = () => {
   const [profilePictureURL, setProfilePictureURL] = useState<string>("");
   const [openChangeImage, setOpenChangeImage] = useState<boolean>(false);
   const [openLogoutDialog, setOpenLogoutDialog] = useState<boolean>(false);
-  const [openSettings, setOpenSettings] = useState<boolean>(false);
-
   const [avatarSrc, setAvatarSrc] = useState<string | null>(null);
 
   useEffect(() => {
@@ -71,13 +68,13 @@ const UserProfile = () => {
   };
 
   const handleSaveImageLink = () => {
-    // TODO: remove image from indexedDB if it exists
     if (
       profilePictureURL.length <= PROFILE_PICTURE_MAX_LENGTH &&
       profilePictureURL.startsWith("https://")
     ) {
       handleCloseImageDialog();
       setProfilePictureURL("");
+      handleDeleteImage();
       setUser((prevUser) => ({
         ...prevUser,
         profilePicture: profilePictureURL,
@@ -182,7 +179,7 @@ const UserProfile = () => {
       deleteRequest.onsuccess = () => {
         setUser({ ...user, profilePicture: null });
         handleCloseImageDialog();
-        showToast("Deleted profile image.");
+        // showToast("Deleted profile image.");
       };
 
       deleteRequest.onerror = () => {
@@ -197,7 +194,7 @@ const UserProfile = () => {
       <Container>
         <Tooltip title="App Settings">
           <IconButton
-            onClick={() => setOpenSettings(true)}
+            onClick={() => (window.location.hash = `#settings/Appearance`)}
             aria-label="Settings"
             size="large"
             sx={{
@@ -367,7 +364,6 @@ const UserProfile = () => {
         </DialogActions>
       </Dialog>
       <LogoutDialog open={openLogoutDialog} onClose={() => setOpenLogoutDialog(false)} />
-      <SettingsDialog open={openSettings} onClose={() => setOpenSettings(false)} />
     </>
   );
 };

@@ -307,29 +307,6 @@ export const StyledDescriptionLink = styled(Button)<{ clr: string }>`
   }
 `;
 
-// export const YouTubeThumbnail = styled.div`
-//   display: flex;
-//   align-items: center;
-//   justify-content: center;
-//   margin-top: 6px;
-//   & img {
-//     width: 300px;
-//     height: 160px;
-//     border-radius: 12px;
-//     margin-bottom: 6px;
-//     object-fit: cover;
-//     object-position: 100%;
-//     opacity: 0.9;
-//   }
-//   @media (max-width: 768px) {
-//     & img {
-//       width: 150px;
-//       height: 80px;
-//     }
-//     justify-content: left;
-//   }
-// `;
-
 export const SearchInput = styled(TextField)`
   margin: 8px 0 0 0;
   border-radius: 16px;

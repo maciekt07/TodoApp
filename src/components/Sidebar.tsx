@@ -86,6 +86,18 @@ export const ProfileSidebar = () => {
     fetchRepoInfo();
   }, []);
 
+  useEffect(() => {
+    const handleHashChange = () => {
+      if (window.location.hash.startsWith("#settings/")) {
+        setOpenSettings(true);
+      }
+    };
+
+    handleHashChange();
+    window.addEventListener("hashchange", handleHashChange);
+    return () => window.removeEventListener("hashchange", handleHashChange);
+  }, []);
+
   const [avatarSrc, setAvatarSrc] = useState<string | null>(null);
 
   useEffect(() => {
@@ -372,7 +384,7 @@ export const ProfileSidebar = () => {
               handleClose();
             }}
           >
-            <SettingsRounded /> &nbsp; Settings
+            <SettingsRounded className="SettingsRoundedIcon" /> &nbsp; Settings
             {JSON.stringify(settings) === JSON.stringify(defaultUser.settings) &&
               user.darkmode === defaultUser.darkmode &&
               user.theme === defaultUser.theme &&
@@ -588,7 +600,7 @@ const SettingsMenuItem = styled(StyledMenuItem)`
   margin-top: 8px !important;
   &:hover {
     background: ${({ theme }) => (theme.darkmode ? "#1f1f1fb2" : "#101727b2")};
-    & svg[data-testid="SettingsRoundedIcon"] {
+    & svg.SettingsRoundedIcon {
       transform: rotate(180deg);
     }
   }

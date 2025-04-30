@@ -141,8 +141,56 @@ export const SettingsDialog = ({ open, onClose }: SettingsProps) => {
   const systemTheme = useSystemTheme();
   const isOnline = useOnlineStatus();
 
-  const handleTabChange = (_event: React.SyntheticEvent, newValue: number) => {
+  const labelToSlug = (label: string) => label.replace(/\s+/g, "");
+
+  const handleTabChange = (_: React.SyntheticEvent, newValue: number) => {
     setTabValue(newValue);
+    const tabSlug = labelToSlug(tabsOptions[newValue].label);
+    window.location.hash = `#settings/${tabSlug}`;
+  };
+
+  // listens for changes in the URL hash and updates the selected tab
+  useEffect(() => {
+    const handleHashChange = () => {
+      const hash = window.location.hash;
+      const match = hash.match(/^#settings\/(\w+)/);
+      if (match) {
+        const slug = match[1];
+        const foundIndex = tabsOptions.findIndex((tab) => labelToSlug(tab.label) === slug);
+        if (foundIndex !== -1) {
+          setTabValue(foundIndex);
+        }
+      }
+    };
+
+    handleHashChange();
+    window.addEventListener("hashchange", handleHashChange);
+    return () => window.removeEventListener("hashchange", handleHashChange);
+  }, []);
+
+  useEffect(() => {
+    if (!open) return;
+
+    const hash = window.location.hash;
+    const match = hash.match(/^#settings\/(\w+)/);
+
+    // if the hash is just #settings or something invalid push the default tab
+    if (!match) {
+      const defaultTabSlug = labelToSlug(tabsOptions[0].label);
+      window.location.hash = `#settings/${defaultTabSlug}`;
+    }
+  }, [open]);
+
+  const handleDialogClose = () => {
+    if (window.speechSynthesis) {
+      window.speechSynthesis.cancel();
+    }
+
+    setIsSampleReading(false);
+    onClose();
+
+    // remove the full hash
+    history.replaceState(null, "", window.location.pathname + window.location.search);
   };
 
   useEffect(() => {
@@ -168,14 +216,6 @@ export const SettingsDialog = ({ open, onClose }: SettingsProps) => {
       window.speechSynthesis.cancel();
     }
   }, [user.settings.voiceVolume, user.settings.voice]);
-
-  const handleDialogClose = () => {
-    if (window.speechSynthesis) {
-      window.speechSynthesis.cancel();
-    }
-    setIsSampleReading(false);
-    onClose();
-  };
 
   const handleAppThemeChange = (event: SelectChangeEvent<unknown>) => {
     const selectedTheme = event.target.value as string;
