@@ -1,7 +1,7 @@
 import styled from "@emotion/styled";
 import { Alarm, RadioButtonChecked, RadioButtonUnchecked } from "@mui/icons-material";
 import { Button, Checkbox, IconButton, TextField, css } from "@mui/material";
-import { fadeIn, ring, scale } from "../../styles/keyframes.styled";
+import { fadeIn, ring, scale, glowBorder } from "../../styles/keyframes.styled";
 import { ColorPalette } from "../../theme/themeConfig";
 import { getFontColor, isDark, systemInfo } from "../../utils";
 
@@ -12,6 +12,7 @@ interface TaskComponentProps {
   done: boolean;
   glow?: boolean;
   blur?: boolean;
+  isimportant?: boolean;
 }
 
 export const TaskContainer = styled.div<TaskComponentProps>`
@@ -31,8 +32,6 @@ export const TaskContainer = styled.div<TaskComponentProps>`
     glow && !done ? `0 0 2px ${getFontColor(backgroundColor)}78` : "none"}; */
   filter: ${({ blur }) => (blur ? "blur(2px) opacity(75%)" : "none")};
 
-  animation: ${fadeIn} 0.5s ease-in;
-
   /* If the theme color and task color are the same, it changes the selection color to be different. */
   *::selection {
     background-color: ${({ theme, backgroundColor }) =>
@@ -40,6 +39,15 @@ export const TaskContainer = styled.div<TaskComponentProps>`
     color: ${({ theme, backgroundColor }) =>
       theme.primary === backgroundColor ? "#000000" : getFontColor(theme.primary)} !important;
   }
+  border: ${({ isimportant, done }) => (isimportant && !done ? "2px solid red" : undefined)};
+  box-shadow: ${(props) =>
+    props.isimportant
+      ? `0 0 12px 2px red`
+      : props.glow && !props.blur
+        ? `0 0 128px -20px ${props.backgroundColor}`
+        : "none"};
+  animation: ${({ isimportant, done }) => (isimportant && !done ? glowBorder : "none")} 1.5s
+    infinite;
 
   @media (max-width: 768px) {
     padding: 14px 14px 14px 18px;
