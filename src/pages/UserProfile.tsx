@@ -72,14 +72,27 @@ const UserProfile = () => {
       profilePictureURL.length <= PROFILE_PICTURE_MAX_LENGTH &&
       profilePictureURL.startsWith("https://")
     ) {
-      handleCloseImageDialog();
-      setProfilePictureURL("");
-      handleDeleteImage();
-      setUser((prevUser) => ({
-        ...prevUser,
-        profilePicture: profilePictureURL,
-      }));
-      showToast("Changed profile picture.");
+      if (user.profilePicture && user.profilePicture.startsWith("LOCAL_FILE_")) {
+        handleDeleteImage(() => {
+          setUser((prevUser) => ({
+            ...prevUser,
+            profilePicture: profilePictureURL,
+          }));
+          setProfilePictureURL("");
+          handleCloseImageDialog();
+          showToast("Profile picture updated with link.");
+        });
+      } else {
+        setUser((prevUser) => ({
+          ...prevUser,
+          profilePicture: profilePictureURL,
+        }));
+        setProfilePictureURL("");
+        handleCloseImageDialog();
+        showToast("Profile picture updated with link.");
+      }
+    } else {
+      showToast("Invalid profile picture URL.", { type: "error" });
     }
   };
 
@@ -153,11 +166,11 @@ const UserProfile = () => {
           }));
 
           handleCloseImageDialog();
-          showToast(`Profile picture updated successfully.`);
+          showToast("Profile picture uploaded.");
         };
 
         putRequest.onerror = () => {
-          showToast("Failed to save profile picture.");
+          showToast("Failed to upload profile picture.");
         };
       };
     } catch (error) {
@@ -166,7 +179,7 @@ const UserProfile = () => {
     }
   };
 
-  const handleDeleteImage = () => {
+  const handleDeleteImage = (callback?: () => void) => {
     const request = indexedDB.open("profilePictureDB", 1);
 
     request.onsuccess = (event) => {
@@ -177,13 +190,13 @@ const UserProfile = () => {
       const deleteRequest = store.delete("profilePicture");
 
       deleteRequest.onsuccess = () => {
-        setUser({ ...user, profilePicture: null });
-        handleCloseImageDialog();
-        // showToast("Deleted profile image.");
+        setUser((prevUser) => ({ ...prevUser, profilePicture: null }));
+        callback?.();
       };
 
       deleteRequest.onerror = () => {
         showToast("Failed to delete profile picture.");
+        callback?.();
       };
     };
   };
@@ -340,7 +353,13 @@ const UserProfile = () => {
               <Divider sx={{ my: "12px" }} />
               <Button
                 fullWidth
-                onClick={handleDeleteImage}
+                onClick={() => {
+                  handleDeleteImage(() => {
+                    setUser((prevUser) => ({ ...prevUser, profilePicture: null }));
+                    handleCloseImageDialog();
+                    showToast("Profile picture removed.");
+                  });
+                }}
                 color="error"
                 variant="outlined"
                 sx={{ my: "8px" }}

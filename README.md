@@ -19,8 +19,6 @@
 
 ## 💻 Tech Stack
 
-## 💻 Tech Stack
-
 <ul style="display: flex; flex-direction: column; gap:10px;">
   <li style="vertical-align: middle;">
     <img src="https://go-skill-icons.vercel.app/api/icons?i=react" alt="react" width="24" style="vertical-align: middle; margin-right: 4px;" /> React
