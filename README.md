@@ -4,6 +4,8 @@
 
 # 📝React.js Todo App
 
+<p align="center"><i>A fast and modern Todo app built with React, featuring task sharing via link, theme customization, offline usage as a PWA, and caching for smooth performance.</i></p>
+
 <img src="https://raw.githubusercontent.com/maciekt07/TodoApp/main/screenshots/baner.png" />
 
 ## [https://react-cool-todo-app.netlify.app/](https://react-cool-todo-app.netlify.app/)
