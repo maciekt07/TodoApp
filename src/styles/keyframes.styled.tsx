@@ -1,4 +1,4 @@
-import { keyframes } from "@emotion/react";
+import { Keyframes, keyframes } from "@emotion/react";
 
 export const fadeInLeft = keyframes`
 from {
@@ -44,22 +44,35 @@ export const scale = keyframes`
   }
 `;
 
-export const pulseAnimation = (clr: string, shadowBlur: number = 12) => keyframes`
-0% {
-  transform: scale(0.95);
-  box-shadow: 0 0 0 0 ${clr}b2;
-}
-70% {
-  transform: scale(1);
-  box-shadow: 0 0 0 ${shadowBlur}px ${clr}00;
-}
-100% {
-  transform: scale(0.95);
-  box-shadow: 0 0 0 0 ${clr}00;
-}
+/**
+ * Creates a pulsating animation using scale and box-shadow to simulate a glowing effect.
+ *
+ * @param {string} clr - The base color for the shadow in hex.
+ * @param {number} [shadowBlur=12] - The maximum spread of the shadow during the pulse.
+ * @returns {Keyframes} An Emotion keyframes animation.
+ */
+export const pulseAnimation = (clr: string, shadowBlur: number = 12): Keyframes => keyframes`
+  0% {
+    transform: scale(0.95);
+    box-shadow: 0 0 0 0 ${clr}b2;
+  }
+  70% {
+    transform: scale(1);
+    box-shadow: 0 0 0 ${shadowBlur}px ${clr}00;
+  }
+  100% {
+    transform: scale(0.95);
+    box-shadow: 0 0 0 0 ${clr}00;
+  }
 `;
 
-export const progressPulse = (clr: string) => keyframes`
+/**
+ * Creates a subtle glowing pulse animation for `ProgressPercentageContainer`.
+ *
+ * @param {string} clr - The base color of the glow in hex.
+ * @returns {Keyframes} An Emotion keyframes animation.
+ */
+export const progressPulse = (clr: string): Keyframes => keyframes`
   0% {
     filter: none;
   }

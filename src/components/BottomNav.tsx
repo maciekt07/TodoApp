@@ -101,16 +101,18 @@ export const BottomNav = (): JSX.Element | null => {
           icon={<CategoryRounded sx={{ fontSize: smallIconSize }} />}
           disabled={!settings.enableCategories}
         />
+
         <NavigationButton
           onClick={() => n("add")}
           showLabel={false}
           aria-label="Add"
           icon={
-            <AddIcon
+            <AddIconContainer
               clr={theme.palette.primary.main}
-              fontSize="large"
               animate={tasks.length === 0 && value !== 2}
-            />
+            >
+              <AddIcon clr={theme.palette.primary.main} fontSize="large" />
+            </AddIconContainer>
           }
         />
         <NavigationButton
@@ -128,19 +130,29 @@ export const BottomNav = (): JSX.Element | null => {
   );
 };
 
-const AddIcon = styled(AddRounded)<{ clr: string; animate: boolean }>`
-  border: 2px solid ${({ clr }) => clr};
-  background-color: ${({ theme }) => theme.palette.secondary.main};
-  font-size: 38px;
+const AddIconContainer = styled(Box)<{ clr: string; animate: boolean }>`
   border-radius: 100px;
-  padding: 6px;
-  margin: 14px;
-  transition: background 0.3s;
+  padding: 0;
+  margin: 0 !important;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
   ${({ animate, theme }) =>
     animate &&
     css`
       animation: ${pulseAnimation(theme.palette.primary.main, 10)} 1.2s infinite;
     `};
+`;
+
+const AddIcon = styled(AddRounded)<{ clr: string }>`
+  border: 2px solid ${({ clr }) => clr};
+  background-color: ${({ theme }) => theme.palette.secondary.main};
+  font-size: 38px;
+  border-radius: 100px;
+  padding: 6px;
+  margin: 0 !important;
+  transition: background 0.3s;
 `;
 
 const Container = styled(Box)`
