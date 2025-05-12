@@ -1,59 +1,66 @@
-import styled from "@emotion/styled";
 import { ArrowBackIosNewRounded } from "@mui/icons-material";
-import { IconButton } from "@mui/material";
+import { AppBar, Box, IconButton, Toolbar, Typography } from "@mui/material";
 import { useNavigate } from "react-router-dom";
+import styled from "@emotion/styled";
+import { useTheme } from "@emotion/react";
 import { getFontColor } from "../utils";
 
 interface TopBarProps {
   title: string;
 }
-//TODO: make it full width
-/**
- * Component for displaying a top bar with a title and a back button.
- * @param {string} title - Title of page
- */
+
 export const TopBar = ({ title }: TopBarProps) => {
   const n = useNavigate();
+  const theme = useTheme();
+
   return (
-    <Container>
-      <BackBtn size="large" aria-label="Back" onClick={() => n("/")}>
-        <ArrowIcon />
-      </BackBtn>
-      <Title>{title}</Title>
-    </Container>
+    <Box sx={{ flexGrow: 1, mb: "100px" }}>
+      <StyledAppBar sx={{ py: "18px !important", mb: "48px !important" }}>
+        <Toolbar
+          sx={{
+            position: "relative",
+            m: "0 !important",
+            p: "0 !important",
+            minHeight: "0 !important",
+          }}
+        >
+          <IconButton
+            size="large"
+            edge="start"
+            color="inherit"
+            aria-label="menu"
+            sx={{ ml: 2, color: getFontColor(theme.secondary) }}
+            onClick={() => n("/")}
+          >
+            <ArrowBackIosNewRounded />
+          </IconButton>
+          <Typography
+            variant="h5"
+            component="div"
+            sx={{
+              position: "absolute",
+              left: "50%",
+              transform: "translateX(-50%)",
+              fontWeight: 600,
+              color: getFontColor(theme.secondary),
+            }}
+          >
+            {title}
+          </Typography>
+        </Toolbar>
+      </StyledAppBar>
+    </Box>
   );
 };
 
-const Container = styled.div`
-  margin: 0;
-  width: 100%;
-  position: sticky;
-  top: 0;
+const StyledAppBar = styled(AppBar)`
   z-index: 99;
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
   background: ${({ theme }) => theme.secondary + "c1"};
-  transition:
-    background 0.3s,
-    color 0.3s;
-  margin-bottom: 48px;
-`;
-
-const ArrowIcon = styled(ArrowBackIosNewRounded)`
-  color: ${({ theme }) => getFontColor(theme.secondary)};
-`;
-
-const Title = styled.h2`
-  font-size: 28px;
-  margin: 0 auto;
-  text-align: center;
-  padding: 4px 0 8px 0;
-  /* text-shadow: 0 0 24px #00000068; */
-`;
-const BackBtn = styled(IconButton)`
-  position: absolute;
-  color: ${({ theme }) => getFontColor(theme.secondary)};
-  @media (max-width: 1024px) {
-    margin-top: 4px;
+  box-shadow: none;
+  /* border: 2px solid red; */
+  @media (min-width: 1024px) {
+    padding: 0 16vw;
   }
 `;

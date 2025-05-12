@@ -217,7 +217,7 @@ export const ShareDialog = ({ open, onClose, selectedTask }: ShareDialogProps) =
               <QRCode
                 id="QRCodeShare"
                 value={generateShareableLink(selectedTask, name || "User")}
-                size={400}
+                size={350}
               />
             </QRCodeContainer>
             <Box

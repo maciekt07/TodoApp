@@ -1,5 +1,6 @@
 import { keyframes, useTheme } from "@emotion/react";
 import styled from "@emotion/styled";
+
 import {
   AddRounded,
   AdjustRounded,
@@ -199,6 +200,7 @@ export const ProfileSidebar = () => {
             hasimage={profilePicture !== null}
             pulse={
               user.name === defaultUser.name &&
+              user.profilePicture === defaultUser.profilePicture &&
               JSON.stringify(user.settings) === JSON.stringify(defaultUser.settings)
             }
             size="52px"
@@ -493,6 +495,8 @@ const PulseMenuLabel = () => {
     </StyledPulseMenuLabel>
   );
 };
+
+// TODO: make avatar sticky on pages with TopBar.tsx
 
 const Container = styled.div`
   position: absolute;

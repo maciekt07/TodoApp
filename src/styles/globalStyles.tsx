@@ -14,7 +14,7 @@ export const GlobalStyles = () => {
           &::selection {
             background-color: ${theme.primary + "e1"};
             color: ${getFontColor(theme.primary)};
-            text-shadow: 0 0 12px ${getFontColor(theme.primary) + "b9"};
+            /* text-shadow: 0 0 12px ${getFontColor(theme.primary) + "b9"}; */
           }
         }
         :root {
