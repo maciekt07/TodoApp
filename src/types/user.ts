@@ -31,6 +31,7 @@ export interface Task {
   id: UUID;
   done: boolean;
   pinned: boolean;
+  isimportant?: boolean;
   name: string;
   description?: string;
   emoji?: string;
