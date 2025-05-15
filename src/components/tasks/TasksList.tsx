@@ -17,7 +17,7 @@ import {
   InputAdornment,
   Tooltip,
 } from "@mui/material";
-import { useCallback, useContext, useEffect, useMemo, useState, memo } from "react";
+import { useCallback, useContext, useEffect, useMemo, useState, memo, useRef } from "react";
 import { CategoryBadge, CustomDialogTitle, EditTask, TaskItem } from "..";
 import { TaskContext } from "../../contexts/TaskContext";
 import { UserContext } from "../../contexts/UserContext";
@@ -94,6 +94,8 @@ export const TasksList: React.FC = () => {
   const [categoryCounts, setCategoryCounts] = useState<{
     [categoryId: UUID]: number;
   }>({});
+  const searchRef = useRef<HTMLInputElement>(null);
+
   const isMobile = useResponsiveDisplay();
   const theme = useTheme();
   useCtrlS();
@@ -125,6 +127,18 @@ export const TasksList: React.FC = () => {
       toggleShowMore(taskId);
     }
   };
+  // focus search input on ctrl + /
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.ctrlKey && e.key === "/") {
+        e.preventDefault();
+        searchRef.current?.focus();
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, []);
 
   const reorderTasks = useCallback(
     (tasks: Task[]): Task[] => {
@@ -300,7 +314,7 @@ export const TasksList: React.FC = () => {
       <TasksContainer>
         {user.tasks.length > 0 && (
           <SearchInput
-            focused
+            inputRef={searchRef}
             color="primary"
             placeholder="Search for task..."
             autoComplete="off"

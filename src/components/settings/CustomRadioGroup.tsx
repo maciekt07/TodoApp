@@ -6,36 +6,46 @@ import type { OptionItem } from "./settingsTypes";
 interface CustomRadioGroupProps<T> {
   options: OptionItem<T>[];
   value: T;
+  disabledOptions?: T[];
   onChange: (value: T) => void;
 }
-
-// TODO: add disable prop
 
 const CustomRadioGroup = <T extends string>({
   options,
   value,
+  disabledOptions = [],
   onChange,
 }: CustomRadioGroupProps<T>) => {
   return (
     <StyledRadioGroup value={value} onChange={(e) => onChange(e.target.value as T)}>
-      {options.map((option) => (
-        <FormControlLabel
-          key={option.value}
-          value={option.value}
-          control={<Radio sx={{ display: "none" }} />}
-          label={
-            <StyledLabelBox
-              selected={value === option.value}
-              sx={{ border: "1px solid", borderColor: "divider" }}
-            >
-              <Typography fontSize="28px">{option.icon}</Typography>
-              <StyledLabel translate="no" variant="body2">
-                {option.label}
-              </StyledLabel>
-            </StyledLabelBox>
-          }
-        />
-      ))}
+      {options.map((option) => {
+        const isDisabled = disabledOptions.includes(option.value);
+        return (
+          <FormControlLabel
+            key={option.value}
+            value={option.value}
+            disabled={isDisabled}
+            control={<Radio sx={{ display: "none" }} />}
+            label={
+              <StyledLabelBox
+                selected={value === option.value}
+                disabled={isDisabled}
+                sx={{ border: "1px solid", borderColor: "divider" }}
+              >
+                <Typography
+                  fontSize="28px"
+                  sx={{ opacity: isDisabled && value !== option.value ? 0.6 : 1 }}
+                >
+                  {option.icon}
+                </Typography>
+                <StyledLabel translate="no" variant="body2">
+                  {option.label}
+                </StyledLabel>
+              </StyledLabelBox>
+            }
+          />
+        );
+      })}
     </StyledRadioGroup>
   );
 };
@@ -60,7 +70,7 @@ const StyledRadioGroup = styled(RadioGroup)`
   }
 `;
 
-const StyledLabelBox = styled(Box)<{ selected: boolean }>`
+const StyledLabelBox = styled(Box)<{ selected: boolean; disabled?: boolean }>`
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -79,11 +89,13 @@ const StyledLabelBox = styled(Box)<{ selected: boolean }>`
     width: unset !important;
     height: unset !important;
   }
-
-  &:hover {
-    background-color: ${({ theme, selected }) =>
-      selected ? theme.primary : "rgba(0, 0, 0, 0.08)"};
-  }
+  ${({ disabled, theme, selected }) =>
+    !disabled &&
+    `
+    &:hover {
+      background-color: ${selected ? theme.primary : "rgba(0, 0, 0, 0.08)"};
+    }
+  `}
 
   &:focus-visible {
     outline: 2px solid ${({ theme }) => theme.primary};

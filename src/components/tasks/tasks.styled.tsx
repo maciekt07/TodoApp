@@ -312,18 +312,34 @@ export const SearchInput = styled(TextField)`
   border-radius: 16px;
   transition: 0.3s all;
   width: 100%;
-  & .MuiOutlinedInput-notchedOutline {
-    border: 1px solid ${({ theme }) => (isDark(theme.secondary) ? "#44479cb7" : theme.primary)} !important;
-  }
+
   & .MuiOutlinedInput-root {
     padding: 2px 16px;
     border-radius: 16px;
     transition: 0.3s all;
     background: ${({ theme }) => (isDark(theme.secondary) ? "#090b2258" : "#ffffff3e")};
     color: ${({ theme }) => getFontColor(theme.secondary)};
+
     & .MuiSvgIcon-root {
       color: ${({ theme }) => getFontColor(theme.secondary)};
     }
+
+    &.Mui-focused {
+      background: ${({ theme }) => (isDark(theme.secondary) ? "#090b228e" : "#ffffff8e")};
+      box-shadow: ${({ theme }) =>
+        isDark(theme.secondary) ? "0 0 0 4px #1a1e4a7f" : `0 0 0 4px ${theme.primary}64`};
+    }
+    &.Mui-focused .MuiSvgIcon-root {
+      animation: ${scale} 0.3s ease-in-out;
+    }
+    &.Mui-focused .MuiOutlinedInput-notchedOutline {
+      border: 2px solid ${({ theme }) => theme.primary};
+    }
+  }
+
+  & .MuiOutlinedInput-notchedOutline {
+    border: 1px solid ${({ theme }) => (isDark(theme.secondary) ? "#44479cb7" : theme.primary)} !important;
+    transition: 0.3s border;
   }
 `;
 

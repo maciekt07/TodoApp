@@ -491,7 +491,13 @@ export const SettingsDialog = ({ open, onClose }: SettingsProps) => {
                     emojisStyle: val,
                   }));
                 }}
+                disabledOptions={
+                  !isOnline
+                    ? [EmojiStyle.APPLE, EmojiStyle.FACEBOOK, EmojiStyle.TWITTER, EmojiStyle.GOOGLE]
+                    : []
+                }
               />
+
               {!isOnline && (
                 <Alert severity="warning" sx={{ mt: "8px" }}>
                   <AlertTitle>Offline Mode</AlertTitle>
@@ -505,7 +511,6 @@ export const SettingsDialog = ({ open, onClose }: SettingsProps) => {
                 text="
               Use a simple emoji picker with only recently used emojis. This will make the emoji picker load faster."
               />
-
               <SectionHeading>Emoji Data</SectionHeading>
               <SectionDescription> Clear data about recently used emojis</SectionDescription>
               <Button
@@ -719,11 +724,11 @@ export const SettingsDialog = ({ open, onClose }: SettingsProps) => {
                 description="Save all tasks and download as JSON file"
                 keys={["Ctrl", "S"]}
               />
-              {/* <ShortcutItem
+              <ShortcutItem
                 name="Quick Search"
                 description="Focus search input"
                 keys={["Ctrl", "/"]}
-              /> */}
+              />
             </TabPanel>
             <TabPanel index={5}>
               <TabHeading>About Todo App</TabHeading>
