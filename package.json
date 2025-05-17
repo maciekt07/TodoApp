@@ -66,6 +66,9 @@
     "vite-plugin-qrcode": "^0.2.4",
     "vitest": "^3.1.1"
   },
+  "sideEffects": [
+    "**/*.styled.tsx"
+  ],
   "overrides": {
     "react-spring-bottom-sheet": {
       "react": "19.0.0"

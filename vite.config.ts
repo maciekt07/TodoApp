@@ -12,7 +12,12 @@ export default defineConfig({
     globals: true,
   },
   plugins: [
-    react(),
+    react({
+      jsxImportSource: "@emotion/react",
+      babel: {
+        plugins: ["@emotion/babel-plugin"],
+      },
+    }),
     // Generate QR code for npm run dev:host
     qrcode({ filter: (url) => url.startsWith("http://192.168.0.") }),
     // https://vite-pwa-org.netlify.app/
