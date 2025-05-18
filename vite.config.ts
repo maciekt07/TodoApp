@@ -24,7 +24,7 @@ export default defineConfig({
     VitePWA({
       manifest, // manifest.ts
       devOptions: {
-        enabled: true,
+        enabled: false, // Enable to test PWA functionality in dev, but it may slow down HMR.
         type: "module",
       },
       registerType: "prompt",

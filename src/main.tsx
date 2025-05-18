@@ -19,7 +19,11 @@ const offlinePreparationCount = parseInt(
   10,
 );
 
-if (offlinePreparationCount < 3 && !localStorage.getItem("initialCachingComplete")) {
+if (
+  offlinePreparationCount < 3 &&
+  !localStorage.getItem("initialCachingComplete") &&
+  process.env.NODE_ENV !== "development"
+) {
   showToast("Preparing app for offline use...", {
     duration: Infinity,
     type: "blank",
