@@ -2,23 +2,44 @@ import { Button } from "@mui/material";
 import { ReactNode } from "react";
 import toast, { Toast, ToastOptions, ToastType } from "react-hot-toast";
 
-interface ToastProps extends ToastOptions {
+interface BaseToastProps extends ToastOptions {
+  /** Prevent closing toast by clicking on it */
   disableClickDismiss?: boolean;
+  /** Disable device vibration when toast appears */
   disableVibrate?: boolean;
+  /** Show dismiss button inside toast and not close it on click */
   dismissButton?: boolean;
-  type?: ToastType; // TODO: add info and warning custom types
+  type?: ToastType;
 }
 
+type ToastProps = BaseToastProps &
+  (
+    | {
+        /** ‼️ requires `id` and `visibleToasts` */
+        preventDuplicate: true;
+        id: string;
+        visibleToasts: Toast[];
+      }
+    | { preventDuplicate?: false; id?: string; visibleToasts?: Toast[] }
+  );
+
 /**
- * Function to display a toast notification with optional vibration, click-to-dismiss, and dismiss button features..
- * @param {string | ReactNode} message - The message to show.
- * @param {ToastProps} [options] - Optional settings for the toast.
- * @param {'success' | 'error' | 'loading' | 'blank' | 'custom'} [options.type] - Type of toast. Defaults to 'success'.
- * @param {boolean} [options.disableClickDismiss] - clicking the toast won't close it.
- * @param {boolean} [options.disableVibrate] - disables device vibration.
- * @param {boolean} [options.dismissButton] - adds a "Dismiss" button inside the toast.
- * @param {ToastOptions} [options.toastOptions] - Additional options for `react-hot-toast`.
- * @returns {void}
+ * Displays a configurable toast notification
+ *
+ * @param {string|ReactNode} message - Content to display in the toast
+ * @param {ToastProps} [options] - Configuration options for toast behavior and appearance
+ *
+ * @example
+ * // basic usage
+ * showToast('Update successful!', {type: "success"});
+ *
+ * @example
+ * // with duplicate prevention
+ * showToast('Only show once at a time', {
+ *   preventDuplicate: true,
+ *   id: 'unique-message',
+ *   visibleToasts: activeToasts
+ * });
  */
 
 export const showToast = (
@@ -28,9 +49,22 @@ export const showToast = (
     disableClickDismiss,
     disableVibrate,
     dismissButton,
+    preventDuplicate,
+    visibleToasts,
     ...toastOptions
   }: ToastProps = {} as ToastProps,
 ): void => {
+  // Prevent showing duplicate of toasts if enabled
+  if (preventDuplicate) {
+    if (!toastOptions.id || !visibleToasts) {
+      console.error("[Toast] `preventDuplicate: true` requires both `id` and `visibleToasts`.");
+      return;
+    }
+    console.log("[Toast] prevented duplicate toast", toastOptions.id);
+    const alreadyVisible = visibleToasts.some((t) => t.id === toastOptions.id && t.visible);
+    if (alreadyVisible) return;
+  }
+
   // Selects the appropriate toast function based on the specified type or defaults to success.
   const toastFunction = {
     error: toast.error,

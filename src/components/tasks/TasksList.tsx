@@ -98,6 +98,7 @@ export const TasksList: React.FC = () => {
 
   const isMobile = useResponsiveDisplay();
   const theme = useTheme();
+  const { toasts } = useToasterStore();
   useCtrlS();
 
   const listFormat = useMemo(
@@ -257,8 +258,6 @@ export const TasksList: React.FC = () => {
     setCategoryCounts(counts);
   }, [user.tasks, search, setCategories, setCategoryCounts, orderedTasks]);
 
-  const { toasts } = useToasterStore();
-
   const checkOverdueTasks = useCallback(
     (tasks: Task[]) => {
       if (location.pathname === "/share") {
@@ -270,16 +269,6 @@ export const TasksList: React.FC = () => {
       );
 
       if (overdueTasks.length > 0) {
-        const hasOverdueToastAlready = toasts.some(
-          // prevent duplicate toasts to be shown when switching pages
-          //TODO: move this to showToast.tsx
-          (toast) => toast.id === "overdue-tasks" && toast.visible,
-        );
-
-        if (hasOverdueToastAlready) {
-          return;
-        }
-
         const taskNames = overdueTasks.map((task) => task.name);
 
         showToast(
@@ -291,6 +280,8 @@ export const TasksList: React.FC = () => {
             id: "overdue-tasks",
             type: "error",
             disableVibrate: true,
+            preventDuplicate: true,
+            visibleToasts: toasts,
             duration: 3400,
             icon: <RingAlarm animate sx={{ color: ColorPalette.red }} />,
             style: {
@@ -301,7 +292,7 @@ export const TasksList: React.FC = () => {
         );
       }
     },
-    [listFormat, user.settings, toasts],
+    [listFormat, toasts, user.settings.enableGlow],
   );
 
   useEffect(() => {

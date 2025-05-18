@@ -13,6 +13,7 @@ import { generateUUID, getFontColor, isDark, showToast } from "../utils";
 import { ColorPalette } from "../theme/themeConfig";
 import InputThemeProvider from "../contexts/InputThemeProvider";
 import { CategorySelect } from "../components/CategorySelect";
+import { useToasterStore } from "react-hot-toast";
 
 const AddTask = () => {
   const { user, setUser } = useContext(UserContext);
@@ -37,6 +38,7 @@ const AddTask = () => {
   const [isDeadlineFocused, setIsDeadlineFocused] = useState<boolean>(false);
 
   const n = useNavigate();
+  const { toasts } = useToasterStore();
 
   useEffect(() => {
     document.title = "Todo App - Add Task";
@@ -85,7 +87,12 @@ const AddTask = () => {
 
   const handleAddTask = () => {
     if (name === "") {
-      showToast("Task name is required.", { type: "error" });
+      showToast("Task name is required.", {
+        type: "error",
+        id: "task-name-required",
+        preventDuplicate: true,
+        visibleToasts: toasts,
+      });
       return;
     }
 

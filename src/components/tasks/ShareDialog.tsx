@@ -31,6 +31,7 @@ import styled from "@emotion/styled";
 import QRCode from "react-qr-code";
 import LZString from "lz-string";
 import { TabGroupProvider, TabPanel } from "..";
+import { useToasterStore } from "react-hot-toast";
 
 interface ShareDialogProps {
   open: boolean;
@@ -41,6 +42,7 @@ interface ShareDialogProps {
 export const ShareDialog = ({ open, onClose, selectedTask }: ShareDialogProps) => {
   const { user } = useContext(UserContext);
   const { settings, name } = user;
+  const { toasts } = useToasterStore();
 
   const [shareTabVal, setShareTabVal] = useState<number>(0);
 
@@ -77,7 +79,11 @@ export const ShareDialog = ({ open, onClose, selectedTask }: ShareDialogProps) =
     const linkToCopy = generateShareableLink(selectedTask, name || "User");
     try {
       await navigator.clipboard.writeText(linkToCopy);
-      showToast("Copied link to clipboard.");
+      showToast("Copied link to clipboard.", {
+        preventDuplicate: true,
+        id: "copy-sharable-link",
+        visibleToasts: toasts,
+      });
     } catch (error) {
       console.error("Error copying link to clipboard:", error);
       showToast("Error copying link to clipboard", { type: "error" });
@@ -219,21 +225,13 @@ export const ShareDialog = ({ open, onClose, selectedTask }: ShareDialogProps) =
                 value={generateShareableLink(selectedTask, name || "User")}
                 size={350}
               />
-            </QRCodeContainer>
-            <Box
-              sx={{
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-              }}
-            >
               <DownloadQrCodeBtn
                 variant="outlined"
                 onClick={() => saveQRCode(selectedTask.name || "")}
               >
                 <DownloadRounded /> &nbsp; Download QR Code
               </DownloadQrCodeBtn>
-            </Box>
+            </QRCodeContainer>
           </TabPanel>
           {systemInfo.isAppleDevice && (
             <TabPanel index={2}>
@@ -274,15 +272,13 @@ const DownloadQrCodeBtn = styled(Button)`
   padding: 12px 24px;
   border-radius: 14px;
   margin-top: 16px;
-  @media (max-width: 520px) {
-    margin-top: -2px;
-  }
 `;
 
 const QRCodeContainer = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
+  flex-direction: column;
   margin-top: 22px;
 `;
 

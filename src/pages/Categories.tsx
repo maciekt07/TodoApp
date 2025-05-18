@@ -41,6 +41,7 @@ import {
 import { generateUUID, getFontColor, showToast } from "../utils";
 import { ColorPalette } from "../theme/themeConfig";
 import InputThemeProvider from "../contexts/InputThemeProvider";
+import { useToasterStore } from "react-hot-toast";
 
 const NotFound = lazy(() => import("./NotFound"));
 
@@ -63,6 +64,7 @@ const Categories = () => {
   const [editColor, setEditColor] = useState<string>(ColorPalette.purple);
 
   const n = useNavigate();
+  const { toasts } = useToasterStore();
 
   useEffect(() => {
     document.title = "Todo App - Categories";
@@ -161,7 +163,12 @@ const Categories = () => {
       setColor(theme.primary);
       setEmoji("");
     } else {
-      showToast("Category name is required.", { type: "error" });
+      showToast("Category name is required.", {
+        type: "error",
+        preventDuplicate: true,
+        id: "category-name-required",
+        visibleToasts: toasts,
+      });
     }
   };
 
