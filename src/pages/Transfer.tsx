@@ -20,7 +20,6 @@ import {
 } from "../constants";
 import { UserContext } from "../contexts/UserContext";
 import { useStorageState } from "../hooks/useStorageState";
-import { useCtrlS } from "../hooks/useCtrlS";
 import {
   DropZone,
   InfoIcon,
@@ -41,8 +40,6 @@ const Transfer = () => {
   ); // Array of selected task IDs
   const [isDragging, setIsDragging] = useState<boolean>(false);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
-
-  useCtrlS();
 
   useEffect(() => {
     document.title = "Todo App - Transfer tasks";

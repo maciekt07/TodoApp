@@ -21,7 +21,6 @@ import { useCallback, useContext, useEffect, useMemo, useState, memo, useRef } f
 import { CategoryBadge, CustomDialogTitle, EditTask, TaskItem } from "..";
 import { TaskContext } from "../../contexts/TaskContext";
 import { UserContext } from "../../contexts/UserContext";
-import { useCtrlS } from "../../hooks/useCtrlS";
 import { useResponsiveDisplay } from "../../hooks/useResponsiveDisplay";
 import { useStorageState } from "../../hooks/useStorageState";
 import { DialogBtn } from "../../styles";
@@ -99,7 +98,6 @@ export const TasksList: React.FC = () => {
   const isMobile = useResponsiveDisplay();
   const theme = useTheme();
   const { toasts } = useToasterStore();
-  useCtrlS();
 
   const listFormat = useMemo(
     () =>

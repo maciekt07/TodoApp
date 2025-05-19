@@ -12,6 +12,7 @@ import AppRouter from "./router";
 import { GlobalStyles } from "./styles";
 import { Themes, createCustomTheme, isDarkMode } from "./theme/createTheme";
 import { showToast } from "./utils";
+import { GlobalQuickSaveHandler } from "./components/GlobalQuickSaveHandler";
 
 function App() {
   const { user, setUser } = useContext(UserContext);
@@ -161,7 +162,9 @@ function App() {
         <CustomToaster />
         <ErrorBoundary>
           <MainLayout>
-            <AppRouter />
+            <GlobalQuickSaveHandler>
+              <AppRouter />
+            </GlobalQuickSaveHandler>
           </MainLayout>
         </ErrorBoundary>
       </EmotionThemeProvider>
