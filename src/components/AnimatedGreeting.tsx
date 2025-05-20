@@ -82,4 +82,7 @@ const GreetingText = styled.div`
   font-style: italic;
   will-change: transform, opacity;
   animation: ${fadeInLeft} 0.5s ease-in-out;
+  @media print {
+    display: none;
+  }
 `;

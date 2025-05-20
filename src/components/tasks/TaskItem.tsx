@@ -19,6 +19,7 @@ import {
   RadioUnchecked,
   TaskCategoriesContainer,
   SharedByContainer,
+  TaskActionsContainer,
 } from "./tasks.styled";
 import { calculateDateDifference, formatDate, getFontColor, systemInfo } from "../../utils";
 import { RenderTaskDescription } from "./RenderTaskDescription";
@@ -191,8 +192,7 @@ export const TaskItem = memo(
             </TaskCategoriesContainer>
           )}
         </TaskInfo>
-
-        {actions}
+        <TaskActionsContainer>{actions}</TaskActionsContainer>
       </TaskContainer>
     );
   },

@@ -14,12 +14,18 @@ export const GreetingHeader = styled.div`
   @media (max-width: 550px) {
     font-size: 22px;
   }
+  @media print {
+    display: none;
+  }
 `;
 
 export const TasksCountContainer = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+  @media print {
+    display: none;
+  }
 `;
 //TODO: design this better for light themes
 export const TasksCount = styled.div<{ glow: boolean }>`
@@ -126,6 +132,9 @@ export const AddButton = styled(Button)<{ animate?: boolean; glow: boolean }>`
 
   @media (max-width: 1024px) {
     right: 24px;
+  }
+  @media print {
+    display: none;
   }
 `;
 

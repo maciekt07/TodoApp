@@ -86,4 +86,10 @@ export const StyledCategoryBadge = styled(Chip)<StyledBadgeProps>`
       color: ${({ backgroundclr }) => getFontColor(backgroundclr || "")};
     }
   }
+  @media print {
+    box-shadow: none;
+    border: 1px solid black;
+    background-color: white;
+    color: black;
+  }
 `;

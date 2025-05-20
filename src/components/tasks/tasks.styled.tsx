@@ -45,6 +45,14 @@ export const TaskContainer = styled.div<TaskComponentProps>`
     padding: 14px 14px 14px 18px;
     margin-top: 10px;
   }
+  @media print {
+    break-inside: avoid;
+    page-break-inside: avoid;
+    background-color: #d62b2b;
+    color: black;
+    box-shadow: none;
+    border: 2px solid black;
+  }
 `;
 
 export const EmojiContainer = styled.span<{ clr: string }>`
@@ -61,6 +69,12 @@ export const EmojiContainer = styled.span<{ clr: string }>`
   border-radius: 18px;
   overflow: hidden;
   text-overflow: ellipsis;
+  @media print {
+    background-color: white;
+    color: black;
+    box-shadow: none;
+    border: 2px solid black;
+  }
 `;
 
 export const TaskCategoriesContainer = styled.div`
@@ -271,6 +285,9 @@ export const CategoriesListContainer = styled.div`
     border-radius: 4px;
     background-color: ${({ theme }) => getFontColor(theme.secondary)}15;
   }
+  @media print {
+    display: none;
+  }
 `;
 
 export const HighlightedText = styled.span`
@@ -341,6 +358,9 @@ export const SearchInput = styled(TextField)`
     border: 1px solid ${({ theme }) => (isDark(theme.secondary) ? "#44479cb7" : theme.primary)} !important;
     transition: 0.3s border;
   }
+  @media print {
+    display: none;
+  }
 `;
 
 export const SearchClear = styled(IconButton)`
@@ -359,4 +379,16 @@ export const RingAlarm = styled(Alarm)<{ animate?: boolean }>`
       -moz-animation: ${ring} ${ringAnimation};
       animation: ${ring} ${ringAnimation};
     `}
+  @media print {
+    color: black !important;
+    -webkit-animation: none;
+    -moz-animation: none;
+    animation: none;
+  }
+`;
+
+export const TaskActionsContainer = styled.div`
+  @media print {
+    display: none;
+  }
 `;

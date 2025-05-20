@@ -729,6 +729,11 @@ export const SettingsDialog = ({ open, onClose }: SettingsProps) => {
                 description="Focus search input"
                 keys={["Ctrl", "/"]}
               />
+              <ShortcutItem
+                name="Print Tasks"
+                description="Print the current task list (on the main page)"
+                keys={["Ctrl", "P"]}
+              />
             </TabPanel>
             <TabPanel index={5}>
               <TabHeading>About Todo App</TabHeading>

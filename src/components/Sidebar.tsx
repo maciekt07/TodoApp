@@ -1,6 +1,5 @@
 import { keyframes, useTheme } from "@emotion/react";
 import styled from "@emotion/styled";
-
 import {
   AddRounded,
   AdjustRounded,
@@ -505,6 +504,9 @@ const Container = styled.div`
   z-index: 900;
   @media (max-width: 1024px) {
     right: 16px;
+  }
+  @media print {
+    display: none;
   }
 `;
 
