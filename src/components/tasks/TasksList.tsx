@@ -161,14 +161,21 @@ export const TasksList: React.FC = () => {
       unpinnedTasks = unpinnedTasks.filter(searchFilter);
       pinnedTasks = pinnedTasks.filter(searchFilter);
 
+      const sortByDeadline = (a: Task, b: Task) => {
+        if (!a.deadline) return 1;
+        if (!b.deadline) return -1;
+        return new Date(a.deadline).getTime() - new Date(b.deadline).getTime();
+      };
+
       // Move done tasks to bottom if the setting is enabled
+
       if (user.settings?.doneToBottom) {
         const doneTasks = unpinnedTasks.filter((task) => task.done);
-        const notDoneTasks = unpinnedTasks.filter((task) => !task.done);
-        return [...pinnedTasks, ...notDoneTasks, ...doneTasks];
+        const notDoneTasks = unpinnedTasks.filter((task) => !task.done).sort(sortByDeadline);
+        return [...pinnedTasks.sort(sortByDeadline), ...notDoneTasks, ...doneTasks];
       }
 
-      return [...pinnedTasks, ...unpinnedTasks];
+      return [...pinnedTasks.sort(sortByDeadline), ...unpinnedTasks.sort(sortByDeadline)];
     },
     [search, selectedCatId, user.settings],
   );

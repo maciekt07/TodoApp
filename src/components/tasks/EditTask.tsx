@@ -9,12 +9,13 @@ import {
   TextField,
   TextFieldProps,
   Tooltip,
+  FormControlLabel,
 } from "@mui/material";
 import { useContext, useEffect, useMemo, useState } from "react";
 import { ColorPicker, CustomDialogTitle, CustomEmojiPicker } from "..";
 import { DESCRIPTION_MAX_LENGTH, TASK_NAME_MAX_LENGTH } from "../../constants";
 import { UserContext } from "../../contexts/UserContext";
-import { DialogBtn } from "../../styles";
+import { DialogBtn, CustomSwitch } from "../../styles";
 import { Category, Task } from "../../types/user";
 import { showToast } from "../../utils";
 import { useTheme } from "@emotion/react";
@@ -70,17 +71,28 @@ export const EditTask = ({ open, task, onClose }: EditTaskProps) => {
       [name]: value,
     }));
   };
+
+  // Event handler for changing the importance of the task.
+  const setisimportant = (value: boolean) => {
+    setEditedTask((prevTask) => ({
+      ...(prevTask as Task),
+      isimportant: value,
+    }));
+  };
+
   // Event handler for saving the edited task.
   const handleSave = () => {
     document.body.style.overflow = "auto";
     if (editedTask && !nameError && !descriptionError) {
       const updatedTasks = user.tasks.map((task) => {
         if (task.id === editedTask.id) {
+          console.log("Task updated: ", editedTask);
           return {
             ...task,
             name: editedTask.name,
             color: editedTask.color,
             emoji: editedTask.emoji || undefined,
+            isimportant: editedTask.isimportant,
             description: editedTask.description || undefined,
             deadline: editedTask.deadline || undefined,
             category: editedTask.category || undefined,
@@ -240,6 +252,16 @@ export const EditTask = ({ open, task, onClose }: EditTaskProps) => {
               transition: ".3s all",
             },
           }}
+        />
+        <FormControlLabel
+          control={
+            <CustomSwitch
+              checked={editedTask?.isimportant}
+              onChange={(e) => setisimportant(e.target.checked)}
+              customcolor={editedTask?.color ?? "#fbc02d"}
+            />
+          }
+          label="Important"
         />
 
         {settings.enableCategories !== undefined && settings.enableCategories && (

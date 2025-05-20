@@ -1,5 +1,5 @@
 import styled from "@emotion/styled";
-import { Button, TextField } from "@mui/material";
+import { Button, TextField, Switch } from "@mui/material";
 import { getFontColor } from "../utils";
 
 export const Container = styled.div`
@@ -48,3 +48,14 @@ export const StyledInput = styled(TextField)<{ helpercolor?: string; hidetext?: 
     opacity: 0.8;
   }
 `;
+
+export const CustomSwitch = styled(Switch, {
+  shouldForwardProp: (prop) => prop !== "customcolor",
+})<{ customcolor: string }>(({ customcolor }) => ({
+  "& .MuiSwitch-switchBase.Mui-checked": {
+    color: customcolor,
+    "& + .MuiSwitch-track": {
+      backgroundColor: customcolor,
+    },
+  },
+}));

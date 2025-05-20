@@ -1,5 +1,20 @@
 import { Keyframes, keyframes } from "@emotion/react";
 
+export const glowBorder = keyframes`
+  0% {
+    box-shadow: 0 0 0px red;
+    border-color: red;
+  }
+  50% {
+    box-shadow: 0 0 10px red;
+    border-color: #ff4d4d;
+  }
+  100% {
+    box-shadow: 0 0 0px red;
+    border-color: red;
+  }
+    `;
+
 export const fadeInLeft = keyframes`
 from {
   opacity: 0;

@@ -81,6 +81,7 @@ export const TaskItem = memo(
         glow={enableGlow}
         done={task.done}
         blur={blur}
+        isimportant={task.isimportant}
         data-testid="task-container"
       >
         {enableSelection && selectedIds.length > 0 && (
