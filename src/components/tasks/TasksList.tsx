@@ -10,6 +10,7 @@ import {
   MoreVert,
 } from "@mui/icons-material";
 import {
+  Box,
   Dialog,
   DialogActions,
   DialogContent,
@@ -40,6 +41,7 @@ import {
 import { TaskMenu } from "./TaskMenu";
 import { TaskIcon } from "../TaskIcon";
 import { useToasterStore } from "react-hot-toast";
+import { TaskSort } from "./TaskSort";
 
 const TaskMenuButton = memo(
   ({ task, onClick }: { task: Task; onClick: (event: React.MouseEvent<HTMLElement>) => void }) => (
@@ -78,6 +80,7 @@ export const TasksList: React.FC = () => {
     setEditModalOpen,
     deleteDialogOpen,
     setDeleteDialogOpen,
+    sortOption,
   } = useContext(TaskContext);
   const open = Boolean(anchorEl);
 
@@ -161,6 +164,27 @@ export const TasksList: React.FC = () => {
       unpinnedTasks = unpinnedTasks.filter(searchFilter);
       pinnedTasks = pinnedTasks.filter(searchFilter);
 
+      // Sort tasks based on the selected sort option
+      const sortTasks = (tasks: Task[]) => {
+        switch (sortOption) {
+          case "dateCreated":
+            return [...tasks];
+          case "dueDate":
+            return [...tasks].sort((a, b) => {
+              if (!a.deadline) return 1;
+              if (!b.deadline) return -1;
+              return new Date(a.deadline).getTime() - new Date(b.deadline).getTime();
+            });
+          case "alphabetical":
+            return [...tasks].sort((a, b) => a.name.localeCompare(b.name));
+          default:
+            return tasks;
+        }
+      };
+
+      unpinnedTasks = sortTasks(unpinnedTasks);
+      pinnedTasks = sortTasks(pinnedTasks);
+
       // Move done tasks to bottom if the setting is enabled
       if (user.settings?.doneToBottom) {
         const doneTasks = unpinnedTasks.filter((task) => task.done);
@@ -170,7 +194,7 @@ export const TasksList: React.FC = () => {
 
       return [...pinnedTasks, ...unpinnedTasks];
     },
-    [search, selectedCatId, user.settings],
+    [search, selectedCatId, user.settings?.doneToBottom, sortOption],
   );
 
   const orderedTasks = useMemo(() => reorderTasks(user.tasks), [user.tasks, reorderTasks]);
@@ -297,50 +321,54 @@ export const TasksList: React.FC = () => {
     checkOverdueTasks(user.tasks);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
   return (
     <>
       <TaskMenu />
       <TasksContainer>
         {user.tasks.length > 0 && (
-          <SearchInput
-            inputRef={searchRef}
-            color="primary"
-            placeholder="Search for task..."
-            autoComplete="off"
-            value={search}
-            onChange={(e) => {
-              setSearch(e.target.value);
-            }}
-            slotProps={{
-              input: {
-                startAdornment: (
-                  <InputAdornment position="start">
-                    <Search sx={{ color: "white" }} />
-                  </InputAdornment>
-                ),
-                endAdornment: search ? (
-                  <InputAdornment position="end">
-                    <SearchClear
-                      color={
-                        orderedTasks.length === 0 && user.tasks.length > 0 ? "error" : "default"
-                      }
-                      onClick={() => setSearch("")}
-                    >
-                      <Close
-                        sx={{
-                          color:
-                            orderedTasks.length === 0 && user.tasks.length > 0
-                              ? `${ColorPalette.red} !important`
-                              : "white",
-                          transition: ".3s all",
-                        }}
-                      />
-                    </SearchClear>
-                  </InputAdornment>
-                ) : undefined,
-              },
-            }}
-          />
+          <Box sx={{ display: "flex", alignItems: "center", gap: "10px", mb: "8px" }}>
+            <SearchInput
+              inputRef={searchRef}
+              color="primary"
+              placeholder="Search for task..."
+              autoComplete="off"
+              value={search}
+              onChange={(e) => {
+                setSearch(e.target.value);
+              }}
+              slotProps={{
+                input: {
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <Search sx={{ color: "white" }} />
+                    </InputAdornment>
+                  ),
+                  endAdornment: search ? (
+                    <InputAdornment position="end">
+                      <SearchClear
+                        color={
+                          orderedTasks.length === 0 && user.tasks.length > 0 ? "error" : "default"
+                        }
+                        onClick={() => setSearch("")}
+                      >
+                        <Close
+                          sx={{
+                            color:
+                              orderedTasks.length === 0 && user.tasks.length > 0
+                                ? `${ColorPalette.red} !important`
+                                : "white",
+                            transition: ".3s all",
+                          }}
+                        />
+                      </SearchClear>
+                    </InputAdornment>
+                  ) : undefined,
+                },
+              }}
+            />
+            <TaskSort />
+          </Box>
         )}
         {categories !== undefined && categories?.length > 0 && user.settings.enableCategories && (
           <CategoriesListContainer>

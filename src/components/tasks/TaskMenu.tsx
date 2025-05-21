@@ -357,8 +357,10 @@ export const TaskMenu = () => {
               padding: "6px 4px",
             },
           }}
-          MenuListProps={{
-            "aria-labelledby": "more-button",
+          slotProps={{
+            list: {
+              "aria-labelledby": "more-button",
+            },
           }}
         >
           {menuItems}

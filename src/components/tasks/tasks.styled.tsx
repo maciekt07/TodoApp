@@ -325,7 +325,6 @@ export const StyledDescriptionLink = styled(Button)<{ clr: string }>`
 `;
 
 export const SearchInput = styled(TextField)`
-  margin: 8px 0 0 0;
   border-radius: 16px;
   transition: 0.3s all;
   width: 100%;
@@ -361,6 +360,29 @@ export const SearchInput = styled(TextField)`
   @media print {
     display: none;
   }
+`;
+
+export const SortButton = styled(Button)<{ isMenuOpen: boolean }>`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  text-transform: none;
+
+  border-radius: 16px;
+  height: 60px;
+  background: ${({ theme }) => (isDark(theme.secondary) ? "#090b2258" : "#ffffff3e")};
+  color: ${({ theme }) => getFontColor(theme.secondary)};
+  border: 1px solid ${({ theme }) => (isDark(theme.secondary) ? "#44479cb7" : theme.primary)} !important;
+  transition: 0.3s all;
+
+  ${({ isMenuOpen, theme }) =>
+    isMenuOpen &&
+    css`
+      background: ${isDark(theme.secondary)} ? "#090b228e" : "#ffffff8e";
+      box-shadow: 
+        ${isDark(theme.secondary) ? "0 0 0 4px #1a1e4a7f" : `0 0 0 4px ${theme.primary}64`};
+    `}
 `;
 
 export const SearchClear = styled(IconButton)`

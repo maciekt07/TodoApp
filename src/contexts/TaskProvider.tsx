@@ -4,6 +4,7 @@ import { useStorageState } from "../hooks/useStorageState";
 import { HighlightedText } from "../components/tasks/tasks.styled";
 import { useResponsiveDisplay } from "../hooks/useResponsiveDisplay";
 import { TaskContext, TaskContextType } from "./TaskContext";
+import { SortOption } from "../components/tasks/TaskSort";
 
 export const TaskProvider = ({ children }: { children: ReactNode }) => {
   const [selectedTaskId, setSelectedTaskId] = useState<UUID | null>(null);
@@ -18,6 +19,12 @@ export const TaskProvider = ({ children }: { children: ReactNode }) => {
   const [search, setSearch] = useStorageState<string>("", "search", "sessionStorage");
   const [editModalOpen, setEditModalOpen] = useState<boolean>(false);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState<boolean>(false);
+  const [sortOption, setSortOption] = useStorageState<SortOption>(
+    "dateCreated",
+    "taskSort",
+    "localStorage",
+  );
+  const [sortAnchorEl, setSortAnchorEl] = useState<null | HTMLElement>(null);
 
   const isMobile = useResponsiveDisplay();
 
@@ -108,6 +115,10 @@ export const TaskProvider = ({ children }: { children: ReactNode }) => {
       deleteDialogOpen,
       setDeleteDialogOpen,
       handleCloseMoreMenu,
+      sortOption,
+      setSortOption,
+      sortAnchorEl,
+      setSortAnchorEl,
     }),
     [
       selectedTaskId,
@@ -125,6 +136,9 @@ export const TaskProvider = ({ children }: { children: ReactNode }) => {
       handleDeleteTask,
       deleteDialogOpen,
       handleCloseMoreMenu,
+      sortOption,
+      setSortOption,
+      sortAnchorEl,
     ],
   );
 
