@@ -1,88 +1,70 @@
-//FIXME: refactor all of this
-/**
- * Converts a given date to a human-readable relative time string.
- *
- * @param {Date} date - The date to be converted.
- * @returns {string} A string representing the relative time using `Intl` format (e.g., "2 days ago").
- */
-export const timeAgo = (date: Date, lang = navigator.language || "en-US"): string => {
-  // Get the current date and time
-  const now = new Date();
-  date = new Date(date);
-  // Calculate the time difference in seconds
-  const diffInSeconds = Math.floor((now.getTime() - date.getTime()) / 1000);
+const MS_IN_MINUTE = 60 * 1000;
+const MS_IN_HOUR = 60 * MS_IN_MINUTE;
+const MS_IN_DAY = 24 * MS_IN_HOUR;
 
-  // Create an Intl.RelativeTimeFormat instance with the user's language
-  const rtf = new Intl.RelativeTimeFormat(lang, { numeric: "auto" });
+const getLocale = () => navigator.language || "en-US";
 
-  // Determine the appropriate unit and format the result
-  if (diffInSeconds < 60) {
-    return rtf.format(-diffInSeconds, "second");
-  } else if (diffInSeconds < 3600) {
-    const minutes = Math.floor(diffInSeconds / 60);
-    return rtf.format(-minutes, "minute");
-  } else if (diffInSeconds < 86400) {
-    const hours = Math.floor(diffInSeconds / 3600);
-    return rtf.format(-hours, "hour");
-  } else {
-    const days = Math.floor(diffInSeconds / 86400);
-    return rtf.format(-days, "day");
-  }
-};
+export const isSameDay = (date1: Date, date2: Date): boolean =>
+  date1.getFullYear() === date2.getFullYear() &&
+  date1.getMonth() === date2.getMonth() &&
+  date1.getDate() === date2.getDate();
 
-/**
- * Formats a date into a human-readable string based on its proximity to the current date.
- * @param {Date} date - The date to format.
- * @returns {string} The formatted date string.
- */
-export const formatDate = (date: Date): string => {
-  const today = new Date();
-  const yesterday = new Date(today);
-  yesterday.setDate(today.getDate() - 1);
-  const oneDay = 24 * 60 * 60 * 1000; // One day in milliseconds
-  const oneWeek = 7 * oneDay; // One week in milliseconds
+const getDayOfWeek = (date: Date): string =>
+  date.toLocaleDateString(getLocale(), { weekday: "long" });
 
-  const timeDifference = date.getTime() - today.getTime();
+const formatTime = (date: Date): string =>
+  date.toLocaleTimeString(getLocale(), { hour: "2-digit", minute: "2-digit" });
 
-  const rtf = new Intl.RelativeTimeFormat(navigator.language, { numeric: "auto" });
-
-  if (isSameDay(date, today)) {
-    return rtf.format(0, "day") + ` ${formatTime(date)}`;
-  } else if (isSameDay(date, yesterday)) {
-    return rtf.format(-1, "day") + ` ${formatTime(date)}`;
-  } else if (timeDifference > -oneWeek) {
-    return `${getDayOfWeek(date)} ${formatTime(date)}`;
-  } else {
-    return formatDateOnly(date);
-  }
-};
-
-const isSameDay = (date1: Date, date2: Date): boolean => {
-  return (
-    date1.getFullYear() === date2.getFullYear() &&
-    date1.getMonth() === date2.getMonth() &&
-    date1.getDate() === date2.getDate()
-  );
-};
-
-const formatTime = (date: Date): string => {
-  return date.toLocaleTimeString(navigator.language, {
-    hour: "2-digit",
-    minute: "2-digit",
-  });
-};
-
-const formatDateOnly = (date: Date): string => {
-  const options: Intl.DateTimeFormatOptions = {
+const formatDateOnly = (date: Date): string =>
+  date.toLocaleDateString(getLocale(), {
     year: "numeric",
     month: "2-digit",
     day: "2-digit",
-  };
-  return date.toLocaleDateString(navigator.language, options);
+  });
+
+/**
+ * Returns a human-readable relative time string (e.g. "in 2 days")
+ */
+export const timeAgo = (input: Date, lang = getLocale()): string => {
+  const now = new Date();
+  const date = new Date(input);
+  const diff = now.getTime() - date.getTime();
+  const rtf = new Intl.RelativeTimeFormat(lang, { numeric: "auto" });
+
+  if (Math.abs(diff) < MS_IN_MINUTE) {
+    return rtf.format(-Math.floor(diff / 1000), "second");
+  } else if (Math.abs(diff) < MS_IN_HOUR) {
+    return rtf.format(-Math.floor(diff / MS_IN_MINUTE), "minute");
+  } else if (Math.abs(diff) < MS_IN_DAY) {
+    return rtf.format(-Math.floor(diff / MS_IN_HOUR), "hour");
+  } else {
+    return rtf.format(-Math.floor(diff / MS_IN_DAY), "day");
+  }
 };
 
-const getDayOfWeek = (date: Date): string =>
-  date.toLocaleDateString(navigator.language, { weekday: "long" });
+export const formatDate = (input: Date): string => {
+  const today = new Date();
+  const date = new Date(input);
+  const rtf = new Intl.RelativeTimeFormat(getLocale(), { numeric: "auto" });
+
+  if (isSameDay(today, date)) {
+    return `${rtf.format(0, "day")} ${formatTime(date)}`;
+  }
+
+  const yesterday = new Date(today);
+  yesterday.setDate(today.getDate() - 1);
+  if (isSameDay(yesterday, date)) {
+    return `${rtf.format(-1, "day")} ${formatTime(date)}`;
+  }
+
+  const daysDiff = Math.floor((date.getTime() - today.getTime()) / MS_IN_DAY);
+
+  if (daysDiff >= -6 && daysDiff <= 6) {
+    return `${getDayOfWeek(date)} ${formatTime(date)}`;
+  }
+
+  return formatDateOnly(date);
+};
 
 /**
  * Calculates the difference between a given date and the current date.
@@ -94,38 +76,44 @@ export const calculateDateDifference = (
   date: Date,
   lang: string = navigator.language || "en-US",
 ): string => {
-  const currentDate = new Date();
-  const targetDate = new Date(date);
-  const difference = targetDate.getTime() - currentDate.getTime();
-  const differenceDays = Math.floor(difference / (1000 * 60 * 60 * 24));
-  const differenceHours = Math.floor(difference / (1000 * 60 * 60));
-  const differenceMinutes = Math.floor(difference / (1000 * 60));
-  const userLocale = lang;
+  const now = new Date();
+  const target = new Date(date);
+  const rtf = new Intl.RelativeTimeFormat(lang, { numeric: "auto" });
 
-  if (targetDate < currentDate) {
-    return `Not completed on time (${timeAgo(targetDate, userLocale)})`;
-  } else if (targetDate.toDateString() === currentDate.toDateString()) {
-    return new Intl.RelativeTimeFormat(userLocale, { numeric: "auto" }).format(
-      differenceHours > 0 ? differenceHours : differenceMinutes,
-      differenceHours > 0 ? "hour" : "minute",
-    );
-  } else if (
-    difference > 0 &&
-    difference <= 86400000 &&
-    targetDate.getDate() !== currentDate.getDate()
-  ) {
-    // Ensure it's within 24 hours
-    return new Intl.RelativeTimeFormat(userLocale, { numeric: "auto" }).format(1, "day");
-  } else if (differenceDays <= 7) {
-    const dayOfWeek = new Intl.DateTimeFormat(userLocale, { weekday: "long" }).format(date);
-    return `${dayOfWeek} (${new Intl.RelativeTimeFormat(userLocale, { numeric: "auto" }).format(
-      differenceDays,
-      "day",
-    )})`;
-  } else {
-    return new Intl.RelativeTimeFormat(userLocale, { numeric: "auto" }).format(
-      differenceDays,
-      "day",
-    );
+  // create dates at midnight for accurate day counting
+  const nowDate = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  const targetDate = new Date(target.getFullYear(), target.getMonth(), target.getDate());
+
+  const dayDiff = Math.round((targetDate.getTime() - nowDate.getTime()) / (1000 * 60 * 60 * 24));
+
+  // for past dates
+  if (dayDiff < 0) {
+    return `Not completed on time (${rtf.format(dayDiff, "day")})`;
   }
+
+  // same day
+  if (dayDiff === 0) {
+    const msDiff = target.getTime() - now.getTime();
+    const diffHours = Math.floor(msDiff / (1000 * 60 * 60));
+    const diffMinutes = Math.floor(msDiff / (1000 * 60));
+
+    if (diffHours > 0) {
+      return rtf.format(diffHours, "hour");
+    }
+    return rtf.format(diffMinutes, "minute");
+  }
+
+  // tomorrow (1 day)
+  if (dayDiff === 1) {
+    return rtf.format(1, "day"); // tomorrow or localized equivalent
+  }
+
+  // within next 7 days (2-7 days)
+  if (dayDiff >= 2 && dayDiff <= 7) {
+    const dayOfWeek = target.toLocaleDateString(lang, { weekday: "long" });
+    return `${dayOfWeek} (${rtf.format(dayDiff, "day")})`;
+  }
+
+  // beyond 7 days
+  return rtf.format(dayDiff, "day");
 };
