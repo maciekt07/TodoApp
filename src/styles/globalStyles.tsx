@@ -73,6 +73,7 @@ export const GlobalStyles = () => {
         div[data-rsbs-header] {
           box-shadow: none;
         }
+
         body {
           margin: 8px 16vw;
           touch-action: manipulation;
@@ -113,7 +114,7 @@ export const GlobalStyles = () => {
           border-radius: 18px;
           overflow-x: auto;
         }
-
+        // EMOJI PICKER REACT STYLES
         .EmojiPickerReact {
           --epr-search-border-color: ${theme.primary} !important;
           --epr-hover-bg-color-reduced-opacity: ${theme.primary + "64"} !important;
@@ -174,6 +175,30 @@ export const GlobalStyles = () => {
           }
         }
 
+        // QR CODE SCANNER STYLES
+        .scanner-container div[style*="border: 2px dashed"] {
+          border-color: ${theme.primary}66 !important; /* 66 hex = 40% opacity */
+        }
+        .scanner-container
+          div[style*="border-color: rgb(239, 68, 68) transparent transparent rgb(239, 68, 68)"] {
+          border-color: ${theme.primary} transparent transparent ${theme.primary} !important;
+        }
+
+        .scanner-container
+          div[style*="border-color: rgb(239, 68, 68) rgb(239, 68, 68) transparent transparent"] {
+          border-color: ${theme.primary} ${theme.primary} transparent transparent !important;
+        }
+
+        .scanner-container
+          div[style*="border-color: transparent transparent rgb(239, 68, 68) rgb(239, 68, 68)"] {
+          border-color: transparent transparent ${theme.primary} ${theme.primary} !important;
+        }
+
+        .scanner-container
+          div[style*="border-color: transparent rgb(239, 68, 68) rgb(239, 68, 68) transparent"] {
+          border-color: transparent ${theme.primary} ${theme.primary} transparent !important;
+        }
+        // MATERIAL UI STYLES
         .MuiDialog-container {
           backdrop-filter: blur(4px);
         }

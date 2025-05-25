@@ -72,6 +72,8 @@ import baner from "../../assets/baner.png";
 import { useOnlineStatus } from "../../hooks/useOnlineStatus";
 import { ShortcutItem } from "./ShortcutItem";
 
+//TODO: code split tabs
+
 const OPTION_ICON_SIZE = 32;
 
 const darkModeOptions: OptionItem<DarkModeOptions>[] = [
@@ -364,6 +366,20 @@ export const SettingsDialog = ({ open, onClose }: SettingsProps) => {
 
     return `${codePointA.toString(16)}-${codePointB.toString(16)}`;
   };
+  useEffect(() => {
+    // close the dialog when pressing ctrl+p to print tasks
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if ((e.ctrlKey || e.metaKey) && e.key === "p") {
+        e.preventDefault();
+        handleDialogClose();
+        setTimeout(() => window.print(), 100);
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <Dialog

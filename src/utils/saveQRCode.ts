@@ -9,7 +9,12 @@ export const saveQRCode = (taskName: string) => {
     return;
   }
 
-  const svgData = new XMLSerializer().serializeToString(svgElement);
+  // clone the svg to not modify the ui
+  const clonedSvg = svgElement.cloneNode(true) as SVGElement;
+  clonedSvg.style.padding = "0";
+  clonedSvg.style.borderRadius = "0";
+
+  const svgData = new XMLSerializer().serializeToString(clonedSvg);
   const canvas = document.createElement("canvas");
   const ctx = canvas.getContext("2d");
   if (!ctx) {

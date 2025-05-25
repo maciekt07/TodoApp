@@ -10,6 +10,7 @@ import {
   FileUpload,
   IntegrationInstructionsRounded,
   Link,
+  QrCodeScannerRounded,
 } from "@mui/icons-material";
 import { exportTasksToJson, isHexColor, showToast, systemInfo } from "../utils";
 import { IconButton, Tooltip } from "@mui/material";
@@ -30,7 +31,8 @@ import {
   ManagementHeader,
   TaskManagementContainer,
 } from "../styles";
-
+import { useNavigate } from "react-router-dom";
+import QRCodeScannerDialog from "../components/QRCodeScannerDialog";
 const Transfer = () => {
   const { user, setUser } = useContext(UserContext);
   const [selectedTasks, setSelectedTasks] = useStorageState<UUID[]>(
@@ -39,7 +41,10 @@ const Transfer = () => {
     "sessionStorage",
   ); // Array of selected task IDs
   const [isDragging, setIsDragging] = useState<boolean>(false);
+  const [isScannerOpen, setIsScannerOpen] = useState<boolean>(false);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
+
+  const n = useNavigate();
 
   useEffect(() => {
     document.title = "Todo App - Transfer tasks";
@@ -286,6 +291,20 @@ const Transfer = () => {
     }
   };
 
+  const handleImportFromQRCode = (qrCodeData: string) => {
+    try {
+      if (qrCodeData.startsWith(`${location.protocol}//${location.hostname}`)) {
+        const url = new URL(qrCodeData);
+        const path = url.pathname + url.search + url.hash;
+        n(path);
+      } else {
+        showToast(<div>Failed to import task from the provided QR Code.</div>, { type: "error" });
+      }
+    } catch (err) {
+      console.error("Failed to read clipboard contents: ", err);
+    }
+  };
+
   const handleImportFromClipboard = async (): Promise<void> => {
     try {
       const text = await navigator.clipboard.readText();
@@ -450,12 +469,26 @@ const Transfer = () => {
         <ManagementButton onClick={handleImportFromClipboard}>
           <IntegrationInstructionsRounded /> &nbsp; Import JSON from clipboard
         </ManagementButton>
-
+        <h2 style={{ textAlign: "center" }}>Import Tasks From a Link</h2>
+        <ManagementButton onClick={() => setIsScannerOpen(true)}>
+          <QrCodeScannerRounded /> &nbsp; Scan QR Code
+        </ManagementButton>
         {/* Solution for PWA on iOS: */}
         <ManagementButton onClick={handleImportFromLink}>
-          <Link /> &nbsp; Import From Link
+          <Link /> &nbsp; Paste Link
         </ManagementButton>
       </ManagementButtonsContainer>
+      <QRCodeScannerDialog
+        isOpen={isScannerOpen}
+        onClose={() => setIsScannerOpen(false)}
+        onScan={(result) => {
+          showToast("QR Code scanned successfully!");
+          setIsScannerOpen(false);
+          if (result[0].rawValue) {
+            handleImportFromQRCode(result[0].rawValue);
+          }
+        }}
+      />
     </>
   );
 };

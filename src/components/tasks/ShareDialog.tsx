@@ -224,6 +224,11 @@ export const ShareDialog = ({ open, onClose, selectedTask }: ShareDialogProps) =
                 id="QRCodeShare"
                 value={generateShareableLink(selectedTask, name || "User")}
                 size={350}
+                style={{
+                  borderRadius: "8px",
+                  padding: "8px",
+                  backgroundColor: "white",
+                }}
               />
               <DownloadQrCodeBtn
                 variant="outlined"

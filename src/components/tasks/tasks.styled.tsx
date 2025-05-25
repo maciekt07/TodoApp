@@ -383,6 +383,9 @@ export const SortButton = styled(Button)<{ isMenuOpen: boolean }>`
       box-shadow: 
         ${isDark(theme.secondary) ? "0 0 0 4px #1a1e4a7f" : `0 0 0 4px ${theme.primary}64`};
     `}
+  @media print {
+    display: none;
+  }
 `;
 
 export const SearchClear = styled(IconButton)`

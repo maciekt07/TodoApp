@@ -30,6 +30,7 @@ import { UserContext } from "../contexts/UserContext";
 import { timeAgo, getFontColor, showToast, getProfilePicture, generateUUID } from "../utils";
 import { ColorPalette } from "../theme/themeConfig";
 
+// TODO: move this to settings dialog
 const UserProfile = () => {
   const { user, setUser } = useContext(UserContext);
   const { name, profilePicture, createdAt } = user;
