@@ -5,20 +5,22 @@ import { showToast } from "../utils";
 import { IScannerProps, Scanner } from "@yudiel/react-qr-scanner";
 
 interface QRCodeScannerDialogProps extends IScannerProps {
-  isOpen: boolean;
+  open: boolean;
   onClose: () => void;
+  subTitle?: string;
 }
 
 export default function QRCodeScannerDialog({
-  isOpen,
+  open,
   onClose,
+  subTitle,
   ...scannerProps
 }: QRCodeScannerDialogProps) {
   return (
-    <Dialog open={isOpen} onClose={onClose} fullWidth>
+    <Dialog open={open} onClose={onClose} fullWidth>
       <CustomDialogTitle
         title="QR Code Scanner"
-        subTitle="Import task by scanning a QR code"
+        subTitle={subTitle || "Scan a QR code to proceed"}
         icon={<QrCodeScannerRounded />}
         onClose={onClose}
       />

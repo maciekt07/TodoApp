@@ -200,21 +200,22 @@ export const TasksList: React.FC = () => {
   const orderedTasks = useMemo(() => reorderTasks(user.tasks), [user.tasks, reorderTasks]);
 
   const confirmDeleteTask = () => {
-    if (selectedTaskId) {
-      const updatedTasks = user.tasks.filter((task) => task.id !== selectedTaskId);
-      setUser((prevUser) => ({
-        ...prevUser,
-        tasks: updatedTasks,
-      }));
-
-      setDeleteDialogOpen(false);
-      showToast(
-        <div>
-          Deleted Task - <b translate="no">{taskToDelete?.name}</b>
-        </div>,
-      );
-      setTaskToDelete(null);
+    if (!selectedTaskId) {
+      return;
     }
+    const updatedTasks = user.tasks.filter((task) => task.id !== selectedTaskId);
+    setUser((prevUser) => ({
+      ...prevUser,
+      tasks: updatedTasks,
+    }));
+    user.deletedTasks.push(selectedTaskId);
+    setDeleteDialogOpen(false);
+    showToast(
+      <div>
+        Deleted Task - <b translate="no">{taskToDelete?.name}</b>
+      </div>,
+    );
+    setTaskToDelete(null);
   };
 
   useEffect(() => {
@@ -562,6 +563,10 @@ export const TasksList: React.FC = () => {
               setUser((prevUser) => ({
                 ...prevUser,
                 tasks: prevUser.tasks.filter((task) => !multipleSelectedTasks.includes(task.id)),
+                deletedTasks: [
+                  ...(prevUser.deletedTasks || []),
+                  ...multipleSelectedTasks.filter((id) => !prevUser.deletedTasks?.includes(id)),
+                ],
               }));
               // Clear the selected task IDs after the operation
               setMultipleSelectedTasks([]);

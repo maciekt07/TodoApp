@@ -67,10 +67,17 @@ const Purge = () => {
     const updatedTasks = user.tasks.filter(
       (task) => !tasks.some((purgeTask) => purgeTask === task),
     );
+
+    const purgedTaskIds = tasks.map((task) => task.id);
+
     setSelectedTasks([]);
     setUser((prevUser) => ({
       ...prevUser,
       tasks: updatedTasks,
+      deletedTasks: [
+        ...(prevUser.deletedTasks || []),
+        ...purgedTaskIds.filter((id) => !prevUser.deletedTasks?.includes(id)),
+      ],
     }));
   };
 

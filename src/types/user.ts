@@ -16,12 +16,15 @@ export interface User {
   profilePicture: string | null;
   emojisStyle: EmojiStyle;
   tasks: Task[];
+  deletedTasks: UUID[];
   categories: Category[];
+  deletedCategories: UUID[];
   favoriteCategories: UUID[];
   colorList: string[];
   settings: AppSettings;
   theme: "system" | (string & {});
   darkmode: DarkModeOptions;
+  lastSyncedAt?: Date;
 }
 
 /**
@@ -35,6 +38,9 @@ export interface Task {
   description?: string;
   emoji?: string;
   color: string;
+  /**
+   * created at date
+   */
   date: Date;
   deadline?: Date;
   category?: Category[];

@@ -85,35 +85,37 @@ const Categories = () => {
   }, [selectedCategoryId, user.categories]);
 
   const handleDelete = (categoryId: UUID | undefined) => {
-    if (categoryId) {
-      const categoryName =
-        user.categories.find((category) => category.id === categoryId)?.name || "";
-      const updatedCategories = user.categories.filter((category) => category.id !== categoryId);
-      // Remove from favorite categories
-      const updatedFavoriteCategories = user.favoriteCategories.filter((id) => id !== categoryId);
+    if (!categoryId) return;
 
-      // Remove the category from tasks that have it associated
-      const updatedTasks = user.tasks.map((task) => {
-        const updatedCategoryList = task.category?.filter((category) => category.id !== categoryId);
-        return {
-          ...task,
-          category: updatedCategoryList,
-        };
-      });
+    const categoryName = user.categories.find((category) => category.id === categoryId)?.name || "";
 
-      setUser({
-        ...user,
-        categories: updatedCategories,
-        favoriteCategories: updatedFavoriteCategories,
-        tasks: updatedTasks,
-      });
+    const updatedCategories = user.categories.filter((category) => category.id !== categoryId);
+    const updatedFavoriteCategories = user.favoriteCategories.filter((id) => id !== categoryId);
 
-      showToast(
-        <div>
-          Deleted category - <b translate="no">{categoryName}.</b>
-        </div>,
-      );
-    }
+    const updatedTasks = user.tasks.map((task) => {
+      const updatedCategoryList = task.category?.filter((category) => category.id !== categoryId);
+      return {
+        ...task,
+        category: updatedCategoryList,
+      };
+    });
+
+    setUser((prevUser) => ({
+      ...prevUser,
+      categories: updatedCategories,
+      favoriteCategories: updatedFavoriteCategories,
+      tasks: updatedTasks,
+      deletedCategories: [
+        ...(prevUser.deletedCategories || []),
+        ...(prevUser.deletedCategories?.includes(categoryId) ? [] : [categoryId]),
+      ],
+    }));
+
+    showToast(
+      <div>
+        Deleted category - <b translate="no">{categoryName}.</b>
+      </div>,
+    );
   };
 
   const handleNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {

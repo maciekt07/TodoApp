@@ -9,11 +9,12 @@ import {
   FileDownload,
   FileUpload,
   IntegrationInstructionsRounded,
-  Link,
+  Link as LinkIcon,
+  PhonelinkRounded,
   QrCodeScannerRounded,
 } from "@mui/icons-material";
 import { exportTasksToJson, isHexColor, showToast, systemInfo } from "../utils";
-import { IconButton, Tooltip } from "@mui/material";
+import { Tooltip } from "@mui/material";
 import {
   CATEGORY_NAME_MAX_LENGTH,
   DESCRIPTION_MAX_LENGTH,
@@ -23,7 +24,6 @@ import { UserContext } from "../contexts/UserContext";
 import { useStorageState } from "../hooks/useStorageState";
 import {
   DropZone,
-  InfoIcon,
   ListContent,
   ManagementButton,
   ManagementButtonsContainer,
@@ -31,7 +31,7 @@ import {
   ManagementHeader,
   TaskManagementContainer,
 } from "../styles";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import QRCodeScannerDialog from "../components/QRCodeScannerDialog";
 const Transfer = () => {
   const { user, setUser } = useContext(UserContext);
@@ -367,16 +367,16 @@ const Transfer = () => {
 
   return (
     <>
-      <TopBar title="Transfer Tasks" />
-      <ManagementHeader>
-        Select Tasks To Export&nbsp;
-        <Tooltip title="Duplicates will be removed during import">
-          <IconButton style={{ color: "#ffffff" }}>
-            <InfoIcon />
-          </IconButton>
-        </Tooltip>
-      </ManagementHeader>
-
+      <TopBar title="Transfer" />
+      <ManagementHeader>Sync Tasks</ManagementHeader>
+      <ManagementButtonsContainer>
+        <Link to="/sync">
+          <ManagementButton variant="contained" size="large" sx={{ mb: 1 }}>
+            <PhonelinkRounded /> &nbsp; Sync With Other Device
+          </ManagementButton>
+        </Link>
+      </ManagementButtonsContainer>
+      <ManagementHeader>Export Tasks to JSON</ManagementHeader>
       <ManagementContainer>
         {user.tasks.length > 0 ? (
           user.tasks.map((task: Task) => (
@@ -469,17 +469,18 @@ const Transfer = () => {
         <ManagementButton onClick={handleImportFromClipboard}>
           <IntegrationInstructionsRounded /> &nbsp; Import JSON from clipboard
         </ManagementButton>
-        <h2 style={{ textAlign: "center" }}>Import Tasks From a Link</h2>
+        <h2 style={{ textAlign: "center" }}>Import Task From a Link</h2>
         <ManagementButton onClick={() => setIsScannerOpen(true)}>
           <QrCodeScannerRounded /> &nbsp; Scan QR Code
         </ManagementButton>
         {/* Solution for PWA on iOS: */}
         <ManagementButton onClick={handleImportFromLink}>
-          <Link /> &nbsp; Paste Link
+          <LinkIcon /> &nbsp; Paste Link
         </ManagementButton>
       </ManagementButtonsContainer>
       <QRCodeScannerDialog
-        isOpen={isScannerOpen}
+        subTitle="Import task by scanning a QR code"
+        open={isScannerOpen}
         onClose={() => setIsScannerOpen(false)}
         onScan={(result) => {
           showToast("QR Code scanned successfully!");

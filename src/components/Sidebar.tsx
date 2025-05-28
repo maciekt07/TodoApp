@@ -17,6 +17,7 @@ import {
   IosShareRounded,
   Logout,
   PhoneIphoneRounded,
+  PhonelinkRounded,
   SettingsRounded,
   StarRounded,
   TaskAltRounded,
@@ -279,6 +280,12 @@ export const ProfileSidebar = () => {
         <MenuLink to="/transfer">
           <StyledMenuItem onClick={handleClose}>
             <GetAppRounded /> &nbsp; Transfer
+          </StyledMenuItem>
+        </MenuLink>
+
+        <MenuLink to="/sync">
+          <StyledMenuItem onClick={handleClose}>
+            <PhonelinkRounded /> &nbsp; Sync Devices
           </StyledMenuItem>
         </MenuLink>
 
