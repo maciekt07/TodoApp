@@ -4,7 +4,7 @@
 
 # 📝React.js Todo App
 
-<p align="center"><i>A fast and modern Todo app built with React, featuring task sharing via link, theme customization, offline usage as a PWA, and caching for smooth performance.</i></p>
+<p align="center"><i>A fast and modern Todo app built with React, featuring task sharing via link, P2P Task Sync with WebRTC, theme customization, offline usage as a PWA, and caching for smooth performance.</i></p>
 
 <img src="https://raw.githubusercontent.com/maciekt07/TodoApp/main/screenshots/baner.png" />
 
@@ -59,6 +59,12 @@ This uses `window.ai` which is an experimental feature that works only in dev ve
 Code: [src/components/EmojiPicker.tsx](https://github.com/maciekt07/TodoApp/blob/main/src/components/EmojiPicker.tsx#L116)
 
 <img src="https://raw.githubusercontent.com/maciekt07/TodoApp/main/screenshots/emoji-ai.gif" alt="AI Emoji" width="360px" style="border-radius:12px" />
+
+### 🔄 P2P Task Sync with WebRTC
+
+Securely sync tasks between devices using peer-to-peer WebRTC connections. Devices pair via QR code, and your data is transferred directly between them—only minimal server involvement for connection setup, with no data stored or processed in the cloud.
+
+![](https://github.com/user-attachments/assets/02950a42-6ef8-4ab8-a908-47d236898ac9)
 
 ### 🎨 Color Themes & Dark Mode
 
