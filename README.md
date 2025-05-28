@@ -64,7 +64,7 @@ Code: [src/components/EmojiPicker.tsx](https://github.com/maciekt07/TodoApp/blob
 
 Securely sync tasks between devices using peer-to-peer WebRTC connections. Devices pair via QR code, and your data is transferred directly between them—only minimal server involvement for connection setup, with no data stored or processed in the cloud.
 
-![](https://github.com/user-attachments/assets/02950a42-6ef8-4ab8-a908-47d236898ac9)
+https://github.com/user-attachments/assets/02950a42-6ef8-4ab8-a908-47d236898ac9
 
 ### 🎨 Color Themes & Dark Mode
 
