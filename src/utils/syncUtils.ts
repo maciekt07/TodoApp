@@ -1,10 +1,13 @@
-import { Task, UUID } from "../types/user";
+import { Task, UUID, Category } from "../types/user";
 import * as LZString from "lz-string";
 
 export interface SyncData {
   version: number;
   tasks: Task[];
   deletedTasks: UUID[];
+  categories: Category[];
+  deletedCategories: UUID[];
+  favoriteCategories: UUID[];
   lastModified: Date;
 }
 
@@ -56,13 +59,98 @@ function mergeTasks(
 }
 
 /**
+ * Merges two arrays of categories, keeping only non-deleted categories from both devices
+ */
+function mergeCategories(
+  localCategories: Category[],
+  remoteCategories: Category[],
+  localDeleted: UUID[],
+  remoteDeleted: UUID[],
+): Category[] {
+  const mergedCategories = new Map<UUID, Category>();
+  const allDeletedCategories = new Set([...localDeleted, ...remoteDeleted]);
+
+  // combine and filter out deleted categories
+  [...localCategories, ...remoteCategories]
+    .filter((category) => !allDeletedCategories.has(category.id))
+    .forEach((category) => {
+      const existing = mergedCategories.get(category.id);
+      if (!existing) {
+        mergedCategories.set(category.id, category);
+      } else {
+        // if category exists use the one with latest lastSave
+        const existingDate = existing.lastSave ? new Date(existing.lastSave) : new Date(0);
+        const newDate = category.lastSave ? new Date(category.lastSave) : new Date(0);
+
+        if (newDate > existingDate) {
+          mergedCategories.set(category.id, category);
+        }
+      }
+    });
+
+  return Array.from(mergedCategories.values());
+}
+
+/**
+ * Merges favorite categories based on the category's lastSave timestamp
+ */
+function mergeFavoriteCategories(
+  localFavorites: UUID[],
+  remoteFavorites: UUID[],
+  localCategories: Category[],
+  remoteCategories: Category[],
+): UUID[] {
+  const categoryMap = new Map<UUID, Category>();
+
+  // get the most up to date version of each category based on lastSave
+  [...localCategories, ...remoteCategories].forEach((category) => {
+    const existing = categoryMap.get(category.id);
+    if (
+      !existing ||
+      (category.lastSave &&
+        (!existing.lastSave || new Date(category.lastSave) > new Date(existing.lastSave)))
+    ) {
+      categoryMap.set(category.id, category);
+    }
+  });
+
+  // for each category use the favorite state from whichever device has the most recent lastSave
+  return Array.from(categoryMap.entries())
+    .filter(([id]) => {
+      const localCat = localCategories.find((c) => c.id === id);
+      const remoteCat = remoteCategories.find((c) => c.id === id);
+
+      if (localCat && remoteCat) {
+        const localDate = localCat.lastSave ? new Date(localCat.lastSave) : new Date(0);
+        const remoteDate = remoteCat.lastSave ? new Date(remoteCat.lastSave) : new Date(0);
+
+        // use favorite status from the device with the most recent category change
+        return localDate > remoteDate ? localFavorites.includes(id) : remoteFavorites.includes(id);
+      }
+
+      // if category only exists on one device use its favorite status
+      return localCat ? localFavorites.includes(id) : remoteFavorites.includes(id);
+    })
+    .map(([id]) => id);
+}
+
+/**
  * Prepares sync data to be sent to another device
  */
-export function prepareSyncData(tasks: Task[], deletedTasks: UUID[]): SyncData {
+export function prepareSyncData(
+  tasks: Task[],
+  deletedTasks: UUID[],
+  categories: Category[],
+  deletedCategories: UUID[],
+  favoriteCategories: UUID[],
+): SyncData {
   return {
     version: 1,
     tasks,
     deletedTasks,
+    categories,
+    deletedCategories,
+    favoriteCategories,
     lastModified: new Date(),
   };
 }
@@ -104,23 +192,60 @@ export function decompressSyncData(compressed: string): SyncData | null {
 export function mergeSyncData(
   localTasks: Task[],
   localDeletedTasks: UUID[],
-  remoteSyncData: SyncData,
-): { tasks: Task[]; deletedTasks: UUID[]; lastSyncedAt: Date } {
-  // merge tasks excluding all deleted tasks from both devices
-  const tasks = mergeTasks(
+  localCategories: Category[],
+  localDeletedCategories: UUID[],
+  localFavoriteCategories: UUID[],
+  syncDataStr: string,
+): {
+  tasks: Task[];
+  deletedTasks: UUID[];
+  categories: Category[];
+  deletedCategories: UUID[];
+  favoriteCategories: UUID[];
+} {
+  const syncData: SyncData = JSON.parse(LZString.decompressFromEncodedURIComponent(syncDataStr));
+
+  // merge tasks
+  const mergedTasks = mergeTasks(
     localTasks,
-    remoteSyncData.tasks,
+    syncData.tasks,
     localDeletedTasks,
-    remoteSyncData.deletedTasks,
+    syncData.deletedTasks,
   );
 
-  // combine deleted tasks from both devices
-  const deletedTasks = [...new Set([...localDeletedTasks, ...remoteSyncData.deletedTasks])];
-
-  // set lastSyncedAt to the most recent lastModified timestamp
-  const lastSyncedAt = new Date(
-    Math.max(remoteSyncData.lastModified.getTime(), new Date().getTime()),
+  // merge categories
+  const mergedCategories = mergeCategories(
+    localCategories,
+    syncData.categories,
+    localDeletedCategories,
+    syncData.deletedCategories,
   );
 
-  return { tasks, deletedTasks, lastSyncedAt };
+  // Store the combined deleted items
+  const mergedDeletedTasks = Array.from(new Set([...localDeletedTasks, ...syncData.deletedTasks]));
+  const mergedDeletedCategories = Array.from(
+    new Set([...localDeletedCategories, ...syncData.deletedCategories]),
+  );
+
+  // remove deleted tasks and categories from merged lists
+  const finalTasks = mergedTasks.filter((task) => !mergedDeletedTasks.includes(task.id));
+  const finalCategories = mergedCategories.filter(
+    (cat) => !mergedDeletedCategories.includes(cat.id),
+  );
+
+  // merge favorite categories
+  const finalFavoriteCategories = mergeFavoriteCategories(
+    localFavoriteCategories,
+    syncData.favoriteCategories || [],
+    finalCategories,
+    syncData.categories,
+  );
+
+  return {
+    tasks: finalTasks,
+    deletedTasks: mergedDeletedTasks,
+    categories: finalCategories,
+    deletedCategories: mergedDeletedCategories,
+    favoriteCategories: finalFavoriteCategories,
+  };
 }

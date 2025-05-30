@@ -66,6 +66,8 @@ const Categories = () => {
   const n = useNavigate();
   const { toasts } = useToasterStore();
 
+  const selectedCategory = user.categories.find((cat) => cat.id === selectedCategoryId);
+
   useEffect(() => {
     document.title = "Todo App - Categories";
     if (!user.settings.enableCategories) {
@@ -191,6 +193,7 @@ const Categories = () => {
             name: editName,
             emoji: editEmoji || undefined,
             color: editColor,
+            lastSave: new Date(),
           };
         }
         return category;
@@ -232,11 +235,14 @@ const Categories = () => {
   };
 
   const handleAddToFavorites = (category: Category) => {
-    setUser((prevUser) => ({
-      ...prevUser,
-      favoriteCategories: prevUser.favoriteCategories.includes(category.id)
-        ? prevUser.favoriteCategories.filter((id) => id !== category.id)
-        : [...prevUser.favoriteCategories, category.id],
+    setUser((user) => ({
+      ...user,
+      favoriteCategories: user.favoriteCategories.includes(category.id)
+        ? user.favoriteCategories.filter((id) => id !== category.id)
+        : [...user.favoriteCategories, category.id],
+      categories: user.categories.map((cat) =>
+        cat.id === category.id ? { ...cat, lastSave: new Date() } : cat,
+      ),
     }));
   };
 
@@ -442,7 +448,11 @@ const Categories = () => {
         >
           <CustomDialogTitle
             title="Edit Category"
-            subTitle={`Edit the details of the category.`}
+            subTitle={
+              user.categories.find((cat) => cat.id === selectedCategoryId)?.lastSave
+                ? `Last Edited: ${new Date(selectedCategory?.lastSave || "").toLocaleDateString()} • ${new Date(selectedCategory?.lastSave || "").toLocaleTimeString()}`
+                : "Edit the details of the category."
+            }
             icon={<Edit />}
             onClose={handleEditDimiss}
           />

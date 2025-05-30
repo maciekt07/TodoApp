@@ -340,6 +340,7 @@ export const TaskMenu = () => {
           }
         >
           <SheetContent>{menuItems}</SheetContent>
+          <div style={{ marginBottom: "48px" }} />
         </BottomSheet>
       ) : (
         <Menu

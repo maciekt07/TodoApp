@@ -9,6 +9,7 @@ import {
   Stack,
   Alert,
   AlertTitle,
+  Tooltip,
 } from "@mui/material";
 import QRCodeScannerDialog from "../components/QRCodeScannerDialog";
 import { UserContext } from "../contexts/UserContext";
@@ -34,7 +35,7 @@ type SyncStatus = {
   severity: "info" | "success" | "error" | "warning";
 };
 
-//TODO: add categories and settings to sync data
+//TODO: add settings (excluding appBadge, voice, voiceVolume) and other data () to sync data
 
 export default function Sync() {
   const { user, setUser } = useContext(UserContext);
@@ -60,12 +61,12 @@ export default function Sync() {
 
     p.on("open", (id) => {
       setHostPeerId(id);
-      setStatus("Waiting for device to connect...", "info");
+      setStatus("Waiting for device to connect...");
     });
 
     p.on("connection", (connection) => {
       setConn(connection);
-      setStatus("Device connected, exchanging data...", "info");
+      setStatus("Device connected, exchanging data...");
 
       connection.on("data", (rawData) => {
         try {
@@ -74,37 +75,51 @@ export default function Sync() {
             throw new Error("Failed to decompress received data");
           }
 
-          setStatus("Received device data, merging tasks...");
+          setStatus("Received device data, merging data...");
 
-          // merge task data from both devices
-          const { tasks, deletedTasks, lastSyncedAt } = mergeSyncData(
+          // merge all data from both devices
+          const compressedDataForMerge = compressSyncData(receivedData);
+          const mergedData = mergeSyncData(
             user.tasks,
             user.deletedTasks,
-            receivedData,
+            user.categories,
+            user.deletedCategories,
+            user.favoriteCategories,
+            compressedDataForMerge,
           );
 
           setUser((prevUser) => ({
             ...prevUser,
-            tasks,
-            deletedTasks,
-            lastSyncedAt,
+            tasks: mergedData.tasks,
+            deletedTasks: mergedData.deletedTasks,
+            categories: mergedData.categories,
+            deletedCategories: mergedData.deletedCategories,
+            favoriteCategories: mergedData.favoriteCategories,
+            lastSyncedAt: new Date(),
           }));
 
           // send back the merged data to guest
-          const mergedSyncData = prepareSyncData(tasks, deletedTasks);
+          const mergedSyncData = prepareSyncData(
+            mergedData.tasks,
+            mergedData.deletedTasks,
+            mergedData.categories,
+            mergedData.deletedCategories,
+            mergedData.favoriteCategories,
+          );
           const compressedData = compressSyncData(mergedSyncData);
           connection.send(compressedData);
 
-          // clear deletedTasks after successful sync since they're no longer needed
+          // clear deleted items after successful sync since they're no longer needed
           setTimeout(() => {
             setUser((prevUser) => ({
               ...prevUser,
               deletedTasks: [],
+              deletedCategories: [],
             }));
           }, 1000);
 
-          setStatus("Tasks synchronized successfully!", "success");
-          showToast("Tasks synchronized successfully!");
+          setStatus("Data synchronized successfully!", "success");
+          showToast("Data synchronized successfully!");
         } catch (err) {
           console.warn("Failed to process incoming data:", err);
           showToast("Failed to sync tasks", { type: "error" });
@@ -124,7 +139,7 @@ export default function Sync() {
 
     p.on("error", (err) => {
       console.error("Peer error:", err);
-      setStatus("Peer error.");
+      setStatus("Peer error.", "error");
     });
 
     setPeer(p);
@@ -142,10 +157,16 @@ export default function Sync() {
 
       connection.on("open", () => {
         setConn(connection);
-        setStatus("Connected, sending your task data...");
+        setStatus("Connected, sending your data...");
 
         // send initial sync data
-        const syncData = prepareSyncData(user.tasks, user.deletedTasks);
+        const syncData = prepareSyncData(
+          user.tasks,
+          user.deletedTasks,
+          user.categories,
+          user.deletedCategories,
+          user.favoriteCategories,
+        );
         const compressedData = compressSyncData(syncData);
         connection.send(compressedData);
 
@@ -157,31 +178,40 @@ export default function Sync() {
             }
 
             // use the final merged data from host
-            const { tasks, deletedTasks, lastSyncedAt } = mergeSyncData(
+            const compressedDataForMerge = compressSyncData(receivedData);
+            const mergedData = mergeSyncData(
               user.tasks,
               user.deletedTasks,
-              receivedData,
+              user.categories,
+              user.deletedCategories,
+              user.favoriteCategories,
+              compressedDataForMerge,
             );
 
             setUser((prevUser) => ({
               ...prevUser,
-              tasks,
-              deletedTasks,
-              lastSyncedAt,
+              tasks: mergedData.tasks,
+              deletedTasks: mergedData.deletedTasks,
+              categories: mergedData.categories,
+              deletedCategories: mergedData.deletedCategories,
+              favoriteCategories: mergedData.favoriteCategories,
+              lastSyncedAt: new Date(),
             }));
 
+            // clear deleted items after successful sync
             setTimeout(() => {
               setUser((prevUser) => ({
                 ...prevUser,
                 deletedTasks: [],
+                deletedCategories: [],
               }));
             }, 1000);
 
-            setStatus("Tasks synchronized successfully!", "success");
-            showToast("Tasks synchronized successfully!");
+            setStatus("Data synchronized successfully!", "success");
+            showToast("Data synchronized successfully!");
           } catch (err) {
             console.warn("Failed to process host data:", err);
-            showToast("Failed to sync tasks", { type: "error" });
+            showToast("Failed to sync data", { type: "error" });
           }
         });
 
@@ -204,7 +234,7 @@ export default function Sync() {
 
     p.on("error", (err) => {
       console.error("Peer error:", err);
-      setStatus("Peer error.");
+      setStatus("Peer error.", "error");
     });
   };
 
@@ -216,7 +246,7 @@ export default function Sync() {
       setMode("scan");
       connectToHost(scannedId);
     } catch (err) {
-      showToast("Invalid QR code", { type: "error" });
+      showToast("Failed to scan QR Code", { type: "error" });
       console.error("Error scaning QR Code:", err);
     }
   };
@@ -247,7 +277,7 @@ export default function Sync() {
 
   return (
     <>
-      <TopBar title="Sync Tasks" />
+      <TopBar title="Sync Data" />
       <MainContainer>
         {!mode && (
           <>
@@ -256,16 +286,24 @@ export default function Sync() {
                 sx={{ fontSize: 40, color: (theme) => theme.palette.primary.main }}
               />
               <Typography variant="h5" sx={{ fontWeight: 600, mb: 1 }}>
-                Sync Tasks Between Devices
+                Sync Data Between Devices
               </Typography>
               <Typography variant="body1" sx={{ mb: 2, opacity: 0.9 }}>
-                Securely transfer your tasks between devices with a QR Code scan using peer-to-peer
-                connection. No data is stored on external servers.
+                Securely transfer your tasks and categories between devices with a QR Code scan
+                using peer-to-peer connection. No data is stored on external servers.
               </Typography>
               {user.lastSyncedAt && (
-                <LastSyncedText>
-                  <AccessTimeRounded /> &nbsp; Last synced {timeAgo(new Date(user.lastSyncedAt))}
-                </LastSyncedText>
+                <Tooltip
+                  title={new Intl.DateTimeFormat(navigator.language, {
+                    dateStyle: "long",
+                    timeStyle: "medium",
+                  }).format(new Date(user.lastSyncedAt))}
+                  placement="top"
+                >
+                  <LastSyncedText>
+                    <AccessTimeRounded /> &nbsp; Last synced {timeAgo(new Date(user.lastSyncedAt))}
+                  </LastSyncedText>
+                </Tooltip>
               )}
             </FeatureDescription>
             <ModeSelectionContainer>
@@ -303,7 +341,7 @@ export default function Sync() {
                       <QRCode value={hostPeerId} size={300} />
                     </QRCodeWrapper>
 
-                    <QRCodeLabel>Scan this QR code with another device to sync tasks</QRCodeLabel>
+                    <QRCodeLabel>Scan this QR code with another device to sync data</QRCodeLabel>
 
                     {/* <ShareField
                       value={hostPeerId}
@@ -375,7 +413,8 @@ export default function Sync() {
             ) : (
               <LoadingContainer>
                 <CircularProgress size={24} />
-                <Typography>Initializing...</Typography>
+                {/* FIXME: color */}
+                <LoadingText>Initializing...</LoadingText>
               </LoadingContainer>
             )}
           </StyledPaper>
@@ -397,10 +436,11 @@ export default function Sync() {
               </StyledAlert>
 
               {(syncStatus.message === "Connecting to host..." ||
-                syncStatus.message === "Connected, sending your task data...") && (
+                syncStatus.message === "Connected, sending your data...") && (
                 <LoadingContainer>
                   <CircularProgress size={24} />
-                  <Typography>Connecting to host...</Typography>
+                  {/* FIXME: color */}
+                  <LoadingText>Connecting to host...</LoadingText>
                 </LoadingContainer>
               )}
 
@@ -533,6 +573,10 @@ const StyledAlert = styled(Alert)`
   @media (max-width: 768px) {
     max-width: 350px;
   }
+`;
+
+const LoadingText = styled(Typography)`
+  color: ${({ theme }) => (theme.darkmode ? "#ffffff" : "#000000")};
 `;
 
 // const ShareField = styled(TextField)`

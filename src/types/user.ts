@@ -65,6 +65,7 @@ export interface Category {
   name: string;
   emoji?: string;
   color: string;
+  lastSave?: Date;
 }
 
 /**
