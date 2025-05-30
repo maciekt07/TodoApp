@@ -54,7 +54,7 @@ describe("Date Utility Functions", () => {
     });
 
     it('should return "tomorrow" for a deadline on the next calendar day', () => {
-      const now = new Date("2025-05-22T19:11:15.214Z");
+      const now = new Date();
       const tomorrow = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1, 1, 0, 0); // 1AM tomorrow
       const result = calculateDateDifference(tomorrow);
       expect(result).toBe("tomorrow");

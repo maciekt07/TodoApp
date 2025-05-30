@@ -1,4 +1,4 @@
-import { getProfilePicture } from "../getProfilePicture";
+import { getProfilePictureFromDB } from "../profilePictureStorage";
 
 function createMockIDBRequest<T>(result: T): IDBRequest<T> {
   const request = {
@@ -28,13 +28,13 @@ describe("getProfilePicture", () => {
   });
 
   it("returns null if profilePicture is null", async () => {
-    expect(await getProfilePicture(null)).toBeNull();
+    expect(await getProfilePictureFromDB(null)).toBeNull();
   });
 
   it("returns profilePicture if it's not a local file", async () => {
     const url =
       "https://images.pexels.com/photos/2071882/pexels-photo-2071882.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500";
-    expect(await getProfilePicture(url)).toBe(url);
+    expect(await getProfilePictureFromDB(url)).toBe(url);
   });
 
   it("returns picture from IndexedDB if it's a local file", async () => {
@@ -83,7 +83,7 @@ describe("getProfilePicture", () => {
       });
     });
 
-    const result = await getProfilePicture("LOCAL_FILE::dfhdzhzdfhfd");
+    const result = await getProfilePictureFromDB("LOCAL_FILE::dfhdzhzdfhfd");
     expect(result).toBe(mockPicture);
   });
 
@@ -106,6 +106,8 @@ describe("getProfilePicture", () => {
       openRequest.onerror?.call(openRequest, new Event("error"));
     });
 
-    await expect(getProfilePicture("LOCAL_FILE::fail")).rejects.toThrow("Failed to open IndexedDB");
+    await expect(getProfilePictureFromDB("LOCAL_FILE::fail")).rejects.toThrow(
+      "Failed to open IndexedDB",
+    );
   });
 });
