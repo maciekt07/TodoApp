@@ -45,7 +45,7 @@ import { fetchBMCInfo } from "../services/bmcApi";
 import { fetchGitHubInfo } from "../services/githubApi";
 import { DialogBtn, UserAvatar, pulseAnimation, ring } from "../styles";
 import { ColorPalette } from "../theme/themeConfig";
-import { getProfilePicture, showToast, systemInfo, timeAgo } from "../utils";
+import { getProfilePictureFromDB, showToast, systemInfo, timeAgo } from "../utils";
 
 export const ProfileSidebar = () => {
   const { user, setUser } = useContext(UserContext);
@@ -103,7 +103,7 @@ export const ProfileSidebar = () => {
 
   useEffect(() => {
     const loadProfilePicture = async () => {
-      const picture = await getProfilePicture(profilePicture);
+      const picture = await getProfilePictureFromDB(profilePicture);
       setAvatarSrc(picture);
     };
     loadProfilePicture();

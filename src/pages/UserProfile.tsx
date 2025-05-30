@@ -27,7 +27,15 @@ import { PROFILE_PICTURE_MAX_LENGTH, USER_NAME_MAX_LENGTH } from "../constants";
 import { CustomDialogTitle, LogoutDialog, TopBar } from "../components";
 import { DialogBtn, UserAvatar } from "../styles";
 import { UserContext } from "../contexts/UserContext";
-import { timeAgo, getFontColor, showToast, getProfilePicture, generateUUID } from "../utils";
+import { timeAgo, getFontColor, showToast } from "../utils";
+import {
+  initDB,
+  saveProfilePictureInDB,
+  deleteProfilePictureFromDB,
+  validateImageFile,
+  fileToBase64,
+  getProfilePictureFromDB,
+} from "../utils/profilePictureStorage";
 import { ColorPalette } from "../theme/themeConfig";
 
 // TODO: move this to settings dialog
@@ -42,7 +50,7 @@ const UserProfile = () => {
 
   useEffect(() => {
     const loadProfilePicture = async () => {
-      const picture = await getProfilePicture(profilePicture);
+      const picture = await getProfilePictureFromDB(profilePicture);
       setAvatarSrc(picture);
     };
     loadProfilePicture();
@@ -51,6 +59,13 @@ const UserProfile = () => {
   useEffect(() => {
     document.title = `Todo App - User ${name ? `(${name})` : ""}`;
   }, [name]);
+
+  useEffect(() => {
+    // Initialize IndexedDB
+    initDB().catch((error) => {
+      console.error("Error initializing IndexedDB:", error);
+    });
+  }, []);
 
   const handleSaveName = () => {
     if (userName.length <= USER_NAME_MAX_LENGTH && userName !== name) {
@@ -97,109 +112,43 @@ const UserProfile = () => {
     }
   };
 
-  useEffect(() => {
-    // init IndexedDB
-    const request = indexedDB.open("profilePictureDB", 1);
-
-    request.onerror = () => {
-      console.error("Error opening IndexedDB");
-    };
-
-    request.onupgradeneeded = (event) => {
-      const db = (event.target as IDBOpenDBRequest).result;
-      if (!db.objectStoreNames.contains("pictures")) {
-        db.createObjectStore("pictures");
-      }
-    };
-  }, []);
-
   const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (!file) return;
 
-    if (!file.type.startsWith("image/")) {
-      showToast("Please upload an image file.");
-      return;
-    }
-
-    const maxFileSize = 6 * 1024 * 1024; //MB
-    if (file.size > maxFileSize) {
-      const formatMB = new Intl.NumberFormat("en-US", {
-        style: "unit",
-        unit: "megabyte",
-        maximumFractionDigits: 2,
-      });
-
-      const fileSizeMB = file.size / (1024 * 1024);
-      const maxSizeMB = maxFileSize / (1024 * 1024);
-
-      showToast(
-        `File size is too large (${formatMB.format(fileSizeMB)}/${formatMB.format(maxSizeMB)})`,
-        { type: "error" },
-      );
+    const error = validateImageFile(file);
+    if (error) {
+      showToast(error, { type: "error" });
       return;
     }
 
     try {
-      // convert to base64
-      const base64 = await new Promise<string>((resolve, reject) => {
-        const reader = new FileReader();
-        reader.onloadend = () => resolve(reader.result as string);
-        reader.onerror = reject;
-        reader.readAsDataURL(file);
-      });
+      const base64 = await fileToBase64(file);
+      const newId = await saveProfilePictureInDB(base64);
 
-      // store in IndexedDB
-      const request = indexedDB.open("profilePictureDB", 1);
+      setUser((prevUser) => ({
+        ...prevUser,
+        profilePicture: newId,
+      }));
 
-      request.onsuccess = (event) => {
-        const db = (event.target as IDBOpenDBRequest).result;
-        const transaction = db.transaction(["pictures"], "readwrite");
-        const store = transaction.objectStore("pictures");
-
-        const putRequest = store.put(base64, "profilePicture");
-
-        putRequest.onsuccess = () => {
-          setUser((prevUser) => ({
-            ...prevUser,
-            // we cant store base64 directly in localStorage because it may cause performance issues
-            profilePicture: "LOCAL_FILE_" + generateUUID(), // add uuid so image would update
-          }));
-
-          handleCloseImageDialog();
-          showToast("Profile picture uploaded.");
-        };
-
-        putRequest.onerror = () => {
-          showToast("Failed to upload profile picture.");
-        };
-      };
+      handleCloseImageDialog();
+      showToast("Profile picture uploaded.");
     } catch (error) {
       console.error("Error uploading file:", error);
       showToast("Failed to upload profile picture.");
     }
   };
 
-  const handleDeleteImage = (callback?: () => void) => {
-    const request = indexedDB.open("profilePictureDB", 1);
-
-    request.onsuccess = (event) => {
-      const db = (event.target as IDBOpenDBRequest).result;
-      const transaction = db.transaction(["pictures"], "readwrite");
-      const store = transaction.objectStore("pictures");
-
-      const deleteRequest = store.delete("profilePicture");
-
-      deleteRequest.onsuccess = () => {
-        setUser((prevUser) => ({ ...prevUser, profilePicture: null }));
-        callback?.();
-      };
-
-      deleteRequest.onerror = () => {
-        showToast("Failed to delete profile picture.");
-        callback?.();
-      };
-    };
+  const handleDeleteImage = async (callback?: () => void) => {
+    try {
+      await deleteProfilePictureFromDB();
+      setUser((prevUser) => ({ ...prevUser, profilePicture: null }));
+      callback?.();
+    } catch (error) {
+      console.error("Error deleting profile picture:", error);
+      showToast("Failed to delete profile picture.");
+      callback?.();
+    }
   };
 
   return (
