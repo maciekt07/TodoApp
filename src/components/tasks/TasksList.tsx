@@ -236,7 +236,7 @@ export const TasksList: React.FC = () => {
       tasks: prevUser.tasks.map((task) => {
         if (multipleSelectedTasks.includes(task.id)) {
           // Mark the task as done if selected
-          return { ...task, done: true };
+          return { ...task, done: true, lastSave: new Date() };
         }
         return task;
       }),

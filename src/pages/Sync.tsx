@@ -7,8 +7,6 @@ import {
   Typography,
   Container,
   Stack,
-  TextField,
-  InputAdornment,
   Alert,
   AlertTitle,
 } from "@mui/material";
@@ -21,7 +19,6 @@ import {
   CloudSyncRounded,
   QrCodeRounded,
   AccessTimeRounded,
-  ContentCopyRounded,
   RestartAltRounded,
 } from "@mui/icons-material";
 import { getFontColor, showToast, timeAgo } from "../utils";
@@ -31,7 +28,6 @@ import {
   decompressSyncData,
   mergeSyncData,
 } from "../utils/syncUtils";
-import { useToasterStore } from "react-hot-toast";
 
 type SyncStatus = {
   message: string;
@@ -42,7 +38,6 @@ type SyncStatus = {
 
 export default function Sync() {
   const { user, setUser } = useContext(UserContext);
-  const { toasts } = useToasterStore();
 
   const [mode, setMode] = useState<"display" | "scan" | null>(null);
   const [hostPeerId, setHostPeerId] = useState<string>("");
@@ -220,8 +215,9 @@ export default function Sync() {
       const scannedId = text.trim();
       setMode("scan");
       connectToHost(scannedId);
-    } catch {
-      alert("Invalid QR code");
+    } catch (err) {
+      showToast("Invalid QR code", { type: "error" });
+      console.error("Error scaning QR Code:", err);
     }
   };
 
@@ -235,19 +231,19 @@ export default function Sync() {
     setMode(null);
   };
 
-  const handleCopyPeerId = async (): Promise<void> => {
-    try {
-      await navigator.clipboard.writeText(hostPeerId);
-      showToast("Copied Peer ID to clipboard.", {
-        preventDuplicate: true,
-        id: "copy-sharable-link",
-        visibleToasts: toasts,
-      });
-    } catch (error) {
-      console.error("Error copying id to clipboard:", error);
-      showToast("Error copying id to clipboard", { type: "error" });
-    }
-  };
+  // const handleCopyPeerId = async (): Promise<void> => {
+  //   try {
+  //     await navigator.clipboard.writeText(hostPeerId);
+  //     showToast("Copied Peer ID to clipboard.", {
+  //       preventDuplicate: true,
+  //       id: "copy-sharable-link",
+  //       visibleToasts: toasts,
+  //     });
+  //   } catch (error) {
+  //     console.error("Error copying id to clipboard:", error);
+  //     showToast("Error copying id to clipboard", { type: "error" });
+  //   }
+  // };
 
   return (
     <>
@@ -300,13 +296,16 @@ export default function Sync() {
           <StyledPaper>
             <ModeHeader>Host Mode</ModeHeader>
             {hostPeerId ? (
-              <Stack spacing={3} alignItems="center">
+              <Stack spacing={2} alignItems="center">
                 {syncStatus.severity !== "success" && (
                   <>
                     <QRCodeWrapper>
                       <QRCode value={hostPeerId} size={300} />
                     </QRCodeWrapper>
-                    <ShareField
+
+                    <QRCodeLabel>Scan this QR code with another device to sync tasks</QRCodeLabel>
+
+                    {/* <ShareField
                       value={hostPeerId}
                       variant="outlined"
                       label="Your Peer ID"
@@ -325,11 +324,11 @@ export default function Sync() {
                           ),
                         },
                       }}
-                    />
+                    /> */}
                   </>
                 )}
 
-                <Alert severity={syncStatus.severity} sx={{ width: "310px", textAlign: "left" }}>
+                <StyledAlert severity={syncStatus.severity}>
                   <AlertTitle>
                     {syncStatus.severity === "success"
                       ? "Sync Complete"
@@ -338,7 +337,26 @@ export default function Sync() {
                         : "Status"}
                   </AlertTitle>
                   {syncStatus.message || "Idle"}
-                </Alert>
+                </StyledAlert>
+
+                {/* <FormControl>
+                  <FormLabel id="sync-row-radio-buttons-group-label">
+                    Sync App Settings & Other Data
+                  </FormLabel>
+                  <RadioGroup
+                    row
+                    aria-labelledby="sync-row-radio-buttons-group-label"
+                    name="row-radio-buttons-group"
+                  >
+                    <FormControlLabel value="this_device" control={<Radio />} label="This Device" />
+                    <FormControlLabel
+                      value="other_device"
+                      control={<Radio />}
+                      label="Other Device"
+                    />
+                    <FormControlLabel value="no_sync" control={<Radio />} label="Don't Sync" />
+                  </RadioGroup>
+                </FormControl> */}
 
                 <SyncButton
                   variant="outlined"
@@ -367,14 +385,7 @@ export default function Sync() {
           <StyledPaper>
             <ModeHeader>Scan Mode</ModeHeader>
             <Stack spacing={3} alignItems="center">
-              <Alert
-                severity={syncStatus.severity}
-                sx={{
-                  width: "310px",
-                  textAlign: "left",
-                  "& .MuiAlert-message": { width: "100%" },
-                }}
-              >
+              <StyledAlert severity={syncStatus.severity}>
                 <AlertTitle>
                   {syncStatus.severity === "success"
                     ? "Sync Complete"
@@ -383,7 +394,7 @@ export default function Sync() {
                       : "Status"}
                 </AlertTitle>
                 {syncStatus.message || "Idle"}
-              </Alert>
+              </StyledAlert>
 
               {(syncStatus.message === "Connecting to host..." ||
                 syncStatus.message === "Connected, sending your task data...") && (
@@ -427,7 +438,7 @@ export default function Sync() {
           }}
           onError={(err) => {
             console.error("QR scan error:", err);
-            alert("Error scanning QR.");
+            showToast("Error scanning QR.", { type: "error" });
             setScannerOpen(false);
           }}
         />
@@ -485,9 +496,16 @@ const StyledPaper = styled.div`
 
 const QRCodeWrapper = styled.div`
   background: white;
-  padding: 16px;
-  border-radius: 16px;
+  padding: 12px;
+  border-radius: 12px;
   display: inline-block;
+`;
+
+const QRCodeLabel = styled(Typography)`
+  font-weight: 600;
+  max-width: 310px;
+  margin: 0;
+  color: ${({ theme }) => (theme.darkmode ? "#ffffff" : "#000000")};
 `;
 
 const LoadingContainer = styled.div`
@@ -505,13 +523,25 @@ const SyncButton = styled(Button)`
   min-width: 180px;
 `;
 
-const ShareField = styled(TextField)`
-  margin-top: 22px;
-
-  .MuiOutlinedInput-root {
-    width: 336px;
-    border-radius: 14px;
-    padding: 2px;
-    transition: 0.3s all;
+const StyledAlert = styled(Alert)`
+  width: 100%;
+  max-width: 400px;
+  text-align: left;
+  & .MuiAlert-message {
+    width: 100%;
+  }
+  @media (max-width: 768px) {
+    max-width: 350px;
   }
 `;
+
+// const ShareField = styled(TextField)`
+//   margin-top: 22px;
+
+//   .MuiOutlinedInput-root {
+//     width: 336px;
+//     border-radius: 14px;
+//     padding: 2px;
+//     transition: 0.3s all;
+//   }
+// `;

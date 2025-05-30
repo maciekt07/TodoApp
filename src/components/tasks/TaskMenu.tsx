@@ -67,7 +67,7 @@ export const TaskMenu = () => {
       handleCloseMoreMenu();
       const updatedTasks = tasks.map((task) => {
         if (task.id === selectedTaskId) {
-          return { ...task, done: !task.done };
+          return { ...task, done: !task.done, lastSave: new Date() };
         }
         return task;
       });
@@ -103,7 +103,7 @@ export const TaskMenu = () => {
       handleCloseMoreMenu();
       const updatedTasks = tasks.map((task) => {
         if (task.id === selectedTaskId) {
-          return { ...task, pinned: !task.pinned };
+          return { ...task, pinned: !task.pinned, lastSave: new Date() };
         }
         return task;
       });
