@@ -339,26 +339,38 @@ export default function Sync() {
                       <QRCode value={hostPeerId} size={300} />
                     </QRCodeWrapper>
                     <QRCodeLabel>Scan this QR code with another device to sync data</QRCodeLabel>
+                    <FormControl>
+                      <StyledFormLabel id="sync-radio-buttons-group-label">
+                        Sync App Settings & Other Data
+                      </StyledFormLabel>
+                      <RadioGroup
+                        row={!isMobile}
+                        aria-labelledby="sync-radio-buttons-group-label"
+                        name="row-radio-buttons-group"
+                      >
+                        <StyledFormControlLabel
+                          value="this_device"
+                          control={<Radio />}
+                          label="This Device"
+                        />
+                        <StyledFormControlLabel
+                          value="other_device"
+                          control={<Radio />}
+                          label="Other Device"
+                        />
+                        <StyledFormControlLabel
+                          value="no_sync"
+                          control={<Radio />}
+                          label="Don't Sync"
+                        />
+                      </RadioGroup>
+                    </FormControl>
+                    <Typography sx={{ opacity: 0.8 }}>
+                      Tasks and categories will be synced automatically.
+                    </Typography>
                   </>
                 )}
-                <FormControl>
-                  <StyledFormLabel id="sync-row-radio-buttons-group-label">
-                    Sync App Settings & Other Data
-                  </StyledFormLabel>
-                  <RadioGroup
-                    row={!isMobile}
-                    aria-labelledby="sync-row-radio-buttons-group-label"
-                    name="row-radio-buttons-group"
-                  >
-                    <FormControlLabel value="this_device" control={<Radio />} label="This Device" />
-                    <FormControlLabel
-                      value="other_device"
-                      control={<Radio />}
-                      label="Other Device"
-                    />
-                    <FormControlLabel value="no_sync" control={<Radio />} label="Don't Sync" />
-                  </RadioGroup>
-                </FormControl>
+
                 <StyledAlert severity={syncStatus.severity}>
                   <AlertTitle>
                     {syncStatus.severity === "success"
@@ -552,9 +564,13 @@ const LoadingText = styled(Typography)`
 `;
 
 const StyledFormLabel = styled(FormLabel)`
-  color: ${({ theme }) => theme.mui.palette.text.primary};
+  color: ${({ theme }) => (theme.darkmode ? "#ffffff" : "#000000")};
   opacity: 0.8;
   &.Mui-focused {
-    color: ${({ theme }) => theme.mui.palette.text.primary};
+    color: ${({ theme }) => (theme.darkmode ? "#ffffff" : "#000000")};
   }
+`;
+
+const StyledFormControlLabel = styled(FormControlLabel)`
+  color: ${({ theme }) => (theme.darkmode ? "#ffffff" : "#000000")};
 `;

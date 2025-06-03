@@ -88,9 +88,18 @@ function mergeCategories(
       }
     });
 
-  return Array.from(mergedCategories.values());
-}
+  // sort by lastSave descending, fallback to name ascending
+  return Array.from(mergedCategories.values()).sort((a, b) => {
+    const aTime = a.lastSave ? new Date(a.lastSave).getTime() : 0;
+    const bTime = b.lastSave ? new Date(b.lastSave).getTime() : 0;
 
+    if (aTime !== bTime) {
+      return bTime - aTime; // newest first
+    }
+
+    return a.name.localeCompare(b.name); // fallback alphabetical
+  });
+}
 /**
  * Merges favorite categories based on the category's lastSave timestamp
  */

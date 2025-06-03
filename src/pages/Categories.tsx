@@ -147,6 +147,7 @@ const Categories = () => {
       }
       const newCategory: Category = {
         id: generateUUID(),
+        lastSave: new Date(),
         name,
         emoji: emoji !== "" && emoji !== null ? emoji : undefined,
         color,
