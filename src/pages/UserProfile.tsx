@@ -49,16 +49,16 @@ const UserProfile = () => {
   const [avatarSrc, setAvatarSrc] = useState<string | null>(null);
 
   useEffect(() => {
+    document.title = `Todo App - User ${name ? `(${name})` : ""}`;
+  }, [name]);
+
+  useEffect(() => {
     const loadProfilePicture = async () => {
       const picture = await getProfilePictureFromDB(profilePicture);
       setAvatarSrc(picture);
     };
     loadProfilePicture();
   }, [profilePicture]);
-
-  useEffect(() => {
-    document.title = `Todo App - User ${name ? `(${name})` : ""}`;
-  }, [name]);
 
   useEffect(() => {
     // Initialize IndexedDB

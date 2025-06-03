@@ -16,6 +16,10 @@ export interface User {
   profilePicture: string | null;
   emojisStyle: EmojiStyle;
   tasks: Task[];
+  /**
+   * Stores the IDs of tasks that were deleted locally.
+   * Used to ensure deletions are synced correctly across devices.
+   */
   deletedTasks: UUID[];
   categories: Category[];
   deletedCategories: UUID[];

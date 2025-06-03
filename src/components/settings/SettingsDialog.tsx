@@ -71,6 +71,7 @@ import type { OptionItem } from "./settingsTypes";
 import baner from "../../assets/baner.png";
 import { useOnlineStatus } from "../../hooks/useOnlineStatus";
 import { ShortcutItem } from "./ShortcutItem";
+import { useNavigate } from "react-router-dom";
 
 //TODO: code split tabs
 
@@ -142,6 +143,7 @@ export const SettingsDialog = ({ open, onClose }: SettingsProps) => {
   const muiTheme = useTheme();
   const systemTheme = useSystemTheme();
   const isOnline = useOnlineStatus();
+  const n = useNavigate();
 
   const labelToSlug = (label: string) => label.replace(/\s+/g, "");
 
@@ -372,7 +374,8 @@ export const SettingsDialog = ({ open, onClose }: SettingsProps) => {
       if ((e.ctrlKey || e.metaKey) && e.key === "p") {
         e.preventDefault();
         handleDialogClose();
-        setTimeout(() => window.print(), 100);
+        n("/");
+        setTimeout(() => window.print(), 500);
       }
     };
 
@@ -755,8 +758,8 @@ export const SettingsDialog = ({ open, onClose }: SettingsProps) => {
               <TabHeading>About Todo App</TabHeading>
               <Typography variant="body1" sx={{ mb: 2 }}>
                 📝 A simple todo app project made using React.js and MUI with many features,
-                including sharing tasks via link, theme customization and offline usage as a
-                Progressive Web App (PWA).
+                including sharing tasks via link, P2P synchronization using WebRTC, theme
+                customization and offline usage as a Progressive Web App (PWA).
               </Typography>
               <img
                 src={baner}

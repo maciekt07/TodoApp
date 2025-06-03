@@ -173,6 +173,9 @@ const StyledBottomNavigation = styled(BottomNavigation)<{ glow: boolean }>`
   transition:
     0.3s background,
     color;
+  @media print {
+    display: none;
+  }
 `;
 
 const NavigationButton = styled(BottomNavigationAction)`

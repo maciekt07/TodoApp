@@ -1,4 +1,4 @@
-import { useState, useContext } from "react";
+import { useState, useContext, useEffect } from "react";
 import QRCode from "react-qr-code";
 import Peer, { DataConnection } from "peerjs";
 import {
@@ -10,6 +10,11 @@ import {
   Alert,
   AlertTitle,
   Tooltip,
+  FormControl,
+  FormLabel,
+  RadioGroup,
+  FormControlLabel,
+  Radio,
 } from "@mui/material";
 import QRCodeScannerDialog from "../components/QRCodeScannerDialog";
 import { UserContext } from "../contexts/UserContext";
@@ -29,6 +34,7 @@ import {
   decompressSyncData,
   mergeSyncData,
 } from "../utils/syncUtils";
+import { useResponsiveDisplay } from "../hooks/useResponsiveDisplay";
 
 type SyncStatus = {
   message: string;
@@ -49,6 +55,12 @@ export default function Sync() {
     message: "",
     severity: "info",
   });
+
+  const isMobile = useResponsiveDisplay();
+
+  useEffect(() => {
+    document.title = "Todo App - Sync Data";
+  }, []);
 
   const setStatus = (message: string, severity: SyncStatus["severity"] = "info") => {
     setSyncStatus({ message, severity });
@@ -261,20 +273,6 @@ export default function Sync() {
     setMode(null);
   };
 
-  // const handleCopyPeerId = async (): Promise<void> => {
-  //   try {
-  //     await navigator.clipboard.writeText(hostPeerId);
-  //     showToast("Copied Peer ID to clipboard.", {
-  //       preventDuplicate: true,
-  //       id: "copy-sharable-link",
-  //       visibleToasts: toasts,
-  //     });
-  //   } catch (error) {
-  //     console.error("Error copying id to clipboard:", error);
-  //     showToast("Error copying id to clipboard", { type: "error" });
-  //   }
-  // };
-
   return (
     <>
       <TopBar title="Sync Data" />
@@ -340,49 +338,15 @@ export default function Sync() {
                     <QRCodeWrapper>
                       <QRCode value={hostPeerId} size={300} />
                     </QRCodeWrapper>
-
                     <QRCodeLabel>Scan this QR code with another device to sync data</QRCodeLabel>
-
-                    {/* <ShareField
-                      value={hostPeerId}
-                      variant="outlined"
-                      label="Your Peer ID"
-                      slotProps={{
-                        input: {
-                          readOnly: true,
-                          endAdornment: (
-                            <InputAdornment position="end">
-                              <Button
-                                onClick={handleCopyPeerId}
-                                sx={{ p: "12px", borderRadius: "14px", mr: "4px" }}
-                              >
-                                <ContentCopyRounded /> &nbsp; Copy
-                              </Button>
-                            </InputAdornment>
-                          ),
-                        },
-                      }}
-                    /> */}
                   </>
                 )}
-
-                <StyledAlert severity={syncStatus.severity}>
-                  <AlertTitle>
-                    {syncStatus.severity === "success"
-                      ? "Sync Complete"
-                      : syncStatus.severity === "error"
-                        ? "Error"
-                        : "Status"}
-                  </AlertTitle>
-                  {syncStatus.message || "Idle"}
-                </StyledAlert>
-
-                {/* <FormControl>
-                  <FormLabel id="sync-row-radio-buttons-group-label">
+                <FormControl>
+                  <StyledFormLabel id="sync-row-radio-buttons-group-label">
                     Sync App Settings & Other Data
-                  </FormLabel>
+                  </StyledFormLabel>
                   <RadioGroup
-                    row
+                    row={!isMobile}
                     aria-labelledby="sync-row-radio-buttons-group-label"
                     name="row-radio-buttons-group"
                   >
@@ -394,7 +358,17 @@ export default function Sync() {
                     />
                     <FormControlLabel value="no_sync" control={<Radio />} label="Don't Sync" />
                   </RadioGroup>
-                </FormControl> */}
+                </FormControl>
+                <StyledAlert severity={syncStatus.severity}>
+                  <AlertTitle>
+                    {syncStatus.severity === "success"
+                      ? "Sync Complete"
+                      : syncStatus.severity === "error"
+                        ? "Error"
+                        : "Status"}
+                  </AlertTitle>
+                  {syncStatus.message || "Idle"}
+                </StyledAlert>
 
                 <SyncButton
                   variant="outlined"
@@ -413,7 +387,6 @@ export default function Sync() {
             ) : (
               <LoadingContainer>
                 <CircularProgress size={24} />
-                {/* FIXME: color */}
                 <LoadingText>Initializing...</LoadingText>
               </LoadingContainer>
             )}
@@ -439,7 +412,6 @@ export default function Sync() {
                 syncStatus.message === "Connected, sending your data...") && (
                 <LoadingContainer>
                   <CircularProgress size={24} />
-                  {/* FIXME: color */}
                   <LoadingText>Connecting to host...</LoadingText>
                 </LoadingContainer>
               )}
@@ -579,13 +551,10 @@ const LoadingText = styled(Typography)`
   color: ${({ theme }) => (theme.darkmode ? "#ffffff" : "#000000")};
 `;
 
-// const ShareField = styled(TextField)`
-//   margin-top: 22px;
-
-//   .MuiOutlinedInput-root {
-//     width: 336px;
-//     border-radius: 14px;
-//     padding: 2px;
-//     transition: 0.3s all;
-//   }
-// `;
+const StyledFormLabel = styled(FormLabel)`
+  color: ${({ theme }) => theme.mui.palette.text.primary};
+  opacity: 0.8;
+  &.Mui-focused {
+    color: ${({ theme }) => theme.mui.palette.text.primary};
+  }
+`;

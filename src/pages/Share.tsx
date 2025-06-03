@@ -26,6 +26,10 @@ const SharePage = () => {
   const [errorDetails, setErrorDetails] = useState<string | undefined>();
 
   useEffect(() => {
+    document.title = `Todo App - Recieved Task ${taskData ? "(" + taskData.name + ")" : ""}`;
+  }, [taskData]);
+
+  useEffect(() => {
     const handleTaskData = (decodedTask: string) => {
       const task: Task = { ...(JSON.parse(decodedTask) as Task), id: generateUUID() };
 
@@ -73,10 +77,6 @@ const SharePage = () => {
       setUserName(decodedUserName);
     }
   }, [taskParam, userNameParam]);
-
-  useEffect(() => {
-    document.title = `Todo App - Recieved Task ${taskData ? "(" + taskData.name + ")" : ""}`;
-  }, [taskData]);
 
   const handleAddTask = () => {
     if (taskData) {
