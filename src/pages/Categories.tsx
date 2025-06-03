@@ -392,30 +392,36 @@ const Categories = () => {
           />
 
           <DialogContent>
-            {selectedCategoryId && (
-              <CategoryBadge
-                glow={false}
-                category={user.categories.find((cat) => cat.id === selectedCategoryId)!}
-                sx={{ width: "100%", height: "100%", margin: "0 auto", borderRadius: "12px" }}
-              />
-            )}
-            {getAssociatedTasks(selectedCategoryId!).length > 0 && (
-              <AssociatedTasksAccordion>
-                <AccordionSummary expandIcon={<ExpandMoreRounded />}>
-                  <span style={{ fontWeight: 600 }}>
-                    {`Associated Tasks (${getAssociatedTasks(selectedCategoryId!).length})`}
-                  </span>
-                </AccordionSummary>
-                <AccordionDetails sx={{ p: 0, m: 0 }}>
-                  <ul>
-                    {user.tasks
-                      .filter((task) => task.category?.some((cat) => cat.id === selectedCategoryId))
-                      .map((task) => (
-                        <li key={task.id}>{task.name}</li>
-                      ))}
-                  </ul>
-                </AccordionDetails>
-              </AssociatedTasksAccordion>
+            {selectedCategory ? (
+              <>
+                <CategoryBadge
+                  glow={false}
+                  category={user.categories.find((cat) => cat.id === selectedCategoryId)!}
+                  sx={{ width: "100%", height: "100%", margin: "0 auto", borderRadius: "12px" }}
+                />
+                {getAssociatedTasks(selectedCategoryId!).length > 0 && (
+                  <AssociatedTasksAccordion>
+                    <AccordionSummary expandIcon={<ExpandMoreRounded />}>
+                      <span style={{ fontWeight: 600 }}>
+                        {`Associated Tasks (${getAssociatedTasks(selectedCategoryId!).length})`}
+                      </span>
+                    </AccordionSummary>
+                    <AccordionDetails sx={{ p: 0, m: 0 }}>
+                      <ul>
+                        {user.tasks
+                          .filter((task) =>
+                            task.category?.some((cat) => cat.id === selectedCategoryId),
+                          )
+                          .map((task) => (
+                            <li key={task.id}>{task.name}</li>
+                          ))}
+                      </ul>
+                    </AccordionDetails>
+                  </AssociatedTasksAccordion>
+                )}
+              </>
+            ) : (
+              <p style={{ textAlign: "center" }}>Category not found</p>
             )}
           </DialogContent>
 
