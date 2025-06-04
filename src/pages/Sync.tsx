@@ -30,7 +30,7 @@ import { UserContext } from "../contexts/UserContext";
 import { useResponsiveDisplay } from "../hooks/useResponsiveDisplay";
 import type { OtherDataSyncOption, SyncStatus } from "../types/sync";
 import type { User } from "../types/user";
-import { getFontColor, showToast, timeAgo } from "../utils";
+import { getFontColor, saveProfilePictureInDB, showToast, timeAgo } from "../utils";
 import {
   compressSyncData,
   decompressSyncData,
@@ -39,7 +39,8 @@ import {
   prepareSyncData,
 } from "../utils/syncUtils";
 
-//TODO: add profile picture sync to other data
+//TODO: OPTIMIZE PROFILE PICTURE SYNC – avoid sending the local file when the UUIDs match or if the image won't be used
+//TODO: show from which device the other data has been synced
 
 export default function Sync() {
   const { user, setUser } = useContext(UserContext);
@@ -85,7 +86,7 @@ export default function Sync() {
       setConn(connection);
       setStatus("Device connected, exchanging data...");
 
-      connection.on("data", (rawData) => {
+      connection.on("data", async (rawData) => {
         try {
           const receivedData = decompressSyncData(rawData as string);
           if (!receivedData) {
@@ -99,7 +100,7 @@ export default function Sync() {
           let localOtherData: Partial<User> | undefined = undefined;
           const syncOption = otherDataSyncOptionRef.current; // always use latest value
           if (syncOption === "this_device") {
-            localOtherData = extractOtherData(user);
+            localOtherData = await extractOtherData(user, receivedData.otherData?.profilePicture);
           } else if (syncOption === "other_device" && receivedData.otherData) {
             localOtherData = receivedData.otherData;
           } // else no_sync: leave undefined
@@ -125,6 +126,27 @@ export default function Sync() {
               lastSyncedAt: new Date(),
             };
             if (syncOption === "other_device" && mergedData.otherData) {
+              // handle pfp sync
+              const profilePicture = mergedData.otherData.profilePicture;
+              const profilePictureData = (mergedData.otherData as { profilePictureData?: string })
+                .profilePictureData;
+              // always set user.profilePicture to the incoming value
+              if (profilePicture && profilePicture.startsWith("LOCAL_FILE") && profilePictureData) {
+                saveProfilePictureInDB(profilePictureData).then(() => {
+                  setUser((u) => ({ ...u, profilePicture: profilePicture }));
+                });
+                updatedUser.profilePicture = profilePicture;
+              } else {
+                // if previous was LOCAL_FILE and new is not delete from IndexedDB
+                if (prevUser.profilePicture && prevUser.profilePicture.startsWith("LOCAL_FILE")) {
+                  import("../utils/profilePictureStorage").then(
+                    ({ deleteProfilePictureFromDB }) => {
+                      deleteProfilePictureFromDB();
+                    },
+                  );
+                }
+                updatedUser.profilePicture = profilePicture ?? null;
+              }
               Object.entries(mergedData.otherData).forEach(([key, value]) => {
                 if (
                   key !== "tasks" &&
@@ -132,7 +154,8 @@ export default function Sync() {
                   key !== "categories" &&
                   key !== "deletedCategories" &&
                   key !== "favoriteCategories" &&
-                  key !== "profilePicture"
+                  key !== "profilePicture" &&
+                  key !== "profilePictureData"
                 ) {
                   if (key === "settings" && value && typeof value === "object") {
                     updatedUser.settings = {
@@ -207,18 +230,19 @@ export default function Sync() {
       setStatus("Connecting to host...");
       const connection = p.connect(hostId);
 
-      connection.on("open", () => {
+      connection.on("open", async () => {
         setConn(connection);
         setStatus("Connected, sending your data...");
 
         // send initial sync data
+        const otherData = await extractOtherData(user);
         const syncData = prepareSyncData(
           user.tasks,
           user.deletedTasks,
           user.categories,
           user.deletedCategories,
           user.favoriteCategories,
-          extractOtherData(user),
+          otherData,
         );
         const compressedData = compressSyncData(syncData);
         connection.send(compressedData);
@@ -254,6 +278,28 @@ export default function Sync() {
                 lastSyncedAt: new Date(),
               };
               if (mergedData.otherData) {
+                const profilePicture = mergedData.otherData.profilePicture;
+                const profilePictureData = (mergedData.otherData as { profilePictureData?: string })
+                  .profilePictureData;
+                if (
+                  profilePicture &&
+                  profilePicture.startsWith("LOCAL_FILE") &&
+                  profilePictureData
+                ) {
+                  saveProfilePictureInDB(profilePictureData).then(() => {
+                    setUser((u) => ({ ...u, profilePicture: profilePicture }));
+                  });
+                  updatedUser.profilePicture = profilePicture;
+                } else {
+                  if (prevUser.profilePicture && prevUser.profilePicture.startsWith("LOCAL_FILE")) {
+                    import("../utils/profilePictureStorage").then(
+                      ({ deleteProfilePictureFromDB }) => {
+                        deleteProfilePictureFromDB();
+                      },
+                    );
+                  }
+                  updatedUser.profilePicture = profilePicture ?? null;
+                }
                 Object.entries(mergedData.otherData).forEach(([key, value]) => {
                   if (
                     key !== "tasks" &&
@@ -261,7 +307,8 @@ export default function Sync() {
                     key !== "categories" &&
                     key !== "deletedCategories" &&
                     key !== "favoriteCategories" &&
-                    key !== "profilePicture"
+                    key !== "profilePicture" &&
+                    key !== "profilePictureData"
                   ) {
                     if (key === "settings" && value && typeof value === "object") {
                       updatedUser.settings = {
@@ -490,7 +537,7 @@ export default function Sync() {
         {mode === "scan" && (
           <StyledPaper>
             <ModeHeader>Scan Mode</ModeHeader>
-            <Stack spacing={3} alignItems="center">
+            <Stack spacing={2} alignItems="center">
               <StyledAlert severity={syncStatus.severity}>
                 <AlertTitle>
                   {syncStatus.severity === "success"
@@ -501,7 +548,6 @@ export default function Sync() {
                 </AlertTitle>
                 {syncStatus.message || "Idle"}
               </StyledAlert>
-
               {(syncStatus.message === "Connecting to host..." ||
                 syncStatus.message === "Connected, sending your data...") && (
                 <LoadingContainer>
@@ -509,7 +555,6 @@ export default function Sync() {
                   <LoadingText>Connecting to host...</LoadingText>
                 </LoadingContainer>
               )}
-
               <SyncButton
                 variant="outlined"
                 onClick={resetAll}

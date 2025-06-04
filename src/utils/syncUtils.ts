@@ -1,6 +1,7 @@
 import type { OtherDataSyncOption, SyncData } from "../types/sync";
 import type { Task, UUID, Category, User, AppSettings } from "../types/user";
 import * as LZString from "lz-string";
+import { getProfilePictureFromDB } from "./profilePictureStorage";
 
 function omit<T extends object, K extends keyof T>(obj: T, keys: K[]): Omit<T, K> {
   const clone = { ...obj };
@@ -10,9 +11,21 @@ function omit<T extends object, K extends keyof T>(obj: T, keys: K[]): Omit<T, K
   return clone;
 }
 //TODO: make it more type-safe
-export function extractOtherData(user: User): Partial<User> {
+export async function extractOtherData(
+  user: User,
+  remoteProfilePicture?: string | null,
+): Promise<Partial<User> & { profilePictureData?: string }> {
   const otherData: Partial<User> = { ...user };
-  delete otherData.profilePicture;
+  let profilePictureData: string | undefined = undefined;
+  //FIXME: only include profilePictureData if LOCAL_FILE and UUID is different from remote
+  if (
+    otherData.profilePicture &&
+    otherData.profilePicture.startsWith("LOCAL_FILE") &&
+    otherData.profilePicture !== remoteProfilePicture
+  ) {
+    const data = await getProfilePictureFromDB(otherData.profilePicture);
+    if (data) profilePictureData = data;
+  }
   if (otherData.settings) {
     otherData.settings = omit(otherData.settings, [
       "appBadge",
@@ -20,7 +33,10 @@ export function extractOtherData(user: User): Partial<User> {
       "voiceVolume",
     ]) as unknown as AppSettings;
   }
-  return otherData;
+  return {
+    ...otherData,
+    ...(profilePictureData ? { profilePictureData } : {}),
+  };
 }
 
 /**
