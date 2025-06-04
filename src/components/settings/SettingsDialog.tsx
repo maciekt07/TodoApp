@@ -73,6 +73,7 @@ import { useOnlineStatus } from "../../hooks/useOnlineStatus";
 import { ShortcutItem } from "./ShortcutItem";
 import { useNavigate } from "react-router-dom";
 
+//FIXME: options show different values after sync
 //TODO: code split tabs
 
 const OPTION_ICON_SIZE = 32;

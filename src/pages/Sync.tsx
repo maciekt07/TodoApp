@@ -1,47 +1,45 @@
-import { useState, useContext, useEffect } from "react";
-import QRCode from "react-qr-code";
-import Peer, { DataConnection } from "peerjs";
-import {
-  Button,
-  CircularProgress,
-  Typography,
-  Container,
-  Stack,
-  Alert,
-  AlertTitle,
-  Tooltip,
-  FormControl,
-  FormLabel,
-  RadioGroup,
-  FormControlLabel,
-  Radio,
-} from "@mui/material";
-import QRCodeScannerDialog from "../components/QRCodeScannerDialog";
-import { UserContext } from "../contexts/UserContext";
-import { TopBar } from "../components";
 import styled from "@emotion/styled";
 import {
-  QrCodeScannerRounded,
+  AccessTimeRounded,
   CloudSyncRounded,
   QrCodeRounded,
-  AccessTimeRounded,
+  QrCodeScannerRounded,
   RestartAltRounded,
 } from "@mui/icons-material";
+import {
+  Alert,
+  AlertTitle,
+  Button,
+  CircularProgress,
+  Container,
+  FormControl,
+  FormControlLabel,
+  FormLabel,
+  Radio,
+  RadioGroup,
+  Stack,
+  Tooltip,
+  Typography,
+} from "@mui/material";
+import Peer, { DataConnection } from "peerjs";
+import { useContext, useEffect, useRef, useState } from "react";
+import QRCode from "react-qr-code";
+import { TopBar } from "../components";
+import QRCodeScannerDialog from "../components/QRCodeScannerDialog";
+import { UserContext } from "../contexts/UserContext";
+import { useResponsiveDisplay } from "../hooks/useResponsiveDisplay";
+import type { OtherDataSyncOption, SyncStatus } from "../types/sync";
+import type { User } from "../types/user";
 import { getFontColor, showToast, timeAgo } from "../utils";
 import {
-  prepareSyncData,
   compressSyncData,
   decompressSyncData,
+  extractOtherData,
   mergeSyncData,
+  prepareSyncData,
 } from "../utils/syncUtils";
-import { useResponsiveDisplay } from "../hooks/useResponsiveDisplay";
 
-type SyncStatus = {
-  message: string;
-  severity: "info" | "success" | "error" | "warning";
-};
-
-//TODO: add settings (excluding appBadge, voice, voiceVolume) and other data () to sync data
+//TODO: add profile picture sync to other data
 
 export default function Sync() {
   const { user, setUser } = useContext(UserContext);
@@ -55,8 +53,15 @@ export default function Sync() {
     message: "",
     severity: "info",
   });
+  const [otherDataSyncOption, setOtherDataSyncOption] =
+    useState<OtherDataSyncOption>("this_device");
+  const otherDataSyncOptionRef = useRef(otherDataSyncOption);
 
   const isMobile = useResponsiveDisplay();
+
+  useEffect(() => {
+    otherDataSyncOptionRef.current = otherDataSyncOption;
+  }, [otherDataSyncOption]);
 
   useEffect(() => {
     document.title = "Todo App - Sync Data";
@@ -91,6 +96,13 @@ export default function Sync() {
 
           // merge all data from both devices
           const compressedDataForMerge = compressSyncData(receivedData);
+          let localOtherData: Partial<User> | undefined = undefined;
+          const syncOption = otherDataSyncOptionRef.current; // always use latest value
+          if (syncOption === "this_device") {
+            localOtherData = extractOtherData(user);
+          } else if (syncOption === "other_device" && receivedData.otherData) {
+            localOtherData = receivedData.otherData;
+          } // else no_sync: leave undefined
           const mergedData = mergeSyncData(
             user.tasks,
             user.deletedTasks,
@@ -98,17 +110,44 @@ export default function Sync() {
             user.deletedCategories,
             user.favoriteCategories,
             compressedDataForMerge,
+            syncOption,
+            localOtherData,
           );
 
-          setUser((prevUser) => ({
-            ...prevUser,
-            tasks: mergedData.tasks,
-            deletedTasks: mergedData.deletedTasks,
-            categories: mergedData.categories,
-            deletedCategories: mergedData.deletedCategories,
-            favoriteCategories: mergedData.favoriteCategories,
-            lastSyncedAt: new Date(),
-          }));
+          setUser((prevUser) => {
+            const updatedUser = {
+              ...prevUser,
+              tasks: mergedData.tasks,
+              deletedTasks: mergedData.deletedTasks,
+              categories: mergedData.categories,
+              deletedCategories: mergedData.deletedCategories,
+              favoriteCategories: mergedData.favoriteCategories,
+              lastSyncedAt: new Date(),
+            };
+            if (syncOption === "other_device" && mergedData.otherData) {
+              Object.entries(mergedData.otherData).forEach(([key, value]) => {
+                if (
+                  key !== "tasks" &&
+                  key !== "deletedTasks" &&
+                  key !== "categories" &&
+                  key !== "deletedCategories" &&
+                  key !== "favoriteCategories" &&
+                  key !== "profilePicture"
+                ) {
+                  if (key === "settings" && value && typeof value === "object") {
+                    updatedUser.settings = {
+                      ...updatedUser.settings,
+                      ...value,
+                    };
+                  } else {
+                    // @ts-expect-error: dynamic assignment of partial user fields from mergedData.otherData
+                    updatedUser[key] = value;
+                  }
+                }
+              });
+            }
+            return updatedUser;
+          });
 
           // send back the merged data to guest
           const mergedSyncData = prepareSyncData(
@@ -117,6 +156,7 @@ export default function Sync() {
             mergedData.categories,
             mergedData.deletedCategories,
             mergedData.favoriteCategories,
+            syncOption === "this_device" ? mergedData.otherData : undefined,
           );
           const compressedData = compressSyncData(mergedSyncData);
           connection.send(compressedData);
@@ -178,6 +218,7 @@ export default function Sync() {
           user.categories,
           user.deletedCategories,
           user.favoriteCategories,
+          extractOtherData(user),
         );
         const compressedData = compressSyncData(syncData);
         connection.send(compressedData);
@@ -198,17 +239,44 @@ export default function Sync() {
               user.deletedCategories,
               user.favoriteCategories,
               compressedDataForMerge,
+              "other_device",
+              undefined,
             );
 
-            setUser((prevUser) => ({
-              ...prevUser,
-              tasks: mergedData.tasks,
-              deletedTasks: mergedData.deletedTasks,
-              categories: mergedData.categories,
-              deletedCategories: mergedData.deletedCategories,
-              favoriteCategories: mergedData.favoriteCategories,
-              lastSyncedAt: new Date(),
-            }));
+            setUser((prevUser) => {
+              const updatedUser = {
+                ...prevUser,
+                tasks: mergedData.tasks,
+                deletedTasks: mergedData.deletedTasks,
+                categories: mergedData.categories,
+                deletedCategories: mergedData.deletedCategories,
+                favoriteCategories: mergedData.favoriteCategories,
+                lastSyncedAt: new Date(),
+              };
+              if (mergedData.otherData) {
+                Object.entries(mergedData.otherData).forEach(([key, value]) => {
+                  if (
+                    key !== "tasks" &&
+                    key !== "deletedTasks" &&
+                    key !== "categories" &&
+                    key !== "deletedCategories" &&
+                    key !== "favoriteCategories" &&
+                    key !== "profilePicture"
+                  ) {
+                    if (key === "settings" && value && typeof value === "object") {
+                      updatedUser.settings = {
+                        ...updatedUser.settings,
+                        ...value,
+                      };
+                    } else {
+                      // @ts-expect-error: dynamic assignment of partial user fields from mergedData.otherData
+                      updatedUser[key] = value;
+                    }
+                  }
+                });
+              }
+              return updatedUser;
+            });
 
             // clear deleted items after successful sync
             setTimeout(() => {
@@ -271,6 +339,7 @@ export default function Sync() {
     setHostPeerId("");
     setStatus("");
     setMode(null);
+    setOtherDataSyncOption("this_device");
   };
 
   return (
@@ -287,8 +356,9 @@ export default function Sync() {
                 Sync Data Between Devices
               </Typography>
               <Typography variant="body1" sx={{ mb: 2, opacity: 0.9 }}>
-                Securely transfer your tasks and categories between devices with a QR Code scan
-                using peer-to-peer connection. No data is stored on external servers.
+                Securely transfer your tasks, categories and other data between devices with a
+                single QR Code scan using peer-to-peer connection. No data is stored on external
+                servers.
               </Typography>
               {user.lastSyncedAt && (
                 <Tooltip
@@ -308,6 +378,7 @@ export default function Sync() {
               <SyncButton
                 variant="contained"
                 onClick={() => {
+                  setOtherDataSyncOption("this_device");
                   setMode("display");
                   startHost();
                 }}
@@ -347,6 +418,12 @@ export default function Sync() {
                         row={!isMobile}
                         aria-labelledby="sync-radio-buttons-group-label"
                         name="row-radio-buttons-group"
+                        value={otherDataSyncOption}
+                        onChange={(e) =>
+                          setOtherDataSyncOption(
+                            e.target.value as "this_device" | "other_device" | "no_sync",
+                          )
+                        }
                       >
                         <StyledFormControlLabel
                           value="this_device"
@@ -365,7 +442,12 @@ export default function Sync() {
                         />
                       </RadioGroup>
                     </FormControl>
-                    <Typography sx={{ opacity: 0.8 }}>
+                    <Typography
+                      sx={{
+                        opacity: 0.8,
+                        color: (theme) => (theme.palette.mode === "dark" ? "#ffffff" : "#000000"),
+                      }}
+                    >
                       Tasks and categories will be synced automatically.
                     </Typography>
                   </>

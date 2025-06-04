@@ -1,14 +1,26 @@
-import { Task, UUID, Category } from "../types/user";
+import type { OtherDataSyncOption, SyncData } from "../types/sync";
+import type { Task, UUID, Category, User, AppSettings } from "../types/user";
 import * as LZString from "lz-string";
 
-export interface SyncData {
-  version: number;
-  tasks: Task[];
-  deletedTasks: UUID[];
-  categories: Category[];
-  deletedCategories: UUID[];
-  favoriteCategories: UUID[];
-  lastModified: Date;
+function omit<T extends object, K extends keyof T>(obj: T, keys: K[]): Omit<T, K> {
+  const clone = { ...obj };
+  keys.forEach((key) => {
+    delete clone[key];
+  });
+  return clone;
+}
+//TODO: make it more type-safe
+export function extractOtherData(user: User): Partial<User> {
+  const otherData: Partial<User> = { ...user };
+  delete otherData.profilePicture;
+  if (otherData.settings) {
+    otherData.settings = omit(otherData.settings, [
+      "appBadge",
+      "voice",
+      "voiceVolume",
+    ]) as unknown as AppSettings;
+  }
+  return otherData;
 }
 
 /**
@@ -152,6 +164,7 @@ export function prepareSyncData(
   categories: Category[],
   deletedCategories: UUID[],
   favoriteCategories: UUID[],
+  otherData?: Partial<User>,
 ): SyncData {
   return {
     version: 1,
@@ -161,6 +174,7 @@ export function prepareSyncData(
     deletedCategories,
     favoriteCategories,
     lastModified: new Date(),
+    ...(otherData ? { otherData } : {}),
   };
 }
 
@@ -197,6 +211,7 @@ export function decompressSyncData(compressed: string): SyncData | null {
 
 /**
  * Merges remote sync data with local data and properly handles deleted tasks
+ * @param syncOption 'this_device' | 'other_device' | 'no_sync' (for otherData)
  */
 export function mergeSyncData(
   localTasks: Task[],
@@ -205,12 +220,15 @@ export function mergeSyncData(
   localDeletedCategories: UUID[],
   localFavoriteCategories: UUID[],
   syncDataStr: string,
+  syncOption: OtherDataSyncOption,
+  localOtherData?: Partial<User>,
 ): {
   tasks: Task[];
   deletedTasks: UUID[];
   categories: Category[];
   deletedCategories: UUID[];
   favoriteCategories: UUID[];
+  otherData?: Partial<User>;
 } {
   const syncData: SyncData = JSON.parse(LZString.decompressFromEncodedURIComponent(syncDataStr));
 
@@ -250,11 +268,19 @@ export function mergeSyncData(
     syncData.categories,
   );
 
+  // merge/select otherData
+  let mergedOtherData: Partial<User> | undefined = undefined;
+  if (syncOption === "this_device") {
+    mergedOtherData = localOtherData;
+  } else if (syncOption === "other_device") {
+    mergedOtherData = syncData.otherData;
+  } // else no_sync: leave undefined
   return {
     tasks: finalTasks,
     deletedTasks: mergedDeletedTasks,
     categories: finalCategories,
     deletedCategories: mergedDeletedCategories,
     favoriteCategories: finalFavoriteCategories,
+    ...(mergedOtherData ? { otherData: mergedOtherData } : {}),
   };
 }
