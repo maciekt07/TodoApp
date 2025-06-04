@@ -136,6 +136,7 @@ export const SettingsDialog = ({ open, onClose }: SettingsProps) => {
   const [emojiStyleValue, setEmojiStyleValue] = useState<EmojiStyle>(user.emojisStyle);
   const [availableVoices, setAvailableVoices] = useState<SpeechSynthesisVoice[]>([]);
   const [voiceVolume, setVoiceVolume] = useState<number>(user.settings.voiceVolume);
+
   const [prevVoiceVol, setPrevVoiceVol] = useState<number>(user.settings.voiceVolume);
   const [isSampleReading, setIsSampleReading] = useState<boolean>(false);
   const [storageUsage, setStorageUsage] = useState<number | undefined>(undefined);
@@ -172,6 +173,12 @@ export const SettingsDialog = ({ open, onClose }: SettingsProps) => {
     window.addEventListener("hashchange", handleHashChange);
     return () => window.removeEventListener("hashchange", handleHashChange);
   }, []);
+
+  // update local state when user settings change (e.g. after P2P sync)
+  useEffect(() => {
+    setDarkModeValue(user.darkmode);
+    setEmojiStyleValue(user.emojisStyle);
+  }, [user.darkmode, user.emojisStyle]);
 
   useEffect(() => {
     if (!open) return;

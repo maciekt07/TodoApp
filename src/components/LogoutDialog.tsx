@@ -5,7 +5,7 @@ import { Logout } from "@mui/icons-material";
 import { useContext } from "react";
 import { UserContext } from "../contexts/UserContext";
 import { defaultUser } from "../constants/defaultUser";
-import { showToast } from "../utils";
+import { deleteProfilePictureFromDB, showToast } from "../utils";
 
 interface LogoutDialogProps {
   open: boolean;
@@ -17,6 +17,7 @@ export function LogoutDialog({ open, onClose }: LogoutDialogProps) {
   const handleLogout = () => {
     setUser(defaultUser);
     onClose();
+    deleteProfilePictureFromDB();
     showToast("You have been successfully logged out");
   };
 

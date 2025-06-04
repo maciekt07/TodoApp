@@ -135,7 +135,7 @@ const UserProfile = () => {
       showToast("Profile picture uploaded.");
     } catch (error) {
       console.error("Error uploading file:", error);
-      showToast("Failed to upload profile picture.");
+      showToast("Failed to upload profile picture.", { type: "error" });
     }
   };
 
@@ -146,7 +146,7 @@ const UserProfile = () => {
       callback?.();
     } catch (error) {
       console.error("Error deleting profile picture:", error);
-      showToast("Failed to delete profile picture.");
+      showToast("Failed to delete profile picture.", { type: "error" });
       callback?.();
     }
   };

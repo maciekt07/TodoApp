@@ -29,6 +29,8 @@ export const fetchGitHubInfo = async (): Promise<GitHubInfoResponse> => {
     } else {
       // Check if rate limit exceeded
       if (repoResponse.status === 403 && branchResponse.status === 403) {
+        if (process.env.NODE_ENV === "development")
+          return { repoData: {}, branchData: {} } as GitHubInfoResponse; // Skip in dev mode
         showToast("Github API rate limit exceeded temporarily for your IP address.", {
           type: "error",
           disableVibrate: true,
