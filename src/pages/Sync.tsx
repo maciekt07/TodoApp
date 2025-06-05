@@ -5,6 +5,7 @@ import {
   QrCodeRounded,
   QrCodeScannerRounded,
   RestartAltRounded,
+  WifiOffRounded,
 } from "@mui/icons-material";
 import {
   Alert,
@@ -12,14 +13,17 @@ import {
   Button,
   CircularProgress,
   Container,
+  createTheme,
   FormControl,
   FormControlLabel,
   FormLabel,
   Radio,
   RadioGroup,
   Stack,
+  ThemeProvider,
   Tooltip,
   Typography,
+  useTheme as useMuiTheme,
 } from "@mui/material";
 import Peer, { DataConnection } from "peerjs";
 import { useContext, useEffect, useRef, useState } from "react";
@@ -30,7 +34,7 @@ import { UserContext } from "../contexts/UserContext";
 import { useResponsiveDisplay } from "../hooks/useResponsiveDisplay";
 import type { OtherDataSyncOption, SyncStatus } from "../types/sync";
 import type { User } from "../types/user";
-import { getFontColor, saveProfilePictureInDB, showToast, timeAgo } from "../utils";
+import { getFontColor, isDark, saveProfilePictureInDB, showToast, timeAgo } from "../utils";
 import {
   compressSyncData,
   decompressSyncData,
@@ -38,9 +42,10 @@ import {
   mergeSyncData,
   prepareSyncData,
 } from "../utils/syncUtils";
+import { useOnlineStatus } from "../hooks/useOnlineStatus";
 
 //TODO: OPTIMIZE PROFILE PICTURE SYNC – avoid sending the local file when the UUIDs match or if the image won't be used
-//TODO: show from which device the other data has been synced
+//TODO: show from which device the other data has been synced, improve ui and status messages
 
 export default function Sync() {
   const { user, setUser } = useContext(UserContext);
@@ -58,7 +63,9 @@ export default function Sync() {
     useState<OtherDataSyncOption>("this_device");
   const otherDataSyncOptionRef = useRef(otherDataSyncOption);
 
+  const muiTheme = useMuiTheme();
   const isMobile = useResponsiveDisplay();
+  const isOnline = useOnlineStatus();
 
   useEffect(() => {
     otherDataSyncOptionRef.current = otherDataSyncOption;
@@ -389,6 +396,16 @@ export default function Sync() {
     setOtherDataSyncOption("this_device");
   };
 
+  // Theme for buttons that maintains proper contrast and visibility when disabled
+  const buttonsTheme = createTheme({
+    ...muiTheme,
+    palette: {
+      mode: isDark(muiTheme.palette.secondary.main) ? "dark" : "light",
+      primary: muiTheme.palette.primary,
+      secondary: muiTheme.palette.secondary,
+    },
+  });
+
   return (
     <>
       <TopBar title="Sync Data" />
@@ -420,28 +437,38 @@ export default function Sync() {
                   </LastSyncedText>
                 </Tooltip>
               )}
+              {!isOnline && (
+                <Alert icon={<WifiOffRounded />} severity="error" sx={{ textAlign: "left", mt: 2 }}>
+                  <AlertTitle>Offline</AlertTitle>
+                  You're offline. Both devices must be online to start a peer-to-peer sync.
+                </Alert>
+              )}
             </FeatureDescription>
             <ModeSelectionContainer>
-              <SyncButton
-                variant="contained"
-                onClick={() => {
-                  setOtherDataSyncOption("this_device");
-                  setMode("display");
-                  startHost();
-                }}
-                startIcon={<QrCodeRounded />}
-              >
-                Display QR Code
-              </SyncButton>
-              <SyncButton
-                variant="outlined"
-                onClick={() => {
-                  setScannerOpen(true);
-                }}
-                startIcon={<QrCodeScannerRounded />}
-              >
-                Scan QR Code
-              </SyncButton>
+              <ThemeProvider theme={buttonsTheme}>
+                <SyncButton
+                  variant="contained"
+                  disabled={!isOnline}
+                  onClick={() => {
+                    setOtherDataSyncOption("this_device");
+                    setMode("display");
+                    startHost();
+                  }}
+                  startIcon={<QrCodeRounded />}
+                >
+                  Display QR Code
+                </SyncButton>
+                <SyncButton
+                  variant="outlined"
+                  disabled={!isOnline}
+                  onClick={() => {
+                    setScannerOpen(true);
+                  }}
+                  startIcon={<QrCodeScannerRounded />}
+                >
+                  Scan QR Code
+                </SyncButton>
+              </ThemeProvider>
             </ModeSelectionContainer>
           </>
         )}
@@ -552,7 +579,7 @@ export default function Sync() {
                 syncStatus.message === "Connected, sending your data...") && (
                 <LoadingContainer>
                   <CircularProgress size={24} />
-                  <LoadingText>Connecting to host...</LoadingText>
+                  <LoadingText>{syncStatus.message}</LoadingText>
                 </LoadingContainer>
               )}
               <SyncButton

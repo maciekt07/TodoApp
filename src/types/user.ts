@@ -13,6 +13,9 @@ export type DarkModeOptions = "system" | "auto" | "light" | "dark";
 export interface User {
   name: string | null;
   createdAt: Date;
+  /**
+   * must be a URL starting with "https://" or a local file reference in the form "LOCAL_FILE_" + UUID
+   */
   profilePicture: string | null;
   emojisStyle: EmojiStyle;
   tasks: Task[];

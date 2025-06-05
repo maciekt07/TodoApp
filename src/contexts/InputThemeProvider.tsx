@@ -1,5 +1,5 @@
 import React from "react";
-import { ThemeProvider as MUIThemeProvider } from "@mui/material/styles";
+import { ThemeProvider as MUIThemeProvider, Theme } from "@mui/material/styles";
 import { useTheme as useMUITheme } from "@mui/material/styles";
 import { useTheme as useEmotionTheme } from "@emotion/react";
 import { isDark } from "../utils";
@@ -11,7 +11,7 @@ const CustomThemeProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const theme = useEmotionTheme();
   const muiTheme = useMUITheme();
 
-  const customTheme = {
+  const customTheme: Theme = {
     ...muiTheme,
     components: {
       ...muiTheme.components,

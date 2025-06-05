@@ -368,7 +368,7 @@ const Transfer = () => {
   return (
     <>
       <TopBar title="Transfer" />
-      <ManagementHeader>Sync Tasks</ManagementHeader>
+      <ManagementHeader>Sync All Data</ManagementHeader>
       <ManagementButtonsContainer>
         <Link to="/sync">
           <ManagementButton variant="contained" size="large" sx={{ mb: 1 }}>
