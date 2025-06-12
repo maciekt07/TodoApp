@@ -270,11 +270,16 @@ export const TasksList: React.FC = () => {
       counts[category.id] = categoryTasks.length;
     });
 
-    // Sort categories based on count
+    // sort categories by count (descending) then by name (ascending) if counts are equal
     uniqueCategories.sort((a, b) => {
       const countA = counts[a.id] || 0;
       const countB = counts[b.id] || 0;
-      return countB - countA;
+
+      if (countB !== countA) {
+        return countB - countA;
+      }
+
+      return (a.name || "").localeCompare(b.name || "");
     });
 
     setCategories(uniqueCategories);
