@@ -1,4 +1,5 @@
 import {
+  Alert,
   Avatar,
   Badge,
   Button,
@@ -25,7 +26,7 @@ import {
 } from "@mui/icons-material";
 import { PROFILE_PICTURE_MAX_LENGTH, USER_NAME_MAX_LENGTH } from "../constants";
 import { CustomDialogTitle, LogoutDialog, TopBar } from "../components";
-import { DialogBtn, UserAvatar } from "../styles";
+import { DialogBtn, fadeIn, UserAvatar } from "../styles";
 import { UserContext } from "../contexts/UserContext";
 import { timeAgo, getFontColor, showToast } from "../utils";
 import {
@@ -47,18 +48,30 @@ const UserProfile = () => {
   const [openChangeImage, setOpenChangeImage] = useState<boolean>(false);
   const [openLogoutDialog, setOpenLogoutDialog] = useState<boolean>(false);
   const [avatarSrc, setAvatarSrc] = useState<string | null>(null);
+  const [showBrokenPfpAlert, setShowBrokenPfpAlert] = useState(false);
 
   useEffect(() => {
     document.title = `Todo App - User ${name ? `(${name})` : ""}`;
   }, [name]);
 
   useEffect(() => {
-    const loadProfilePicture = async () => {
-      const picture = await getProfilePictureFromDB(profilePicture);
-      setAvatarSrc(picture);
+    const loadAvatar = async () => {
+      const src = await getProfilePictureFromDB(profilePicture);
+      setAvatarSrc(src);
     };
-    loadProfilePicture();
+
+    loadAvatar();
   }, [profilePicture]);
+
+  useEffect(() => {
+    setShowBrokenPfpAlert(false);
+
+    const timer = setTimeout(() => {
+      setShowBrokenPfpAlert(true);
+    }, 2000);
+
+    return () => clearTimeout(timer);
+  }, [avatarSrc, profilePicture]);
 
   useEffect(() => {
     // Initialize IndexedDB
@@ -142,11 +155,12 @@ const UserProfile = () => {
   const handleDeleteImage = async (callback?: () => void) => {
     try {
       await deleteProfilePictureFromDB();
+
       setUser((prevUser) => ({ ...prevUser, profilePicture: null }));
-      callback?.();
     } catch (error) {
       console.error("Error deleting profile picture:", error);
       showToast("Failed to delete profile picture.", { type: "error" });
+    } finally {
       callback?.();
     }
   };
@@ -197,6 +211,13 @@ const UserProfile = () => {
             </UserAvatar>
           </Badge>
         </Tooltip>
+        {showBrokenPfpAlert &&
+          (!avatarSrc || !avatarSrc.startsWith("data:")) &&
+          profilePicture?.startsWith("LOCAL_FILE") && (
+            <BrokenPfpAlert severity="warning" variant="outlined">
+              Profile picture might be broken. You can try removing it.
+            </BrokenPfpAlert>
+          )}
         <UserName translate={name ? "no" : "yes"}>{name || "User"}</UserName>
         <Tooltip
           title={new Intl.DateTimeFormat(navigator.language, {
@@ -411,4 +432,13 @@ const StyledDivider = styled(Divider)`
   &::after {
     border-color: ${({ theme }) => (theme.darkmode ? "#ffffff83" : "#00000083")};
   }
+`;
+
+const BrokenPfpAlert = styled(Alert)`
+  margin: 0;
+  max-width: 260px;
+  font-size: 0.7rem;
+  padding: 0 8px;
+  align-items: center;
+  animation: ${fadeIn} 0.5s ease-in;
 `;

@@ -82,13 +82,14 @@ const StyledLabelBox = styled(Box)<{ selected: boolean; disabled?: boolean }>`
   color: ${({ theme, selected }) => selected && getFontColor(theme.primary)};
   background-color: ${({ theme, selected }) => (selected ? theme.primary : "transparent")};
   transition: background-color 0.3s ease-in-out;
-  cursor: pointer;
+  cursor: ${({ disabled }) => (disabled ? "not-allowed" : "pointer")};
   box-sizing: border-box;
   user-select: none;
   & .epr-emoji-native {
     width: unset !important;
     height: unset !important;
   }
+
   ${({ disabled, theme, selected }) =>
     !disabled &&
     `

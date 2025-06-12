@@ -96,29 +96,45 @@ export const saveProfilePictureInDB = async (base64Image: string): Promise<strin
   });
 };
 
-// delete profile picture from IndexedDB
+// completely reset the IndexedDB by deleting and recreating it to ensure no corrupted or broken profile images remain
 export const deleteProfilePictureFromDB = async (): Promise<void> => {
   return new Promise((resolve, reject) => {
-    const request = indexedDB.open(DB_NAME, 1);
+    // delete the entire database
+    const deleteRequest = indexedDB.deleteDatabase(DB_NAME);
 
-    request.onsuccess = (event) => {
-      const db = (event.target as IDBOpenDBRequest).result;
-      const transaction = db.transaction([STORE_NAME], "readwrite");
-      const store = transaction.objectStore(STORE_NAME);
+    deleteRequest.onsuccess = () => {
+      console.log("IndexedDB deleted successfully");
 
-      const deleteRequest = store.delete(PROFILE_PICTURE_KEY);
+      // recreate the DB
+      const openRequest = indexedDB.open(DB_NAME, 1);
 
-      deleteRequest.onsuccess = () => {
+      openRequest.onupgradeneeded = (event) => {
+        const db = (event.target as IDBOpenDBRequest).result;
+        if (!db.objectStoreNames.contains(STORE_NAME)) {
+          db.createObjectStore(STORE_NAME);
+        }
+      };
+
+      openRequest.onsuccess = () => {
+        openRequest.result.close(); // close the connection immediately
+        console.log("IndexedDB recreated empty");
         resolve();
       };
 
-      deleteRequest.onerror = () => {
-        reject(new Error("Failed to delete profile picture"));
+      openRequest.onerror = () => {
+        console.error("Failed to recreate IndexedDB");
+        reject(new Error("Failed to recreate IndexedDB"));
       };
     };
 
-    request.onerror = () => {
-      reject(new Error("Failed to open IndexedDB"));
+    deleteRequest.onerror = () => {
+      console.error("Failed to delete IndexedDB");
+      reject(new Error("Failed to delete IndexedDB"));
+    };
+
+    deleteRequest.onblocked = () => {
+      console.warn("Deletion blocked. Close all other tabs using the DB.");
+      reject(new Error("IndexedDB deletion blocked"));
     };
   });
 };

@@ -21,6 +21,7 @@ import {
   VolumeDown,
   VolumeOff,
   VolumeUp,
+  WifiOffRounded,
 } from "@mui/icons-material";
 import {
   Alert,
@@ -526,7 +527,7 @@ export const SettingsDialog = ({ open, onClose }: SettingsProps) => {
               />
 
               {!isOnline && (
-                <Alert severity="warning" sx={{ mt: "8px" }}>
+                <Alert severity="warning" sx={{ mt: "8px" }} icon={<WifiOffRounded />}>
                   <AlertTitle>Offline Mode</AlertTitle>
                   You are currently offline. Non-native emoji styles may not load.
                 </Alert>
@@ -624,7 +625,12 @@ export const SettingsDialog = ({ open, onClose }: SettingsProps) => {
                         value={`${voice.name}::${voice.lang}`}
                         translate="no"
                         disabled={voice.localService === false && !isOnline}
-                        sx={{ padding: "10px", borderRadius: "8px" }}
+                        sx={{
+                          padding: "10px",
+                          borderRadius: "8px",
+                          cursor:
+                            voice.localService === false && !isOnline ? "not-allowed" : "pointer",
+                        }}
                       >
                         {voice.name.startsWith("Google") && <Google sx={{ mr: "8px" }} />}
                         {voice.name.startsWith("Microsoft") && <Microsoft sx={{ mr: "8px" }} />}
@@ -704,7 +710,7 @@ export const SettingsDialog = ({ open, onClose }: SettingsProps) => {
                 </NoVoiceStyles>
               )}
               {!isOnline && availableVoices.some((voice) => voice.localService === false) && (
-                <Alert severity="warning" sx={{ mt: "8px" }}>
+                <Alert severity="warning" sx={{ mt: "8px" }} icon={<WifiOffRounded />}>
                   <AlertTitle>Offline Mode</AlertTitle>
                   You are currently offline. Some Voices may require an internet connection to work.
                 </Alert>
@@ -758,7 +764,7 @@ export const SettingsDialog = ({ open, onClose }: SettingsProps) => {
               />
               <ShortcutItem
                 name="Print Tasks"
-                description="Print the current task list (on the main page)"
+                description="Print the current task list"
                 keys={["Ctrl", "P"]}
               />
             </TabPanel>

@@ -5,7 +5,9 @@ import {
   QrCodeRounded,
   QrCodeScannerRounded,
   RestartAltRounded,
+  SyncProblemRounded,
   WifiOffRounded,
+  WifiTetheringRounded,
 } from "@mui/icons-material";
 import {
   Alert,
@@ -43,6 +45,7 @@ import {
   prepareSyncData,
 } from "../utils/syncUtils";
 import { useOnlineStatus } from "../hooks/useOnlineStatus";
+import toast from "react-hot-toast";
 
 //TODO: OPTIMIZE PROFILE PICTURE SYNC – avoid sending the local file when the UUIDs match or if the image won't be used
 //TODO: show from which device the other data has been synced, improve ui and status messages
@@ -107,7 +110,7 @@ export default function Sync() {
           let localOtherData: Partial<User> | undefined = undefined;
           const syncOption = otherDataSyncOptionRef.current; // always use latest value
           if (syncOption === "this_device") {
-            localOtherData = await extractOtherData(user, receivedData.otherData?.profilePicture);
+            localOtherData = await extractOtherData(user);
           } else if (syncOption === "other_device" && receivedData.otherData) {
             localOtherData = receivedData.otherData;
           } // else no_sync: leave undefined
@@ -394,6 +397,7 @@ export default function Sync() {
     setStatus("");
     setMode(null);
     setOtherDataSyncOption("this_device");
+    toast.dismiss();
   };
 
   // Theme for buttons that maintains proper contrast and visibility when disabled
@@ -438,7 +442,7 @@ export default function Sync() {
                 </Tooltip>
               )}
               {!isOnline && (
-                <Alert icon={<WifiOffRounded />} severity="error" sx={{ textAlign: "left", mt: 2 }}>
+                <Alert icon={<WifiOffRounded />} severity="error" sx={{ textAlign: "left", mt: 4 }}>
                   <AlertTitle>Offline</AlertTitle>
                   You're offline. Both devices must be online to start a peer-to-peer sync.
                 </Alert>
@@ -475,7 +479,9 @@ export default function Sync() {
 
         {mode === "display" && (
           <StyledPaper>
-            <ModeHeader>Host Mode</ModeHeader>
+            <ModeHeader>
+              <WifiTetheringRounded /> Host Mode
+            </ModeHeader>
             {hostPeerId ? (
               <Stack spacing={2} alignItems="center">
                 {syncStatus.severity !== "success" && (
@@ -483,6 +489,16 @@ export default function Sync() {
                     <QRCodeWrapper>
                       <QRCode value={hostPeerId} size={300} />
                     </QRCodeWrapper>
+                    {/* <Typography
+                      sx={{
+                        opacity: 0.4,
+                        fontSize: "0.8rem",
+                        fontStyle: "italic",
+                        color: (theme) => (theme.palette.mode === "dark" ? "#ffffff" : "#000000"),
+                      }}
+                    >
+                      {hostPeerId}
+                    </Typography> */}
                     <QRCodeLabel>Scan this QR code with another device to sync data</QRCodeLabel>
                     <FormControl>
                       <StyledFormLabel id="sync-radio-buttons-group-label">
@@ -527,7 +543,14 @@ export default function Sync() {
                   </>
                 )}
 
-                <StyledAlert severity={syncStatus.severity}>
+                <StyledAlert
+                  severity={syncStatus.severity}
+                  icon={
+                    syncStatus.severity === "error" || syncStatus.severity === "warning" ? (
+                      <SyncProblemRounded />
+                    ) : undefined
+                  }
+                >
                   <AlertTitle>
                     {syncStatus.severity === "success"
                       ? "Sync Complete"
@@ -563,9 +586,18 @@ export default function Sync() {
 
         {mode === "scan" && (
           <StyledPaper>
-            <ModeHeader>Scan Mode</ModeHeader>
+            <ModeHeader>
+              <QrCodeScannerRounded /> Scan Mode
+            </ModeHeader>
             <Stack spacing={2} alignItems="center">
-              <StyledAlert severity={syncStatus.severity}>
+              <StyledAlert
+                severity={syncStatus.severity}
+                icon={
+                  syncStatus.severity === "error" || syncStatus.severity === "warning" ? (
+                    <SyncProblemRounded />
+                  ) : undefined
+                }
+              >
                 <AlertTitle>
                   {syncStatus.severity === "success"
                     ? "Sync Complete"
@@ -646,6 +678,10 @@ const ModeHeader = styled.h5`
   text-align: center;
   margin: 0;
   margin-bottom: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
 `;
 
 const LastSyncedText = styled(Typography)`
