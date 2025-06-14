@@ -1,4 +1,5 @@
 import { generateUUID } from ".";
+import { PFP_MAX_SIZE } from "../constants";
 
 // we cant store base64 directly in localStorage because it may cause performance issues
 
@@ -139,14 +140,21 @@ export const deleteProfilePictureFromDB = async (): Promise<void> => {
   });
 };
 
+export const ALLOWED_PFP_TYPES = ["image/png", "image/jpeg", "image/webp"];
 // helper to validate file size
 export const validateImageFile = (file: File): string | null => {
   if (!file.type.startsWith("image/")) {
     return "Please upload an image file.";
   }
 
-  const maxFileSize = 6 * 1024 * 1024; //6MB
-  if (file.size > maxFileSize) {
+  if (!ALLOWED_PFP_TYPES.includes(file.type)) {
+    const allowedFormats = ALLOWED_PFP_TYPES.map((type) =>
+      type.replace("image/", "").toUpperCase(),
+    ).join(", ");
+    return `Unsupported image format: ${file.type}. Allowed formats: ${allowedFormats}.`;
+  }
+
+  if (file.size > PFP_MAX_SIZE) {
     const formatMB = new Intl.NumberFormat("en-US", {
       style: "unit",
       unit: "megabyte",
@@ -154,7 +162,7 @@ export const validateImageFile = (file: File): string | null => {
     });
 
     const fileSizeMB = file.size / (1024 * 1024);
-    const maxSizeMB = maxFileSize / (1024 * 1024);
+    const maxSizeMB = PFP_MAX_SIZE / (1024 * 1024);
     return `File size is too large (${formatMB.format(fileSizeMB)}/${formatMB.format(maxSizeMB)})`;
   }
 
@@ -170,3 +178,35 @@ export const fileToBase64 = (file: File): Promise<string> => {
     reader.readAsDataURL(file);
   });
 };
+
+// resize image to save space
+export function cropImageToSquare(file: File): Promise<Blob> {
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    img.onload = () => {
+      const side = Math.min(img.width, img.height);
+      const offsetX = (img.width - side) / 2;
+      const offsetY = (img.height - side) / 2;
+
+      const canvas = document.createElement("canvas");
+      canvas.width = 128;
+      canvas.height = 128;
+
+      const ctx = canvas.getContext("2d");
+      if (!ctx) return reject("Canvas context failed");
+
+      ctx.drawImage(img, offsetX, offsetY, side, side, 0, 0, 128, 128);
+
+      canvas.toBlob(
+        (blob) => {
+          if (blob) resolve(blob);
+          else reject("Blob creation failed");
+        },
+        file.type || "image/jpeg",
+        0.8,
+      );
+    };
+    img.onerror = reject;
+    img.src = URL.createObjectURL(file);
+  });
+}

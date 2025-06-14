@@ -13,4 +13,6 @@ export {
   getProfilePictureFromDB,
   saveProfilePictureInDB,
   validateImageFile,
+  cropImageToSquare,
+  ALLOWED_PFP_TYPES,
 } from "./profilePictureStorage";

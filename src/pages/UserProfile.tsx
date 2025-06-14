@@ -11,6 +11,7 @@ import {
   InputAdornment,
   TextField,
   Tooltip,
+  Typography,
 } from "@mui/material";
 import { useContext, useEffect, useState } from "react";
 import styled from "@emotion/styled";
@@ -24,7 +25,7 @@ import {
   TodayRounded,
   UploadRounded,
 } from "@mui/icons-material";
-import { PROFILE_PICTURE_MAX_LENGTH, USER_NAME_MAX_LENGTH } from "../constants";
+import { PFP_MAX_SIZE, PROFILE_PICTURE_MAX_LENGTH, USER_NAME_MAX_LENGTH } from "../constants";
 import { CustomDialogTitle, LogoutDialog, TopBar } from "../components";
 import { DialogBtn, fadeIn, UserAvatar } from "../styles";
 import { UserContext } from "../contexts/UserContext";
@@ -36,6 +37,8 @@ import {
   validateImageFile,
   fileToBase64,
   getProfilePictureFromDB,
+  cropImageToSquare,
+  ALLOWED_PFP_TYPES,
 } from "../utils/profilePictureStorage";
 import { ColorPalette } from "../theme/themeConfig";
 
@@ -136,7 +139,12 @@ const UserProfile = () => {
     }
 
     try {
-      const base64 = await fileToBase64(file);
+      // crop image to square first
+      const croppedBlob = await cropImageToSquare(file);
+      const croppedFile = new File([croppedBlob], file.name, { type: croppedBlob.type });
+
+      // convert cropped image to base64
+      const base64 = await fileToBase64(croppedFile);
       const newId = await saveProfilePictureInDB(base64);
 
       setUser((prevUser) => ({
@@ -155,7 +163,6 @@ const UserProfile = () => {
   const handleDeleteImage = async (callback?: () => void) => {
     try {
       await deleteProfilePictureFromDB();
-
       setUser((prevUser) => ({ ...prevUser, profilePicture: null }));
     } catch (error) {
       console.error("Error deleting profile picture:", error);
@@ -318,6 +325,15 @@ const UserProfile = () => {
               <UploadRounded /> &nbsp; Upload from file
             </Button>
           </label>
+          <Typography sx={{ opacity: 0.6, textAlign: "center", fontSize: "14px" }}>
+            {ALLOWED_PFP_TYPES.map((type) => type.replace("image/", "").toUpperCase()).join(", ")}{" "}
+            under{" "}
+            {new Intl.NumberFormat("en-US", {
+              style: "unit",
+              unit: "megabyte",
+              maximumFractionDigits: 2,
+            }).format(PFP_MAX_SIZE / (1024 * 1024))}
+          </Typography>
 
           {profilePicture !== null && (
             <>

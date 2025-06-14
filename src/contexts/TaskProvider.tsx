@@ -19,7 +19,7 @@ export const TaskProvider = ({ children }: { children: ReactNode }) => {
   const [search, setSearch] = useStorageState<string>("", "search", "sessionStorage");
   const [editModalOpen, setEditModalOpen] = useState<boolean>(false);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState<boolean>(false);
-  const [sortOption, setSortOption] = useStorageState<SortOption>(
+  const [sortOption, setSortOption] = useStorageState<SortOption>( // TODO: move to user.settings and add to sync
     "dateCreated",
     "taskSort",
     "localStorage",

@@ -39,6 +39,10 @@ export const MAX_CATEGORIES_IN_TASK = 3;
 export const MAX_COLORS_IN_LIST = 32;
 
 /**
+ * Maximum size of uploaded profile picture.
+ */
+export const PFP_MAX_SIZE = 16 * 1024 * 1024; //MB;
+/**
  * Maximum number of tasks a user can have.
  */
 // export const MAX_TASKS: number = 200;

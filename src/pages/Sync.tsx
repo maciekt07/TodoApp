@@ -49,6 +49,7 @@ import toast from "react-hot-toast";
 
 //TODO: OPTIMIZE PROFILE PICTURE SYNC – avoid sending the local file when the UUIDs match or if the image won't be used
 //TODO: show from which device the other data has been synced, improve ui and status messages
+//FIXME: when syncing pfp host success screen shows to early
 
 export default function Sync() {
   const { user, setUser } = useContext(UserContext);
@@ -540,6 +541,13 @@ export default function Sync() {
                     >
                       Tasks and categories will be synced automatically.
                     </Typography>
+                    {/* {user.profilePicture?.startsWith("LOCAL_FILE_") && (
+                      <Typography color="warning" sx={{ maxWidth: "420px", fontSize: "14px" }}>
+                        <WarningAmberRounded sx={{ verticalAlign: "middle", fontSize: "22px" }} />
+                        &nbsp; Using a locally stored profile picture could make syncing a bit
+                        slower.
+                      </Typography>
+                    )} */}
                   </>
                 )}
 
@@ -713,6 +721,9 @@ const QRCodeWrapper = styled.div`
   padding: 12px;
   border-radius: 12px;
   display: inline-block;
+  /* position: sticky;
+  top: 96px;
+  z-index: 2; */
 `;
 
 const QRCodeLabel = styled(Typography)`
