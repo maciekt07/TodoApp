@@ -40,9 +40,9 @@ import { UserContext } from "../contexts/UserContext";
 import { useOnlineStatus } from "../hooks/useOnlineStatus";
 import { DialogBtn, fadeIn } from "../styles";
 import { ColorPalette } from "../theme/themeConfig";
-import { AILanguageModel } from "../types/ai";
 import { getFontColor, showToast, systemInfo } from "../utils";
 import { CustomDialogTitle } from "./DialogTitle";
+import type { LanguageModel } from "../types/ai";
 
 interface EmojiPickerProps {
   emoji?: string;
@@ -112,13 +112,13 @@ export const CustomEmojiPicker = ({ emoji, setEmoji, color, name, type }: EmojiP
   };
 
   const [isAILoading, setIsAILoading] = useState<boolean>(false);
-  const [session, setSession] = useState<AILanguageModel | null>(null);
+  const [session, setSession] = useState<LanguageModel | null>(null);
 
   // Create Session on component mount for faster first load
   useEffect(() => {
     const createSession = async () => {
-      if (window.ai) {
-        const session = await window.ai.languageModel.create();
+      if (window.LanguageModel) {
+        const session = await window.LanguageModel.create();
         setSession(session);
       }
     };
@@ -131,11 +131,11 @@ export const CustomEmojiPicker = ({ emoji, setEmoji, color, name, type }: EmojiP
     const start = new Date().getTime();
     setIsAILoading(true);
     try {
-      const sessionInstance: AILanguageModel = session || (await window.ai.languageModel.create());
+      const sessionInstance: LanguageModel = session || (await window.LanguageModel.create());
 
       // chrome://flags/#text-safety-classifier must be disabled to make this prompt work
       const response = await sessionInstance.prompt(
-        `Pick one emoji that best fits the task: "${name}". Reply with the chosen emoji only, no text or explanation.`,
+        `Respond with ONLY ONE emoji that best represents this task: "${name}". DO NOT include any other text, explanations, or symbols. Just the SINGLE emoji.`,
       );
 
       console.log("Full AI response:", response);
@@ -297,7 +297,7 @@ export const CustomEmojiPicker = ({ emoji, setEmoji, color, name, type }: EmojiP
           </EmojiAvatar>
         </Badge>
       </EmojiContainer>
-      {"ai" in window && name !== undefined && (
+      {"LanguageModel" in window && name !== undefined && (
         <Tooltip title={!name ? `Enter a name for the ${type} to find emoji` : undefined}>
           <div style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
             <Button

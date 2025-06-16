@@ -248,7 +248,6 @@ export const ColorPicker: React.FC<ColorPickerProps> = ({
               <Tooltip title="Add new color">
                 <Grid>
                   <ColorElement
-                    clr="transparent"
                     style={{ border: "2px solid", color: fontColor || ColorPalette.fontLight }}
                     onClick={handleAddDialogOpen}
                   >

@@ -1,73 +1,124 @@
-// types for window.ai experimental chrome api
-// https://docs.google.com/document/d/1VG8HIyz361zGduWgNG7R_R8Xkv0OOJ8b5C9QKeCjU0c/view?tab=t.0#heading=h.3vqpk8wufne
+// types for window.LanguageModel experimental chrome api
+// https://docs.google.com/document/d/1VG8HIyz361zGduWgNG7R_R8Xkv0OOJ8b5C9QKeCjU0c/view?pli=1&tab=t.0#heading=h.nszgbi9928bg
 
-// interface WindowOrWorkerGlobalScope {
-//   readonly ai: AI;
-// }
+// Core model types and enums
+export type LanguageModelMessageRole = "system" | "user" | "assistant";
+export type LanguageModelMessageType = "text" | "image" | "audio";
 
-export interface AI {
-  readonly languageModel: AILanguageModelFactory;
+export type LanguageModelMessageContentValue =
+  | ImageBitmapSource
+  | AudioBuffer
+  | BufferSource
+  | string;
+
+// Message structure
+export interface LanguageModelMessageContent {
+  type: LanguageModelMessageType;
+  content: LanguageModelMessageContentValue;
 }
 
-interface AICreateMonitor extends EventTarget {
-  ondownloadprogress: (event: Event) => void;
+export interface LanguageModelMessage {
+  role: LanguageModelMessageRole;
+  content: LanguageModelMessageContent[];
 }
 
-type AICreateMonitorCallback = (monitor: AICreateMonitor) => void;
-
-type AICapabilityAvailability = "readily" | "after-download" | "no";
-
-interface AILanguageModelFactory {
-  create(options?: AILanguageModelCreateOptions): Promise<AILanguageModel>;
-  capabilities(): Promise<AILanguageModelCapabilities>;
-}
-
-export interface AILanguageModel extends EventTarget {
-  prompt(input: string, options?: AILanguageModelPromptOptions): Promise<string>;
-  promptStreaming(input: string, options?: AILanguageModelPromptOptions): ReadableStream;
-
-  countPromptTokens(input: string, options?: AILanguageModelPromptOptions): Promise<number>;
-  readonly maxTokens: number;
-  readonly tokensSoFar: number;
-  readonly tokensLeft: number;
-  readonly topK: number;
-  readonly temperature: number;
-
-  clone(): Promise<AILanguageModel>;
-  destroy(): void;
-}
-
-interface AILanguageModelCapabilities {
-  readonly available: AICapabilityAvailability;
-
-  // Always null if available === "no"
-  readonly defaultTopK?: number;
-  readonly maxTopK?: number;
-  readonly defaultTemperature?: number;
-}
-
-export interface AILanguageModelCreateOptions {
-  signal?: AbortSignal;
-  monitor?: AICreateMonitorCallback;
-
-  systemPrompt?: string;
-  initialPrompts?: AILanguageModelPrompt[];
-  topK?: number;
-  temperature?: number;
-}
-
-interface AILanguageModelPrompt {
-  role: AILanguageModelPromptRole;
+export interface LanguageModelMessageShorthand {
+  role: LanguageModelMessageRole;
   content: string;
 }
 
-interface AILanguageModelPromptOptions {
+export interface LanguageModelPromptDict {
+  role?: LanguageModelMessageRole; // default: "user"
+  type?: LanguageModelMessageType; // default: "text"
+  content: LanguageModelMessageContent;
+}
+
+// Prompt type: supports multiple formats
+export type LanguageModelPrompt = LanguageModelMessage[] | LanguageModelMessageShorthand[] | string;
+
+export type LanguageModelInitialPrompts = LanguageModelMessage[] | LanguageModelMessageShorthand[];
+
+// Expected input spec
+export interface LanguageModelExpectedInput {
+  type: LanguageModelMessageType;
+  languages: string[];
+}
+
+// Options dictionaries
+export interface LanguageModelCreateCoreOptions {
+  topK?: number;
+  temperature?: number;
+  expectedInputs?: LanguageModelExpectedInput[];
+}
+
+export interface LanguageModelCreateOptions extends LanguageModelCreateCoreOptions {
+  signal?: AbortSignal;
+  monitor?: AICreateMonitorCallback;
+  initialPrompts?: LanguageModelInitialPrompts;
+}
+
+export interface LanguageModelPromptOptions {
+  responseConstraint?: object;
   signal?: AbortSignal;
 }
 
-type AILanguageModelPromptRole = "system" | "user" | "assistant";
+export interface LanguageModelAppendOptions {
+  signal?: AbortSignal;
+}
+
+export interface LanguageModelCloneOptions {
+  signal?: AbortSignal;
+}
+
+// Parameter info from the model
+export interface LanguageModelParams {
+  readonly defaultTopK: number;
+  readonly maxTopK: number;
+  readonly defaultTemperature: number;
+  readonly maxTemperature: number;
+}
+
+// Capability availability enum
+export type Availability = "readily" | "after-download" | "no";
+
+// Monitor interface
+export interface AICreateMonitor extends EventTarget {
+  ondownloadprogress: (event: Event) => void;
+}
+
+export type AICreateMonitorCallback = (monitor: AICreateMonitor) => void;
+
+// Main LanguageModel interface
+export interface LanguageModel extends EventTarget {
+  prompt(input: LanguageModelPrompt, options?: LanguageModelPromptOptions): Promise<string>;
+
+  promptStreaming(input: LanguageModelPrompt, options?: LanguageModelPromptOptions): ReadableStream;
+
+  append(input: LanguageModelPrompt, options?: LanguageModelAppendOptions): Promise<void>;
+
+  measureInputUsage(
+    input: LanguageModelPrompt,
+    options?: LanguageModelPromptOptions,
+  ): Promise<number>;
+
+  readonly inputUsage: number;
+  readonly inputQuota: number;
+
+  readonly topK: number;
+  readonly temperature: number;
+
+  clone(options?: LanguageModelCloneOptions): Promise<LanguageModel>;
+  destroy(): void;
+}
+
+export interface LanguageModel {
+  create(options?: LanguageModelCreateOptions): Promise<LanguageModel>;
+  availability(options?: LanguageModelCreateCoreOptions): Promise<Availability>;
+  params(): Promise<LanguageModelParams | null>;
+}
+
 declare global {
   interface Window {
-    ai: AI;
+    LanguageModel: LanguageModel;
   }
 }

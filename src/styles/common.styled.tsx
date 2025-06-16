@@ -74,7 +74,7 @@ export const UserAvatar = styled(UnstyledAvatar)<UserAvatarProps>`
 `;
 
 interface ColorElementProps {
-  clr: string;
+  clr?: string;
   secondClr?: string;
   size?: string;
   disableHover?: boolean;
@@ -83,9 +83,13 @@ interface ColorElementProps {
 // Styled button for color selection
 export const ColorElement = styled.button<ColorElementProps>`
   background: ${({ clr, secondClr }) =>
-    secondClr ? `linear-gradient(135deg, ${clr} 50%, ${secondClr} 50%)` : clr};
+    !clr
+      ? "transparent"
+      : secondClr
+        ? `linear-gradient(135deg, ${clr} 50%, ${secondClr} 50%)`
+        : clr};
 
-  color: ${({ clr }) => getFontColor(clr || "")};
+  color: ${({ clr }) => (clr ? getFontColor(clr) : "transparent")};
   border: none;
   cursor: pointer;
   width: ${({ size }) => size || "48px"};
