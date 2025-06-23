@@ -47,9 +47,24 @@ import {
 import { useOnlineStatus } from "../hooks/useOnlineStatus";
 import toast from "react-hot-toast";
 
-//TODO: OPTIMIZE PROFILE PICTURE SYNC – avoid sending the local file when the UUIDs match or if the image won't be used
-//TODO: show from which device the other data has been synced, improve ui and status messages
-//FIXME: when syncing pfp host success screen shows to early
+// status messages for sync steps
+const STATUS: Record<string, SyncStatus> = {
+  startingPeer: { message: "Starting Peer...", severity: "info" },
+  waitingForDevice: { message: "Waiting for device to connect...", severity: "info" },
+  deviceConnected: { message: "Device connected, exchanging data...", severity: "info" },
+  receivedData: { message: "Received device data, merging data...", severity: "info" },
+  connectingToHost: { message: "Connecting to host...", severity: "info" },
+  connectedSending: { message: "Connected, sending your data...", severity: "info" },
+  syncSuccess: { message: "Data synchronized successfully!", severity: "success" },
+  connectionClosed: { message: "Connection closed.", severity: "warning" },
+  connectionError: { message: "Connection error.", severity: "error" },
+  peerError: { message: "Peer error.", severity: "error" },
+  decompressError: { message: "Failed to decompress received data", severity: "error" },
+  syncError: { message: "Failed to sync data", severity: "error" },
+};
+
+//TODO: refactor and code split
+//FIXME: lastSyncedAt
 
 export default function Sync() {
   const { user, setUser } = useContext(UserContext);
@@ -63,11 +78,15 @@ export default function Sync() {
     message: "",
     severity: "info",
   });
+
   const [otherDataSyncOption, setOtherDataSyncOption] =
     useState<OtherDataSyncOption>("this_device");
   const otherDataSyncOptionRef = useRef(otherDataSyncOption);
 
+  const [otherDataSource, setOtherDataSource] = useState<OtherDataSyncOption | null>(null);
+
   const muiTheme = useMuiTheme();
+
   const isMobile = useResponsiveDisplay();
   const isOnline = useOnlineStatus();
 
@@ -85,26 +104,26 @@ export default function Sync() {
 
   // HOST SETUP
   const startHost = () => {
-    setStatus("Starting Peer...");
+    setStatus(STATUS.startingPeer.message, STATUS.startingPeer.severity);
     const p = new Peer();
 
     p.on("open", (id) => {
       setHostPeerId(id);
-      setStatus("Waiting for device to connect...");
+      setStatus(STATUS.waitingForDevice.message, STATUS.waitingForDevice.severity);
     });
 
     p.on("connection", (connection) => {
       setConn(connection);
-      setStatus("Device connected, exchanging data...");
+      setStatus(STATUS.deviceConnected.message, STATUS.deviceConnected.severity);
 
       connection.on("data", async (rawData) => {
         try {
           const receivedData = decompressSyncData(rawData as string);
           if (!receivedData) {
-            throw new Error("Failed to decompress received data");
+            throw new Error(STATUS.decompressError.message);
           }
 
-          setStatus("Received device data, merging data...");
+          setStatus(STATUS.receivedData.message, STATUS.receivedData.severity);
 
           // merge all data from both devices
           const compressedDataForMerge = compressSyncData(receivedData);
@@ -184,16 +203,21 @@ export default function Sync() {
           });
 
           // send back the merged data to guest
-          const mergedSyncData = prepareSyncData(
-            mergedData.tasks,
-            mergedData.deletedTasks,
-            mergedData.categories,
-            mergedData.deletedCategories,
-            mergedData.favoriteCategories,
-            syncOption === "this_device" ? mergedData.otherData : undefined,
-          );
+          const mergedSyncData = {
+            ...prepareSyncData(
+              mergedData.tasks,
+              mergedData.deletedTasks,
+              mergedData.categories,
+              mergedData.deletedCategories,
+              mergedData.favoriteCategories,
+              syncOption === "this_device" ? mergedData.otherData : undefined,
+            ),
+            otherDataSource: syncOption,
+          };
           const compressedData = compressSyncData(mergedSyncData);
           connection.send(compressedData);
+
+          setOtherDataSource(syncOption); // track for host UI
 
           // clear deleted items after successful sync since they're no longer needed
           setTimeout(() => {
@@ -204,28 +228,29 @@ export default function Sync() {
             }));
           }, 1000);
 
-          setStatus("Data synchronized successfully!", "success");
-          showToast("Data synchronized successfully!");
+          setStatus(STATUS.syncSuccess.message, STATUS.syncSuccess.severity);
+          showToast(STATUS.syncSuccess.message);
         } catch (err) {
           console.warn("Failed to process incoming data:", err);
-          showToast("Failed to sync tasks", { type: "error" });
+          setStatus(STATUS.syncError.message, STATUS.syncError.severity);
+          showToast(STATUS.syncError.message, { type: "error" });
         }
       });
 
       connection.on("close", () => {
-        setStatus("Connection closed.", "warning");
+        setStatus(STATUS.connectionClosed.message, STATUS.connectionClosed.severity);
         resetAll();
       });
 
       connection.on("error", (err) => {
         console.error("Connection error:", err);
-        setStatus("Connection error.", "error");
+        setStatus(STATUS.connectionError.message, STATUS.connectionError.severity);
       });
     });
 
     p.on("error", (err) => {
       console.error("Peer error:", err);
-      setStatus("Peer error.", "error");
+      setStatus(STATUS.peerError.message, STATUS.peerError.severity);
     });
 
     setPeer(p);
@@ -233,17 +258,17 @@ export default function Sync() {
 
   // SCAN SETUP:
   const connectToHost = (hostId: string) => {
-    setStatus("Starting Peer...");
+    setStatus(STATUS.startingPeer.message, STATUS.startingPeer.severity);
     const p = new Peer();
     setPeer(p);
 
     p.on("open", () => {
-      setStatus("Connecting to host...");
+      setStatus(STATUS.connectingToHost.message, STATUS.connectingToHost.severity);
       const connection = p.connect(hostId);
 
       connection.on("open", async () => {
         setConn(connection);
-        setStatus("Connected, sending your data...");
+        setStatus(STATUS.connectedSending.message, STATUS.connectedSending.severity);
 
         // send initial sync data
         const otherData = await extractOtherData(user);
@@ -262,7 +287,7 @@ export default function Sync() {
           try {
             const receivedData = decompressSyncData(rawData as string);
             if (!receivedData) {
-              throw new Error("Failed to decompress received data");
+              throw new Error(STATUS.decompressError.message);
             }
 
             // use the final merged data from host
@@ -336,6 +361,13 @@ export default function Sync() {
               return updatedUser;
             });
 
+            // track which device otherData was used
+            if (receivedData.otherDataSource) {
+              setOtherDataSource(receivedData.otherDataSource);
+            } else {
+              setOtherDataSource(null);
+            }
+
             // clear deleted items after successful sync
             setTimeout(() => {
               setUser((prevUser) => ({
@@ -345,34 +377,35 @@ export default function Sync() {
               }));
             }, 1000);
 
-            setStatus("Data synchronized successfully!", "success");
-            showToast("Data synchronized successfully!");
+            setStatus(STATUS.syncSuccess.message, STATUS.syncSuccess.severity);
+            showToast(STATUS.syncSuccess.message);
           } catch (err) {
             console.warn("Failed to process host data:", err);
-            showToast("Failed to sync data", { type: "error" });
+            setStatus(STATUS.syncError.message, STATUS.syncError.severity);
+            showToast(STATUS.syncError.message, { type: "error" });
           }
         });
 
         connection.on("close", () => {
-          setStatus("Connection closed.");
+          setStatus(STATUS.connectionClosed.message, STATUS.connectionClosed.severity);
           resetAll();
         });
 
         connection.on("error", (err) => {
           console.error("Connection error:", err);
-          setStatus("Connection error.");
+          setStatus(STATUS.connectionError.message, STATUS.connectionError.severity);
         });
       });
 
       connection.on("error", (err) => {
         console.error("Connection error:", err);
-        setStatus("Connection error.");
+        setStatus(STATUS.connectionError.message, STATUS.connectionError.severity);
       });
     });
 
     p.on("error", (err) => {
       console.error("Peer error:", err);
-      setStatus("Peer error.", "error");
+      setStatus(STATUS.peerError.message, STATUS.peerError.severity);
     });
   };
 
@@ -395,9 +428,10 @@ export default function Sync() {
     setConn(null);
     setPeer(null);
     setHostPeerId("");
-    setStatus("");
+    setStatus("", "info");
     setMode(null);
     setOtherDataSyncOption("this_device");
+    setOtherDataSource(null);
     toast.dismiss();
   };
 
@@ -410,6 +444,21 @@ export default function Sync() {
       secondary: muiTheme.palette.secondary,
     },
   });
+
+  const getOtherDataSourceLabel = (src: OtherDataSyncOption | null) => {
+    if (src === "no_sync") return "Not Synced";
+    if (!src) return null;
+
+    if (src === "this_device") {
+      return mode === "display" ? "This Device" : "Host Device";
+    }
+
+    if (src === "other_device") {
+      return mode === "display" ? "Other Device" : "This Device";
+    }
+
+    return null;
+  };
 
   return (
     <>
@@ -568,7 +617,14 @@ export default function Sync() {
                   </AlertTitle>
                   {syncStatus.message || "Idle"}
                 </StyledAlert>
-
+                {syncStatus.severity === "success" &&
+                  otherDataSource &&
+                  otherDataSource !== "no_sync" && (
+                    <Typography sx={{ fontSize: 12, opacity: 0.8 }}>
+                      Settings & other data imported from:{" "}
+                      <b>{getOtherDataSourceLabel(otherDataSource)}</b>
+                    </Typography>
+                  )}
                 <SyncButton
                   variant="outlined"
                   onClick={resetAll}
@@ -615,6 +671,14 @@ export default function Sync() {
                 </AlertTitle>
                 {syncStatus.message || "Idle"}
               </StyledAlert>
+              {syncStatus.severity === "success" &&
+                otherDataSource &&
+                otherDataSource !== "no_sync" && (
+                  <Typography sx={{ fontSize: 12, opacity: 0.8 }}>
+                    Settings & other data synced from:{" "}
+                    <b>{getOtherDataSourceLabel(otherDataSource)}</b>
+                  </Typography>
+                )}
               {(syncStatus.message === "Connecting to host..." ||
                 syncStatus.message === "Connected, sending your data...") && (
                 <LoadingContainer>

@@ -16,4 +16,5 @@ export interface SyncData {
   favoriteCategories: UUID[];
   lastModified: Date;
   otherData?: Partial<User>;
+  otherDataSource?: OtherDataSyncOption;
 }
