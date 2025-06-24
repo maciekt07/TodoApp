@@ -9,8 +9,8 @@ import { Box, ListItemIcon, ListItemText, Menu, MenuItem } from "@mui/material";
 import { TaskContext } from "../../contexts/TaskContext";
 import { SortButton } from "./tasks.styled";
 import styled from "@emotion/styled";
+import { SortOption } from "../../types/user";
 
-export type SortOption = "dateCreated" | "dueDate" | "alphabetical";
 //TODO: add more sort options
 const sortOptions: {
   value: SortOption;

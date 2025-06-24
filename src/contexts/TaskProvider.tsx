@@ -1,12 +1,14 @@
-import { ReactNode, useState, useCallback, useMemo } from "react";
-import { UUID } from "../types/user";
+import { ReactNode, useState, useCallback, useMemo, useContext } from "react";
+import { SortOption, UUID } from "../types/user";
 import { useStorageState } from "../hooks/useStorageState";
 import { HighlightedText } from "../components/tasks/tasks.styled";
 import { useResponsiveDisplay } from "../hooks/useResponsiveDisplay";
 import { TaskContext, TaskContextType } from "./TaskContext";
-import { SortOption } from "../components/tasks/TaskSort";
+import { UserContext } from "../contexts/UserContext";
 
 export const TaskProvider = ({ children }: { children: ReactNode }) => {
+  const { user, setUser } = useContext(UserContext);
+
   const [selectedTaskId, setSelectedTaskId] = useState<UUID | null>(null);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [anchorPosition, setAnchorPosition] = useState<{ top: number; left: number } | null>(null);
@@ -19,14 +21,23 @@ export const TaskProvider = ({ children }: { children: ReactNode }) => {
   const [search, setSearch] = useStorageState<string>("", "search", "sessionStorage");
   const [editModalOpen, setEditModalOpen] = useState<boolean>(false);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState<boolean>(false);
-  const [sortOption, setSortOption] = useStorageState<SortOption>( // TODO: move to user.settings and add to sync
-    "dateCreated",
-    "taskSort",
-    "localStorage",
-  );
   const [sortAnchorEl, setSortAnchorEl] = useState<null | HTMLElement>(null);
 
   const isMobile = useResponsiveDisplay();
+
+  const sortOption = user.settings.sortOption;
+  const setSortOption = useCallback(
+    (option: SortOption) => {
+      setUser((prev) => ({
+        ...prev,
+        settings: {
+          ...prev.settings,
+          sortOption: option,
+        },
+      }));
+    },
+    [setUser],
+  );
 
   // Use useCallback for all functions to prevent recreation on each render
   const toggleShowMore = useCallback((taskId: UUID) => {

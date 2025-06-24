@@ -91,4 +91,7 @@ export interface AppSettings {
    */
   voice: `${string}::${string}`;
   voiceVolume: number;
+  sortOption: SortOption;
 }
+
+export type SortOption = "dateCreated" | "dueDate" | "alphabetical";
