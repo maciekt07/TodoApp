@@ -1,6 +1,5 @@
 import { Dispatch, ReactNode, SetStateAction, createContext } from "react";
-import type { UUID } from "../types/user";
-import { SortOption } from "../components/tasks/TaskSort";
+import type { SortOption, UUID } from "../types/user";
 
 interface TaskState {
   selectedTaskId: UUID | null;
@@ -29,7 +28,7 @@ interface TaskActions {
   setDeleteDialogOpen: Dispatch<SetStateAction<boolean>>;
   handleDeleteTask: () => void;
   handleCloseMoreMenu: () => void;
-  setSortOption: Dispatch<SetStateAction<SortOption>>;
+  setSortOption: (option: SortOption) => void;
   setSortAnchorEl: Dispatch<SetStateAction<null | HTMLElement>>;
 }
 
