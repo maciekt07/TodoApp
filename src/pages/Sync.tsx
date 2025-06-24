@@ -64,7 +64,6 @@ const STATUS: Record<string, SyncStatus> = {
 };
 
 //TODO: refactor and code split
-//FIXME: lastSyncedAt
 
 export default function Sync() {
   const { user, setUser } = useContext(UserContext);
@@ -153,7 +152,6 @@ export default function Sync() {
               categories: mergedData.categories,
               deletedCategories: mergedData.deletedCategories,
               favoriteCategories: mergedData.favoriteCategories,
-              lastSyncedAt: new Date(),
             };
             if (syncOption === "other_device" && mergedData.otherData) {
               // handle pfp sync
@@ -229,6 +227,7 @@ export default function Sync() {
           }, 1000);
 
           setStatus(STATUS.syncSuccess.message, STATUS.syncSuccess.severity);
+          setUser((u) => ({ ...u, lastSyncedAt: new Date() }));
           showToast(STATUS.syncSuccess.message);
         } catch (err) {
           console.warn("Failed to process incoming data:", err);
@@ -311,7 +310,6 @@ export default function Sync() {
                 categories: mergedData.categories,
                 deletedCategories: mergedData.deletedCategories,
                 favoriteCategories: mergedData.favoriteCategories,
-                lastSyncedAt: new Date(),
               };
               if (mergedData.otherData) {
                 const profilePicture = mergedData.otherData.profilePicture;
@@ -378,6 +376,7 @@ export default function Sync() {
             }, 1000);
 
             setStatus(STATUS.syncSuccess.message, STATUS.syncSuccess.severity);
+            setUser((u) => ({ ...u, lastSyncedAt: new Date() }));
             showToast(STATUS.syncSuccess.message);
           } catch (err) {
             console.warn("Failed to process host data:", err);
