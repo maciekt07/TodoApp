@@ -1,5 +1,7 @@
 import type { Category, Task, User, UUID } from "./user";
 
+export type SyncMode = "display" | "scan";
+
 export type SyncStatus = {
   message: string;
   severity: "info" | "success" | "error" | "warning";

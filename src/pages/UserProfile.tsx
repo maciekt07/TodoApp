@@ -71,7 +71,7 @@ const UserProfile = () => {
 
     const timer = setTimeout(() => {
       setShowBrokenPfpAlert(true);
-    }, 2000);
+    }, 1500);
 
     return () => clearTimeout(timer);
   }, [avatarSrc, profilePicture]);
@@ -175,7 +175,7 @@ const UserProfile = () => {
   return (
     <>
       <TopBar title="User Profile" />
-      <Container>
+      <Container glow={user.settings.enableGlow}>
         <Tooltip title="App Settings">
           <IconButton
             onClick={() => (window.location.hash = `#settings/Appearance`)}
@@ -376,19 +376,18 @@ const UserProfile = () => {
 
 export default UserProfile;
 
-const Container = styled.div`
+const Container = styled.div<{ glow: boolean }>`
   margin: 0 auto;
   max-width: 400px;
   padding: 64px 38px;
   border-radius: 48px;
-  box-shadow: 0px 4px 50px rgba(0, 0, 0, 0.25);
   background: ${({ theme }) => (theme.darkmode ? "#383838" : "#f5f5f5")};
   color: ${({ theme }) => (theme.darkmode ? ColorPalette.fontLight : ColorPalette.fontDark)};
   transition:
     border 0.3s,
     box-shadow 0.3s;
   border: 4px solid ${({ theme }) => theme.primary};
-  box-shadow: 0 0 72px -1px ${({ theme }) => theme.primary + "bf"};
+  box-shadow: ${({ glow, theme }) => (glow ? `0 0 72px -1px ${theme.primary}bf` : "none")};
   display: flex;
   gap: 14px;
   flex-direction: column;
