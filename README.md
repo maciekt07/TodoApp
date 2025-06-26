@@ -66,7 +66,10 @@ Code: [src/components/EmojiPicker.tsx](https://github.com/maciekt07/TodoApp/blob
 
 Securely sync all the data between devices using peer-to-peer WebRTC connections. Devices pair via QR code, and your data is transferred directly between them — only minimal server involvement for connection setup, with no data stored or processed in the cloud.
 
-<video src="https://github-production-user-asset-6210df.s3.amazonaws.com/85953204/448608266-02950a42-6ef8-4ab8-a908-47d236898ac9.mp4?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAVCODYLSA53PQK4ZA%2F20250528%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20250528T225841Z&X-Amz-Expires=300&X-Amz-Signature=7a7afe9749cd84a63e6096badbc0374b5183ca040b74ee5040fe17de4b76b9bf&X-Amz-SignedHeaders=host" controls></video>
+- Tasks and categories are auto-merged based on recent edits or deletions
+- For settings and other data, you choose which device to sync from
+
+<video src="https://github-production-user-asset-6210df.s3.amazonaws.com/85953204/459582059-1f2fd620-a64e-42e2-be4f-f17e07fba9a2.mp4?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAVCODYLSA53PQK4ZA%2F20250626%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20250626T185723Z&X-Amz-Expires=300&X-Amz-Signature=514e1513d883fab2b5b895d9075d0e0a522497e600e2577d1d11a341ab95aa6f&X-Amz-SignedHeaders=host" controls></video>
 
 ### 🎨 Color Themes & Dark Mode
 
