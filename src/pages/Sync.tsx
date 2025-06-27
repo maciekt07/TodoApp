@@ -188,9 +188,11 @@ export default function Sync() {
                 />
               ) : (
                 <Stack spacing={2} alignItems="center">
-                  <QRCodeWrapper>
-                    <QRCode value={hostPeerId} size={300} />
-                  </QRCodeWrapper>
+                  <QRCode
+                    value={hostPeerId}
+                    size={300}
+                    style={{ backgroundColor: "white", borderRadius: "8px", padding: "8px" }}
+                  />
                   <QRCodeLabel>Scan this QR code with another device to sync data</QRCodeLabel>
                   <FormControl>
                     <StyledFormLabel id="sync-radio-buttons-group-label">
@@ -356,6 +358,8 @@ function SyncStatusAlert({ syncStatus }: { syncStatus: SyncStatus }) {
   return (
     <StyledAlert
       severity={syncStatus.severity}
+      //@ts-expect-error it works
+      color={isSeverity(syncStatus.severity, "info") ? "primary" : undefined}
       icon={
         syncStatus.severity === "error" || syncStatus.severity === "warning" ? (
           <SyncProblemRounded />
@@ -430,16 +434,6 @@ const StyledPaper = styled.div`
   background: ${({ theme }) => (theme.darkmode ? "#1f1f1f" : "#ffffff")};
   width: 100%;
   text-align: center;
-`;
-
-const QRCodeWrapper = styled.div`
-  background: white;
-  padding: 12px;
-  border-radius: 12px;
-  display: inline-block;
-  /* position: sticky;
-  top: 96px;
-  z-index: 2; */
 `;
 
 const QRCodeLabel = styled(Typography)`

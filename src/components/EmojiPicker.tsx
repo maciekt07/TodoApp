@@ -287,7 +287,17 @@ export const CustomEmojiPicker = ({ emoji, setEmoji, color, name, type }: EmojiP
           overlap="circular"
           anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
           badgeContent={
-            <EditBadge onClick={toggleEmojiPicker}>
+            <EditBadge
+              onClick={toggleEmojiPicker}
+              tabIndex={0}
+              role="button"
+              onKeyDown={(e) => {
+                if (e.key === "Enter" || e.key === " ") {
+                  e.preventDefault();
+                  toggleEmojiPicker();
+                }
+              }}
+            >
               <Edit />
             </EditBadge>
           }

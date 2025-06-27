@@ -30,6 +30,7 @@ import {
   ManagementContainer,
   ManagementHeader,
   TaskManagementContainer,
+  VisuallyHiddenInput,
 } from "../styles";
 import { Link, useNavigate } from "react-router-dom";
 import QRCodeScannerDialog from "../components/QRCodeScannerDialog";
@@ -370,7 +371,7 @@ const Transfer = () => {
       <TopBar title="Transfer" />
       <ManagementHeader>Sync All Data</ManagementHeader>
       <ManagementButtonsContainer>
-        <Link to="/sync">
+        <Link to="/sync" tabIndex={-1}>
           <ManagementButton variant="contained" size="large" sx={{ mb: 1 }}>
             <PhonelinkRounded /> &nbsp; Sync With Other Device
           </ManagementButton>
@@ -444,27 +445,25 @@ const Transfer = () => {
           </div>
         )}
 
-        <input
-          accept=".json"
-          id="import-file"
-          type="file"
-          ref={fileInputRef}
-          style={{ display: "none" }}
-          onChange={handleSelectChange}
-        />
-        <label htmlFor="import-file">
-          <Button
-            component="span"
-            variant="outlined"
-            sx={{
-              p: "12px 20px",
-              borderRadius: "14px",
-              width: "300px",
-            }}
-          >
-            <FileUpload /> &nbsp; Select JSON File
-          </Button>
-        </label>
+        <Button
+          component="label"
+          role={undefined}
+          tabIndex={-1}
+          variant="outlined"
+          sx={{
+            p: "12px 20px",
+            borderRadius: "14px",
+            width: "300px",
+          }}
+        >
+          <FileUpload /> &nbsp; Select JSON File
+          <VisuallyHiddenInput
+            accept=".json"
+            type="file"
+            ref={fileInputRef}
+            onChange={handleSelectChange}
+          />
+        </Button>
 
         <ManagementButton onClick={handleImportFromClipboard}>
           <IntegrationInstructionsRounded /> &nbsp; Import JSON from clipboard

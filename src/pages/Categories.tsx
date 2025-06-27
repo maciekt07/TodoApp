@@ -45,6 +45,8 @@ import { useToasterStore } from "react-hot-toast";
 
 const NotFound = lazy(() => import("./NotFound"));
 
+//FIXME: category colors can be broken after sync
+
 const Categories = () => {
   const { user, setUser } = useContext(UserContext);
   const theme = useTheme();

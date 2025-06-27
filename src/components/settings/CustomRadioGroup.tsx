@@ -2,6 +2,8 @@ import styled from "@emotion/styled";
 import { Box, FormControlLabel, Radio, RadioGroup, Typography } from "@mui/material";
 import { getFontColor } from "../../utils";
 import type { OptionItem } from "./settingsTypes";
+import { useEffect, useState } from "react";
+import { SyncAltRounded } from "@mui/icons-material";
 
 interface CustomRadioGroupProps<T> {
   options: OptionItem<T>[];
@@ -16,20 +18,52 @@ const CustomRadioGroup = <T extends string>({
   disabledOptions = [],
   onChange,
 }: CustomRadioGroupProps<T>) => {
+  const [focusedValue, setFocusedValue] = useState<T | null>(null);
+  const [keyboardFocus, setKeyboardFocus] = useState<boolean>(false);
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Tab" || e.key.startsWith("Arrow")) {
+        setKeyboardFocus(true);
+      }
+    };
+
+    const handleMouseDown = () => {
+      setKeyboardFocus(false);
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    window.addEventListener("mousedown", handleMouseDown);
+
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+      window.removeEventListener("mousedown", handleMouseDown);
+    };
+  }, []);
+
   return (
     <StyledRadioGroup value={value} onChange={(e) => onChange(e.target.value as T)}>
       {options.map((option) => {
         const isDisabled = disabledOptions.includes(option.value);
+        const isSelected = value === option.value;
+        const isFocused = focusedValue === option.value;
         return (
           <FormControlLabel
             key={option.value}
             value={option.value}
             disabled={isDisabled}
-            control={<Radio sx={{ display: "none" }} />}
+            sx={{ position: "relative", width: 100, height: 100, margin: 0, padding: 0 }}
+            control={
+              <StyledRadioControl
+                onFocus={() => setFocusedValue(option.value)}
+                onBlur={() => setFocusedValue(null)}
+              />
+            }
             label={
               <StyledLabelBox
-                selected={value === option.value}
+                selected={isSelected}
                 disabled={isDisabled}
+                focused={isFocused && keyboardFocus}
                 sx={{ border: "1px solid", borderColor: "divider" }}
               >
                 <Typography
@@ -46,6 +80,11 @@ const CustomRadioGroup = <T extends string>({
           />
         );
       })}
+      {focusedValue && keyboardFocus && (
+        <FocusHint>
+          <SyncAltRounded /> Navigate with arrow keys
+        </FocusHint>
+      )}
     </StyledRadioGroup>
   );
 };
@@ -70,7 +109,27 @@ const StyledRadioGroup = styled(RadioGroup)`
   }
 `;
 
-const StyledLabelBox = styled(Box)<{ selected: boolean; disabled?: boolean }>`
+// make radio control invisible but accessible with keyboard navigation
+const StyledRadioControl = styled(Radio)`
+  opacity: 0;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  z-index: 1;
+  /* cursor: isDisabled ? "not-allowed" : "pointer", */
+`;
+
+interface StyledLabelBoxProps {
+  selected: boolean;
+  disabled?: boolean;
+  focused?: boolean;
+}
+
+const StyledLabelBox = styled(Box)<StyledLabelBoxProps>`
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -85,10 +144,6 @@ const StyledLabelBox = styled(Box)<{ selected: boolean; disabled?: boolean }>`
   cursor: ${({ disabled }) => (disabled ? "not-allowed" : "pointer")};
   box-sizing: border-box;
   user-select: none;
-  & .epr-emoji-native {
-    width: unset !important;
-    height: unset !important;
-  }
 
   ${({ disabled, theme, selected }) =>
     !disabled &&
@@ -98,10 +153,14 @@ const StyledLabelBox = styled(Box)<{ selected: boolean; disabled?: boolean }>`
     }
   `}
 
-  &:focus-visible {
-    outline: 2px solid ${({ theme }) => theme.primary};
-    outline-offset: 2px;
-  }
+  ${({ focused, theme }) =>
+    focused &&
+    `
+    outline: 3px solid ${theme.primary};
+    outline-offset: 3px;
+    box-shadow: 0 0 8px ${theme.primary}AA;
+  `}
+
   @media (max-width: 768px) {
     width: 80px;
     height: 80px;
@@ -115,4 +174,12 @@ const StyledLabel = styled(Typography)`
   word-wrap: break-word;
   overflow: hidden;
   text-overflow: ellipsis;
+`;
+
+const FocusHint = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  opacity: 0.8;
+  font-size: 14px;
 `;

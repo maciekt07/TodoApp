@@ -147,6 +147,7 @@ export const CategorySelect: React.FC<CategorySelectProps> = ({
               key={category.id}
               value={category.id}
               clr={category.color}
+              tabIndex={0}
               translate="no"
               disable={
                 selectedCats.length >= MAX_CATEGORIES_IN_TASK &&
@@ -167,7 +168,9 @@ export const CategorySelect: React.FC<CategorySelectProps> = ({
             if (cats.length === 0) return [];
 
             return [
-              <StyledListSubheader key={headerId}>{headerText}</StyledListSubheader>,
+              <StyledListSubheader key={headerId} tabIndex={-1}>
+                {headerText}
+              </StyledListSubheader>,
               ...cats.map(renderCategoryItem),
             ];
           };

@@ -27,7 +27,7 @@ import {
 } from "@mui/icons-material";
 import { PFP_MAX_SIZE, PROFILE_PICTURE_MAX_LENGTH, USER_NAME_MAX_LENGTH } from "../constants";
 import { CustomDialogTitle, LogoutDialog, TopBar } from "../components";
-import { DialogBtn, fadeIn, UserAvatar } from "../styles";
+import { DialogBtn, fadeIn, UserAvatar, VisuallyHiddenInput } from "../styles";
 import { UserContext } from "../contexts/UserContext";
 import { timeAgo, getFontColor, showToast } from "../utils";
 import {
@@ -197,6 +197,14 @@ const UserProfile = () => {
             badgeContent={
               <Avatar
                 onClick={handleOpenImageDialog}
+                tabIndex={0}
+                role="button"
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" || e.key === " ") {
+                    e.preventDefault();
+                    handleOpenImageDialog();
+                  }
+                }}
                 sx={{
                   background: "#9c9c9c81",
                   backdropFilter: "blur(10px)",
@@ -313,18 +321,18 @@ const UserProfile = () => {
             <span style={{ opacity: 0.8 }}>or</span>
           </StyledDivider>
 
-          <input
-            accept="image/*"
-            id="upload-pfp"
-            type="file"
-            style={{ display: "none" }}
-            onChange={handleFileUpload}
-          />
-          <label htmlFor="upload-pfp">
-            <Button component="span" variant="contained" fullWidth sx={{ my: "8px" }}>
-              <UploadRounded /> &nbsp; Upload from file
-            </Button>
-          </label>
+          <Button
+            component="label"
+            variant="contained"
+            role={undefined}
+            tabIndex={-1}
+            fullWidth
+            sx={{ my: "8px" }}
+          >
+            <UploadRounded /> &nbsp; Upload from file
+            <VisuallyHiddenInput accept="image/*" type="file" onChange={handleFileUpload} />
+          </Button>
+
           <Typography sx={{ opacity: 0.6, textAlign: "center", fontSize: "14px" }}>
             {ALLOWED_PFP_TYPES.map((type) => type.replace("image/", "").toUpperCase()).join(", ")}{" "}
             under{" "}

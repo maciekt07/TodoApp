@@ -257,7 +257,12 @@ export const ShareDialog = ({ open, onClose, selectedTask }: ShareDialogProps) =
           )}
         </TabGroupProvider>
         {shareTabVal !== 2 && (
-          <Alert severity="info" sx={{ mt: "20px" }}>
+          <Alert
+            severity="info"
+            sx={{ mt: "20px" }}
+            //@ts-expect-error it works
+            color="primary"
+          >
             <AlertTitle>Share Your Task</AlertTitle>
             Copy the link to share manually or use the share button to send it via other apps.
           </Alert>

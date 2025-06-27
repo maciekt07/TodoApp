@@ -48,9 +48,6 @@ export const GlobalStyles = () => {
           color: inherit;
         }
 
-        input[type="file"]::-webkit-file-upload-button {
-          display: none;
-        }
         div[role="dialog"] {
           border-radius: 42px 42px 0 0;
           z-index: 9999999;

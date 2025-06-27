@@ -33,6 +33,7 @@ import { TaskContext } from "../../contexts/TaskContext";
 import { ColorPalette } from "../../theme/themeConfig";
 import { ShareDialog } from "./ShareDialog";
 
+//FIXME: keyboard navigation
 export const TaskMenu = () => {
   const { user, setUser } = useContext(UserContext);
   const { tasks, settings, emojisStyle } = user;
@@ -253,72 +254,86 @@ export const TaskMenu = () => {
     }
   };
 
-  const menuItems: JSX.Element = (
-    <div>
-      <StyledMenuItem onClick={handleMarkAsDone}>
-        {selectedTask.done ? <Close /> : <Done />}
-        &nbsp; {selectedTask.done ? "Mark as not done" : "Mark as done"}
-      </StyledMenuItem>
-      <StyledMenuItem onClick={handlePin}>
-        <PushPinRounded sx={{ textDecoration: "line-through" }} />
-        &nbsp; {selectedTask.pinned ? "Unpin" : "Pin"}
-      </StyledMenuItem>
+  const menuItems: JSX.Element[] = [
+    <StyledMenuItem key="done" onClick={handleMarkAsDone}>
+      {selectedTask.done ? <Close /> : <Done />}
+      &nbsp; {selectedTask.done ? "Mark as not done" : "Mark as done"}
+    </StyledMenuItem>,
 
-      {multipleSelectedTasks.length === 0 && (
-        <StyledMenuItem onClick={() => handleSelectTask(selectedTaskId || generateUUID())}>
-          <RadioButtonChecked /> &nbsp; Select
-        </StyledMenuItem>
-      )}
+    <StyledMenuItem key="pin" onClick={handlePin}>
+      <PushPinRounded sx={{ textDecoration: "line-through" }} />
+      &nbsp; {selectedTask.pinned ? "Unpin" : "Pin"}
+    </StyledMenuItem>,
 
-      <StyledMenuItem onClick={redirectToTaskDetails}>
-        <LaunchRounded /> &nbsp; Task details
-      </StyledMenuItem>
+    ...(multipleSelectedTasks.length === 0
+      ? [
+          <StyledMenuItem
+            key="select"
+            onClick={() => handleSelectTask(selectedTaskId || generateUUID())}
+          >
+            <RadioButtonChecked /> &nbsp; Select
+          </StyledMenuItem>,
+        ]
+      : []),
 
-      {settings.enableReadAloud && "speechSynthesis" in window && (
-        <StyledMenuItem
-          onClick={handleReadAloud}
-          disabled={
-            window.speechSynthesis &&
-            (window.speechSynthesis.speaking || window.speechSynthesis.pending)
-          }
-        >
-          <RecordVoiceOverRounded /> &nbsp; Read Aloud
-        </StyledMenuItem>
-      )}
+    <StyledMenuItem key="details" onClick={redirectToTaskDetails}>
+      <LaunchRounded /> &nbsp; Task details
+    </StyledMenuItem>,
 
-      <StyledMenuItem
-        onClick={() => {
-          setShowShareDialog(true);
-          handleCloseMoreMenu();
-        }}
-      >
-        <LinkRounded /> &nbsp; Share
-      </StyledMenuItem>
+    ...(settings.enableReadAloud && "speechSynthesis" in window
+      ? [
+          <StyledMenuItem
+            key="read-aloud"
+            onClick={handleReadAloud}
+            disabled={
+              window.speechSynthesis &&
+              (window.speechSynthesis.speaking || window.speechSynthesis.pending)
+            }
+          >
+            <RecordVoiceOverRounded /> &nbsp; Read Aloud
+          </StyledMenuItem>,
+        ]
+      : []),
 
-      <Divider />
-      <StyledMenuItem
-        onClick={() => {
-          setEditModalOpen(true);
-          handleCloseMoreMenu();
-        }}
-      >
-        <EditRounded /> &nbsp; Edit
-      </StyledMenuItem>
-      <StyledMenuItem onClick={handleDuplicateTask}>
-        <ContentCopy /> &nbsp; Duplicate
-      </StyledMenuItem>
-      <Divider />
-      <StyledMenuItem
-        clr={ColorPalette.red}
-        onClick={() => {
-          handleDeleteTask();
-          handleCloseMoreMenu();
-        }}
-      >
-        <DeleteRounded /> &nbsp; Delete
-      </StyledMenuItem>
-    </div>
-  );
+    <StyledMenuItem
+      key="share"
+      onClick={() => {
+        setShowShareDialog(true);
+        handleCloseMoreMenu();
+      }}
+    >
+      <LinkRounded /> &nbsp; Share
+    </StyledMenuItem>,
+
+    <Divider key="divider-1" />,
+
+    <StyledMenuItem
+      key="edit"
+      onClick={() => {
+        setEditModalOpen(true);
+        handleCloseMoreMenu();
+      }}
+    >
+      <EditRounded /> &nbsp; Edit
+    </StyledMenuItem>,
+
+    <StyledMenuItem key="duplicate" onClick={handleDuplicateTask}>
+      <ContentCopy /> &nbsp; Duplicate
+    </StyledMenuItem>,
+
+    <Divider key="divider-2" />,
+
+    <StyledMenuItem
+      key="delete"
+      clr={ColorPalette.red}
+      onClick={() => {
+        handleDeleteTask();
+        handleCloseMoreMenu();
+      }}
+    >
+      <DeleteRounded /> &nbsp; Delete
+    </StyledMenuItem>,
+  ];
 
   return (
     <>

@@ -47,6 +47,7 @@ import { DialogBtn, UserAvatar, pulseAnimation, ring } from "../styles";
 import { ColorPalette } from "../theme/themeConfig";
 import { getProfilePictureFromDB, showToast, systemInfo, timeAgo } from "../utils";
 
+// FIXME: logout, install app, settings are not accessible with keyboard navigation
 export const ProfileSidebar = () => {
   const { user, setUser } = useContext(UserContext);
   const { name, profilePicture, tasks, settings } = user;
@@ -344,7 +345,7 @@ export const ProfileSidebar = () => {
         <StyledDivider />
 
         {supportsPWA && !isAppInstalled && (
-          <StyledMenuItem onClick={installPWA}>
+          <StyledMenuItem tabIndex={0} onClick={installPWA}>
             {systemInfo.os === "Android" ? (
               <InstallMobileRounded />
             ) : (
@@ -358,6 +359,7 @@ export const ProfileSidebar = () => {
           systemInfo.os === "iOS" &&
           !window.matchMedia("(display-mode: standalone)").matches && (
             <StyledMenuItem
+              tabIndex={0}
               onClick={() => {
                 showToast(
                   <div style={{ display: "inline-block" }}>
@@ -376,6 +378,7 @@ export const ProfileSidebar = () => {
           )}
 
         <StyledMenuItem
+          tabIndex={0}
           onClick={() => {
             handleClose();
             setOpenLogoutDialog(true);
@@ -387,6 +390,7 @@ export const ProfileSidebar = () => {
 
         <ProfileOptionsBottom>
           <SettingsMenuItem
+            tabIndex={0}
             onClick={() => {
               setOpenSettings(true);
               handleClose();
@@ -470,7 +474,7 @@ export const ProfileSidebar = () => {
 
 const MenuLink = ({ to, children }: { to: string; children: React.ReactNode }) => {
   const styles: React.CSSProperties = { borderRadius: "14px" };
-  if (to.startsWith("/")) {
+  if (to.startsWith("/") || to === "") {
     return (
       // React Router Link component for internal navigation
       <Link to={to} style={styles}>

@@ -74,7 +74,6 @@ import { useOnlineStatus } from "../../hooks/useOnlineStatus";
 import { ShortcutItem } from "./ShortcutItem";
 import { useNavigate } from "react-router-dom";
 
-//FIXME: options show different values after sync
 //TODO: code split tabs
 
 const OPTION_ICON_SIZE = 32;
@@ -468,6 +467,7 @@ export const SettingsDialog = ({ open, onClose }: SettingsProps) => {
                 {Themes.map((theme) => (
                   <StyledMenuItem key={theme.name} value={theme.name}>
                     <ColorElement
+                      tabIndex={-1}
                       clr={theme.MuiTheme.palette.primary.main}
                       secondClr={theme.MuiTheme.palette.secondary.main}
                       aria-label={`Change theme - ${theme.name}`}

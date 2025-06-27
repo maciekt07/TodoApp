@@ -49,6 +49,7 @@ const TaskMenuButton = memo(
       aria-label="Task Menu"
       aria-controls="task-menu"
       aria-haspopup="true"
+      aria-expanded={Boolean(task)}
       onClick={onClick}
       sx={{ color: getFontColor(task.color) }}
     >
