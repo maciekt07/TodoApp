@@ -74,6 +74,14 @@ export const TaskItem = memo(
       return null;
     }
 
+    const handleSelectChange = (taskId: UUID) => {
+      if (isSelected) {
+        onDeselect?.(taskId);
+      } else {
+        onSelect?.(taskId);
+      }
+    };
+
     return (
       <TaskContainer
         id={task.id}
@@ -90,13 +98,16 @@ export const TaskItem = memo(
             checked={isSelected}
             icon={<RadioUnchecked />}
             checkedIcon={<RadioChecked />}
-            onChange={() => {
-              if (isSelected) {
-                onDeselect?.(task.id);
-              } else {
-                onSelect?.(task.id);
+            onChange={() => handleSelectChange(task.id)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter" || e.key === " ") {
+                e.preventDefault();
+                handleSelectChange(task.id);
               }
             }}
+            tabIndex={0}
+            role="checkbox"
+            aria-checked={isSelected}
           />
         )}
 
