@@ -123,7 +123,7 @@ export const AddButton = styled(Button)<{ animate?: boolean; glow: boolean }>`
     background-color: ${({ theme }) => theme.primary};
     backdrop-filter: blur(6px);
   }
-  animation: ${scale} 0.3s;
+  animation: ${scale} 0.5s;
   ${({ animate, theme }) =>
     animate &&
     css`

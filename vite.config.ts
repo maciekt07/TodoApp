@@ -58,6 +58,13 @@ export default defineConfig({
       output: {
         manualChunks(id) {
           if (id.includes("node_modules")) {
+            if (
+              id.match(/node_modules\/react(-dom)?\//) ||
+              id.includes("node_modules/react-is/") ||
+              id.includes("node_modules/scheduler/")
+            ) {
+              return "vendor-react";
+            }
             if (id.includes("@mui") || id.includes("@emotion")) {
               return "ui-lib";
             }

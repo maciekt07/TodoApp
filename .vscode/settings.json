@@ -29,6 +29,12 @@
       "base": "typescript",
       "color": "orange-400",
       "fileNames": ["workbox.config.ts"]
+    },
+    {
+      "name": "manifest",
+      "base": "typescript",
+      "color": "purple-400",
+      "fileNames": ["manifest.ts"]
     }
   ],
 
@@ -44,6 +50,12 @@
       "base": "images",
       "color": "purple-300",
       "folderNames": ["splash-screens"]
+    },
+    {
+      "name": "tabs",
+      "base": "meta",
+      "color": "cyan-900",
+      "folderNames": ["tabs"]
     }
   ]
 }

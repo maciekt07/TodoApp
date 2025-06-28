@@ -1,5 +1,6 @@
 import styled from "@emotion/styled";
 import {
+  Button,
   ListSubheader,
   MenuItem,
   Select,
@@ -119,4 +120,18 @@ export const StyledListSubheader = styled(ListSubheader)`
   position: sticky;
   z-index: 1;
   top: 0;
+`;
+
+export const CloseButtonContainer = styled.div`
+  position: fixed;
+  bottom: 32px;
+  left: 50%;
+  transform: translateX(-50%);
+`;
+
+export const CloseButton = styled(Button)`
+  padding: 16px 64px;
+  font-size: 16px;
+  font-weight: 600;
+  border-radius: 999px;
 `;

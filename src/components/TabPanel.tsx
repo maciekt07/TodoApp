@@ -1,4 +1,4 @@
-import { Box, Typography } from "@mui/material";
+import { Box, BoxProps, Typography } from "@mui/material";
 import React, { createContext, ReactNode, useContext } from "react";
 
 const TabGroupContext = createContext<{ name: string; value: number } | undefined>(undefined);
@@ -21,7 +21,7 @@ const useTabGroupContext = () => {
   return context;
 };
 
-interface TabPanelProps extends React.HTMLAttributes<HTMLDivElement> {
+interface TabPanelProps extends BoxProps {
   children?: ReactNode;
   index: number;
 }
@@ -30,7 +30,7 @@ export function TabPanel({ children, index, ...other }: TabPanelProps) {
   const { name, value } = useTabGroupContext();
 
   return (
-    <div
+    <Box
       role="tabpanel"
       hidden={value !== index}
       id={`${name}-tabpanel-${index}`}
@@ -43,6 +43,6 @@ export function TabPanel({ children, index, ...other }: TabPanelProps) {
           <Typography>{children}</Typography>
         </Box>
       )}
-    </div>
+    </Box>
   );
 }
