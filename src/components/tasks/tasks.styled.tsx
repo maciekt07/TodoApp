@@ -30,9 +30,8 @@ export const TaskContainer = styled.div<TaskComponentProps>`
   /* text-shadow: ${({ backgroundColor, glow, done }) =>
     glow && !done ? `0 0 2px ${getFontColor(backgroundColor)}78` : "none"}; */
   filter: ${({ blur }) => (blur ? "blur(2px) opacity(75%)" : "none")};
-
-  animation: ${fadeIn} 0.5s ease-in;
-
+  /* animation: ${fadeIn} 0.5s ease-in; */
+  backdrop-filter: ${({ done }) => (done ? "blur(6px)" : "none")};
   /* If the theme color and task color are the same, it changes the selection color to be different. */
   *::selection {
     background-color: ${({ theme, backgroundColor }) =>
@@ -357,6 +356,7 @@ export const SearchInput = styled(TextField)`
     border: 1px solid ${({ theme }) => (isDark(theme.secondary) ? "#44479cb7" : theme.primary)} !important;
     transition: 0.3s border;
   }
+
   @media print {
     display: none;
   }

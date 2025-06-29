@@ -53,6 +53,10 @@ export interface Task {
   category?: Category[];
   lastSave?: Date;
   sharedBy?: string;
+  /**
+   * Optional numeric position for drag-and-drop (for p2p sync)
+   */
+  position?: number;
 }
 
 // export type Emoji = Omit<
@@ -94,4 +98,4 @@ export interface AppSettings {
   sortOption: SortOption;
 }
 
-export type SortOption = "dateCreated" | "dueDate" | "alphabetical";
+export type SortOption = "dateCreated" | "dueDate" | "alphabetical" | "custom";

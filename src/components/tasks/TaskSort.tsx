@@ -2,6 +2,7 @@ import React, { useContext } from "react";
 import {
   AccessTimeRounded,
   CalendarTodayRounded,
+  MoveUpRounded,
   SortByAlphaRounded,
   SortRounded,
 } from "@mui/icons-material";
@@ -32,10 +33,16 @@ const sortOptions: {
     label: "Alphabetical",
     icon: <SortByAlphaRounded fontSize="small" />,
   },
+  {
+    value: "custom",
+    label: "Custom",
+    icon: <MoveUpRounded fontSize="small" />,
+  },
 ];
 
 export const TaskSort = () => {
-  const { sortOption, setSortOption, sortAnchorEl, setSortAnchorEl } = useContext(TaskContext);
+  const { sortOption, setSortOption, sortAnchorEl, setSortAnchorEl, moveMode } =
+    useContext(TaskContext);
   const sortOpen = Boolean(sortAnchorEl);
 
   const handleSortClick = (event: React.MouseEvent<HTMLElement>) => {
@@ -51,12 +58,14 @@ export const TaskSort = () => {
 
   return (
     <>
+      {/* FIXME: visibility issues when disabled */}
       <SortButton
         onClick={handleSortClick}
         aria-controls={sortOpen ? "sort-menu" : undefined}
         aria-haspopup="true"
         aria-expanded={sortOpen ? "true" : undefined}
         isMenuOpen={sortOpen}
+        disabled={moveMode}
       >
         <Box
           sx={{

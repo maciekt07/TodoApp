@@ -12,6 +12,7 @@ interface TaskState {
   deleteDialogOpen: boolean;
   sortOption: SortOption;
   sortAnchorEl: null | HTMLElement;
+  moveMode: boolean;
 }
 
 interface TaskActions {
@@ -30,6 +31,7 @@ interface TaskActions {
   handleCloseMoreMenu: () => void;
   setSortOption: (option: SortOption) => void;
   setSortAnchorEl: Dispatch<SetStateAction<null | HTMLElement>>;
+  setMoveMode: Dispatch<SetStateAction<boolean>>;
 }
 
 export type TaskContextType = TaskState & TaskActions;

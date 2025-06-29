@@ -8,6 +8,7 @@ import {
   EditRounded,
   LaunchRounded,
   LinkRounded,
+  MoveUpRounded,
   Pause,
   PlayArrow,
   PushPinRounded,
@@ -46,6 +47,9 @@ export const TaskMenu = () => {
     setEditModalOpen,
     handleDeleteTask,
     handleCloseMoreMenu,
+    moveMode,
+    setMoveMode,
+    setSearch,
   } = useContext(TaskContext);
   const [showShareDialog, setShowShareDialog] = useState<boolean>(false);
 
@@ -270,8 +274,35 @@ export const TaskMenu = () => {
           <StyledMenuItem
             key="select"
             onClick={() => handleSelectTask(selectedTaskId || generateUUID())}
+            disabled={moveMode}
           >
             <RadioButtonChecked /> &nbsp; Select
+          </StyledMenuItem>,
+        ]
+      : []),
+
+    ...(!moveMode
+      ? [
+          <StyledMenuItem
+            key="move"
+            disabled={multipleSelectedTasks.length > 0}
+            onClick={() => {
+              setMoveMode(true);
+              setSearch("");
+              handleCloseMoreMenu();
+              if (user.settings.sortOption !== "custom") {
+                showToast("Changed sort option to: Custom", { type: "blank" }); //TODO: add info type
+              }
+              setUser((prevUser) => ({
+                ...prevUser,
+                settings: {
+                  ...prevUser.settings,
+                  sortOption: "custom",
+                },
+              }));
+            }}
+          >
+            <MoveUpRounded /> &nbsp; Move
           </StyledMenuItem>,
         ]
       : []),
@@ -416,7 +447,7 @@ const SheetContent = styled.div`
 `;
 const StyledMenuItem = styled(MenuItem)<{ clr?: string }>`
   margin: 0 6px;
-  padding: 12px;
+  padding: 10px;
   border-radius: 12px;
   box-shadow: none;
   gap: 2px;

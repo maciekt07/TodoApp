@@ -1,6 +1,6 @@
-import { memo, useContext } from "react";
+import { useRef, memo, useContext } from "react";
 import { Emoji } from "emoji-picker-react";
-import { DoneRounded, PushPinRounded, Link } from "@mui/icons-material";
+import { DoneRounded, PushPinRounded, Link, DragIndicatorRounded } from "@mui/icons-material";
 import { Tooltip } from "@mui/material";
 import type { Task, UUID } from "../../types/user";
 import {
@@ -25,6 +25,9 @@ import { calculateDateDifference, formatDate, getFontColor, systemInfo } from ".
 import { RenderTaskDescription } from "./RenderTaskDescription";
 import { CategoryBadge } from "..";
 import { UserContext } from "../../contexts/UserContext";
+import { TaskContext } from "../../contexts/TaskContext";
+import { useSortable } from "@dnd-kit/sortable";
+import { CSS } from "@dnd-kit/utilities";
 
 interface TaskItemProps {
   task: Task;
@@ -32,6 +35,7 @@ interface TaskItemProps {
     enableLinks?: boolean;
     enableGlow?: boolean;
     enableSelection?: boolean;
+    enableMoveMode?: boolean;
   };
   selection?: {
     selectedIds?: UUID[];
@@ -56,14 +60,24 @@ export const TaskItem = memo(
     actions,
     blur,
     textHighlighter = (text) => text,
-  }: TaskItemProps) => {
+  }: TaskItemProps & { draggingId?: string; draggingHeight?: number }) => {
     const { user } = useContext(UserContext);
     const { settings } = user;
+    const { moveMode } = useContext(TaskContext);
+
+    // dnd-kit sortable logic
+    const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
+      id: task.id,
+      disabled: !moveMode,
+    });
+
+    const itemRef = useRef<HTMLDivElement>(null);
 
     const {
       enableLinks = true,
       enableGlow = settings.enableGlow,
       enableSelection = false,
+      enableMoveMode = false,
     } = features;
 
     const { selectedIds = [], onSelect, onDeselect } = selection || {};
@@ -84,6 +98,10 @@ export const TaskItem = memo(
 
     return (
       <TaskContainer
+        ref={(node) => {
+          setNodeRef(node);
+          itemRef.current = node;
+        }}
         id={task.id}
         onContextMenu={onContextMenu}
         backgroundColor={task.color}
@@ -91,7 +109,22 @@ export const TaskItem = memo(
         done={task.done}
         blur={blur}
         data-testid="task-container"
+        style={{
+          transform: CSS.Transform.toString(transform),
+          transition,
+          opacity: isDragging ? 0.5 : 1,
+          cursor: undefined,
+        }}
+        {...attributes}
       >
+        {enableMoveMode && moveMode && (
+          <span
+            {...listeners}
+            style={{ display: "flex", alignItems: "center", padding: "6px", cursor: "grab" }}
+          >
+            <DragIndicatorRounded sx={{ mr: "4px", ml: "-8px" }} />
+          </span>
+        )}
         {enableSelection && selectedIds.length > 0 && (
           <StyledRadio
             clr={getFontColor(task.color)}
@@ -135,10 +168,14 @@ export const TaskItem = memo(
           <TaskHeader>
             <TaskName done={task.done}>{textHighlighter(task.name)}</TaskName>
             <Tooltip
-              title={new Intl.DateTimeFormat(navigator.language, {
-                dateStyle: "full",
-                timeStyle: "medium",
-              }).format(new Date(task.date))}
+              title={
+                moveMode && enableMoveMode
+                  ? ""
+                  : new Intl.DateTimeFormat(navigator.language, {
+                      dateStyle: "full",
+                      timeStyle: "medium",
+                    }).format(new Date(task.date))
+              }
             >
               <TaskDate>{formatDate(new Date(task.date))}</TaskDate>
             </Tooltip>
@@ -154,10 +191,14 @@ export const TaskItem = memo(
 
           {task.deadline && (
             <Tooltip
-              title={new Intl.DateTimeFormat(navigator.language, {
-                dateStyle: "full",
-                timeStyle: "medium",
-              }).format(new Date(task.deadline))}
+              title={
+                moveMode && enableMoveMode
+                  ? ""
+                  : new Intl.DateTimeFormat(navigator.language, {
+                      dateStyle: "full",
+                      timeStyle: "medium",
+                    }).format(new Date(task.deadline))
+              }
               placement="bottom-start"
             >
               <TimeLeft done={task.done} translate="yes">

@@ -23,6 +23,8 @@ export const TaskProvider = ({ children }: { children: ReactNode }) => {
   const [deleteDialogOpen, setDeleteDialogOpen] = useState<boolean>(false);
   const [sortAnchorEl, setSortAnchorEl] = useState<null | HTMLElement>(null);
 
+  const [moveMode, setMoveMode] = useStorageState<boolean>(false, "moveMode", "sessionStorage");
+
   const isMobile = useResponsiveDisplay();
 
   const sortOption = user.settings.sortOption;
@@ -130,6 +132,8 @@ export const TaskProvider = ({ children }: { children: ReactNode }) => {
       setSortOption,
       sortAnchorEl,
       setSortAnchorEl,
+      moveMode,
+      setMoveMode,
     }),
     [
       selectedTaskId,
@@ -150,6 +154,8 @@ export const TaskProvider = ({ children }: { children: ReactNode }) => {
       sortOption,
       setSortOption,
       sortAnchorEl,
+      moveMode,
+      setMoveMode,
     ],
   );
 

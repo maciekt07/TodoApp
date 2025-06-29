@@ -222,7 +222,7 @@ export const SettingsDialog = ({ open, onClose }: SettingsProps) => {
         >
           <TabGroupProvider value={tabValue} name="settings">
             {settingsTabs.map((tab, index) => (
-              <TabPanel index={index} key={index} sx={{ animation: `${fadeIn} 0.4s ease-in` }}>
+              <TabPanel index={index} key={index} sx={{ animation: `${fadeIn} 0.3s ease-in` }}>
                 {tabValue === index && (
                   <Suspense
                     fallback={

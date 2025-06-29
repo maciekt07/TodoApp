@@ -65,6 +65,9 @@ export default defineConfig({
             ) {
               return "vendor-react";
             }
+            if (id.includes("@dnd-kit")) {
+              return "dnd-kit";
+            }
             if (id.includes("@mui") || id.includes("@emotion")) {
               return "ui-lib";
             }

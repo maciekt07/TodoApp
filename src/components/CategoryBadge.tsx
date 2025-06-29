@@ -58,7 +58,7 @@ export const StyledCategoryBadge = styled(Chip)<StyledBadgeProps>`
   margin: 6px 0 0 0;
   padding: 8px;
   transition: 0.3s all;
-  animation: ${fadeIn} 0.5s ease-in;
+  /* animation: ${fadeIn} 0.5s ease-in; */
 
   &:hover {
     background-color: ${({ backgroundclr }) => `${backgroundclr} !important`};

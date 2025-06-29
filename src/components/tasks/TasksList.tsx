@@ -8,9 +8,11 @@ import {
   Search,
   RadioButtonChecked,
   MoreVert,
+  MoveUpRounded,
 } from "@mui/icons-material";
 import {
   Box,
+  Button,
   Dialog,
   DialogActions,
   DialogContent,
@@ -42,6 +44,21 @@ import { TaskMenu } from "./TaskMenu";
 import { TaskIcon } from "../TaskIcon";
 import { useToasterStore } from "react-hot-toast";
 import { TaskSort } from "./TaskSort";
+import {
+  DndContext,
+  DragEndEvent,
+  closestCenter,
+  DragOverlay,
+  MeasuringStrategy,
+  DragStartEvent,
+  useSensors,
+  useSensor,
+  TouchSensor,
+  MouseSensor,
+  UniqueIdentifier,
+} from "@dnd-kit/core";
+import { SortableContext, arrayMove, verticalListSortingStrategy } from "@dnd-kit/sortable";
+import { restrictToVerticalAxis, restrictToParentElement } from "@dnd-kit/modifiers";
 
 const TaskMenuButton = memo(
   ({ task, onClick }: { task: Task; onClick: (event: React.MouseEvent<HTMLElement>) => void }) => (
@@ -82,6 +99,8 @@ export const TasksList: React.FC = () => {
     deleteDialogOpen,
     setDeleteDialogOpen,
     sortOption,
+    moveMode,
+    setMoveMode,
   } = useContext(TaskContext);
   const open = Boolean(anchorEl);
 
@@ -97,6 +116,7 @@ export const TasksList: React.FC = () => {
   const [categoryCounts, setCategoryCounts] = useState<{
     [categoryId: UUID]: number;
   }>({});
+  const [activeDragId, setActiveDragId] = useState<UniqueIdentifier | null>(null);
   const searchRef = useRef<HTMLInputElement>(null);
 
   const isMobile = useResponsiveDisplay();
@@ -130,6 +150,7 @@ export const TasksList: React.FC = () => {
       toggleShowMore(taskId);
     }
   };
+
   // focus search input on ctrl + /
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -169,7 +190,9 @@ export const TasksList: React.FC = () => {
       const sortTasks = (tasks: Task[]) => {
         switch (sortOption) {
           case "dateCreated":
-            return [...tasks];
+            return [...tasks].sort(
+              (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime(),
+            );
           case "dueDate":
             return [...tasks].sort((a, b) => {
               if (!a.deadline) return 1;
@@ -178,6 +201,14 @@ export const TasksList: React.FC = () => {
             });
           case "alphabetical":
             return [...tasks].sort((a, b) => a.name.localeCompare(b.name));
+          case "custom":
+            return [...tasks].sort((a, b) => {
+              if (a.position != null && b.position != null) return a.position - b.position;
+              if (a.position == null && b.position != null) return 1;
+              if (a.position != null && b.position == null) return -1;
+              return new Date(a.date).getTime() - new Date(b.date).getTime();
+            });
+
           default:
             return tasks;
         }
@@ -329,6 +360,45 @@ export const TasksList: React.FC = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  const dndKitSensors = useSensors(
+    useSensor(MouseSensor),
+    useSensor(TouchSensor, {
+      activationConstraint: {
+        delay: 250,
+        tolerance: 5,
+      },
+    }),
+  );
+
+  // handler for drag end
+  const handleDragEnd = (event: DragEndEvent) => {
+    const { active, over } = event;
+    if (!over || active.id === over.id) return;
+    const oldIndex = orderedTasks.findIndex((task) => task.id === active.id);
+    const newIndex = orderedTasks.findIndex((task) => task.id === over.id);
+    if (oldIndex === -1 || newIndex === -1) return;
+
+    // calculate new positions for all tasks in the new order
+    const newOrdered = arrayMove(orderedTasks, oldIndex, newIndex);
+    // assign position as index
+    const updatedTasks = user.tasks.map((task) => {
+      const idx = newOrdered.findIndex((t) => t.id === task.id);
+      return idx !== -1 ? { ...task, position: idx, lastSave: new Date() } : task;
+    });
+    setUser((prevUser) => ({
+      ...prevUser,
+      tasks: updatedTasks,
+    }));
+    requestAnimationFrame(() => {
+      setActiveDragId(null);
+    });
+  };
+
+  // handler for drag start
+  const handleDragStart = (event: DragStartEvent) => {
+    setActiveDragId(event.active.id as string);
+  };
+
   return (
     <>
       <TaskMenu />
@@ -341,6 +411,7 @@ export const TasksList: React.FC = () => {
               placeholder="Search for task..."
               autoComplete="off"
               value={search}
+              disabled={moveMode}
               onChange={(e) => {
                 setSearch(e.target.value);
               }}
@@ -456,6 +527,19 @@ export const TasksList: React.FC = () => {
             </div>
           </SelectedTasksContainer>
         )}
+        {moveMode && (
+          <SelectedTasksContainer>
+            <div>
+              <h3>
+                <MoveUpRounded /> &nbsp; Move Mode Enabled
+              </h3>
+              <span>Organize tasks by dragging and dropping.</span>
+            </div>
+            <Button variant="contained" onClick={() => setMoveMode(false)}>
+              Done
+            </Button>
+          </SelectedTasksContainer>
+        )}
         {search && orderedTasks.length > 1 && user.tasks.length > 0 && (
           <div
             style={{
@@ -471,33 +555,113 @@ export const TasksList: React.FC = () => {
             </b>
           </div>
         )}
+        {/* FIXME: dry */}
         {user.tasks.length !== 0 ? (
-          orderedTasks.map((task) => (
-            <TaskItem
-              key={task.id}
-              task={task}
-              features={{
-                enableLinks: true,
-                enableGlow: user.settings.enableGlow,
-                enableSelection: true,
-              }}
-              selection={{
-                selectedIds: multipleSelectedTasks,
-                onSelect: handleSelectTask,
-                onDeselect: (taskId) =>
-                  setMultipleSelectedTasks((prevTasks) => prevTasks.filter((id) => id !== taskId)),
-              }}
-              onContextMenu={(e: React.MouseEvent<Element>) => {
-                e.preventDefault();
-                handleClick(e as unknown as React.MouseEvent<HTMLElement>, task.id);
-              }}
-              actions={
-                <TaskMenuButton task={task} onClick={(event) => handleClick(event, task.id)} />
-              }
-              blur={selectedTaskId !== task.id && open && !isMobile}
-              textHighlighter={highlightMatchingText}
-            />
-          ))
+          moveMode ? (
+            <DndContext
+              collisionDetection={closestCenter}
+              onDragEnd={handleDragEnd}
+              onDragStart={handleDragStart}
+              modifiers={[restrictToVerticalAxis, restrictToParentElement]}
+              measuring={{ droppable: { strategy: MeasuringStrategy.Always } }}
+              sensors={dndKitSensors}
+            >
+              <SortableContext
+                items={orderedTasks.map((task) => task.id)}
+                strategy={verticalListSortingStrategy}
+              >
+                {orderedTasks.map((task) => (
+                  <TaskItem
+                    key={task.id}
+                    task={task}
+                    features={{
+                      enableLinks: true,
+                      enableGlow: user.settings.enableGlow,
+                      enableSelection: true,
+                      enableMoveMode: true,
+                    }}
+                    selection={{
+                      selectedIds: multipleSelectedTasks,
+                      onSelect: handleSelectTask,
+                      onDeselect: (taskId) =>
+                        setMultipleSelectedTasks((prevTasks) =>
+                          prevTasks.filter((id) => id !== taskId),
+                        ),
+                    }}
+                    onContextMenu={(e: React.MouseEvent<Element>) => {
+                      e.preventDefault();
+                      handleClick(e as unknown as React.MouseEvent<HTMLElement>, task.id);
+                    }}
+                    actions={
+                      <TaskMenuButton
+                        task={task}
+                        onClick={(event) => handleClick(event, task.id)}
+                      />
+                    }
+                    blur={selectedTaskId !== task.id && open && !isMobile}
+                  />
+                ))}
+              </SortableContext>
+              <DragOverlay
+                dropAnimation={{
+                  duration: 250,
+                  easing: "ease-in-out",
+                }}
+              >
+                {/* DRAG PREVIEW */}
+                {activeDragId ? (
+                  <TaskItem
+                    task={orderedTasks.find((t) => t.id === activeDragId)!}
+                    features={{
+                      enableLinks: true,
+                      enableGlow: user.settings.enableGlow,
+                      enableSelection: false,
+                      enableMoveMode: true,
+                    }}
+                    blur={false}
+                    actions={
+                      <TaskMenuButton
+                        task={orderedTasks.find((t) => t.id === activeDragId)!}
+                        onClick={(event) =>
+                          handleClick(event, orderedTasks.find((t) => t.id === activeDragId)!.id)
+                        }
+                      />
+                    }
+                  />
+                ) : null}
+              </DragOverlay>
+            </DndContext>
+          ) : (
+            orderedTasks.map((task) => (
+              <TaskItem
+                key={task.id}
+                task={task}
+                features={{
+                  enableLinks: true,
+                  enableGlow: user.settings.enableGlow,
+                  enableSelection: true,
+                  enableMoveMode: true,
+                }}
+                selection={{
+                  selectedIds: multipleSelectedTasks,
+                  onSelect: handleSelectTask,
+                  onDeselect: (taskId) =>
+                    setMultipleSelectedTasks((prevTasks) =>
+                      prevTasks.filter((id) => id !== taskId),
+                    ),
+                }}
+                onContextMenu={(e: React.MouseEvent<Element>) => {
+                  e.preventDefault();
+                  handleClick(e as unknown as React.MouseEvent<HTMLElement>, task.id);
+                }}
+                actions={
+                  <TaskMenuButton task={task} onClick={(event) => handleClick(event, task.id)} />
+                }
+                blur={selectedTaskId !== task.id && open && !isMobile}
+                textHighlighter={highlightMatchingText}
+              />
+            ))
+          )
         ) : (
           <NoTasks>
             <span>You don't have any tasks yet</span>
