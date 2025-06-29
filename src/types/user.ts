@@ -89,6 +89,7 @@ export interface AppSettings {
   simpleEmojiPicker: boolean;
   enableReadAloud: boolean;
   appBadge: boolean;
+  showProgressBar: boolean;
   /**
    * Voice property in the format 'name::lang' to ensure uniqueness on macOS/iOS,
    * where multiple voices can share the same name.

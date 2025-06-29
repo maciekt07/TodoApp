@@ -7,6 +7,7 @@ import {
   ProgressPercentageContainer,
   StyledProgress,
   TaskCompletionText,
+  TaskCountClose,
   TaskCountHeader,
   TaskCountTextContainer,
   TasksCount,
@@ -16,19 +17,20 @@ import {
 import { Emoji } from "emoji-picker-react";
 import { Box, CircularProgress, Tooltip, Typography } from "@mui/material";
 import { useOnlineStatus } from "../hooks/useOnlineStatus";
-import { AddRounded, TodayRounded, WifiOff } from "@mui/icons-material";
+import { AddRounded, CloseRounded, TodayRounded, WifiOff } from "@mui/icons-material";
 import { UserContext } from "../contexts/UserContext";
 import { useResponsiveDisplay } from "../hooks/useResponsiveDisplay";
 import { useNavigate } from "react-router-dom";
 import { TaskProvider } from "../contexts/TaskProvider";
 import { AnimatedGreeting } from "../components/AnimatedGreeting";
+import { showToast } from "../utils";
 
 const TasksList = lazy(() =>
   import("../components/tasks/TasksList").then((module) => ({ default: module.TasksList })),
 );
 
 const Home = () => {
-  const { user } = useContext(UserContext);
+  const { user, setUser } = useContext(UserContext);
   const { tasks, emojisStyle, settings, name } = user;
 
   const isOnline = useOnlineStatus();
@@ -112,9 +114,21 @@ const Home = () => {
           <WifiOff /> You're offline but you can use the app!
         </Offline>
       )}
-      {tasks.length > 0 && (
+      {tasks.length > 0 && settings.showProgressBar && (
         <TasksCountContainer>
           <TasksCount glow={settings.enableGlow}>
+            <TaskCountClose
+              size="small"
+              onClick={() => {
+                setUser((prevUser) => ({
+                  ...prevUser,
+                  settings: { ...prevUser.settings, showProgressBar: false },
+                }));
+                showToast("Progress bar hidden. You can enable it in settings.");
+              }}
+            >
+              <CloseRounded />
+            </TaskCountClose>
             <Box sx={{ position: "relative", display: "inline-flex" }}>
               <StyledProgress
                 variant="determinate"

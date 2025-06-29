@@ -402,7 +402,7 @@ export const TasksList: React.FC = () => {
   return (
     <>
       <TaskMenu />
-      <TasksContainer>
+      <TasksContainer style={{ marginTop: user.settings.showProgressBar ? "0" : "24px" }}>
         {user.tasks.length > 0 && (
           <Box sx={{ display: "flex", alignItems: "center", gap: "10px", mb: "8px" }}>
             <SearchInput

@@ -22,8 +22,9 @@ export const defaultUser: User = {
     simpleEmojiPicker: false,
     enableReadAloud: "speechSynthesis" in window,
     voice: "Microsoft Mark - English (United States)::en-US",
-    appBadge: false,
     voiceVolume: 0.6,
+    appBadge: false,
+    showProgressBar: true,
     sortOption: "dateCreated",
   },
   categories: [

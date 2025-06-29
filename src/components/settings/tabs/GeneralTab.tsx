@@ -23,6 +23,11 @@ export default function GeneralTab() {
         header="Completed Tasks at Bottom"
         text="Move completed tasks to the bottom of the list to keep your active tasks more visible."
       />
+      <CustomSwitch
+        settingKey="showProgressBar"
+        header="Show Progress Bar"
+        text="Display a progress bar at the top of the screen to visualize your task completion."
+      />
     </>
   );
 }

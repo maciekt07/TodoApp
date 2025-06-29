@@ -1,6 +1,6 @@
 import styled from "@emotion/styled";
 import { fadeIn, progressPulse, pulseAnimation, scale } from "./keyframes.styled";
-import { Box, Button, CircularProgress, css } from "@mui/material";
+import { Box, Button, CircularProgress, css, IconButton } from "@mui/material";
 import { getFontColor, isDark } from "../utils";
 
 export const GreetingHeader = styled.div`
@@ -29,6 +29,7 @@ export const TasksCountContainer = styled.div`
 `;
 //TODO: design this better for light themes
 export const TasksCount = styled.div<{ glow: boolean }>`
+  position: relative;
   color: ${({ theme }) => getFontColor(theme.secondary)};
   /* background: #090b2258; */
   background: ${({ theme }) => (isDark(theme.secondary) ? "#090b2258" : "#ffffff3e")};
@@ -45,6 +46,13 @@ export const TasksCount = styled.div<{ glow: boolean }>`
   @media (min-width: 1024px) {
     padding: 24px;
   }
+`;
+
+export const TaskCountClose = styled(IconButton)`
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  opacity: 0.8;
 `;
 
 export const TaskCountTextContainer = styled.div`

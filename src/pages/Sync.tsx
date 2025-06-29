@@ -38,6 +38,7 @@ import type { OtherDataSyncOption, SyncStatus } from "../types/sync";
 import { getFontColor, isDark, showToast, timeAgo } from "../utils";
 import { useOnlineStatus } from "../hooks/useOnlineStatus";
 
+//FIXME: deleted categories are not being removed from tasks on other device
 export default function Sync() {
   const { user } = useContext(UserContext);
 
