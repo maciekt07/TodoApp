@@ -42,50 +42,52 @@ const CustomRadioGroup = <T extends string>({
   }, []);
 
   return (
-    <StyledRadioGroup value={value} onChange={(e) => onChange(e.target.value as T)}>
-      {options.map((option) => {
-        const isDisabled = disabledOptions.includes(option.value);
-        const isSelected = value === option.value;
-        const isFocused = focusedValue === option.value;
-        return (
-          <FormControlLabel
-            key={option.value}
-            value={option.value}
-            disabled={isDisabled}
-            sx={{ position: "relative", width: 100, height: 100, margin: 0, padding: 0 }}
-            control={
-              <StyledRadioControl
-                onFocus={() => setFocusedValue(option.value)}
-                onBlur={() => setFocusedValue(null)}
-              />
-            }
-            label={
-              <StyledLabelBox
-                selected={isSelected}
-                disabled={isDisabled}
-                focused={isFocused && keyboardFocus}
-                sx={{ border: "1px solid", borderColor: "divider" }}
-              >
-                <Typography
-                  fontSize="28px"
-                  sx={{ opacity: isDisabled && value !== option.value ? 0.6 : 1 }}
+    <>
+      <StyledRadioGroup value={value} onChange={(e) => onChange(e.target.value as T)}>
+        {options.map((option) => {
+          const isDisabled = disabledOptions.includes(option.value);
+          const isSelected = value === option.value;
+          const isFocused = focusedValue === option.value;
+          return (
+            <FormControlLabel
+              key={option.value}
+              value={option.value}
+              disabled={isDisabled}
+              sx={{ position: "relative", margin: 0, padding: 0 }}
+              control={
+                <StyledRadioControl
+                  onFocus={() => setFocusedValue(option.value)}
+                  onBlur={() => setFocusedValue(null)}
+                />
+              }
+              label={
+                <StyledLabelBox
+                  selected={isSelected}
+                  disabled={isDisabled}
+                  focused={isFocused && keyboardFocus}
+                  sx={{ border: "1px solid", borderColor: "divider" }}
                 >
-                  {option.icon}
-                </Typography>
-                <StyledLabel translate="no" variant="body2">
-                  {option.label}
-                </StyledLabel>
-              </StyledLabelBox>
-            }
-          />
-        );
-      })}
+                  <Typography
+                    fontSize="28px"
+                    sx={{ opacity: isDisabled && value !== option.value ? 0.6 : 1 }}
+                  >
+                    {option.icon}
+                  </Typography>
+                  <StyledLabel translate="no" variant="body2">
+                    {option.label}
+                  </StyledLabel>
+                </StyledLabelBox>
+              }
+            />
+          );
+        })}
+      </StyledRadioGroup>
       {focusedValue && keyboardFocus && (
         <FocusHint>
           <SyncAltRounded /> Navigate with arrow keys
         </FocusHint>
       )}
-    </StyledRadioGroup>
+    </>
   );
 };
 
@@ -97,15 +99,17 @@ const StyledRadioGroup = styled(RadioGroup)`
   display: flex;
   flex-direction: row;
   justify-content: flex-start;
-  gap: 12px;
+  gap: 16px;
+  margin: 0 6px;
   flex-wrap: wrap;
-  margin: 0px 6px;
-  padding: 8px;
+  margin-top: 12px;
   width: 100%;
-  max-width: calc(100% - 24px);
+  max-width: calc(100% - 16px);
   box-sizing: border-box;
   @media (max-width: 768px) {
-    gap: 4px;
+    gap: 10px;
+    margin: 12px 0 0 0;
+    max-width: calc(100% - 8px);
   }
 `;
 
@@ -179,6 +183,7 @@ const StyledLabel = styled(Typography)`
 const FocusHint = styled.div`
   display: flex;
   align-items: center;
+  margin-top: 8px;
   gap: 4px;
   opacity: 0.8;
   font-size: 14px;

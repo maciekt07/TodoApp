@@ -1,5 +1,5 @@
 import { TabHeading } from "../settings.styled";
-import { ShortcutItem } from "../ShortcutItem";
+import ShortcutItem from "../ShortcutItem";
 // TODO: add shortcut more shortcuts and custom hook
 export default function ShortcutsTab() {
   return (

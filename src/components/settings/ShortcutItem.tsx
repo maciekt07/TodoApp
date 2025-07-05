@@ -8,7 +8,7 @@ interface ShortcutItemProps {
   keys: string[];
 }
 
-export const ShortcutItem: FC<ShortcutItemProps> = ({ name, description, keys }) => {
+const ShortcutItem: FC<ShortcutItemProps> = ({ name, description, keys }) => {
   return (
     <ShortcutRow>
       <ShortcutText>
@@ -27,6 +27,8 @@ export const ShortcutItem: FC<ShortcutItemProps> = ({ name, description, keys })
     </ShortcutRow>
   );
 };
+
+export default ShortcutItem;
 
 const ShortcutRow = styled(Box)`
   display: flex;
