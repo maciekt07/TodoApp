@@ -123,7 +123,7 @@ const SortButton = styled(Button)<{ isMenuOpen: boolean }>`
   text-transform: none;
   border-radius: 16px;
   height: 60px;
-  padding: 16px 24px;
+  padding: 16px 28px;
   background: ${({ theme }) => (isDark(theme.secondary) ? "#090b2258" : "#ffffff3e")};
   color: ${({ theme }) => getFontColor(theme.secondary)};
   border: 1px solid ${({ theme }) => (isDark(theme.secondary) ? "#44479cb7" : theme.primary)} !important;
@@ -151,8 +151,6 @@ const SortLabel = styled(Typography)`
   font-size: 0.7rem;
   opacity: 0.7;
   line-height: 1;
-  white-space: collapse;
-  text-overflow: ellipsis;
 `;
 
 const SortValue = styled(Typography)`

@@ -59,6 +59,7 @@ import {
 } from "@dnd-kit/core";
 import { SortableContext, arrayMove, verticalListSortingStrategy } from "@dnd-kit/sortable";
 import { restrictToVerticalAxis, restrictToParentElement } from "@dnd-kit/modifiers";
+import DisabledThemeProvider from "../../contexts/DisabledThemeProvider";
 
 const TaskMenuButton = memo(
   ({ task, onClick }: { task: Task; onClick: (event: React.MouseEvent<HTMLElement>) => void }) => (
@@ -405,47 +406,49 @@ export const TasksList: React.FC = () => {
       <TasksContainer style={{ marginTop: user.settings.showProgressBar ? "0" : "24px" }}>
         {user.tasks.length > 0 && (
           <Box sx={{ display: "flex", alignItems: "center", gap: "10px", mb: "8px" }}>
-            <SearchInput
-              inputRef={searchRef}
-              color="primary"
-              placeholder="Search for task..."
-              autoComplete="off"
-              value={search}
-              disabled={moveMode}
-              onChange={(e) => {
-                setSearch(e.target.value);
-              }}
-              slotProps={{
-                input: {
-                  startAdornment: (
-                    <InputAdornment position="start">
-                      <Search sx={{ color: "white" }} />
-                    </InputAdornment>
-                  ),
-                  endAdornment: search ? (
-                    <InputAdornment position="end">
-                      <SearchClear
-                        color={
-                          orderedTasks.length === 0 && user.tasks.length > 0 ? "error" : "default"
-                        }
-                        onClick={() => setSearch("")}
-                      >
-                        <Close
-                          sx={{
-                            color:
-                              orderedTasks.length === 0 && user.tasks.length > 0
-                                ? `${ColorPalette.red} !important`
-                                : "white",
-                            transition: ".3s all",
-                          }}
-                        />
-                      </SearchClear>
-                    </InputAdornment>
-                  ) : undefined,
-                },
-              }}
-            />
-            <TaskSort />
+            <DisabledThemeProvider>
+              <SearchInput
+                inputRef={searchRef}
+                color="primary"
+                placeholder="Search for task..."
+                autoComplete="off"
+                value={search}
+                disabled={moveMode}
+                onChange={(e) => {
+                  setSearch(e.target.value);
+                }}
+                slotProps={{
+                  input: {
+                    startAdornment: (
+                      <InputAdornment position="start">
+                        <Search sx={{ color: "white" }} />
+                      </InputAdornment>
+                    ),
+                    endAdornment: search ? (
+                      <InputAdornment position="end">
+                        <SearchClear
+                          color={
+                            orderedTasks.length === 0 && user.tasks.length > 0 ? "error" : "default"
+                          }
+                          onClick={() => setSearch("")}
+                        >
+                          <Close
+                            sx={{
+                              color:
+                                orderedTasks.length === 0 && user.tasks.length > 0
+                                  ? `${ColorPalette.red} !important`
+                                  : "white",
+                              transition: ".3s all",
+                            }}
+                          />
+                        </SearchClear>
+                      </InputAdornment>
+                    ) : undefined,
+                  },
+                }}
+              />
+              <TaskSort />
+            </DisabledThemeProvider>
           </Box>
         )}
         {categories !== undefined && categories?.length > 0 && user.settings.enableCategories && (

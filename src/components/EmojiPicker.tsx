@@ -1,4 +1,4 @@
-import { useTheme } from "@emotion/react";
+import { useTheme as useEmotionTheme } from "@emotion/react";
 import styled from "@emotion/styled";
 import {
   AddReaction,
@@ -43,6 +43,7 @@ import { ColorPalette } from "../theme/themeConfig";
 import { getFontColor, showToast, systemInfo } from "../utils";
 import { CustomDialogTitle } from "./DialogTitle";
 import type { LanguageModel } from "../types/ai";
+import DisabledThemeProvider from "../contexts/DisabledThemeProvider";
 
 interface EmojiPickerProps {
   emoji?: string;
@@ -59,7 +60,7 @@ export const CustomEmojiPicker = ({ emoji, setEmoji, color, name, type }: EmojiP
   const [currentEmoji, setCurrentEmoji] = useState<string | null>(emoji || null);
 
   const isOnline = useOnlineStatus();
-  const emotionTheme = useTheme();
+  const emotionTheme = useEmotionTheme();
 
   interface EmojiItem {
     unified: string;
@@ -310,18 +311,19 @@ export const CustomEmojiPicker = ({ emoji, setEmoji, color, name, type }: EmojiP
       {"LanguageModel" in window && name !== undefined && (
         <Tooltip title={!name ? `Enter a name for the ${type} to find emoji` : undefined}>
           <div style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
-            <Button
-              onClick={useAI}
-              disabled={
-                name?.length < 3 ||
-                (type === "task"
-                  ? name.length > TASK_NAME_MAX_LENGTH
-                  : name.length > CATEGORY_NAME_MAX_LENGTH)
-              }
-              style={{ marginBottom: "4px" }}
-            >
-              <AutoAwesome /> &nbsp; Find emoji with AI
-            </Button>
+            <DisabledThemeProvider>
+              <Button
+                onClick={useAI}
+                disabled={
+                  name?.length < 3 ||
+                  (type === "task"
+                    ? name.length > TASK_NAME_MAX_LENGTH
+                    : name.length > CATEGORY_NAME_MAX_LENGTH)
+                }
+              >
+                <AutoAwesome /> &nbsp; Find emoji with AI
+              </Button>
+            </DisabledThemeProvider>
           </div>
         </Tooltip>
       )}

@@ -15,17 +15,14 @@ import {
   Button,
   CircularProgress,
   Container,
-  createTheme,
   FormControl,
   FormControlLabel,
   FormLabel,
   Radio,
   RadioGroup,
   Stack,
-  ThemeProvider,
   Tooltip,
   Typography,
-  useTheme as useMuiTheme,
 } from "@mui/material";
 import { useContext, useEffect, useRef, useState } from "react";
 import QRCode from "react-qr-code";
@@ -35,14 +32,14 @@ import { UserContext } from "../contexts/UserContext";
 import { useResponsiveDisplay } from "../hooks/useResponsiveDisplay";
 import { usePeerSync } from "../hooks/usePeerSync";
 import type { OtherDataSyncOption, SyncStatus } from "../types/sync";
-import { getFontColor, isDark, showToast, timeAgo } from "../utils";
+import { getFontColor, showToast, timeAgo } from "../utils";
 import { useOnlineStatus } from "../hooks/useOnlineStatus";
+import DisabledThemeProvider from "../contexts/DisabledThemeProvider";
 
 //FIXME: deleted categories are not being removed from tasks on other device
 export default function Sync() {
   const { user } = useContext(UserContext);
 
-  const muiTheme = useMuiTheme();
   const isMobile = useResponsiveDisplay();
   const isOnline = useOnlineStatus();
   const [scannerOpen, setScannerOpen] = useState<boolean>(false);
@@ -97,16 +94,6 @@ export default function Sync() {
     return null;
   };
 
-  // theme for display/scan buttons that maintains proper contrast and visibility when disabled
-  const buttonsTheme = createTheme({
-    ...muiTheme,
-    palette: {
-      mode: isDark(muiTheme.palette.secondary.main) ? "dark" : "light",
-      primary: muiTheme.palette.primary,
-      secondary: muiTheme.palette.secondary,
-    },
-  });
-
   return (
     <>
       <TopBar title="Sync Data" />
@@ -146,7 +133,7 @@ export default function Sync() {
               )}
             </FeatureDescription>
             <ModeSelectionContainer>
-              <ThemeProvider theme={buttonsTheme}>
+              <DisabledThemeProvider>
                 <SyncButton
                   variant="contained"
                   disabled={!isOnline}
@@ -169,7 +156,7 @@ export default function Sync() {
                 >
                   Scan QR Code
                 </SyncButton>
-              </ThemeProvider>
+              </DisabledThemeProvider>
             </ModeSelectionContainer>
           </>
         )}

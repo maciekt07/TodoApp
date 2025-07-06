@@ -14,10 +14,10 @@ interface LogoutDialogProps {
 
 export function LogoutDialog({ open, onClose }: LogoutDialogProps) {
   const { setUser } = useContext(UserContext);
-  const handleLogout = () => {
+  const handleLogout = async () => {
     setUser(defaultUser);
     onClose();
-    deleteProfilePictureFromDB();
+    await deleteProfilePictureFromDB();
     showToast("You have been successfully logged out");
   };
 

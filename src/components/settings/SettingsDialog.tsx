@@ -184,14 +184,17 @@ export const SettingsDialog = ({ open, onClose, handleOpen }: SettingsProps) => 
     const defaultThemeColor = muiTheme.palette.secondary.main;
 
     if (themeColorMeta) {
-      if (open) {
-        themeColorMeta.setAttribute(
-          "content",
-          muiTheme.palette.mode === "dark" ? "#383838" : "#ffffff",
-        );
-      } else {
-        themeColorMeta.setAttribute("content", defaultThemeColor);
-      }
+      // ensure this runs after App.tsx useEffect to override theme-color
+      setTimeout(() => {
+        if (open) {
+          themeColorMeta.setAttribute(
+            "content",
+            muiTheme.palette.mode === "dark" ? "#383838" : "#ffffff",
+          );
+        } else {
+          themeColorMeta.setAttribute("content", defaultThemeColor);
+        }
+      }, 10);
     }
   }, [muiTheme.palette.mode, muiTheme.palette.secondary.main, open, user.theme, user.darkmode]);
 
