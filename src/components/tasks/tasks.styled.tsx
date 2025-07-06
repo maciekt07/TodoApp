@@ -12,6 +12,7 @@ interface TaskComponentProps {
   done: boolean;
   glow?: boolean;
   blur?: boolean;
+  isDragging?: boolean;
 }
 
 export const TaskContainer = styled.div<TaskComponentProps>`
@@ -20,7 +21,7 @@ export const TaskContainer = styled.div<TaskComponentProps>`
   padding: 16px 16px 16px 20px;
   border-radius: 30px;
   margin-top: 12px;
-  transition: 0.3s all !important;
+  transition: ${({ isDragging }) => (isDragging ? "none" : "border-left 0.2s, opacity 0.4s")};
   color: ${({ backgroundColor }) => getFontColor(backgroundColor)};
   background-color: ${({ backgroundColor, done }) => `${backgroundColor}${done ? "cc" : ""}`};
   opacity: ${({ done }) => (done ? 0.8 : 1)};

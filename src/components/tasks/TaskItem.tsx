@@ -108,6 +108,7 @@ export const TaskItem = memo(
         glow={enableGlow}
         done={task.done}
         blur={blur}
+        isDragging={isDragging}
         data-testid="task-container"
         style={{
           transform: CSS.Transform.toString(transform),
