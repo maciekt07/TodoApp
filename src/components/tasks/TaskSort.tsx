@@ -4,15 +4,13 @@ import {
   CalendarTodayRounded,
   MoveUpRounded,
   SortByAlphaRounded,
-  SortRounded,
 } from "@mui/icons-material";
-import { Box, ListItemIcon, ListItemText, Menu, MenuItem } from "@mui/material";
+import { Button, css, ListItemIcon, ListItemText, Menu, MenuItem, Typography } from "@mui/material";
 import { TaskContext } from "../../contexts/TaskContext";
-import { SortButton } from "./tasks.styled";
 import styled from "@emotion/styled";
 import { SortOption } from "../../types/user";
+import { getFontColor, isDark } from "../../utils";
 
-//TODO: add more sort options
 const sortOptions: {
   value: SortOption;
   label: string;
@@ -56,9 +54,10 @@ export const TaskSort = () => {
     }
   };
 
+  const currentSortOption = sortOptions.find((option) => option.value === sortOption);
+
   return (
     <>
-      {/* FIXME: visibility issues when disabled */}
       <SortButton
         onClick={handleSortClick}
         aria-controls={sortOpen ? "sort-menu" : undefined}
@@ -67,18 +66,11 @@ export const TaskSort = () => {
         isMenuOpen={sortOpen}
         disabled={moveMode}
       >
-        <Box
-          sx={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            width: "100%",
-            height: "100%",
-            gap: "6px",
-          }}
-        >
-          <SortRounded /> Sort
-        </Box>
+        {currentSortOption?.icon}
+        <ButtonContent>
+          <SortLabel>Sort by</SortLabel>
+          <SortValue>{currentSortOption?.label}</SortValue>
+        </ButtonContent>
       </SortButton>
 
       <Menu
@@ -124,4 +116,49 @@ const StyledMenuItem = styled(MenuItem)<{ clr?: string }>`
   box-shadow: none;
   gap: 2px;
   color: ${({ clr }) => clr || "unset"};
+`;
+
+const SortButton = styled(Button)<{ isMenuOpen: boolean }>`
+  gap: 8px;
+  text-transform: none;
+  border-radius: 16px;
+  height: 60px;
+  padding: 16px 24px;
+  background: ${({ theme }) => (isDark(theme.secondary) ? "#090b2258" : "#ffffff3e")};
+  color: ${({ theme }) => getFontColor(theme.secondary)};
+  border: 1px solid ${({ theme }) => (isDark(theme.secondary) ? "#44479cb7" : theme.primary)} !important;
+  transition: width 0.2s ease;
+  ${({ isMenuOpen, theme }) =>
+    isMenuOpen &&
+    css`
+      background: ${isDark(theme.secondary)} ? "#090b228e" : "#ffffff8e";
+      box-shadow: 
+        ${isDark(theme.secondary) ? "0 0 0 4px #1a1e4a7f" : `0 0 0 4px ${theme.primary}64`};
+    `}
+  @media print {
+    display: none;
+  }
+`;
+
+const ButtonContent = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  flex: 1;
+`;
+
+const SortLabel = styled(Typography)`
+  font-size: 0.7rem;
+  opacity: 0.7;
+  line-height: 1;
+  white-space: collapse;
+  text-overflow: ellipsis;
+`;
+
+const SortValue = styled(Typography)`
+  font-size: 0.8rem;
+  font-weight: 500;
+  line-height: 1.1;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 `;

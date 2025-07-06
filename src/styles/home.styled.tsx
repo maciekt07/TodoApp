@@ -53,6 +53,7 @@ export const TaskCountClose = styled(IconButton)`
   top: 16px;
   right: 16px;
   opacity: 0.8;
+  color: ${({ theme }) => getFontColor(theme.secondary)};
 `;
 
 export const TaskCountTextContainer = styled.div`
