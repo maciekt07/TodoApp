@@ -88,18 +88,6 @@ export const ProfileSidebar = () => {
     fetchRepoInfo();
   }, []);
 
-  useEffect(() => {
-    const handleHashChange = () => {
-      if (window.location.hash.startsWith("#settings/")) {
-        setOpenSettings(true);
-      }
-    };
-
-    handleHashChange();
-    window.addEventListener("hashchange", handleHashChange);
-    return () => window.removeEventListener("hashchange", handleHashChange);
-  }, []);
-
   const [avatarSrc, setAvatarSrc] = useState<string | null>(null);
 
   useEffect(() => {
@@ -467,7 +455,11 @@ export const ProfileSidebar = () => {
         </DialogActions>
       </Dialog>
       <LogoutDialog open={openLogoutDialog} onClose={() => setOpenLogoutDialog(false)} />
-      <SettingsDialog open={openSettings} onClose={() => setOpenSettings(false)} />
+      <SettingsDialog
+        open={openSettings}
+        onClose={() => setOpenSettings(false)}
+        handleOpen={() => setOpenSettings(true)}
+      />
     </Container>
   );
 };

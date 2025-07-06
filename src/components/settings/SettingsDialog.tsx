@@ -24,6 +24,7 @@ import {
   useContext,
   useEffect,
   useState,
+  useCallback,
 } from "react";
 import { CustomDialogTitle, TabGroupProvider, TabPanel } from "..";
 import { UserContext } from "../../contexts/UserContext";
@@ -31,6 +32,7 @@ import { useResponsiveDisplay } from "../../hooks/useResponsiveDisplay";
 import { CloseButton, CloseButtonContainer, StyledTab } from "./settings.styled";
 import { fadeIn } from "../../styles";
 import { useNavigate } from "react-router-dom";
+import { showToast } from "../../utils";
 
 const settingsTabs: {
   label: string;
@@ -69,78 +71,114 @@ const settingsTabs: {
   },
 ];
 
+// hash routing utils
+const createTabSlug = (label: string): string => label.replace(/\s+/g, "");
+
+const navigateToTab = (tabIndex: number): void => {
+  const tabSlug = createTabSlug(settingsTabs[tabIndex].label);
+  window.location.hash = `#settings/${tabSlug}`;
+};
+
+const replaceWithTab = (tabIndex: number): void => {
+  const tabSlug = createTabSlug(settingsTabs[tabIndex].label);
+  history.replaceState(
+    null,
+    "",
+    `${window.location.pathname}${window.location.search}#settings/${tabSlug}`,
+  );
+};
+
+const isSettingsHash = (hash: string): boolean => /^#settings(\/.*)?$/.test(hash);
+
 interface SettingsProps {
   open: boolean;
   onClose: () => void;
+  handleOpen: () => void;
 }
 
-export const SettingsDialog = ({ open, onClose }: SettingsProps) => {
+export const SettingsDialog = ({ open, onClose, handleOpen }: SettingsProps) => {
   const { user } = useContext(UserContext);
-
   const [tabValue, setTabValue] = useState<number>(0);
-  const n = useNavigate();
+  const navigate = useNavigate();
   const isMobile = useResponsiveDisplay();
   const muiTheme = useTheme();
 
-  const labelToSlug = (label: string) => label.replace(/\s+/g, "");
-
-  const handleTabChange = (_: React.SyntheticEvent, newValue: number) => {
-    setTabValue(newValue);
-    const tabSlug = labelToSlug(settingsTabs[newValue].label);
-    window.location.hash = `#settings/${tabSlug}`;
-  };
-
-  // listens for changes in the URL hash and updates the selected tab
-  useEffect(() => {
-    const handleHashChange = () => {
-      const hash = window.location.hash;
-      // tab selection logic
-      const match = hash.match(/^#settings\/(\w+)/);
-      if (match) {
-        const slug = match[1];
-        const foundIndex = settingsTabs.findIndex((tab) => labelToSlug(tab.label) === slug);
-        if (foundIndex !== -1) {
-          setTabValue(foundIndex);
-        }
-      }
-    };
-
-    handleHashChange();
-    window.addEventListener("hashchange", handleHashChange);
-    return () => window.removeEventListener("hashchange", handleHashChange);
-  }, [open, onClose]);
-
-  // close dialog if hash no longer matches #settings/TabName
-  useEffect(() => {
-    const handleHashChange = () => {
-      if (!/^#settings(\/\w+)?$/.test(window.location.hash)) {
-        onClose();
-      }
-    };
-    window.addEventListener("hashchange", handleHashChange);
-    return () => window.removeEventListener("hashchange", handleHashChange);
-  }, [onClose]);
-
-  useEffect(() => {
-    if (!open) return;
-    const hash = window.location.hash;
-    const match = hash.match(/^#settings\/(\w+)/);
-    // if the hash is just #settings or something invalid push the default tab
-    if (!match) {
-      const defaultTabSlug = labelToSlug(settingsTabs[0].label);
-      window.location.hash = `#settings/${defaultTabSlug}`;
-    }
-  }, [open]);
-
-  const handleDialogClose = () => {
+  const handleDialogClose = useCallback(() => {
     if (window.speechSynthesis) {
       window.speechSynthesis.cancel();
     }
     onClose();
-    // remove the full hash
     history.replaceState(null, "", window.location.pathname + window.location.search);
+  }, [onClose]);
+
+  const handleTabChange = (_: React.SyntheticEvent, newValue: number) => {
+    setTabValue(newValue);
+    navigateToTab(newValue);
   };
 
+  // validate tab
+  const handleHashChange = useCallback(() => {
+    const hash = window.location.hash;
+
+    if (!isSettingsHash(hash)) {
+      onClose();
+      return;
+    }
+
+    if (hash === "#settings" || hash === "#settings/") {
+      replaceWithTab(0);
+      setTabValue(0);
+      return;
+    }
+
+    const match = hash.match(/^#settings\/(\w+)/);
+    if (!match) return -1;
+
+    const slug = match[1];
+    const tabIndex = settingsTabs.findIndex((tab) => createTabSlug(tab.label) === slug);
+
+    if (tabIndex !== -1) {
+      setTabValue(tabIndex);
+    } else {
+      const invalidSlug = hash.match(/^#settings\/(\w+)/)?.[1];
+      if (invalidSlug) {
+        showToast(`Invalid settings tab: "${invalidSlug}". Redirecting to default tab.`, {
+          type: "error", // TODO: add warning type
+        });
+        replaceWithTab(0);
+        setTabValue(0);
+      }
+    }
+  }, [onClose]);
+
+  const handleHashOpen = useCallback(() => {
+    if (window.location.hash.startsWith("#settings")) {
+      handleOpen();
+    }
+  }, [handleOpen]);
+
+  useEffect(() => {
+    handleHashChange();
+    window.addEventListener("hashchange", handleHashChange);
+    return () => window.removeEventListener("hashchange", handleHashChange);
+  }, [handleHashChange]);
+
+  useEffect(() => {
+    handleHashOpen();
+    window.addEventListener("hashchange", handleHashOpen);
+    return () => window.removeEventListener("hashchange", handleHashOpen);
+  }, [handleHashOpen]);
+
+  useEffect(() => {
+    if (open) {
+      const hash = window.location.hash;
+      if (!isSettingsHash(hash)) {
+        navigateToTab(0);
+      }
+    }
+  }, [open]);
+
+  // theme color management
   useEffect(() => {
     const themeColorMeta = document.querySelector("meta[name=theme-color]");
     const defaultThemeColor = muiTheme.palette.secondary.main;
@@ -157,21 +195,20 @@ export const SettingsDialog = ({ open, onClose }: SettingsProps) => {
     }
   }, [muiTheme.palette.mode, muiTheme.palette.secondary.main, open, user.theme, user.darkmode]);
 
+  // print shortcut handler
   useEffect(() => {
-    // close the dialog when pressing ctrl+p to print tasks
     const handleKeyDown = (e: KeyboardEvent) => {
       if ((e.ctrlKey || e.metaKey) && e.key === "p") {
         e.preventDefault();
         handleDialogClose();
-        n("/");
+        navigate("/");
         setTimeout(() => window.print(), 500);
       }
     };
 
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [navigate, handleDialogClose]);
 
   return (
     <Dialog

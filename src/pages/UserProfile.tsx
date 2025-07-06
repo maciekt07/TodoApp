@@ -178,7 +178,7 @@ const UserProfile = () => {
       <Container glow={user.settings.enableGlow}>
         <Tooltip title="App Settings">
           <IconButton
-            onClick={() => (window.location.hash = `#settings/Appearance`)}
+            onClick={() => (window.location.hash = "#settings")}
             aria-label="Settings"
             size="large"
             sx={{
