@@ -139,11 +139,11 @@ const UserProfile = () => {
     }
 
     try {
+      const originalSize = file.size;
       // crop image to square first
       const croppedBlob = await cropImageToSquare(file);
       const croppedFile = new File([croppedBlob], file.name, { type: croppedBlob.type });
 
-      // convert cropped image to base64
       const base64 = await fileToBase64(croppedFile);
       const newId = await saveProfilePictureInDB(base64);
 
@@ -153,7 +153,39 @@ const UserProfile = () => {
       }));
 
       handleCloseImageDialog();
-      showToast("Profile picture uploaded.");
+
+      const formatBytes = (bytes: number): string => {
+        const units = ["byte", "kilobyte", "megabyte"] as const;
+        const i = Math.min(Math.floor(Math.log(bytes) / Math.log(1024)), units.length - 1);
+        const value = bytes / 1024 ** i;
+
+        return new Intl.NumberFormat(navigator.language, {
+          style: "unit",
+          unit: units[i],
+          maximumFractionDigits: 1,
+        }).format(value);
+      };
+
+      // calculate actual byte size including the header
+      const base64Size = new TextEncoder().encode(base64).length;
+
+      const compressionPercent = Number(((1 - base64Size / originalSize) * 100).toFixed(1));
+
+      showToast(
+        compressionPercent > 10 ? (
+          <>
+            <strong>Profile picture uploaded.</strong>
+            <br />
+            Compressed from <b style={{ whiteSpace: "nowrap" }}>
+              {formatBytes(originalSize)}
+            </b> to <b style={{ whiteSpace: "nowrap" }}>{formatBytes(base64Size)}</b> (
+            {compressionPercent}% smaller)
+          </>
+        ) : (
+          "Profile picture uploaded."
+        ),
+        { duration: 7000 },
+      );
     } catch (error) {
       console.error("Error uploading file:", error);
       showToast("Failed to upload profile picture.", { type: "error" });
