@@ -17,14 +17,13 @@ import {
   RecordVoiceOverRounded,
 } from "@mui/icons-material";
 import { Divider, IconButton, Menu, MenuItem } from "@mui/material";
-import { Emoji, EmojiStyle } from "emoji-picker-react";
 import { JSX, useContext, useMemo, useState } from "react";
 import Marquee from "react-fast-marquee";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 import { BottomSheet } from "react-spring-bottom-sheet";
 import "react-spring-bottom-sheet/dist/style.css";
-import { TaskIcon } from "..";
+import { TaskIcon, TaskItem } from "..";
 import { UserContext } from "../../contexts/UserContext";
 import { useResponsiveDisplay } from "../../hooks/useResponsiveDisplay";
 import { Task } from "../../types/user";
@@ -34,10 +33,9 @@ import { TaskContext } from "../../contexts/TaskContext";
 import { ColorPalette } from "../../theme/themeConfig";
 import { ShareDialog } from "./ShareDialog";
 
-//FIXME: keyboard navigation
 export const TaskMenu = () => {
   const { user, setUser } = useContext(UserContext);
-  const { tasks, settings, emojisStyle } = user;
+  const { tasks, settings } = user;
   const {
     selectedTaskId,
     anchorEl,
@@ -375,12 +373,13 @@ export const TaskMenu = () => {
           snapPoints={({ minHeight, maxHeight }) => [minHeight, maxHeight]}
           expandOnContentDrag
           header={
-            <div style={{ cursor: "ns-resize" }}>
-              <SheetHeader translate="no">
-                <Emoji emojiStyle={emojisStyle} size={32} unified={selectedTask.emoji || ""} />{" "}
-                {emojisStyle === EmojiStyle.NATIVE && "\u00A0 "}
-                {selectedTask.name}
-              </SheetHeader>
+            <div
+              style={{
+                textAlign: "left",
+                backdropFilter: "blur(8px)",
+              }}
+            >
+              <TaskItem task={selectedTask} features={{ enableGlow: false }} />
               <Divider sx={{ mt: "20px", mb: "-20px" }} />
             </div>
           }
@@ -421,16 +420,6 @@ export const TaskMenu = () => {
     </>
   );
 };
-
-const SheetHeader = styled.h3`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 6px;
-  color: ${({ theme }) => (theme.darkmode ? ColorPalette.fontLight : ColorPalette.fontDark)};
-  margin: 10px;
-  font-size: 20px;
-`;
 
 const SheetContent = styled.div`
   color: ${({ theme }) => (theme.darkmode ? ColorPalette.fontLight : ColorPalette.fontDark)};
