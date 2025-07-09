@@ -15,9 +15,9 @@ import {
 } from "../styles";
 
 import { Emoji } from "emoji-picker-react";
-import { Box, CircularProgress, Tooltip, Typography } from "@mui/material";
+import { Box, Button, CircularProgress, Tooltip, Typography } from "@mui/material";
 import { useOnlineStatus } from "../hooks/useOnlineStatus";
-import { AddRounded, CloseRounded, TodayRounded, WifiOff } from "@mui/icons-material";
+import { AddRounded, CloseRounded, TodayRounded, UndoRounded, WifiOff } from "@mui/icons-material";
 import { UserContext } from "../contexts/UserContext";
 import { useResponsiveDisplay } from "../hooks/useResponsiveDisplay";
 import { useNavigate } from "react-router-dom";
@@ -36,6 +36,10 @@ const Home = () => {
   const isOnline = useOnlineStatus();
   const n = useNavigate();
   const isMobile = useResponsiveDisplay();
+
+  useEffect(() => {
+    document.title = "Todo App";
+  }, []);
 
   // Calculate these values only when tasks change
   const taskStats = useMemo(() => {
@@ -92,9 +96,15 @@ const Home = () => {
     }
   }, [taskStats.completedTaskPercentage]);
 
-  useEffect(() => {
-    document.title = "Todo App";
-  }, []);
+  const updateShowProgressBar = (value: boolean) => {
+    setUser((prevUser) => ({
+      ...prevUser,
+      settings: {
+        ...prevUser.settings,
+        showProgressBar: value,
+      },
+    }));
+  };
 
   return (
     <>
@@ -120,11 +130,20 @@ const Home = () => {
             <TaskCountClose
               size="small"
               onClick={() => {
-                setUser((prevUser) => ({
-                  ...prevUser,
-                  settings: { ...prevUser.settings, showProgressBar: false },
-                }));
-                showToast("Progress bar hidden. You can enable it in settings.");
+                updateShowProgressBar(false);
+                showToast(
+                  <span style={{ display: "flex", alignItems: "center", gap: 4 }}>
+                    Progress bar hidden. You can enable it in settings.
+                    <Button
+                      variant="contained"
+                      sx={{ p: "12px 32px" }}
+                      onClick={() => updateShowProgressBar(true)}
+                      startIcon={<UndoRounded />}
+                    >
+                      Undo
+                    </Button>
+                  </span>,
+                );
               }}
             >
               <CloseRounded />
