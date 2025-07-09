@@ -37,7 +37,7 @@ import {
   validateImageFile,
   fileToBase64,
   getProfilePictureFromDB,
-  cropImageToSquare,
+  optimizeProfilePicture,
   ALLOWED_PFP_TYPES,
 } from "../utils/profilePictureStorage";
 import { ColorPalette } from "../theme/themeConfig";
@@ -141,7 +141,7 @@ const UserProfile = () => {
     try {
       const originalSize = file.size;
       // crop image to square first
-      const croppedBlob = await cropImageToSquare(file);
+      const croppedBlob = await optimizeProfilePicture(file);
       const croppedFile = new File([croppedBlob], file.name, { type: croppedBlob.type });
 
       const base64 = await fileToBase64(croppedFile);

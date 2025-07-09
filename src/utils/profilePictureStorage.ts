@@ -140,6 +140,47 @@ export const deleteProfilePictureFromDB = async (): Promise<void> => {
   });
 };
 
+/**
+ * Optimizes profile pictire with centered square crop and dynamic scaling (2x–3x of largest displayed pfp) based on device pixel ratio.
+ * @param {File} file - Input image
+ * @returns {Promise<Blob>} Optimized image
+ */
+export function optimizeProfilePicture(file: File): Promise<Blob> {
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    const baseSize = 96; // largest displayed size of pfp in the ui (96x96)
+    const dpr = window.devicePixelRatio > 2 ? 3 : 2;
+    const targetSize = Math.round(baseSize * Math.min(dpr, 3)); // cap at 3x to avoid overscaling
+
+    img.onload = () => {
+      const side = Math.min(img.width, img.height);
+      const offsetX = (img.width - side) / 2;
+      const offsetY = (img.height - side) / 2;
+
+      const canvas = document.createElement("canvas");
+      canvas.width = targetSize;
+      canvas.height = targetSize;
+
+      const ctx = canvas.getContext("2d");
+      if (!ctx) return reject("Canvas context failed");
+
+      ctx.imageSmoothingQuality = "high"; // improve downscaling quality
+      ctx.drawImage(img, offsetX, offsetY, side, side, 0, 0, targetSize, targetSize);
+
+      canvas.toBlob(
+        (blob) => {
+          if (blob) resolve(blob);
+          else reject("Blob creation failed");
+        },
+        file.type || "image/webp",
+        0.85,
+      );
+    };
+    img.onerror = reject;
+    img.src = URL.createObjectURL(file);
+  });
+}
+
 export const ALLOWED_PFP_TYPES = ["image/png", "image/jpeg", "image/webp"];
 // helper to validate file size
 export const validateImageFile = (file: File): string | null => {
@@ -178,35 +219,3 @@ export const fileToBase64 = (file: File): Promise<string> => {
     reader.readAsDataURL(file);
   });
 };
-
-// resize image to save space
-export function cropImageToSquare(file: File): Promise<Blob> {
-  return new Promise((resolve, reject) => {
-    const img = new Image();
-    img.onload = () => {
-      const side = Math.min(img.width, img.height);
-      const offsetX = (img.width - side) / 2;
-      const offsetY = (img.height - side) / 2;
-
-      const canvas = document.createElement("canvas");
-      canvas.width = 128;
-      canvas.height = 128;
-
-      const ctx = canvas.getContext("2d");
-      if (!ctx) return reject("Canvas context failed");
-
-      ctx.drawImage(img, offsetX, offsetY, side, side, 0, 0, 128, 128);
-
-      canvas.toBlob(
-        (blob) => {
-          if (blob) resolve(blob);
-          else reject("Blob creation failed");
-        },
-        file.type || "image/jpeg",
-        0.8,
-      );
-    };
-    img.onerror = reject;
-    img.src = URL.createObjectURL(file);
-  });
-}
