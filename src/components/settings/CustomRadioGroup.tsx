@@ -67,12 +67,7 @@ const CustomRadioGroup = <T extends string>({
                   focused={isFocused && keyboardFocus}
                   sx={{ border: "1px solid", borderColor: "divider" }}
                 >
-                  <Typography
-                    fontSize="28px"
-                    sx={{ opacity: isDisabled && value !== option.value ? 0.6 : 1 }}
-                  >
-                    {option.icon}
-                  </Typography>
+                  <IconWrapper>{option.icon}</IconWrapper>
                   <StyledLabel translate="no" variant="body2">
                     {option.label}
                   </StyledLabel>
@@ -107,7 +102,7 @@ const StyledRadioGroup = styled(RadioGroup)`
   max-width: calc(100% - 16px);
   box-sizing: border-box;
   @media (max-width: 768px) {
-    gap: 10px;
+    gap: 12px;
     margin: 12px 0 0 0;
     max-width: calc(100% - 8px);
   }
@@ -169,6 +164,17 @@ const StyledLabelBox = styled(Box)<StyledLabelBoxProps>`
     width: 80px;
     height: 80px;
   }
+`;
+
+const IconWrapper = styled.div`
+  font-size: 28px;
+  width: 1em;
+  height: 1em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+  margin-bottom: 12px;
 `;
 
 const StyledLabel = styled(Typography)`
