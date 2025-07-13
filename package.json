@@ -36,6 +36,7 @@
     "@emotion/styled": "^11.14.0",
     "@mui/icons-material": "^7.0.2",
     "@mui/material": "^7.0.2",
+    "@types/dom-chromium-ai": "^0.0.9",
     "@yudiel/react-qr-scanner": "^2.3.1",
     "emoji-picker-react": "^4.12.2",
     "lz-string": "^1.5.0",

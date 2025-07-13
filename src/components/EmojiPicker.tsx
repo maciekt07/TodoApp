@@ -42,7 +42,6 @@ import { DialogBtn, fadeIn } from "../styles";
 import { ColorPalette } from "../theme/themeConfig";
 import { getFontColor, showToast, systemInfo } from "../utils";
 import { CustomDialogTitle } from "./DialogTitle";
-import type { LanguageModel } from "../types/ai";
 import DisabledThemeProvider from "../contexts/DisabledThemeProvider";
 
 interface EmojiPickerProps {
@@ -118,21 +117,21 @@ export const CustomEmojiPicker = ({ emoji, setEmoji, color, name, type }: EmojiP
   // Create Session on component mount for faster first load
   useEffect(() => {
     const createSession = async () => {
-      if (window.LanguageModel) {
-        const session = await window.LanguageModel.create();
+      if (LanguageModel) {
+        const session = await LanguageModel.create();
         setSession(session);
       }
     };
     createSession();
   }, []);
 
-  // ‼ This feature works only in Chrome (Dev / Canary) version 127 or higher with some flags enabled
-  // https://afficone.com/blog/window-ai-new-chrome-feature-api/
+  // ‼ This feature works only in Chrome (Dev / Canary) version 127 or higher with some flags enabled and Gemini Nano model
+  // https://developer.chrome.com/docs/ai/built-in
   async function useAI(): Promise<void> {
     const start = new Date().getTime();
     setIsAILoading(true);
     try {
-      const sessionInstance: LanguageModel = session || (await window.LanguageModel.create());
+      const sessionInstance: LanguageModel = session || (await LanguageModel.create());
 
       // chrome://flags/#text-safety-classifier must be disabled to make this prompt work
       const response = await sessionInstance.prompt(

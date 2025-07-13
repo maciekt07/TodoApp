@@ -47,7 +47,6 @@ import { DialogBtn, UserAvatar, pulseAnimation, ring } from "../styles";
 import { ColorPalette } from "../theme/themeConfig";
 import { getProfilePictureFromDB, showToast, systemInfo, timeAgo } from "../utils";
 
-// FIXME: logout, install app, settings are not accessible with keyboard navigation
 export const ProfileSidebar = () => {
   const { user, setUser } = useContext(UserContext);
   const { name, profilePicture, tasks, settings } = user;

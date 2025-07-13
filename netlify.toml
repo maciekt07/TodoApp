@@ -1,5 +1,8 @@
 [build]
+  publish = "dist"
   command = "npm install --legacy-peer-deps && npm run build"
+  ignore = "git log -1 --pretty=%B | grep -qE '^(chore|test|tests|docs|refactor)' && exit 0 || exit 1"
+
 
 [[redirects]]
   from = "/*"
