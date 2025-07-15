@@ -42,6 +42,7 @@ import { generateUUID, getFontColor, showToast } from "../utils";
 import { ColorPalette } from "../theme/themeConfig";
 import InputThemeProvider from "../contexts/InputThemeProvider";
 import { useToasterStore } from "react-hot-toast";
+import { TaskContext } from "../contexts/TaskContext";
 
 const NotFound = lazy(() => import("./NotFound"));
 
@@ -49,6 +50,7 @@ const NotFound = lazy(() => import("./NotFound"));
 
 const Categories = () => {
   const { user, setUser } = useContext(UserContext);
+  const { updateCategory } = useContext(TaskContext);
   const theme = useTheme();
 
   const [name, setName] = useStorageState<string>("", "catName", "sessionStorage");
@@ -188,53 +190,21 @@ const Categories = () => {
   };
 
   const handleEditCategory = () => {
-    if (selectedCategoryId) {
-      const updatedCategories = user.categories.map((category) => {
-        if (category.id === selectedCategoryId) {
-          return {
-            ...category,
-            name: editName,
-            emoji: editEmoji || undefined,
-            color: editColor,
-            lastSave: new Date(),
-          };
-        }
-        return category;
-      });
+    updateCategory({
+      id: selectedCategoryId,
+      name: editName,
+      emoji: editEmoji || undefined,
+      color: editColor,
+      lastSave: new Date(),
+    });
 
-      const updatedTasks = user.tasks.map((task) => {
-        const updatedCategoryList = task.category?.map((category) => {
-          if (category.id === selectedCategoryId) {
-            return {
-              id: selectedCategoryId,
-              name: editName,
-              emoji: editEmoji || undefined,
-              color: editColor,
-            };
-          }
-          return category;
-        });
+    showToast(
+      <div>
+        Updated category - <b translate="no">{editName}</b>
+      </div>,
+    );
 
-        return {
-          ...task,
-          category: updatedCategoryList,
-        };
-      });
-
-      setUser({
-        ...user,
-        categories: updatedCategories,
-        tasks: updatedTasks,
-      });
-
-      showToast(
-        <div>
-          Updated category - <b translate="no">{editName}</b>
-        </div>,
-      );
-
-      setOpenEditDialog(false);
-    }
+    setOpenEditDialog(false);
   };
 
   const handleAddToFavorites = (category: Category) => {

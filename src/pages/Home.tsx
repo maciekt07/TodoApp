@@ -1,4 +1,3 @@
-// Main Home component
 import { useContext, useMemo, lazy, Suspense, useEffect } from "react";
 import {
   AddButton,
@@ -21,7 +20,6 @@ import { AddRounded, CloseRounded, TodayRounded, UndoRounded, WifiOff } from "@m
 import { UserContext } from "../contexts/UserContext";
 import { useResponsiveDisplay } from "../hooks/useResponsiveDisplay";
 import { useNavigate } from "react-router-dom";
-import { TaskProvider } from "../contexts/TaskProvider";
 import { AnimatedGreeting } from "../components/AnimatedGreeting";
 import { showToast } from "../utils";
 
@@ -203,9 +201,7 @@ const Home = () => {
           </Box>
         }
       >
-        <TaskProvider>
-          <TasksList />
-        </TaskProvider>
+        <TasksList />
       </Suspense>
       {!isMobile && (
         <Tooltip title={tasks.length > 0 ? "Add New Task" : "Add Task"} placement="left">

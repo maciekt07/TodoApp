@@ -1,5 +1,5 @@
 import { ReactNode, useState, useCallback, useMemo, useContext } from "react";
-import { SortOption, UUID } from "../types/user";
+import { Category, SortOption, UUID } from "../types/user";
 import { useStorageState } from "../hooks/useStorageState";
 import { HighlightedText } from "../components/tasks/tasks.styled";
 import { useResponsiveDisplay } from "../hooks/useResponsiveDisplay";
@@ -104,6 +104,31 @@ export const TaskProvider = ({ children }: { children: ReactNode }) => {
     }
   }, [selectedTaskId, isMobile, expandedTasks, toggleShowMore]);
 
+  const updateCategory = useCallback(
+    (patch: Partial<Category>) => {
+      setUser((prev) => {
+        const updatedCategories = prev.categories.map((c) =>
+          c.id === patch.id ? { ...c, ...patch } : c,
+        );
+
+        const updatedTasks = prev.tasks.map((task) => {
+          const updatedCategoryList = task.category?.map((c) =>
+            c.id === patch.id ? { ...c, ...patch } : c,
+          );
+
+          return { ...task, category: updatedCategoryList };
+        });
+
+        return {
+          ...prev,
+          categories: updatedCategories,
+          tasks: updatedTasks,
+        };
+      });
+    },
+    [setUser],
+  );
+
   // Memoize the context value to prevent recreation on every render
   const contextValue = useMemo<TaskContextType>(
     () => ({
@@ -134,6 +159,7 @@ export const TaskProvider = ({ children }: { children: ReactNode }) => {
       setSortAnchorEl,
       moveMode,
       setMoveMode,
+      updateCategory,
     }),
     [
       selectedTaskId,
@@ -156,6 +182,7 @@ export const TaskProvider = ({ children }: { children: ReactNode }) => {
       sortAnchorEl,
       moveMode,
       setMoveMode,
+      updateCategory,
     ],
   );
 

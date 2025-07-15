@@ -117,7 +117,7 @@ export const CustomEmojiPicker = ({ emoji, setEmoji, color, name, type }: EmojiP
   // Create Session on component mount for faster first load
   useEffect(() => {
     const createSession = async () => {
-      if (LanguageModel) {
+      if ("LanguageModel" in window) {
         const session = await LanguageModel.create();
         setSession(session);
       }
@@ -125,7 +125,7 @@ export const CustomEmojiPicker = ({ emoji, setEmoji, color, name, type }: EmojiP
     createSession();
   }, []);
 
-  // ‼ This feature works only in Chrome (Dev / Canary) version 127 or higher with some flags enabled and Gemini Nano model
+  // ‼ This feature works only in Chrome (Dev / Canary) version 127 or higher with some flags enabled and Gemini Nano model installed
   // https://developer.chrome.com/docs/ai/built-in
   async function useAI(): Promise<void> {
     const start = new Date().getTime();
@@ -167,21 +167,9 @@ export const CustomEmojiPicker = ({ emoji, setEmoji, color, name, type }: EmojiP
       let emojiResponse = uniqueEmojis[0];
 
       // Check if the emoji needs to be replaced
-
       const emojiMap: {
         [key: string]: string;
       } = {
-        ":joy:": "😄",
-        ":smile:": "😄",
-        ":heart:": "❤️",
-        "<3": "❤️",
-        ":sunglasses:": "😎",
-        ":thinking_head:": "🤔",
-        ":technology:": "💻",
-        ":tech:": "💻",
-        ":ml:": "🧠",
-        ":wave:": "👋",
-        ":O": "😮",
         "☮": "✌️",
         "🎙": "🎙️",
         "🗣": "🗣️",
@@ -190,6 +178,7 @@ export const CustomEmojiPicker = ({ emoji, setEmoji, color, name, type }: EmojiP
         "⌨": "⌨️",
         "🖱": "🖱️",
       };
+
       if (emojiResponse in emojiMap) {
         emojiResponse = emojiMap[emojiResponse];
         console.log("Emoji replaced with:", emojiResponse);

@@ -1,5 +1,5 @@
 import { Dispatch, ReactNode, SetStateAction, createContext } from "react";
-import type { SortOption, UUID } from "../types/user";
+import type { Category, SortOption, UUID } from "../types/user";
 
 interface TaskState {
   selectedTaskId: UUID | null;
@@ -32,6 +32,7 @@ interface TaskActions {
   setSortOption: (option: SortOption) => void;
   setSortAnchorEl: Dispatch<SetStateAction<null | HTMLElement>>;
   setMoveMode: Dispatch<SetStateAction<boolean>>;
+  updateCategory: (category: Partial<Category>) => void;
 }
 
 export type TaskContextType = TaskState & TaskActions;

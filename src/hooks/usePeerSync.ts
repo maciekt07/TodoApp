@@ -12,6 +12,7 @@ import {
 import { saveProfilePictureInDB, showToast } from "../utils";
 import { UserContext } from "../contexts/UserContext";
 import toast from "react-hot-toast";
+import { TaskContext } from "../contexts/TaskContext";
 
 // status messages for sync steps
 const STATUS: Record<string, SyncStatus> = {
@@ -92,6 +93,7 @@ function mergeUserData(
  */
 export function usePeerSync() {
   const { user, setUser } = useContext(UserContext);
+  const { updateCategory } = useContext(TaskContext);
   const [mode, setMode] = useState<SyncMode | null>(null);
   const [hostPeerId, setHostPeerId] = useState<string>("");
   const [peer, setPeer] = useState<Peer | null>(null);
@@ -155,6 +157,16 @@ export function usePeerSync() {
           localOtherData,
         );
         setUser((prevUser) => mergeUserData(prevUser, mergedData, syncOption));
+        mergedData.categories.forEach((cat) => {
+          updateCategory({
+            id: cat.id,
+            name: cat.name,
+            emoji: cat.emoji,
+            color: cat.color,
+            lastSave: cat.lastSave,
+          });
+        });
+
         if (sendBack) {
           const mergedSyncData = {
             ...prepareSyncData(
@@ -186,7 +198,7 @@ export function usePeerSync() {
         showToast(STATUS.syncError.message, { type: "error" });
       }
     },
-    [setStatus, setUser, user],
+    [setStatus, setUser, updateCategory, user],
   );
 
   // HOST SETUP

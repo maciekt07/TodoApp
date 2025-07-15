@@ -11,11 +11,13 @@ function omit<T extends object, K extends keyof T>(obj: T, keys: K[]): Omit<T, K
   });
   return clone;
 }
-//TODO: make it more type-safe
+
 export async function extractOtherData(
   user: User,
 ): Promise<Partial<User> & { profilePictureData?: string }> {
-  const otherData: Partial<User> = { ...user };
+  // remove emojis style from sync
+  const otherData = omit(user, ["emojisStyle"]);
+
   let profilePictureData: string | undefined = undefined;
 
   if (otherData.profilePicture && otherData.profilePicture.startsWith("LOCAL_FILE")) {

@@ -9,6 +9,7 @@ import { showToast } from "./utils/showToast.tsx";
 import { updatePrompt } from "./utils/updatePrompt.tsx";
 import { CircularProgress } from "@mui/material";
 import toast from "react-hot-toast";
+import { TaskProvider } from "./contexts/TaskProvider.tsx";
 
 // initialize ntc colors
 initColors(ORIGINAL_COLORS);
@@ -59,7 +60,9 @@ navigator.serviceWorker?.addEventListener("controllerchange", () => {
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
   <BrowserRouter>
     <UserContextProvider>
-      <App />
+      <TaskProvider>
+        <App />
+      </TaskProvider>
     </UserContextProvider>
   </BrowserRouter>,
 );
