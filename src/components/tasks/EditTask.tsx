@@ -16,7 +16,7 @@ import { DESCRIPTION_MAX_LENGTH, TASK_NAME_MAX_LENGTH } from "../../constants";
 import { UserContext } from "../../contexts/UserContext";
 import { DialogBtn } from "../../styles";
 import { Category, Task } from "../../types/user";
-import { showToast } from "../../utils";
+import { formatDate, showToast, timeAgo } from "../../utils";
 import { useTheme } from "@emotion/react";
 import { ColorPalette } from "../../theme/themeConfig";
 import { CategorySelect } from "../CategorySelect";
@@ -151,7 +151,7 @@ export const EditTask = ({ open, task, onClose }: EditTaskProps) => {
         title="Edit Task"
         subTitle={
           editedTask?.lastSave
-            ? `Last Edited: ${new Date(editedTask.lastSave).toLocaleDateString()} • ${new Date(editedTask.lastSave).toLocaleTimeString()}`
+            ? `Last edited ${timeAgo(new Date(editedTask.lastSave))} • ${formatDate(new Date(editedTask.lastSave))}`
             : "Edit the details of the task."
         }
         icon={<EditCalendarRounded />}

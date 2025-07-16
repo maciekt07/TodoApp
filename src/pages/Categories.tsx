@@ -38,7 +38,7 @@ import {
   StarChecked,
   StarUnchecked,
 } from "../styles";
-import { generateUUID, getFontColor, showToast } from "../utils";
+import { formatDate, generateUUID, getFontColor, showToast, timeAgo } from "../utils";
 import { ColorPalette } from "../theme/themeConfig";
 import InputThemeProvider from "../contexts/InputThemeProvider";
 import { useToasterStore } from "react-hot-toast";
@@ -428,8 +428,8 @@ const Categories = () => {
           <CustomDialogTitle
             title="Edit Category"
             subTitle={
-              user.categories.find((cat) => cat.id === selectedCategoryId)?.lastSave
-                ? `Last Edited: ${new Date(selectedCategory?.lastSave || "").toLocaleDateString()} • ${new Date(selectedCategory?.lastSave || "").toLocaleTimeString()}`
+              selectedCategory?.lastSave
+                ? `Last edited ${timeAgo(new Date(selectedCategory.lastSave))} • ${formatDate(new Date(selectedCategory.lastSave))}`
                 : "Edit the details of the category."
             }
             icon={<Edit />}

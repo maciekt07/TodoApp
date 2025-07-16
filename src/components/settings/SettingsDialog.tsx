@@ -158,16 +158,16 @@ export const SettingsDialog = ({ open, onClose, handleOpen }: SettingsProps) => 
   }, [handleOpen]);
 
   useEffect(() => {
-    handleHashChange();
-    window.addEventListener("hashchange", handleHashChange);
-    return () => window.removeEventListener("hashchange", handleHashChange);
-  }, [handleHashChange]);
+    const onHashChange = () => {
+      handleHashChange();
+      handleHashOpen();
+    };
 
-  useEffect(() => {
-    handleHashOpen();
-    window.addEventListener("hashchange", handleHashOpen);
-    return () => window.removeEventListener("hashchange", handleHashOpen);
-  }, [handleHashOpen]);
+    onHashChange();
+
+    window.addEventListener("hashchange", onHashChange);
+    return () => window.removeEventListener("hashchange", onHashChange);
+  }, [handleHashChange, handleHashOpen]);
 
   useEffect(() => {
     if (open) {
