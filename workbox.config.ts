@@ -76,6 +76,21 @@ const workbox: Partial<GenerateSWOptions> = {
         },
       },
     },
+    // Cache for Google Favicon API
+    {
+      urlPattern: /^https:\/\/www\.google\.com\/s2\/favicons\?/,
+      handler: "StaleWhileRevalidate",
+      options: {
+        cacheName: "google-favicons",
+        expiration: {
+          maxEntries: 100,
+          maxAgeSeconds: 14 * 24 * 60 * 60, // 14 days
+        },
+        cacheableResponse: {
+          statuses: [0, 200],
+        },
+      },
+    },
     // DON'T cache emojis for now since they take a lot of space
     //TODO: find a way to only cache the ones used by user
     {

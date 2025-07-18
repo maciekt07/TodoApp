@@ -1,9 +1,7 @@
-import React, { JSX, memo } from "react";
-import { ShowMoreBtn } from "./tasks.styled";
+import React, { memo } from "react";
+import { ShowMoreBtn, StyledDescriptionLink } from "./tasks.styled";
 import { DESCRIPTION_SHORT_LENGTH, URL_REGEX } from "../../constants";
 import { Task } from "../../types/user";
-import { GitHub, Language, Link, LinkedIn, LinkOff, Reddit, X, YouTube } from "@mui/icons-material";
-import { StyledDescriptionLink } from "./tasks.styled";
 import { Tooltip } from "@mui/material";
 
 interface RenderTaskDescriptionProps {
@@ -14,6 +12,7 @@ interface RenderTaskDescriptionProps {
   enableLinks?: boolean;
 }
 
+//FIXME: show more button logic
 export const RenderTaskDescription = memo(
   ({
     task,
@@ -22,15 +21,13 @@ export const RenderTaskDescription = memo(
     expanded = false,
     enableLinks = true,
   }: RenderTaskDescriptionProps) => {
-    if (!task || !task.description) {
-      return null;
-    }
+    if (!task?.description) return null;
 
     const { description, color } = task;
     const hasLinks = description.match(URL_REGEX);
-    const highlightedDescription =
-      expanded || hasLinks ? description : description.slice(0, DESCRIPTION_SHORT_LENGTH);
-
+    const highlightedDescription = description;
+    // const highlightedDescription =
+    //       expanded || hasLinks ? description : description.slice(0, DESCRIPTION_SHORT_LENGTH);
     const parts = highlightedDescription.split(URL_REGEX);
 
     const descriptionWithLinks = parts.map((part, index) => {
@@ -52,38 +49,15 @@ export const RenderTaskDescription = memo(
     return (
       <div>
         {descriptionWithLinks}{" "}
-        {task.description &&
-          task.description.length > DESCRIPTION_SHORT_LENGTH &&
-          !hasLinks &&
-          onExpandClick && (
-            <ShowMoreBtn onClick={onExpandClick} clr={task.color}>
-              {expanded ? "Show less" : "Show more"}
-            </ShowMoreBtn>
-          )}
+        {description.length > DESCRIPTION_SHORT_LENGTH && !hasLinks && onExpandClick && (
+          <ShowMoreBtn onClick={onExpandClick} clr={color}>
+            {expanded ? "Show less" : "Show more"}
+          </ShowMoreBtn>
+        )}
       </div>
     );
   },
 );
-
-interface DomainMappings {
-  regex: RegExp;
-  domainName?: string;
-  icon: JSX.Element;
-}
-
-const domainMappings: DomainMappings[] = [
-  { regex: /(m\.)?youtu(\.be|be\.com)/, domainName: "Youtube", icon: <YouTube /> },
-  {
-    regex: /(twitter\.com|x\.com)/,
-    domainName: "X",
-    icon: <X sx={{ fontSize: "18px" }} />,
-  },
-  { regex: /github\.com/, domainName: "Github", icon: <GitHub sx={{ fontSize: "20px" }} /> },
-  { regex: /reddit\.com/, domainName: "Reddit", icon: <Reddit /> },
-  { regex: /linkedin\.com/, domainName: "LinkedIn", icon: <LinkedIn /> },
-  { regex: /localhost/, icon: <Language /> },
-  { regex: /.*/, icon: <Link /> }, // Default icon for other domains
-];
 
 interface DescriptionLinkProps {
   url: string;
@@ -95,26 +69,14 @@ interface DescriptionLinkProps {
 const DescriptionLink = memo(
   ({ url, color, disabled = false, textHighlighter = (text) => text }: DescriptionLinkProps) => {
     let domain = "";
-    let displayName = "";
-    let icon = disabled ? <LinkOff sx={{ fontSize: "24px" }} /> : <Link />;
-
     try {
       const urlObj = new URL(url);
       domain = urlObj.hostname.replace("www.", "");
-
-      if (!disabled) {
-        // Find matching domain mapping
-        const mapping = domainMappings.find(({ regex }) => domain.match(regex));
-        if (mapping) {
-          icon = mapping.icon;
-          displayName = mapping.domainName || domain;
-        }
-      }
     } catch (error) {
       console.error(`Invalid URL: ${url}`, error);
     }
 
-    const LinkComponent = (
+    const LinkContent = (
       <StyledDescriptionLink
         href={disabled ? undefined : url}
         rel={disabled ? undefined : "noreferrer"}
@@ -123,11 +85,16 @@ const DescriptionLink = memo(
         disabled={disabled}
       >
         <div>
-          {icon} {textHighlighter(displayName || domain)}
+          <img
+            alt="favicon"
+            src={`https://www.google.com/s2/favicons?sz=96&domain_url=${url}`}
+            style={{ width: 20, height: 20, marginRight: 2, borderRadius: 4 }}
+          />
+          {textHighlighter(domain)}
         </div>
       </StyledDescriptionLink>
     );
 
-    return <Tooltip title={url}>{LinkComponent}</Tooltip>;
+    return <Tooltip title={url}>{LinkContent}</Tooltip>;
   },
 );
