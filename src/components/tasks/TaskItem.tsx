@@ -187,6 +187,7 @@ export const TaskItem = memo(
               task={task}
               textHighlighter={textHighlighter}
               enableLinks={enableLinks}
+              enableMoreButton={!!actions}
             />
           </TaskDescription>
 

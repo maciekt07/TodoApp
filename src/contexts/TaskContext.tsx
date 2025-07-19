@@ -5,7 +5,7 @@ interface TaskState {
   selectedTaskId: UUID | null;
   anchorEl: null | HTMLElement;
   anchorPosition: { top: number; left: number } | null;
-  expandedTasks: Set<UUID>;
+  expandedTasks: UUID[];
   multipleSelectedTasks: UUID[];
   search: string;
   editModalOpen: boolean;
@@ -19,7 +19,7 @@ interface TaskActions {
   setSelectedTaskId: Dispatch<SetStateAction<UUID | null>>;
   setAnchorEl: Dispatch<SetStateAction<null | HTMLElement>>;
   setAnchorPosition: Dispatch<SetStateAction<{ top: number; left: number } | null>>;
-  setExpandedTasks: Dispatch<SetStateAction<Set<UUID>>>;
+  setExpandedTasks: Dispatch<SetStateAction<UUID[]>>;
   setMultipleSelectedTasks: Dispatch<SetStateAction<UUID[]>>;
   setSearch: Dispatch<SetStateAction<string>>;
   toggleShowMore: (taskId: UUID) => void;

@@ -2,7 +2,6 @@ import { ReactNode, useState, useCallback, useMemo, useContext } from "react";
 import { Category, SortOption, UUID } from "../types/user";
 import { useStorageState } from "../hooks/useStorageState";
 import { HighlightedText } from "../components/tasks/tasks.styled";
-import { useResponsiveDisplay } from "../hooks/useResponsiveDisplay";
 import { TaskContext, TaskContextType } from "./TaskContext";
 import { UserContext } from "../contexts/UserContext";
 
@@ -12,7 +11,11 @@ export const TaskProvider = ({ children }: { children: ReactNode }) => {
   const [selectedTaskId, setSelectedTaskId] = useState<UUID | null>(null);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [anchorPosition, setAnchorPosition] = useState<{ top: number; left: number } | null>(null);
-  const [expandedTasks, setExpandedTasks] = useState<Set<UUID>>(new Set());
+  const [expandedTasks, setExpandedTasks] = useStorageState<UUID[]>(
+    [],
+    "expandedTasks",
+    "sessionStorage",
+  );
   const [multipleSelectedTasks, setMultipleSelectedTasks] = useStorageState<UUID[]>(
     [],
     "selectedTasks",
@@ -24,8 +27,6 @@ export const TaskProvider = ({ children }: { children: ReactNode }) => {
   const [sortAnchorEl, setSortAnchorEl] = useState<null | HTMLElement>(null);
 
   const [moveMode, setMoveMode] = useStorageState<boolean>(false, "moveMode", "sessionStorage");
-
-  const isMobile = useResponsiveDisplay();
 
   const sortOption = user.settings.sortOption;
   const setSortOption = useCallback(
@@ -41,18 +42,18 @@ export const TaskProvider = ({ children }: { children: ReactNode }) => {
     [setUser],
   );
 
-  // Use useCallback for all functions to prevent recreation on each render
-  const toggleShowMore = useCallback((taskId: UUID) => {
-    setExpandedTasks((prevExpandedTasks) => {
-      const newSet = new Set(prevExpandedTasks);
-      if (newSet.has(taskId)) {
-        newSet.delete(taskId);
-      } else {
-        newSet.add(taskId);
-      }
-      return newSet;
-    });
-  }, []);
+  const toggleShowMore = useCallback(
+    (taskId: UUID) => {
+      setExpandedTasks((prevExpandedTasks) => {
+        if (prevExpandedTasks.includes(taskId)) {
+          return prevExpandedTasks.filter((id) => id !== taskId);
+        } else {
+          return [...prevExpandedTasks, taskId];
+        }
+      });
+    },
+    [setExpandedTasks],
+  );
 
   const handleSelectTask = useCallback(
     (taskId: UUID) => {
@@ -99,10 +100,10 @@ export const TaskProvider = ({ children }: { children: ReactNode }) => {
   const handleCloseMoreMenu = useCallback(() => {
     setAnchorEl(null);
     document.body.style.overflow = "visible";
-    if (selectedTaskId && !isMobile && expandedTasks.has(selectedTaskId)) {
-      toggleShowMore(selectedTaskId);
-    }
-  }, [selectedTaskId, isMobile, expandedTasks, toggleShowMore]);
+    // if (selectedTaskId && !isMobile && expandedTasks.includes(selectedTaskId)) {
+    //   toggleShowMore(selectedTaskId);
+    // }
+  }, []);
 
   const updateCategory = useCallback(
     (patch: Partial<Category>) => {
@@ -166,6 +167,7 @@ export const TaskProvider = ({ children }: { children: ReactNode }) => {
       anchorEl,
       anchorPosition,
       expandedTasks,
+      setExpandedTasks,
       toggleShowMore,
       search,
       setSearch,

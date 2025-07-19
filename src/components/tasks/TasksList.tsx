@@ -64,6 +64,7 @@ import DisabledThemeProvider from "../../contexts/DisabledThemeProvider";
 const TaskMenuButton = memo(
   ({ task, onClick }: { task: Task; onClick: (event: React.MouseEvent<HTMLElement>) => void }) => (
     <IconButton
+      id="task-menu-button"
       aria-label="Task Menu"
       aria-controls="task-menu"
       aria-haspopup="true"
@@ -87,8 +88,6 @@ export const TasksList: React.FC = () => {
     anchorEl,
     setAnchorEl,
     setAnchorPosition,
-    expandedTasks,
-    toggleShowMore,
     search,
     setSearch,
     highlightMatchingText,
@@ -135,21 +134,25 @@ export const TasksList: React.FC = () => {
 
   // Handler for clicking the more options button in a task
   const handleClick = (event: React.MouseEvent<HTMLElement>, taskId: UUID) => {
+    const target = event.target as HTMLElement;
+
+    // if clicking inside a task link, show native context menu and skip custom menu.
+    if (target.closest("#task-description-link")) {
+      return;
+    }
+
+    event.preventDefault();
     setAnchorEl(event.currentTarget);
     setSelectedTaskId(taskId);
-    const target = event.target as HTMLElement;
-    // Position the menu where the click event occurred
-    if (target.tagName !== "BUTTON") {
-      setAnchorPosition({
-        top: event.clientY,
-        left: event.clientX,
-      });
-    } else {
-      setAnchorPosition(null);
-    }
-    if (!isMobile && !expandedTasks.has(taskId)) {
-      toggleShowMore(taskId);
-    }
+
+    setAnchorPosition({
+      top: event.clientY,
+      left: event.clientX,
+    });
+
+    // if (!isMobile && !expandedTasks.includes(taskId)) {
+    //   toggleShowMore(taskId);
+    // }
   };
 
   // focus search input on ctrl + /
@@ -592,7 +595,6 @@ export const TasksList: React.FC = () => {
                         ),
                     }}
                     onContextMenu={(e: React.MouseEvent<Element>) => {
-                      e.preventDefault();
                       handleClick(e as unknown as React.MouseEvent<HTMLElement>, task.id);
                     }}
                     actions={
@@ -654,7 +656,6 @@ export const TasksList: React.FC = () => {
                     ),
                 }}
                 onContextMenu={(e: React.MouseEvent<Element>) => {
-                  e.preventDefault();
                   handleClick(e as unknown as React.MouseEvent<HTMLElement>, task.id);
                 }}
                 actions={

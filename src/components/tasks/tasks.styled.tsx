@@ -1,6 +1,6 @@
 import styled from "@emotion/styled";
 import { Alarm, RadioButtonChecked, RadioButtonUnchecked } from "@mui/icons-material";
-import { Button, Checkbox, IconButton, TextField, css } from "@mui/material";
+import { Checkbox, IconButton, TextField, css } from "@mui/material";
 import { fadeIn, ring, scale } from "../../styles/keyframes.styled";
 import { ColorPalette } from "../../theme/themeConfig";
 import { getFontColor, isDark, systemInfo } from "../../utils";
@@ -122,21 +122,6 @@ export const TaskDescription = styled.div<{ done: boolean }>`
   font-size: 18px;
   text-decoration: ${({ done }) => (done ? "line-through" : "none")};
   word-break: break-word;
-`;
-
-export const ShowMoreBtn = styled(Button)<{ clr: string }>`
-  background: none;
-  border: none;
-  cursor: pointer;
-  font-size: 16px;
-  font-weight: bolder;
-  transition: 0.3s color;
-  color: ${({ clr }) => getFontColor(clr)};
-  text-shadow: ${({ clr }) => `0 0 8px ${getFontColor(clr) + 45}`};
-  text-transform: capitalize;
-  border-radius: 6px;
-  padding: 0 4px;
-  margin: 0 4px;
 `;
 
 export const NoTasks = styled.div`
@@ -302,28 +287,6 @@ export const HighlightedText = styled.span`
   font-weight: bold;
   border: 1px solid #ffffff5f;
   transition: 0.3s all;
-`;
-
-export const StyledDescriptionLink = styled(Button)<{ clr: string }>`
-  margin: 0;
-  color: ${({ clr }) => getFontColor(clr)};
-  padding: 0 4px;
-  display: inline-block;
-  background: ${({ clr }) => getFontColor(clr)}28;
-  backdrop-filter: none !important;
-  text-transform: none !important;
-  min-width: unset !important;
-  user-select: auto !important;
-  border-radius: 6px;
-  &:hover {
-    background: ${({ clr }) => getFontColor(clr)}19;
-  }
-  & div {
-    word-break: break-all;
-    display: flex;
-    align-items: center;
-    gap: 4px;
-  }
 `;
 
 export const SearchInput = styled(TextField)`

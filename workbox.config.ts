@@ -79,7 +79,7 @@ const workbox: Partial<GenerateSWOptions> = {
     // Cache for Google Favicon API
     {
       urlPattern: /^https:\/\/www\.google\.com\/s2\/favicons\?/,
-      handler: "StaleWhileRevalidate",
+      handler: "CacheFirst",
       options: {
         cacheName: "google-favicons",
         expiration: {
