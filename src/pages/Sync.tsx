@@ -109,8 +109,8 @@ export default function Sync() {
               </Typography>
               <Typography variant="body1" sx={{ mb: 2, opacity: 0.9 }}>
                 Securely transfer your tasks, categories and other data between devices with a
-                single QR Code scan using peer-to-peer connection. No data is stored on external
-                servers.
+                single QR Code scan using peer-to-peer connection. No data is stored or processed on
+                external servers.
               </Typography>
               {user.lastSyncedAt && (
                 <Tooltip

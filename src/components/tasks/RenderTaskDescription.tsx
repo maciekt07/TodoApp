@@ -112,15 +112,18 @@ export const RenderTaskDescription = memo(
     });
 
     return (
-      <div>
-        {descriptionWithLinks}
-        {!isExpanded && showMore && !task.done && "..."}
-        {shouldShowButton && !task.done && (
-          <ShowMoreBtn onClick={() => toggleShowMore(task.id)} clr={color}>
-            {isExpanded ? "Show Less" : "Show More"}
-          </ShowMoreBtn>
-        )}
-      </div>
+      <>
+        <ScreenDescription>
+          {descriptionWithLinks}
+          {!isExpanded && showMore && !task.done && "..."}
+          {shouldShowButton && !task.done && (
+            <ShowMoreBtn onClick={() => toggleShowMore(task.id)} clr={color}>
+              {isExpanded ? "Show Less" : "Show More"}
+            </ShowMoreBtn>
+          )}
+        </ScreenDescription>
+        <PrintDescription>{task.description}</PrintDescription>
+      </>
     );
   },
 );
@@ -195,7 +198,11 @@ const ShowMoreBtn = styled(Button)<{ clr: string }>`
   border-radius: 6px;
   padding: 0 4px;
   margin: 0 4px;
+  @media print {
+    color: black;
+  }
 `;
+
 const StyledDescriptionLink = styled(Button)<{ clr: string }>`
   margin: 0;
   color: ${({ clr }) => getFontColor(clr)};
@@ -215,5 +222,23 @@ const StyledDescriptionLink = styled(Button)<{ clr: string }>`
     display: flex;
     align-items: center;
     gap: 4px;
+  }
+  @media print {
+    color: black;
+  }
+`;
+
+const ScreenDescription = styled.div`
+  @media print {
+    display: none !important;
+  }
+`;
+
+const PrintDescription = styled.div`
+  display: none;
+
+  @media print {
+    display: block !important;
+    color: black !important;
   }
 `;
