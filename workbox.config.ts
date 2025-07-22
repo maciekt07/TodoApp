@@ -4,27 +4,18 @@ const isDev = process.env.NODE_ENV === "development";
 // Dev: avoid API spam and hitting rate limits | Prod: fast loads with background updates
 const apiCacheStrategy: StrategyName = isDev ? "CacheFirst" : "StaleWhileRevalidate";
 
+// Precache emoji previews for settings dialog
+export const settingsEmojiPreviewAssets = (["facebook", "twitter", "apple", "google"] as const).map(
+  (platform) => ({
+    url: `https://cdn.jsdelivr.net/npm/emoji-datasource-${platform}/img/${platform}/64/1f60e.png`,
+    revision: null,
+  }),
+);
+
 const workbox: Partial<GenerateSWOptions> = {
+  cleanupOutdatedCaches: true,
   globPatterns: ["**/*.{js,css,html,svg,png,webmanifest}"],
-  // Precache emoji previews for settings dialog
-  additionalManifestEntries: [
-    {
-      url: "https://cdn.jsdelivr.net/npm/emoji-datasource-facebook/img/facebook/64/1f60e.png",
-      revision: null,
-    },
-    {
-      url: "https://cdn.jsdelivr.net/npm/emoji-datasource-twitter/img/twitter/64/1f60e.png",
-      revision: null,
-    },
-    {
-      url: "https://cdn.jsdelivr.net/npm/emoji-datasource-apple/img/apple/64/1f60e.png",
-      revision: null,
-    },
-    {
-      url: "https://cdn.jsdelivr.net/npm/emoji-datasource-google/img/google/64/1f60e.png",
-      revision: null,
-    },
-  ],
+  additionalManifestEntries: [...settingsEmojiPreviewAssets],
   // Use runtime caching for dynamic imports and external resources
   runtimeCaching: [
     // Cache for Github API

@@ -38,7 +38,6 @@ import { Link, useNavigate } from "react-router-dom";
 import { CustomDialogTitle, LogoutDialog, SettingsDialog } from ".";
 import bmcLogoLight from "../assets/bmc-logo-light.svg";
 import bmcLogo from "../assets/bmc-logo.svg";
-import logo from "../assets/logo256.png";
 import { defaultUser } from "../constants/defaultUser";
 import { UserContext } from "../contexts/UserContext";
 import { fetchBMCInfo } from "../services/bmcApi";
@@ -223,7 +222,7 @@ export const ProfileSidebar = () => {
             handleClose();
           }}
         >
-          <Logo src={logo} alt="logo" />
+          <Logo src="/logo192.png" alt="logo" />
           <LogoText>
             <span>Todo</span> App
             <span>.</span>
@@ -580,6 +579,11 @@ const StyledMenuItem = styled(MenuItem)`
     transition: 0.4s transform;
   }
 
+  &:focus-visible {
+    outline: 2px solid ${({ theme }) => (theme.darkmode ? "#fff" : "#000")};
+    background: none;
+  }
+
   &:hover {
     & svg.GitHubIcon {
       transform: rotateY(${2 * Math.PI}rad);
@@ -611,6 +615,9 @@ const SettingsMenuItem = styled(StyledMenuItem)`
     & svg.SettingsRoundedIcon {
       transform: rotate(180deg);
     }
+  }
+  &:focus-visible {
+    background: ${({ theme }) => (theme.darkmode ? "#1f1f1f" : "#101727")};
   }
 `;
 

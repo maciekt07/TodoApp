@@ -372,7 +372,8 @@ export const CustomEmojiPicker = ({ emoji, setEmoji, color, name, type }: EmojiP
                         ...prevUser,
                         emojisStyle: EmojiStyle.NATIVE,
                       }));
-                      // setShowEmojiPicker(false);
+                      setShowEmojiPicker(false);
+                      setTimeout(() => setShowEmojiPicker(true), 100);
                     }}
                   >
                     <EmojiEmotions /> &nbsp; Switch to Native Emoji

@@ -9,9 +9,8 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 const mode = process.argv.find((arg) => arg.startsWith("--mode="))?.split("=")[1] || "default";
 
-// TODO: compress PNG images
-/** @type {'.png' | '.jpeg'} */ // .jpeg technically works and its way easier to compress but its not recommended for splash screens
-const fileType = ".jpeg";
+/** @type {'.png' | '.jpeg'} */
+const fileType = ".jpeg"; // Use .jpeg instead of .png to save space
 
 if (mode !== "default" && mode !== "cleanup") {
   console.error("Invalid mode. Use --mode=default or --mode=cleanup");

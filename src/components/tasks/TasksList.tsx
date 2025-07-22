@@ -374,7 +374,6 @@ export const TasksList: React.FC = () => {
     }),
   );
 
-  // handler for drag end
   const handleDragEnd = (event: DragEndEvent) => {
     const { active, over } = event;
     if (!over || active.id === over.id) return;
@@ -398,7 +397,6 @@ export const TasksList: React.FC = () => {
     });
   };
 
-  // handler for drag start
   const handleDragStart = (event: DragStartEvent) => {
     setActiveDragId(event.active.id as string);
   };

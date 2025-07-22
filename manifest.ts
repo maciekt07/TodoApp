@@ -9,7 +9,7 @@ const manifest: Partial<ManifestOptions> = {
   theme_color: "#7764E8",
   background_color: "#171D34",
   description:
-    "Todo app with many features, including sharing tasks via link, theme customization and offline usage as a PWA. Made by github.com/maciekt07",
+    "A fast and modern Todo app built with React, featuring task sharing via link, P2P Task Sync with WebRTC, theme customization, offline usage as a PWA, and caching for smooth performance. Made by github.com/maciekt07",
   categories: ["productivity", "utilities", "lifestyle"],
   edge_side_panel: {
     preferred_width: 500,
@@ -115,22 +115,22 @@ const manifest: Partial<ManifestOptions> = {
   ],
   screenshots: [
     {
-      src: "pwa/wideScreenshot1.png",
+      src: "pwa/wideScreenshot1.webp",
       sizes: "1460x959",
       form_factor: "wide",
     },
     {
-      src: "pwa/wideScreenshot2.png",
+      src: "pwa/wideScreenshot2.webp",
       sizes: "1460x959",
       form_factor: "wide",
     },
     {
-      src: "pwa/narrowScreenshot1.png",
+      src: "pwa/narrowScreenshot1.webp",
       sizes: "1170x2532",
       form_factor: "narrow",
     },
     {
-      src: "pwa/narrowScreenshot2.png",
+      src: "pwa/narrowScreenshot2.webp",
       sizes: "1170x2532",
       form_factor: "narrow",
     },

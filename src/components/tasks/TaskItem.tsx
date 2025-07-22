@@ -84,10 +84,6 @@ export const TaskItem = memo(
 
     const isSelected = selectedIds.includes(task.id);
 
-    if (!task) {
-      return null;
-    }
-
     const handleSelectChange = (taskId: UUID) => {
       if (isSelected) {
         onDeselect?.(taskId);
@@ -95,6 +91,10 @@ export const TaskItem = memo(
         onSelect?.(taskId);
       }
     };
+
+    if (!task) {
+      return null;
+    }
 
     return (
       <TaskContainer
@@ -105,7 +105,7 @@ export const TaskItem = memo(
         id={task.id}
         onContextMenu={onContextMenu}
         backgroundColor={task.color}
-        glow={enableGlow}
+        glow={enableGlow && !moveMode}
         done={task.done}
         blur={blur}
         isDragging={isDragging}

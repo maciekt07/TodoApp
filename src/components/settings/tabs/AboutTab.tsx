@@ -1,7 +1,7 @@
 import { Box, Divider, FormGroup, FormLabel, Link, Typography } from "@mui/material";
 import { TabHeading } from "../settings.styled";
 import { useEffect, useState } from "react";
-import baner from "../../../assets/baner.png";
+import baner from "../../../assets/baner.webp";
 import { Inventory2Rounded } from "@mui/icons-material";
 import { systemInfo } from "../../../utils";
 

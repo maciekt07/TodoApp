@@ -23,7 +23,7 @@ export const TaskContainer = styled.div<TaskComponentProps>`
   margin-top: 12px;
   transition: ${(
     { isDragging }, // FIXME: disable transitions only if element is dragged (not when drag mode is enabled)
-  ) => (isDragging ? "none" : "border-left 0.2s, opacity 0.4s, filter 0.3s")};
+  ) => (isDragging ? "none" : "border-left 0.2s, opacity 0.4s, filter 0.3s, box-shadow 0.3s")};
   color: ${({ backgroundColor }) => getFontColor(backgroundColor)};
   background-color: ${({ backgroundColor, done }) => `${backgroundColor}${done ? "cc" : ""}`};
   opacity: ${({ done }) => (done ? 0.8 : 1)};
