@@ -21,7 +21,7 @@ const ShortcutItem: FC<ShortcutItemProps> = ({ name, description, keys }) => {
       </ShortcutText>
       <KeyCombo>
         {keys.map((key, idx) => (
-          <Key key={idx}>{key}</Key>
+          <Key key={idx}>{key === "Cmd" ? "⌘" : key}</Key>
         ))}
       </KeyCombo>
     </ShortcutRow>
@@ -48,7 +48,7 @@ const ShortcutText = styled(Box)`
 
 const KeyCombo = styled(Box)`
   display: flex;
-  gap: 8px;
+  gap: 4px;
   flex-shrink: 0;
   flex-wrap: wrap;
 `;
@@ -59,7 +59,7 @@ const Key = styled("kbd")`
   border-radius: 6px;
   padding: 5px 10px;
   font-size: 0.85rem;
-  font-family: "Roboto Mono", monospace;
+  font-family: "Roboto Mono", monospace !important;
   color: ${({ theme }) => (theme.darkmode ? "#fff" : "#111")};
   box-shadow: ${({ theme }) =>
     theme.darkmode

@@ -198,10 +198,9 @@ export const SettingsDialog = ({ open, onClose, handleOpen }: SettingsProps) => 
     }
   }, [muiTheme.palette.mode, muiTheme.palette.secondary.main, open, user.theme, user.darkmode]);
 
-  // print shortcut handler
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if ((e.ctrlKey || e.metaKey) && e.key === "p") {
+      if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "p") {
         e.preventDefault();
         handleDialogClose();
         navigate("/");

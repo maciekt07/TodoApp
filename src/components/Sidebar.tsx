@@ -170,6 +170,25 @@ export const ProfileSidebar = () => {
     }
   };
 
+  // const avatarButtonRef = useRef<HTMLButtonElement | null>(null);
+
+  // useEffect(() => {
+  //   const handleKeyDown = (e: KeyboardEvent) => {
+  //     if (e.repeat) return;
+  //     if ((e.metaKey || e.ctrlKey) && !e.shiftKey && !e.altKey && e.key.toLowerCase() === "b") {
+  //       e.preventDefault();
+  //       if (open) {
+  //         setAnchorEl(null);
+  //       } else if (avatarButtonRef.current) {
+  //         setAnchorEl(avatarButtonRef.current);
+  //       }
+  //     }
+  //   };
+
+  //   document.addEventListener("keydown", handleKeyDown);
+  //   return () => document.removeEventListener("keydown", handleKeyDown);
+  // }, [open]);
+
   return (
     <Container>
       <Tooltip title={<div translate={name ? "no" : "yes"}>{name || "User"}</div>}>

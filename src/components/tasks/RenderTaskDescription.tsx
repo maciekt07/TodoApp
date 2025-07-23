@@ -23,7 +23,7 @@ export const RenderTaskDescription = memo(
     const { expandedTasks, toggleShowMore } = useContext(TaskContext);
     if (!task.description) return null;
 
-    const isExpanded = expandedTasks.includes(task.id);
+    const isExpanded = enableMoreButton ? expandedTasks.includes(task.id) : false;
 
     const { description, color } = task;
 
