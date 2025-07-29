@@ -33,6 +33,17 @@ const greetingsText: string[] = [
   hoursLeft > 4
     ? `${hoursLeft} hours left in the day. Use them wisely!`
     : `Only ${hoursLeft} hours left in the day`,
+  // New motivational greetings
+  "Every step forward is progress. Keep going!",
+  "Small actions today lead to big results tomorrow.",
+  "You’re one task away from a great day!",
+  "Let your productivity inspire others.",
+  "Success is built on daily habits. Start now!",
+  "Your future self will thank you for today’s effort.",
+  "Stay positive, work hard, make it happen!",
+  "A productive day starts with a single action.",
+  "You have the power to make today amazing!",
+  "Focus, finish, and feel accomplished!",
 ];
 
 /**
