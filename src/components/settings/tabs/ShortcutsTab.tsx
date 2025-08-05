@@ -13,7 +13,7 @@ export default function ShortcutsTab() {
         description="Save all tasks and download as JSON file"
         keys={[cmdOrCtrl, "S"]}
       />
-      <ShortcutItem name="Quick Search" description="Focus search input" keys={["Ctrl", "/"]} />
+      <ShortcutItem name="Quick Search" description="Focus search input" keys={[cmdOrCtrl, "/"]} />
       <ShortcutItem
         name="Print Tasks"
         description="Print the current task list"

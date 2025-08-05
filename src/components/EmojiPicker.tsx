@@ -440,6 +440,9 @@ const EmojiPickerContainer = styled(DialogContent)`
   margin: 8px 16px;
   animation: ${fadeIn} 0.4s ease-in;
   padding: 0;
+  @media (prefers-reduced-motion: reduce) {
+    animation: none !important;
+  }
 `;
 
 const SimplePickerContainer = styled.div`
@@ -449,6 +452,9 @@ const SimplePickerContainer = styled.div`
   margin: 16px;
   animation: ${fadeIn} 0.4s ease-in;
   padding: 0;
+  @media (prefers-reduced-motion: reduce) {
+    animation: none !important;
+  }
 `;
 
 const EmojiAvatar = styled(Avatar)<{ clr: string | undefined }>`
@@ -465,10 +471,12 @@ const EditBadge = styled(Avatar)`
   cursor: pointer;
 `;
 
-const PickerLoader = styled.div<{
+interface PickerLoaderProps {
   pickerTheme: "light" | "dark" | undefined;
   width?: CSSProperties["width"] | undefined;
-}>`
+}
+
+const PickerLoader = styled.div<PickerLoaderProps>`
   display: flex;
   align-items: center;
   justify-content: center;
@@ -483,4 +491,7 @@ const PickerLoader = styled.div<{
 
 const EmojiElement = styled.div`
   animation: ${fadeIn} 0.4s ease-in;
+  @media (prefers-reduced-motion: reduce) {
+    animation: none !important;
+  }
 `;

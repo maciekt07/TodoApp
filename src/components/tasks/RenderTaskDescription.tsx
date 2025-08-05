@@ -5,6 +5,7 @@ import { Button, Tooltip } from "@mui/material";
 import { TaskContext } from "../../contexts/TaskContext";
 import styled from "@emotion/styled";
 import { getFontColor } from "../../utils";
+import { LinkOffRounded } from "@mui/icons-material";
 
 interface RenderTaskDescriptionProps {
   task: Task;
@@ -148,21 +149,30 @@ const DescriptionLink = memo(
     const LinkContent = (
       <StyledDescriptionLink
         id="task-description-link"
-        href={disabled ? undefined : url}
-        rel={disabled ? undefined : "noreferrer"}
         clr={color}
         data-disabled={disabled}
         disabled={disabled}
       >
-        <div>
-          <FaviconImage
-            draggable={false}
-            alt="favicon"
-            src={`https://www.google.com/s2/favicons?sz=96&domain_url=${url}`}
-            style={{ width: 20, height: 20, marginRight: 2, borderRadius: 4 }}
-          />
-          {textHighlighter(domain)}
-        </div>
+        {/* put a tag inside button to enable link preview on ios */}
+        <a
+          href={disabled ? undefined : url}
+          rel={disabled ? undefined : "noreferrer"}
+          target="_blank"
+        >
+          <div>
+            {disabled ? (
+              <LinkOffRounded />
+            ) : (
+              <FaviconImage
+                draggable={false}
+                alt="favicon"
+                src={`https://www.google.com/s2/favicons?sz=96&domain_url=${url}`}
+                style={{ width: 20, height: 20, marginRight: 2, borderRadius: 4 }}
+              />
+            )}
+            {textHighlighter(domain)}
+          </div>
+        </a>
       </StyledDescriptionLink>
     );
 

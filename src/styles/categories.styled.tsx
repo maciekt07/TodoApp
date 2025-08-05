@@ -47,6 +47,10 @@ export const CategoryElement = styled.div<{ clr: string }>`
   @media (max-width: 768px) {
     width: 360px;
   }
+
+  @media (prefers-reduced-motion: reduce) {
+    animation: none !important;
+  }
 `;
 
 export const CategoryContent = styled.div`
@@ -119,6 +123,10 @@ export const AssociatedTasksAccordion = styled(Accordion)`
 
 const StarIconStyles = css`
   animation: ${scale} 0.2s ease-in;
+
+  @media (prefers-reduced-motion: reduce) {
+    animation: none !important;
+  }
 `;
 
 export const StarChecked = styled(StarRounded)`

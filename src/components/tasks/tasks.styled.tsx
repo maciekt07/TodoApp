@@ -43,6 +43,11 @@ export const TaskContainer = styled.div<TaskComponentProps>`
       theme.primary === backgroundColor ? "#000000" : getFontColor(theme.primary)} !important;
   }
 
+  @media (prefers-reduced-motion: reduce) {
+    animation: none !important;
+    transition: none !important;
+  }
+
   @media (max-width: 768px) {
     padding: 14px 14px 14px 18px;
     margin-top: 10px;
@@ -144,6 +149,9 @@ export const TaskNotFound = styled.div`
   opacity: 0.9;
   margin-top: 18px;
   animation: ${fadeIn} 0.5s ease-in;
+  @media (prefers-reduced-motion: reduce) {
+    animation: none !important;
+  }
 `;
 
 export const TasksContainer = styled.main`
@@ -189,7 +197,7 @@ export const Pinned = styled.div`
   font-size: 16px;
 `;
 
-export const SelectedTasksContainer = styled.div`
+export const TaskActionContainer = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -219,6 +227,9 @@ export const StyledRadio = styled(Checkbox)<{ clr: string }>`
   &.Mui-checked {
     color: ${({ clr }) => clr} !important;
   }
+  @media (prefers-reduced-motion: reduce) {
+    animation: none !important;
+  }
 `;
 
 const radioIconStyles = css`
@@ -226,6 +237,9 @@ const radioIconStyles = css`
   font-size: 24px;
   @media (max-width: 768px) {
     font-size: 26px;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    animation: none !important;
   }
 `;
 
@@ -349,6 +363,9 @@ export const RingAlarm = styled(Alarm)<{ animate?: boolean }>`
     -webkit-animation: none;
     -moz-animation: none;
     animation: none;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    animation: none !important;
   }
 `;
 

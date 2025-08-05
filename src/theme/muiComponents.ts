@@ -73,6 +73,23 @@ export const muiComponentsProps: Theme["components"] = {
         "& .MuiInputBase-root": {
           borderRadius: "16px",
         },
+        "@media (prefers-reduced-motion: reduce)": {
+          "& *": {
+            animation: "none !important",
+            transition: "none !important",
+          },
+        },
+      },
+    },
+  },
+
+  MuiMenu: {
+    styleOverrides: {
+      paper: {
+        "@media (prefers-reduced-motion: reduce)": {
+          animation: "none !important",
+          transition: "none !important",
+        },
       },
     },
   },

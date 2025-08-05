@@ -35,7 +35,7 @@ import {
   RingAlarm,
   SearchClear,
   SearchInput,
-  SelectedTasksContainer,
+  TaskActionContainer,
   TasksContainer,
   CategoriesListContainer,
   TaskNotFound,
@@ -493,7 +493,7 @@ export const TasksList: React.FC = () => {
           </CategoriesListContainer>
         )}
         {multipleSelectedTasks.length > 0 && (
-          <SelectedTasksContainer>
+          <TaskActionContainer>
             <div>
               <h3>
                 <RadioButtonChecked /> &nbsp; Selected {multipleSelectedTasks.length} task
@@ -529,10 +529,10 @@ export const TasksList: React.FC = () => {
                 </IconButton>
               </Tooltip>
             </div>
-          </SelectedTasksContainer>
+          </TaskActionContainer>
         )}
         {moveMode && (
-          <SelectedTasksContainer>
+          <TaskActionContainer>
             <div>
               <h3>
                 <MoveUpRounded /> &nbsp; Move Mode Enabled
@@ -542,7 +542,7 @@ export const TasksList: React.FC = () => {
             <Button variant="contained" onClick={() => setMoveMode(false)}>
               Done
             </Button>
-          </SelectedTasksContainer>
+          </TaskActionContainer>
         )}
         {search && orderedTasks.length > 1 && user.tasks.length > 0 && (
           <div

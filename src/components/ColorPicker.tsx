@@ -18,6 +18,7 @@ import {
   Grid,
   Popover,
   Tooltip,
+  useMediaQuery,
 } from "@mui/material";
 import { getColorName } from "ntc-ts";
 import { CSSProperties, useCallback, useContext, useEffect, useRef, useState } from "react";
@@ -59,6 +60,8 @@ export const ColorPicker: React.FC<ColorPickerProps> = ({
   const colorElementRefs = useRef<Array<HTMLElement | null>>([]);
 
   const theme = useTheme();
+
+  const prefersReducedMotion = useMediaQuery("(prefers-reduced-motion: reduce)");
 
   useEffect(() => {
     // Update the selected color when the color prop changes
@@ -163,6 +166,11 @@ export const ColorPicker: React.FC<ColorPickerProps> = ({
         onChange={(_event, isExpanded) => setAccordionExpanded(isExpanded)}
         isExpanded={accordionExpanded}
         fontColor={fontColor}
+        slotProps={{
+          transition: {
+            timeout: prefersReducedMotion ? 0 : undefined,
+          },
+        }}
         sx={{
           width,
         }}
@@ -429,6 +437,10 @@ const DialogPreview = styled.div`
 const SelectedIcon = styled(DoneRounded)`
   font-size: 28px;
   animation: ${scale} 0.25s;
+
+  @media (prefers-reduced-motion: reduce) {
+    animation: none !important;
+  }
 `;
 
 const StyledColorPicker = styled.input`

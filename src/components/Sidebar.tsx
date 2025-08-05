@@ -550,8 +550,14 @@ const StyledSwipeableDrawer = styled(SwipeableDrawer)`
     @media (max-width: 600px) {
       min-width: 55vw;
     }
+
+    @media (prefers-reduced-motion: reduce) {
+      animation: none !important;
+      transition: none !important;
+    }
   }
 `;
+
 const LogoutAnimation = keyframes`
   0% {
     transform: scale(1);
@@ -623,6 +629,17 @@ const StyledMenuItem = styled(MenuItem)`
       animation: ${ring} 2.5s ease-in alternate;
     }
   }
+
+  /* disable all animation and transition when user prefers reduced motion */
+  @media (prefers-reduced-motion: reduce) {
+    &,
+    & svg,
+    & .bmc-icon {
+      animation: none !important;
+      transition: none !important;
+      transform: none !important;
+    }
+  }
 `;
 
 const SettingsMenuItem = styled(StyledMenuItem)`
@@ -668,6 +685,9 @@ const StyledPulseMenuLabel = styled(MenuLabel)`
   animation: ${({ theme }) => pulseAnimation(theme.primary, 6)} 1.2s infinite;
   padding: 6px;
   margin-right: 4px;
+  @media (prefers-reduced-motion: reduce) {
+    animation: none !important;
+  }
 `;
 
 const LogoContainer = styled.div`

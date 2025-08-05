@@ -98,6 +98,10 @@ export const ProgressPercentageContainer = styled(Box)<{ glow: boolean }>`
           ${progressPulse(theme.primary)} 4s infinite ease-in
         `
       : "none"};
+
+  @media (prefers-reduced-motion: reduce) {
+    animation: none !important;
+  }
 `;
 
 export const StyledProgress = styled(CircularProgress)<{ glow: boolean }>`
@@ -132,6 +136,7 @@ export const AddButton = styled(Button)<{ animate?: boolean; glow: boolean }>`
     background-color: ${({ theme }) => theme.primary};
     backdrop-filter: blur(6px);
   }
+
   animation: ${scale} 0.5s;
   ${({ animate, theme }) =>
     animate &&
@@ -139,9 +144,20 @@ export const AddButton = styled(Button)<{ animate?: boolean; glow: boolean }>`
       animation: ${pulseAnimation(theme.primary, 14)} 1.2s infinite;
     `}
 
+  @media (prefers-reduced-motion: reduce) {
+    animation: none;
+    // remove only scale animation
+    ${({ animate, theme }) =>
+      animate &&
+      css`
+        animation: ${pulseAnimation(theme.primary, 14)} 1.2s infinite;
+      `}
+  }
+
   @media (max-width: 1024px) {
     right: 24px;
   }
+
   @media print {
     display: none;
   }

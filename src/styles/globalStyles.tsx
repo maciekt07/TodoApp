@@ -205,13 +205,24 @@ export const GlobalStyles = () => {
         .MuiPaper-elevation8 {
           border-radius: 16px !important;
         }
-        .MuiSelect-select,
         .MuiSelect-select {
           display: flex !important;
           justify-content: left;
           align-items: center;
           gap: 4px;
         }
+        .MuiBackdrop-root {
+          @media (prefers-reduced-motion: reduce) {
+            transition: none !important;
+          }
+        }
+        .MuiDialog-container {
+          @media (prefers-reduced-motion: reduce) {
+            transition: none !important;
+            animation: none !important;
+          }
+        }
+
         .MuiTooltip-tooltip {
           color: ${theme.darkmode ? "white" : "black"} !important;
           background-color: ${theme.darkmode ? "#141431dd" : "#ededf3dd"} !important;
@@ -219,6 +230,9 @@ export const GlobalStyles = () => {
           padding: 8px 16px !important;
           border-radius: 8px !important;
           font-size: 12px !important;
+          @media (prefers-reduced-motion: reduce) {
+            transition: none !important;
+          }
         }
         .MuiBottomNavigationAction-root {
           padding: 12px !important;
