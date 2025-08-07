@@ -13,6 +13,7 @@ import { GlobalStyles } from "./styles";
 import { Themes, createCustomTheme, isDarkMode } from "./theme/createTheme";
 import { showToast } from "./utils";
 import { GlobalQuickSaveHandler } from "./components/GlobalQuickSaveHandler";
+import type { Category, UUID } from "./types/user";
 
 function App() {
   const { user, setUser } = useContext(UserContext);
@@ -20,22 +21,26 @@ function App() {
 
   // Initialize user properties if they are undefined
   // this allows to add new properties to the user object without error
-  const updateNestedProperties = useCallback(
+  useEffect(() => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    (userObject: any, defaultObject: any) => {
-      if (!userObject) {
-        return defaultObject;
-      }
+    const updateNestedProperties = (userObject: any, defaultObject: any): any => {
+      if (!userObject) return defaultObject;
 
       Object.keys(defaultObject).forEach((key) => {
-        if (key === "categories") {
-          return;
-        }
+        if (key === "categories") return;
+
         if (
           key === "colorList" &&
-          user.colorList &&
-          !defaultUser.colorList.every((element, index) => element === user.colorList[index])
+          userObject.colorList &&
+          !defaultUser.colorList.every((element, index) => element === userObject.colorList[index])
         ) {
+          return;
+        }
+
+        if (key === "favoriteCategories" && Array.isArray(userObject.favoriteCategories)) {
+          userObject.favoriteCategories = userObject.favoriteCategories.filter((id: UUID) =>
+            userObject.categories.some((cat: Category) => cat.id === id),
+          );
           return;
         }
 
@@ -72,16 +77,13 @@ function App() {
       });
 
       return userObject;
-    },
-    [user.colorList],
-  );
+    };
 
-  useEffect(() => {
     setUser((prevUser) => {
       const updatedUser = updateNestedProperties({ ...prevUser }, defaultUser);
       return prevUser !== updatedUser ? updatedUser : prevUser;
     });
-  }, [setUser, user.colorList, updateNestedProperties]);
+  }, [setUser]);
 
   useEffect(() => {
     const setBadge = async (count: number) => {

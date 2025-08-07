@@ -36,7 +36,6 @@ import { getFontColor, showToast, timeAgo } from "../utils";
 import { useOnlineStatus } from "../hooks/useOnlineStatus";
 import DisabledThemeProvider from "../contexts/DisabledThemeProvider";
 
-//FIXME: deleted categories are not being removed from tasks on other device
 export default function Sync() {
   const { user } = useContext(UserContext);
 

@@ -46,23 +46,40 @@ export async function extractOtherData(
 
 /**
  * Merges two arrays of tasks, keeping only non-deleted tasks from both devices
+ * and removing references to deleted categories from tasks
  */
 function mergeTasks(
   localTasks: Task[],
   remoteTasks: Task[],
   localDeleted: UUID[],
   remoteDeleted: UUID[],
+  localDeletedCategories: UUID[],
+  remoteDeletedCategories: UUID[],
 ): Task[] {
   const mergedTasks = new Map<UUID, Task>();
   const allDeletedTasks = new Set([...localDeleted, ...remoteDeleted]);
+  const allDeletedCategories = new Set([...localDeletedCategories, ...remoteDeletedCategories]);
   const taskOrder = new Map<UUID, number>();
 
   // process tasks in creation date order to establish base ordering
-  const allTasks = [...localTasks, ...remoteTasks]
+  const processedTasks = [...localTasks, ...remoteTasks]
     .filter((task) => !allDeletedTasks.has(task.id))
-    .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+    .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
+    .map((task: Task) => {
+      // clean up task categories, removing any references to deleted categories
+      if (task.category) {
+        const filteredCategories = task.category.filter(
+          (cat: Category) => !allDeletedCategories.has(cat.id),
+        );
+        if (filteredCategories.length === 0) {
+          return { ...task, category: undefined };
+        }
+        return { ...task, category: filteredCategories };
+      }
+      return task;
+    });
 
-  allTasks.forEach((task, index) => {
+  processedTasks.forEach((task: Task, index: number) => {
     const existingTask = mergedTasks.get(task.id);
     if (!existingTask) {
       mergedTasks.set(task.id, task);
@@ -259,6 +276,8 @@ export function mergeSyncData(
     syncData.tasks,
     localDeletedTasks,
     syncData.deletedTasks,
+    localDeletedCategories,
+    syncData.deletedCategories,
   );
 
   // merge categories
