@@ -158,6 +158,7 @@ function App() {
           secondary: getMuiTheme().palette.secondary.main,
           darkmode: isDarkMode(user.darkmode, systemTheme, getMuiTheme().palette.secondary.main),
           mui: getMuiTheme(),
+          reduceMotion: user.settings.reduceMotion || "system",
         }}
       >
         <GlobalStyles />

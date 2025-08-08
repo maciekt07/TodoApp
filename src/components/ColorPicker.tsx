@@ -18,17 +18,17 @@ import {
   Grid,
   Popover,
   Tooltip,
-  useMediaQuery,
 } from "@mui/material";
 import { getColorName } from "ntc-ts";
 import { CSSProperties, useCallback, useContext, useEffect, useRef, useState } from "react";
 import { type ToastOptions } from "react-hot-toast";
 import { MAX_COLORS_IN_LIST } from "../constants";
 import { UserContext } from "../contexts/UserContext";
-import { ColorElement, DialogBtn, scale } from "../styles";
+import { ColorElement, DialogBtn, scale, reduceMotion } from "../styles";
 import { ColorPalette } from "../theme/themeConfig";
 import { getFontColor, isDark, isHexColor, showToast } from "../utils";
 import { CustomDialogTitle } from "./DialogTitle";
+import { usePrefersReducedMotion } from "../hooks/usePrefersReducedMotion";
 
 interface ColorPickerProps {
   color: string;
@@ -61,7 +61,7 @@ export const ColorPicker: React.FC<ColorPickerProps> = ({
 
   const theme = useTheme();
 
-  const prefersReducedMotion = useMediaQuery("(prefers-reduced-motion: reduce)");
+  const prefersReducedMotion = usePrefersReducedMotion(user.settings.reduceMotion);
 
   useEffect(() => {
     // Update the selected color when the color prop changes
@@ -438,9 +438,7 @@ const SelectedIcon = styled(DoneRounded)`
   font-size: 28px;
   animation: ${scale} 0.25s;
 
-  @media (prefers-reduced-motion: reduce) {
-    animation: none !important;
-  }
+  ${({ theme }) => reduceMotion(theme)}
 `;
 
 const StyledColorPicker = styled.input`

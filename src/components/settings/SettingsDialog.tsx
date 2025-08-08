@@ -26,11 +26,10 @@ import {
   useState,
   useCallback,
 } from "react";
-import { CustomDialogTitle, TabGroupProvider, TabPanel } from "..";
+import { CustomDialogTitle, TabGroupProvider } from "..";
 import { UserContext } from "../../contexts/UserContext";
 import { useResponsiveDisplay } from "../../hooks/useResponsiveDisplay";
-import { CloseButton, CloseButtonContainer, StyledTab } from "./settings.styled";
-import { fadeIn } from "../../styles";
+import { CloseButton, CloseButtonContainer, StyledTab, StyledTabPanel } from "./settings.styled";
 import { useNavigate } from "react-router-dom";
 import { showToast } from "../../utils";
 
@@ -261,16 +260,7 @@ export const SettingsDialog = ({ open, onClose, handleOpen }: SettingsProps) => 
         >
           <TabGroupProvider value={tabValue} name="settings">
             {settingsTabs.map((tab, index) => (
-              <TabPanel
-                index={index}
-                key={index}
-                sx={{
-                  animation: `${fadeIn} 0.3s ease-in`,
-                  "@media (prefers-reduced-motion: reduce)": {
-                    animation: "none !important",
-                  },
-                }}
-              >
+              <StyledTabPanel index={index} key={index}>
                 {tabValue === index && (
                   <Suspense
                     fallback={
@@ -287,7 +277,7 @@ export const SettingsDialog = ({ open, onClose, handleOpen }: SettingsProps) => 
                     <tab.Component />
                   </Suspense>
                 )}
-              </TabPanel>
+              </StyledTabPanel>
             ))}
           </TabGroupProvider>
         </Box>

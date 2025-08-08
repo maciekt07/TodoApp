@@ -11,13 +11,13 @@ export default function GeneralTab() {
         header="Enable Categories"
         text="Enable categories to organize your tasks."
       />
-      {systemInfo.isPWA && "setAppBadge" in navigator && (
-        <CustomSwitch
-          settingKey="appBadge"
-          header="App Badge"
-          text="Show a badge on the PWA icon to indicate the number of not done tasks."
-        />
-      )}
+      <CustomSwitch
+        settingKey="appBadge"
+        header="App Badge"
+        text="Show a badge on the PWA icon to indicate the number of not done tasks."
+        disabled={!systemInfo.isPWA || !("setAppBadge" in navigator)}
+        disabledReason="This feature requires the app to be installed as a PWA and supported by your browser."
+      />
       <CustomSwitch
         settingKey="doneToBottom"
         header="Completed Tasks at Bottom"

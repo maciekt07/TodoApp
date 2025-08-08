@@ -1,5 +1,5 @@
-import { Box, BoxProps, Typography } from "@mui/material";
-import React, { createContext, ReactNode, useContext } from "react";
+import { Box, BoxProps } from "@mui/material";
+import { createContext, ReactNode, useContext } from "react";
 
 const TabGroupContext = createContext<{ name: string; value: number } | undefined>(undefined);
 
@@ -38,11 +38,7 @@ export function TabPanel({ children, index, ...other }: TabPanelProps) {
       style={{ overflowX: "hidden" }}
       {...other}
     >
-      {value === index && (
-        <Box>
-          <Typography>{children}</Typography>
-        </Box>
-      )}
+      {value === index && <Box>{children}</Box>}
     </Box>
   );
 }

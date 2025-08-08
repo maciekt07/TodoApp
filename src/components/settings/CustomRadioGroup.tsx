@@ -4,6 +4,7 @@ import { getFontColor } from "../../utils";
 import type { OptionItem } from "./settingsTypes";
 import { useEffect, useState } from "react";
 import { SyncAltRounded } from "@mui/icons-material";
+import { css } from "@emotion/react";
 
 interface CustomRadioGroupProps<T> {
   options: OptionItem<T>[];
@@ -119,7 +120,6 @@ const StyledRadioControl = styled(Radio)`
   margin: 0;
   padding: 0;
   z-index: 1;
-  /* cursor: isDisabled ? "not-allowed" : "pointer", */
 `;
 
 interface StyledLabelBoxProps {
@@ -146,19 +146,19 @@ const StyledLabelBox = styled(Box)<StyledLabelBoxProps>`
 
   ${({ disabled, theme, selected }) =>
     !disabled &&
-    `
-    &:hover {
-      background-color: ${selected ? theme.primary : "rgba(0, 0, 0, 0.08)"};
-    }
-  `}
+    css`
+      &:hover {
+        background-color: ${selected ? theme.primary : "rgba(0, 0, 0, 0.08)"};
+      }
+    `}
 
   ${({ focused, theme }) =>
     focused &&
-    `
-    outline: 3px solid ${theme.primary};
-    outline-offset: 3px;
-    box-shadow: 0 0 8px ${theme.primary}AA;
-  `}
+    css`
+      outline: 3px solid ${theme.primary};
+      outline-offset: 3px;
+      box-shadow: 0 0 8px ${theme.primary}AA;
+    `}
 
   @media (max-width: 768px) {
     width: 80px;

@@ -1,6 +1,7 @@
 import { Global, css, useTheme } from "@emotion/react";
 import { getFontColor } from "../utils";
 import { ColorPalette } from "../theme/themeConfig";
+import { reduceMotion } from "./reduceMotion.styled";
 
 export const GlobalStyles = () => {
   const theme = useTheme();
@@ -211,16 +212,10 @@ export const GlobalStyles = () => {
           align-items: center;
           gap: 4px;
         }
-        .MuiBackdrop-root {
-          @media (prefers-reduced-motion: reduce) {
-            transition: none !important;
-          }
-        }
-        .MuiDialog-container {
-          @media (prefers-reduced-motion: reduce) {
-            transition: none !important;
-            animation: none !important;
-          }
+
+        .MuiDialog-container,
+        .MuiPaper-root {
+          ${reduceMotion(theme)}
         }
 
         .MuiTooltip-tooltip {
@@ -230,9 +225,7 @@ export const GlobalStyles = () => {
           padding: 8px 16px !important;
           border-radius: 8px !important;
           font-size: 12px !important;
-          @media (prefers-reduced-motion: reduce) {
-            transition: none !important;
-          }
+          ${reduceMotion(theme)}
         }
         .MuiBottomNavigationAction-root {
           padding: 12px !important;

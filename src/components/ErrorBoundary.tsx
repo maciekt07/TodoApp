@@ -20,7 +20,6 @@ import {
   DialogContent,
   Typography,
 } from "@mui/material";
-import { Emoji } from "emoji-picker-react";
 import React, { ErrorInfo } from "react";
 import { CustomDialogTitle, TaskIcon } from ".";
 import { UserContext } from "../contexts/UserContext";
@@ -102,15 +101,18 @@ class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoundarySta
 
       return (
         <Container>
-          <ErrorHeader>
-            <span>Oops! An error occurred.&nbsp;</span>
-            <span>
-              <Emoji size={38} unified="1f644" />
-            </span>
-          </ErrorHeader>
+          <ErrorHeader>Oops! An error occurred.</ErrorHeader>
           <ErrorIconContainer>
             <TaskIcon scale={0.6} variant="error" />
           </ErrorIconContainer>
+          <h3>
+            <span style={{ color: "#ff3131", display: "inline-block" }}>
+              <ErrorOutlineRounded sx={{ verticalAlign: "middle", mb: "4px" }} /> ERROR:
+            </span>{" "}
+            <span translate="no">
+              [{this.state.error?.name}] {this.state.error?.message}
+            </span>
+          </h3>
           <h2>
             To fix it, try clearing your local files (cookies and cache) and then refresh the page.
             If the problem persists, please report the issue via{" "}
@@ -130,14 +132,6 @@ class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoundarySta
               <DeleteForeverRounded /> &nbsp; Auto Clear
             </StyledButton>
           </div>
-          <h3>
-            <span style={{ color: "#ff3131", display: "inline-block" }}>
-              <ErrorOutlineRounded sx={{ verticalAlign: "middle", mb: "4px" }} /> ERROR:
-            </span>{" "}
-            <span translate="no">
-              [{this.state.error?.name}] {this.state.error?.message}
-            </span>
-          </h3>
 
           <ErrorAccordion disableGutters>
             <AccordionSummary expandIcon={<ErrorExpandIcon />}>
@@ -237,6 +231,7 @@ const ErrorAccordion = styled(Accordion)`
   box-shadow: none;
   padding: 4px;
   margin-bottom: 18px;
+  margin-top: 18px;
 `;
 
 const ErrorExpandIcon = styled(ExpandMoreRounded)`

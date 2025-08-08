@@ -11,6 +11,8 @@ import {
   Typography,
 } from "@mui/material";
 import { useResponsiveDisplay } from "../../hooks/useResponsiveDisplay";
+import { TabPanel } from "../TabPanel";
+import { fadeIn, reduceMotion } from "../../styles";
 
 const UnstyledSelect = (props: SelectProps) => {
   const isMobile = useResponsiveDisplay();
@@ -37,6 +39,11 @@ const UnstyledSelect = (props: SelectProps) => {
     />
   );
 };
+
+export const StyledTabPanel = styled(TabPanel)`
+  animation: ${fadeIn} 0.3s ease-in;
+  ${({ theme }) => reduceMotion(theme)}
+`;
 
 export const StyledSelect = styled(UnstyledSelect)`
   margin: 8px 0;

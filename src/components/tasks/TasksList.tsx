@@ -422,7 +422,7 @@ export const TasksList: React.FC = () => {
                   input: {
                     startAdornment: (
                       <InputAdornment position="start">
-                        <Search sx={{ color: "white" }} />
+                        <Search sx={{ color: "white", opacity: moveMode ? 0.5 : undefined }} />
                       </InputAdornment>
                     ),
                     endAdornment: search ? (

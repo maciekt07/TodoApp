@@ -3,6 +3,7 @@ import { getFontColor } from "../utils";
 import { fadeIn, scale } from "./keyframes.styled";
 import { Accordion, Button, css, TextField } from "@mui/material";
 import { StarOutlineRounded, StarRounded } from "@mui/icons-material";
+import { reduceMotion } from ".";
 
 export const CategoriesContainer = styled.div`
   display: flex;
@@ -48,9 +49,7 @@ export const CategoryElement = styled.div<{ clr: string }>`
     width: 360px;
   }
 
-  @media (prefers-reduced-motion: reduce) {
-    animation: none !important;
-  }
+  ${({ theme }) => reduceMotion(theme)}
 `;
 
 export const CategoryContent = styled.div`
@@ -123,16 +122,14 @@ export const AssociatedTasksAccordion = styled(Accordion)`
 
 const StarIconStyles = css`
   animation: ${scale} 0.2s ease-in;
-
-  @media (prefers-reduced-motion: reduce) {
-    animation: none !important;
-  }
 `;
 
 export const StarChecked = styled(StarRounded)`
   ${StarIconStyles}
+  ${({ theme }) => reduceMotion(theme)}
 `;
 
 export const StarUnchecked = styled(StarOutlineRounded)`
   ${StarIconStyles}
+  ${({ theme }) => reduceMotion(theme)}
 `;

@@ -114,7 +114,7 @@ export const RenderTaskDescription = memo(
 
     return (
       <>
-        <ScreenDescription>
+        <ScreenDescription title={!isExpanded && shouldShowButton ? task.description : undefined}>
           {descriptionWithLinks}
           {!isExpanded && showMore && !task.done && "..."}
           {shouldShowButton && !task.done && (

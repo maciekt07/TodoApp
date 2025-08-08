@@ -59,15 +59,6 @@ export interface Task {
   position?: number;
 }
 
-// export type Emoji = Omit<
-//   EmojiClickData,
-//   "activeSkinTone" | "names" | "unifiedWithoutSkinTone" | "getImageUrl"
-// > & {
-//   name: string;
-// };
-
-// export type Emoji = Pick<EmojiClickData, "unified" | "emoji" | "names">;
-
 /**
  * Represents a category in the application.
  */
@@ -97,6 +88,8 @@ export interface AppSettings {
   voice: `${string}::${string}`;
   voiceVolume: number;
   sortOption: SortOption;
+  reduceMotion: ReduceMotionOption;
 }
 
 export type SortOption = "dateCreated" | "dueDate" | "alphabetical" | "custom";
+export type ReduceMotionOption = "system" | "on" | "off";

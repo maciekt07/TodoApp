@@ -38,7 +38,7 @@ import {
 import { CATEGORY_NAME_MAX_LENGTH, TASK_NAME_MAX_LENGTH } from "../constants";
 import { UserContext } from "../contexts/UserContext";
 import { useOnlineStatus } from "../hooks/useOnlineStatus";
-import { DialogBtn, fadeIn } from "../styles";
+import { DialogBtn, fadeIn, reduceMotion } from "../styles";
 import { ColorPalette } from "../theme/themeConfig";
 import { getFontColor, showToast, systemInfo } from "../utils";
 import { CustomDialogTitle } from "./DialogTitle";
@@ -417,6 +417,9 @@ export const CustomEmojiPicker = ({ emoji, setEmoji, color, name, type }: EmojiP
                   <RemoveCircleOutline /> &nbsp; Remove Emoji
                 </DialogBtn>
               )}
+              {/* <DialogBtn onClick={() => n("#settings/Emoji")}>
+                <SettingsRounded /> &nbsp; Settings
+              </DialogBtn> */}
               <DialogBtn onClick={toggleEmojiPicker}>Cancel</DialogBtn>
             </DialogActions>
           </Dialog>
@@ -440,9 +443,7 @@ const EmojiPickerContainer = styled(DialogContent)`
   margin: 8px 16px;
   animation: ${fadeIn} 0.4s ease-in;
   padding: 0;
-  @media (prefers-reduced-motion: reduce) {
-    animation: none !important;
-  }
+  ${({ theme }) => reduceMotion(theme)}
 `;
 
 const SimplePickerContainer = styled.div`
@@ -452,9 +453,7 @@ const SimplePickerContainer = styled.div`
   margin: 16px;
   animation: ${fadeIn} 0.4s ease-in;
   padding: 0;
-  @media (prefers-reduced-motion: reduce) {
-    animation: none !important;
-  }
+  ${({ theme }) => reduceMotion(theme)}
 `;
 
 const EmojiAvatar = styled(Avatar)<{ clr: string | undefined }>`
@@ -491,7 +490,5 @@ const PickerLoader = styled.div<PickerLoaderProps>`
 
 const EmojiElement = styled.div`
   animation: ${fadeIn} 0.4s ease-in;
-  @media (prefers-reduced-motion: reduce) {
-    animation: none !important;
-  }
+  ${({ theme }) => reduceMotion(theme)}
 `;

@@ -42,7 +42,7 @@ import { defaultUser } from "../constants/defaultUser";
 import { UserContext } from "../contexts/UserContext";
 import { fetchBMCInfo } from "../services/bmcApi";
 import { fetchGitHubInfo } from "../services/githubApi";
-import { DialogBtn, UserAvatar, pulseAnimation, ring } from "../styles";
+import { DialogBtn, UserAvatar, pulseAnimation, reduceMotion, ring } from "../styles";
 import { ColorPalette } from "../theme/themeConfig";
 import { getProfilePictureFromDB, showToast, systemInfo, timeAgo } from "../utils";
 
@@ -551,10 +551,7 @@ const StyledSwipeableDrawer = styled(SwipeableDrawer)`
       min-width: 55vw;
     }
 
-    @media (prefers-reduced-motion: reduce) {
-      animation: none !important;
-      transition: none !important;
-    }
+    ${({ theme }) => reduceMotion(theme)}
   }
 `;
 
@@ -631,14 +628,10 @@ const StyledMenuItem = styled(MenuItem)`
   }
 
   /* disable all animation and transition when user prefers reduced motion */
-  @media (prefers-reduced-motion: reduce) {
-    &,
-    & svg,
-    & .bmc-icon {
-      animation: none !important;
-      transition: none !important;
-      transform: none !important;
-    }
+  &,
+  & svg,
+  & .bmc-icon {
+    ${({ theme }) => reduceMotion(theme, { transform: "none !important" })}
   }
 `;
 
@@ -685,9 +678,7 @@ const StyledPulseMenuLabel = styled(MenuLabel)`
   animation: ${({ theme }) => pulseAnimation(theme.primary, 6)} 1.2s infinite;
   padding: 6px;
   margin-right: 4px;
-  @media (prefers-reduced-motion: reduce) {
-    animation: none !important;
-  }
+  ${({ theme }) => reduceMotion(theme)}
 `;
 
 const LogoContainer = styled.div`

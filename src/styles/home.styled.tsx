@@ -2,6 +2,7 @@ import styled from "@emotion/styled";
 import { fadeIn, progressPulse, pulseAnimation, scale } from "./keyframes.styled";
 import { Box, Button, CircularProgress, css, IconButton } from "@mui/material";
 import { getFontColor, isDark } from "../utils";
+import { reduceMotion } from ".";
 
 export const GreetingHeader = styled.div`
   display: flex;
@@ -99,9 +100,7 @@ export const ProgressPercentageContainer = styled(Box)<{ glow: boolean }>`
         `
       : "none"};
 
-  @media (prefers-reduced-motion: reduce) {
-    animation: none !important;
-  }
+  ${({ theme }) => reduceMotion(theme)}
 `;
 
 export const StyledProgress = styled(CircularProgress)<{ glow: boolean }>`
@@ -144,15 +143,7 @@ export const AddButton = styled(Button)<{ animate?: boolean; glow: boolean }>`
       animation: ${pulseAnimation(theme.primary, 14)} 1.2s infinite;
     `}
 
-  @media (prefers-reduced-motion: reduce) {
-    animation: none;
-    // remove only scale animation
-    ${({ animate, theme }) =>
-      animate &&
-      css`
-        animation: ${pulseAnimation(theme.primary, 14)} 1.2s infinite;
-      `}
-  }
+  ${({ theme }) => reduceMotion(theme)}
 
   @media (max-width: 1024px) {
     right: 24px;

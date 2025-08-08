@@ -4,6 +4,7 @@ import { Checkbox, IconButton, TextField, css } from "@mui/material";
 import { fadeIn, ring, scale } from "../../styles/keyframes.styled";
 import { ColorPalette } from "../../theme/themeConfig";
 import { getFontColor, isDark, systemInfo } from "../../utils";
+import { reduceMotion } from "../../styles/reduceMotion.styled";
 
 // TODO: move EmojiContainer to top on smaller screens, fix text spacing
 
@@ -43,10 +44,7 @@ export const TaskContainer = styled.div<TaskComponentProps>`
       theme.primary === backgroundColor ? "#000000" : getFontColor(theme.primary)} !important;
   }
 
-  @media (prefers-reduced-motion: reduce) {
-    animation: none !important;
-    transition: none !important;
-  }
+  ${({ theme }) => reduceMotion(theme)}
 
   @media (max-width: 768px) {
     padding: 14px 14px 14px 18px;
@@ -149,9 +147,7 @@ export const TaskNotFound = styled.div`
   opacity: 0.9;
   margin-top: 18px;
   animation: ${fadeIn} 0.5s ease-in;
-  @media (prefers-reduced-motion: reduce) {
-    animation: none !important;
-  }
+  ${({ theme }) => reduceMotion(theme)}
 `;
 
 export const TasksContainer = styled.main`
@@ -209,6 +205,10 @@ export const TaskActionContainer = styled.div`
   top: ${systemInfo.os === "iOS" ? "52" : "60"}px;
   z-index: 1;
   backdrop-filter: blur(24px);
+
+  animation: ${fadeIn} 0.3s ease-in;
+  ${({ theme }) => reduceMotion(theme)}
+
   & h3 {
     margin: 0;
     display: flex;
@@ -227,9 +227,7 @@ export const StyledRadio = styled(Checkbox)<{ clr: string }>`
   &.Mui-checked {
     color: ${({ clr }) => clr} !important;
   }
-  @media (prefers-reduced-motion: reduce) {
-    animation: none !important;
-  }
+  ${({ theme }) => reduceMotion(theme)}
 `;
 
 const radioIconStyles = css`
@@ -238,17 +236,16 @@ const radioIconStyles = css`
   @media (max-width: 768px) {
     font-size: 26px;
   }
-  @media (prefers-reduced-motion: reduce) {
-    animation: none !important;
-  }
 `;
 
 export const RadioChecked = styled(RadioButtonChecked)`
   ${radioIconStyles}
+  ${({ theme }) => reduceMotion(theme)}
 `;
 
 export const RadioUnchecked = styled(RadioButtonUnchecked)`
   ${radioIconStyles}
+  ${({ theme }) => reduceMotion(theme)}
 `;
 
 export const CategoriesListContainer = styled.div`
@@ -364,9 +361,7 @@ export const RingAlarm = styled(Alarm)<{ animate?: boolean }>`
     -moz-animation: none;
     animation: none;
   }
-  @media (prefers-reduced-motion: reduce) {
-    animation: none !important;
-  }
+  ${({ theme }) => reduceMotion(theme)}
 `;
 
 export const TaskActionsContainer = styled.div`
