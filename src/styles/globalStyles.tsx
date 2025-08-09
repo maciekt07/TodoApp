@@ -2,9 +2,14 @@ import { Global, css, useTheme } from "@emotion/react";
 import { getFontColor } from "../utils";
 import { ColorPalette } from "../theme/themeConfig";
 import { reduceMotion } from "./reduceMotion.styled";
+import { useContext } from "react";
+import { UserContext } from "../contexts/UserContext";
+import { usePrefersReducedMotion } from "../hooks/usePrefersReducedMotion";
 
 export const GlobalStyles = () => {
   const theme = useTheme();
+  const { user } = useContext(UserContext);
+  const prefersReducedMotion = usePrefersReducedMotion(user.settings.reduceMotion);
 
   return (
     <Global
@@ -32,6 +37,7 @@ export const GlobalStyles = () => {
           --rsbs-backdrop-bg: rgba(0, 0, 0, 0.3);
           --rsbs-bg: ${theme.darkmode ? "#383838" : "#ffffff"};
         }
+
         input[type="datetime-local"]:placeholder-shown {
           color: transparent !important;
         }
@@ -70,6 +76,23 @@ export const GlobalStyles = () => {
         }
         div[data-rsbs-header] {
           box-shadow: none;
+        }
+
+        [data-rsbs-root] {
+          ${prefersReducedMotion &&
+          css`
+            --rsbs-animation-duration: 0ms !important;
+            --rsbs-backdrop-opacity: 1 !important;
+          `}
+        }
+
+        [data-rsbs-root],
+        [data-rsbs-root] * {
+          ${reduceMotion(theme, {
+            transform: "none !important",
+            willChange: "auto !important",
+            scrollBehavior: "auto",
+          })};
         }
 
         body {

@@ -1,13 +1,19 @@
 import { useTheme } from "@emotion/react";
-import { Toaster } from "react-hot-toast";
+import { ToastBar, Toaster } from "react-hot-toast";
 import { useResponsiveDisplay } from "../hooks/useResponsiveDisplay";
 import { ColorPalette } from "../theme/themeConfig";
 import { getFontColor } from "../utils";
 import styled from "@emotion/styled";
+import { usePrefersReducedMotion } from "../hooks/usePrefersReducedMotion";
+import { useContext } from "react";
+import { UserContext } from "../contexts/UserContext";
 
 export const CustomToaster = () => {
   const isMobile = useResponsiveDisplay();
   const theme = useTheme();
+  const { user } = useContext(UserContext);
+
+  const prefersReducedMotion = usePrefersReducedMotion(user.settings.reduceMotion);
   return (
     <ToasterContainer>
       <Toaster
@@ -20,6 +26,7 @@ export const CustomToaster = () => {
         toastOptions={{
           position: "bottom-center",
           duration: 4000,
+          removeDelay: prefersReducedMotion ? 0 : 1500,
           style: {
             padding: "14px 22px",
             borderRadius: "18px",
@@ -46,7 +53,21 @@ export const CustomToaster = () => {
             },
           },
         }}
-      />
+      >
+        {(t) =>
+          prefersReducedMotion ? (
+            <ToastBar
+              toast={t}
+              style={{
+                ...t.style,
+                animation: t.visible ? "custom-enter 1s ease" : "custom-exit 1s ease forwards",
+              }}
+            />
+          ) : (
+            <ToastBar toast={t} style={t.style} />
+          )
+        }
+      </Toaster>
     </ToasterContainer>
   );
 };

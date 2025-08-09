@@ -32,6 +32,7 @@ import { useTheme } from "@emotion/react";
 import { TaskContext } from "../../contexts/TaskContext";
 import { ColorPalette } from "../../theme/themeConfig";
 import { ShareDialog } from "./ShareDialog";
+import { usePrefersReducedMotion } from "../../hooks/usePrefersReducedMotion";
 
 export const TaskMenu = () => {
   const { user, setUser } = useContext(UserContext);
@@ -54,6 +55,7 @@ export const TaskMenu = () => {
   const isMobile = useResponsiveDisplay();
   const n = useNavigate();
   const theme = useTheme();
+  const prefersReducedMotion = usePrefersReducedMotion(user.settings.reduceMotion);
 
   const selectedTask = useMemo(() => {
     return tasks.find((task) => task.id === selectedTaskId) || ({} as Task);
@@ -364,30 +366,35 @@ export const TaskMenu = () => {
     </StyledMenuItem>,
   ];
 
+  const sheet = (
+    <BottomSheet
+      open={prefersReducedMotion ? true : Boolean(anchorEl)}
+      onDismiss={handleCloseMoreMenu}
+      snapPoints={({ minHeight, maxHeight }) => [minHeight, maxHeight]}
+      expandOnContentDrag
+      header={
+        <div
+          style={{
+            textAlign: "left",
+            backdropFilter: "blur(8px)",
+          }}
+        >
+          <TaskItem task={selectedTask} features={{ enableGlow: false }} />
+          <Divider sx={{ mt: "20px", mb: "-20px" }} />
+        </div>
+      }
+    >
+      <SheetContent>{menuItems}</SheetContent>
+      <div style={{ marginBottom: "48px" }} />
+    </BottomSheet>
+  );
+
   return (
     <>
-      {isMobile ? (
-        <BottomSheet
-          open={Boolean(anchorEl)}
-          onDismiss={handleCloseMoreMenu}
-          snapPoints={({ minHeight, maxHeight }) => [minHeight, maxHeight]}
-          expandOnContentDrag
-          header={
-            <div
-              style={{
-                textAlign: "left",
-                backdropFilter: "blur(8px)",
-              }}
-            >
-              <TaskItem task={selectedTask} features={{ enableGlow: false }} />
-              <Divider sx={{ mt: "20px", mb: "-20px" }} />
-            </div>
-          }
-        >
-          <SheetContent>{menuItems}</SheetContent>
-          <div style={{ marginBottom: "48px" }} />
-        </BottomSheet>
-      ) : (
+      {/* close sheet instantly if motion is reduced */}
+      {isMobile && (prefersReducedMotion ? Boolean(anchorEl) && sheet : sheet)}
+
+      {!isMobile && (
         <Menu
           id="task-menu"
           anchorEl={anchorEl}
