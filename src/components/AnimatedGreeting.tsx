@@ -1,6 +1,6 @@
 import { useState, useEffect, ReactNode, useCallback, memo, useContext, useRef } from "react";
 import { Emoji } from "emoji-picker-react";
-import { fadeInLeft } from "../styles";
+import { fadeInLeft, reduceMotion } from "../styles";
 import { UserContext } from "../contexts/UserContext";
 import styled from "@emotion/styled";
 import { getRandomGreeting } from "../utils";
@@ -14,9 +14,6 @@ export const AnimatedGreeting = memo(() => {
   // use refs to avoid recreating the animation frame on each render
   const animationFrameIdRef = useRef<number | null>(null);
   const lastUpdateTimeRef = useRef<number>(0);
-
-  // Cache the rendered greeting
-  const renderedGreetingRef = useRef<ReactNode[]>([]);
 
   const replaceEmojiCodes = useCallback(
     (text: string): ReactNode[] => {
@@ -40,7 +37,6 @@ export const AnimatedGreeting = memo(() => {
   useEffect(() => {
     const initialGreeting = getRandomGreeting();
     setRandomGreeting(initialGreeting);
-    renderedGreetingRef.current = replaceEmojiCodes(initialGreeting);
 
     const updateInterval = 6000;
 
@@ -49,7 +45,6 @@ export const AnimatedGreeting = memo(() => {
         lastUpdateTimeRef.current = timestamp;
         const newGreeting = getRandomGreeting();
         setRandomGreeting(newGreeting);
-        renderedGreetingRef.current = replaceEmojiCodes(newGreeting);
         setGreetingKey((prev) => prev + 1);
       }
 
@@ -63,11 +58,11 @@ export const AnimatedGreeting = memo(() => {
         cancelAnimationFrame(animationFrameIdRef.current);
       }
     };
-  }, [replaceEmojiCodes]);
+  }, []);
 
   return (
     <GreetingText key={greetingKey} className="animated-greeting">
-      {typeof randomGreeting === "string" ? replaceEmojiCodes(randomGreeting) : randomGreeting}
+      {replaceEmojiCodes(randomGreeting)}
     </GreetingText>
   );
 });
@@ -82,6 +77,7 @@ const GreetingText = styled.div`
   font-style: italic;
   will-change: transform, opacity;
   animation: ${fadeInLeft} 0.5s ease-in-out;
+  ${({ theme }) => reduceMotion(theme)}
   @media print {
     display: none;
   }

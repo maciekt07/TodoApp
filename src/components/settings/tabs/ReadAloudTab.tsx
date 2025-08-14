@@ -1,24 +1,4 @@
-import {
-  Alert,
-  AlertTitle,
-  Button,
-  Chip,
-  IconButton,
-  MenuItem,
-  SelectChangeEvent,
-  Slider,
-  Tooltip,
-  useTheme as useMuiTheme,
-} from "@mui/material";
-import {
-  NoVoiceStyles,
-  SectionHeading,
-  StyledListSubheader,
-  StyledSelect,
-  TabHeading,
-  VolumeSlider,
-} from "../settings.styled";
-import { getFontColor, systemInfo } from "../../../utils";
+import styled from "@emotion/styled";
 import {
   CachedRounded,
   CloudOffRounded,
@@ -33,12 +13,34 @@ import {
   VolumeUp,
   WifiOffRounded,
 } from "@mui/icons-material";
-import { useContext, useEffect, useState } from "react";
-import { UserContext } from "../../../contexts/UserContext";
+import {
+  Alert,
+  AlertTitle,
+  Button,
+  Chip,
+  IconButton,
+  MenuItem,
+  SelectChangeEvent,
+  Slider,
+  Tooltip,
+  useTheme as useMuiTheme,
+} from "@mui/material";
 import { Emoji } from "emoji-picker-react";
+import { useContext, useEffect, useState } from "react";
+import { defaultUser } from "../../../constants/defaultUser";
+import { UserContext } from "../../../contexts/UserContext";
 import { useOnlineStatus } from "../../../hooks/useOnlineStatus";
 import type { AppSettings } from "../../../types/user";
-import { defaultUser } from "../../../constants/defaultUser";
+import { getFontColor, systemInfo } from "../../../utils";
+import CustomSwitch from "../CustomSwitch";
+import {
+  NoVoiceStyles,
+  SectionHeading,
+  StyledListSubheader,
+  StyledSelect,
+  TabHeading,
+  VolumeSlider,
+} from "../settings.styled";
 
 export default function ReadAloudTab() {
   const { user, setUser } = useContext(UserContext);
@@ -51,13 +53,18 @@ export default function ReadAloudTab() {
   const muiTheme = useMuiTheme();
   const isOnline = useOnlineStatus();
 
+  const readAloudEnabled = user.settings.enableReadAloud && "speechSynthesis" in window;
+
   // Cancel speech synthesis when the voice settings are changed
   useEffect(() => {
+    if (!readAloudEnabled) {
+      return;
+    }
     setIsSampleReading(false);
     if (window.speechSynthesis) {
       window.speechSynthesis.cancel();
     }
-  }, [user.settings.voiceVolume, user.settings.voice]);
+  }, [readAloudEnabled]);
 
   // Function to get the available speech synthesis voices
   // https://developer.mozilla.org/en-US/docs/Web/API/SpeechSynthesis
@@ -65,6 +72,7 @@ export default function ReadAloudTab() {
     if (!window.speechSynthesis) {
       return [];
     }
+
     const voices = window.speechSynthesis.getVoices() ?? [];
     const voiceInfoArray: SpeechSynthesisVoice[] = [];
     for (const voice of voices) {
@@ -74,12 +82,15 @@ export default function ReadAloudTab() {
   };
 
   useEffect(() => {
+    if (!readAloudEnabled) {
+      return;
+    }
     const availableVoices = getAvailableVoices();
     setAvailableVoices(availableVoices ?? []);
-  }, []);
+  }, [readAloudEnabled]);
 
   // Ensure the voices are loaded before calling getAvailableVoices
-  if (window.speechSynthesis) {
+  if (readAloudEnabled) {
     window.speechSynthesis.onvoiceschanged = () => {
       const availableVoices = getAvailableVoices();
       setAvailableVoices(availableVoices ?? []);
@@ -202,181 +213,212 @@ export default function ReadAloudTab() {
           Your browser does not support built in text-to-speech.
         </Alert>
       )}
-      <SectionHeading>Play Sample</SectionHeading>
-      <Button
-        variant="contained"
+      <CustomSwitch
+        settingKey="enableReadAloud"
+        header="Enable Read Aloud"
+        text="Loads voices and shows Read Aloud in the task menu."
         disabled={!("speechSynthesis" in window)}
-        sx={{ color: getFontColor(muiTheme.palette.primary.main), mt: "8px" }}
-        onClick={() => {
-          if (!("speechSynthesis" in window)) return;
-          window.speechSynthesis.cancel();
-          if (isSampleReading) {
-            window.speechSynthesis.pause();
-          } else {
-            const textToRead = "This is a sample text for testing the speech synthesis feature.";
-            const utterance = new SpeechSynthesisUtterance(textToRead);
-            const voices = window.speechSynthesis.getVoices() ?? [];
-            utterance.voice =
-              voices.find((voice) => voice.name === user.settings.voice.split("::")[0]) ||
-              voices[0];
-            utterance.volume = voiceVolume;
-            utterance.rate = 1;
-            utterance.onend = () => {
-              setIsSampleReading(false);
-            };
-            window.speechSynthesis.speak(utterance);
-          }
-          setIsSampleReading((prev) => !prev);
-        }}
-      >
-        {isSampleReading ? <StopCircleRounded /> : <RecordVoiceOverRounded />} &nbsp; Play Sample
-      </Button>
-      <SectionHeading>Voice Selection</SectionHeading>
-      {filteredVoices.length !== 0 ? (
-        <StyledSelect
-          value={user.settings.voice}
-          variant="outlined"
+      />
+      <ReadAloudWrapper active={readAloudEnabled} disabled={!readAloudEnabled}>
+        <SectionHeading>Play Sample</SectionHeading>
+        <Button
+          variant="contained"
           disabled={!("speechSynthesis" in window)}
-          onChange={handleVoiceChange}
-          translate="no"
-          IconComponent={ExpandMoreRounded}
-          MenuProps={{
-            PaperProps: {
-              style: {
-                maxHeight: 500,
-                padding: "0px 6px",
-              },
-            },
+          sx={{ color: getFontColor(muiTheme.palette.primary.main), mt: "8px" }}
+          onClick={() => {
+            if (!readAloudEnabled) return;
+            window.speechSynthesis.cancel();
+            if (isSampleReading) {
+              window.speechSynthesis.pause();
+            } else {
+              const textToRead = "This is a sample text for testing the speech synthesis feature.";
+              const utterance = new SpeechSynthesisUtterance(textToRead);
+              const voices = window.speechSynthesis.getVoices() ?? [];
+              utterance.voice =
+                voices.find((voice) => voice.name === user.settings.voice.split("::")[0]) ||
+                voices[0];
+              utterance.volume = voiceVolume;
+              utterance.rate = 1;
+              utterance.onend = () => {
+                setIsSampleReading(false);
+              };
+              window.speechSynthesis.speak(utterance);
+            }
+            setIsSampleReading((prev) => !prev);
           }}
         >
-          {(() => {
-            // group voices by language match
-            const matchingLanguageVoices = filteredVoices.filter((voice) =>
-              voice.lang.startsWith(navigator.language),
-            );
-            const otherVoices = filteredVoices.filter(
-              (voice) => !voice.lang.startsWith(navigator.language),
-            );
+          {isSampleReading ? <StopCircleRounded /> : <RecordVoiceOverRounded />} &nbsp; Play Sample
+        </Button>
+        <SectionHeading>Voice Selection</SectionHeading>
+        {filteredVoices.length !== 0 ? (
+          <StyledSelect
+            value={user.settings.voice}
+            variant="outlined"
+            disabled={!readAloudEnabled}
+            onChange={handleVoiceChange}
+            translate="no"
+            IconComponent={ExpandMoreRounded}
+            MenuProps={{
+              PaperProps: {
+                style: {
+                  maxHeight: 500,
+                  padding: "0px 6px",
+                },
+              },
+            }}
+          >
+            {(() => {
+              // group voices by language match
+              const matchingLanguageVoices = filteredVoices.filter((voice) =>
+                voice.lang.startsWith(navigator.language),
+              );
+              const otherVoices = filteredVoices.filter(
+                (voice) => !voice.lang.startsWith(navigator.language),
+              );
 
-            // function to render a voice item consistently
-            const renderVoiceItem = (voice: SpeechSynthesisVoice) => (
-              <MenuItem
-                key={`${voice.name}::${voice.lang}`}
-                value={`${voice.name}::${voice.lang}`}
-                translate="no"
-                disabled={voice.localService === false && !isOnline}
-                sx={{
-                  padding: "10px",
-                  borderRadius: "8px",
-                  cursor: voice.localService === false && !isOnline ? "not-allowed" : "pointer",
-                }}
-              >
-                {voice.name.startsWith("Google") && <Google sx={{ mr: "8px" }} />}
-                {voice.name.startsWith("Microsoft") && <Microsoft sx={{ mr: "8px" }} />}
-                {voice.name.replace(/^(Google|Microsoft)\s*|\([^()]*\)/gi, "")}
-                <Chip
-                  sx={{ fontWeight: 500, padding: "4px", ml: "8px" }}
-                  label={getLanguageRegion(voice.lang || "")}
-                  icon={
-                    <span style={{ fontSize: "16px", alignItems: "center", display: "flex" }}>
-                      <Emoji
-                        unified={getFlagUnicodes(voice.lang)}
-                        emojiStyle={user.emojisStyle}
-                        size={18}
-                      />
+              // function to render a voice item consistently
+              const renderVoiceItem = (voice: SpeechSynthesisVoice) => (
+                <MenuItem
+                  key={`${voice.name}::${voice.lang}`}
+                  value={`${voice.name}::${voice.lang}`}
+                  translate="no"
+                  disabled={voice.localService === false && !isOnline}
+                  sx={{
+                    padding: "10px",
+                    borderRadius: "8px",
+                    cursor: voice.localService === false && !isOnline ? "not-allowed" : "pointer",
+                  }}
+                >
+                  {voice.name.startsWith("Google") && <Google sx={{ mr: "8px" }} />}
+                  {voice.name.startsWith("Microsoft") && <Microsoft sx={{ mr: "8px" }} />}
+                  {voice.name.replace(/^(Google|Microsoft)\s*|\([^()]*\)/gi, "")}
+                  <Chip
+                    sx={{ fontWeight: 500, padding: "4px", ml: "8px" }}
+                    label={getLanguageRegion(voice.lang || "")}
+                    icon={
+                      <span style={{ fontSize: "16px", alignItems: "center", display: "flex" }}>
+                        <Emoji
+                          unified={getFlagUnicodes(voice.lang)}
+                          emojiStyle={user.emojisStyle}
+                          size={18}
+                        />
+                      </span>
+                    }
+                  />
+                  {voice.default && systemInfo.os !== "iOS" && systemInfo.os !== "macOS" && (
+                    <span style={{ fontWeight: 600 }}>&nbsp; Default</span>
+                  )}
+                  {voice.localService === false && (
+                    <span style={{ marginLeft: "auto", display: "flex", alignItems: "center" }}>
+                      {!isOnline ? (
+                        <CloudOffRounded sx={{ fontSize: "18px" }} />
+                      ) : (
+                        <Tooltip title="Requires Internet Connection" placement="left">
+                          <CloudQueueRounded sx={{ fontSize: "18px" }} />
+                        </Tooltip>
+                      )}
                     </span>
-                  }
-                />
-                {voice.default && systemInfo.os !== "iOS" && systemInfo.os !== "macOS" && (
-                  <span style={{ fontWeight: 600 }}>&nbsp; Default</span>
-                )}
-                {voice.localService === false && (
-                  <span style={{ marginLeft: "auto", display: "flex", alignItems: "center" }}>
-                    {!isOnline ? (
-                      <CloudOffRounded sx={{ fontSize: "18px" }} />
-                    ) : (
-                      <Tooltip title="Requires Internet Connection" placement="left">
-                        <CloudQueueRounded sx={{ fontSize: "18px" }} />
-                      </Tooltip>
-                    )}
-                  </span>
-                )}
-              </MenuItem>
-            );
+                  )}
+                </MenuItem>
+              );
 
-            // create voice groups with headers
-            const createVoiceGroup = (
-              voices: SpeechSynthesisVoice[],
-              headerText: string,
-              headerId: string,
-            ) => {
-              if (voices.length === 0) return [];
+              // create voice groups with headers
+              const createVoiceGroup = (
+                voices: SpeechSynthesisVoice[],
+                headerText: string,
+                headerId: string,
+              ) => {
+                if (voices.length === 0) return [];
 
+                return [
+                  <StyledListSubheader key={headerId}>{headerText}</StyledListSubheader>,
+                  ...voices.map(renderVoiceItem),
+                ];
+              };
+
+              // return all menu items
               return [
-                <StyledListSubheader key={headerId}>{headerText}</StyledListSubheader>,
-                ...voices.map(renderVoiceItem),
+                ...createVoiceGroup(
+                  matchingLanguageVoices,
+                  `Your Language (${getLanguageRegion(navigator.language)})`,
+                  "header-matching",
+                ),
+                ...createVoiceGroup(otherVoices, "Other Languages", "header-other"),
               ];
-            };
-
-            // return all menu items
-            return [
-              ...createVoiceGroup(
-                matchingLanguageVoices,
-                `Your Language (${getLanguageRegion(navigator.language)})`,
-                "header-matching",
-              ),
-              ...createVoiceGroup(otherVoices, "Other Languages", "header-other"),
-            ];
-          })()}
-        </StyledSelect>
-      ) : (
-        <NoVoiceStyles>
-          There are no voice styles available.
-          <Tooltip title="Refetch voices">
-            <IconButton
-              size="large"
-              onClick={() => {
-                setAvailableVoices(getAvailableVoices() ?? []);
-              }}
-            >
-              <CachedRounded fontSize="large" />
+            })()}
+          </StyledSelect>
+        ) : (
+          <NoVoiceStyles>
+            There are no voice styles available.
+            {user.settings.enableReadAloud && "speechSynthesis" in window && (
+              <Tooltip title="Refetch voices">
+                <IconButton
+                  size="large"
+                  onClick={() => setAvailableVoices(getAvailableVoices() ?? [])}
+                >
+                  <CachedRounded fontSize="large" />
+                </IconButton>
+              </Tooltip>
+            )}
+          </NoVoiceStyles>
+        )}
+        {!isOnline && availableVoices.some((voice) => voice.localService === false) && (
+          <Alert severity="warning" sx={{ mt: "8px" }} icon={<WifiOffRounded />}>
+            <AlertTitle>Offline Mode</AlertTitle>
+            You are currently offline. Some Voices may require an internet connection to work.
+          </Alert>
+        )}
+        <SectionHeading>Voice Volume</SectionHeading>
+        <div style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
+          <VolumeSlider spacing={2} direction="row" alignItems="center">
+            {/* <Tooltip title={voiceVolume ? "Mute" : "Unmute"}> */}
+            <IconButton onClick={handleMuteClick}>
+              {voiceVolume === 0 ? (
+                <VolumeOff />
+              ) : voiceVolume <= 0.4 ? (
+                <VolumeDown />
+              ) : (
+                <VolumeUp />
+              )}
             </IconButton>
-          </Tooltip>
-        </NoVoiceStyles>
-      )}
-      {!isOnline && availableVoices.some((voice) => voice.localService === false) && (
-        <Alert severity="warning" sx={{ mt: "8px" }} icon={<WifiOffRounded />}>
-          <AlertTitle>Offline Mode</AlertTitle>
-          You are currently offline. Some Voices may require an internet connection to work.
-        </Alert>
-      )}
-      <SectionHeading>Voice Volume</SectionHeading>
-      <div style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
-        <VolumeSlider spacing={2} direction="row" alignItems="center">
-          {/* <Tooltip title={voiceVolume ? "Mute" : "Unmute"}> */}
-          <IconButton onClick={handleMuteClick}>
-            {voiceVolume === 0 ? <VolumeOff /> : voiceVolume <= 0.4 ? <VolumeDown /> : <VolumeUp />}
-          </IconButton>
-          {/* </Tooltip> */}
-          <Slider
-            sx={{
-              width: "100%",
-            }}
-            value={voiceVolume}
-            onChange={(_event, value) => setVoiceVolume(value as number)}
-            onChangeCommitted={handleVoiceVolCommitChange}
-            min={0}
-            max={1}
-            step={0.01}
-            aria-label="Volume Slider"
-            valueLabelFormat={() => {
-              const vol = Math.floor(voiceVolume * 100);
-              return vol === 0 ? "Muted" : vol + "%";
-            }}
-            valueLabelDisplay="auto"
-          />
-        </VolumeSlider>
-      </div>
+            {/* </Tooltip> */}
+            <Slider
+              sx={{
+                width: "100%",
+              }}
+              value={voiceVolume}
+              onChange={(_event, value) => setVoiceVolume(value as number)}
+              onChangeCommitted={handleVoiceVolCommitChange}
+              min={0}
+              max={1}
+              step={0.01}
+              aria-label="Volume Slider"
+              valueLabelFormat={() => {
+                const vol = Math.floor(voiceVolume * 100);
+                return vol === 0 ? "Muted" : vol + "%";
+              }}
+              valueLabelDisplay="auto"
+            />
+          </VolumeSlider>
+        </div>
+      </ReadAloudWrapper>
     </>
   );
 }
+
+const ReadAloudWrapper = styled.fieldset<{ active: boolean }>`
+  opacity: ${({ active }) => (active ? 1 : 0.6)};
+  pointer-events: ${({ active }) => (active ? "auto" : "none")};
+  border: none;
+  margin: 0;
+  padding: 0;
+
+  button,
+  input,
+  select,
+  textarea,
+  a {
+    pointer-events: ${({ active }) => (active ? "auto" : "none")};
+    ${({ active }) => (!active ? "tab-index: -1;" : "")}
+  }
+`;

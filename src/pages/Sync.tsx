@@ -319,7 +319,13 @@ export function SyncSuccessScreen({
         <div>{syncStatus.message || "Idle"}</div>
       </StyledAlert>
       {otherDataSource && (
-        <Typography sx={{ fontSize: 12, opacity: 0.8 }}>
+        <Typography
+          sx={{
+            fontSize: 12,
+            opacity: 0.8,
+            color: (theme) => (theme.palette.mode === "dark" ? "#ffffff" : "#000000"),
+          }}
+        >
           Settings and other data{" "}
           {otherDataSource === "no_sync" ? (
             "were not synced."

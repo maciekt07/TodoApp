@@ -128,6 +128,9 @@ export function usePeerSync() {
     toast.dismiss();
   }, [conn, peer, setStatus]);
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  useEffect(() => () => resetAll(), []);
+
   // shared handler for incoming data
   const handleIncomingData = useCallback(
     async (
