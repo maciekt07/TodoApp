@@ -32,7 +32,9 @@ const CustomSwitch: React.FC<CustomSwitchProps> = ({
   };
 
   return (
-    <Box sx={{ p: 2, display: "flex", flexDirection: "column", opacity: disabled ? 0.6 : 1 }}>
+    <Box
+      sx={{ my: 2, mx: 1, display: "flex", flexDirection: "column", opacity: disabled ? 0.6 : 1 }}
+    >
       <Box sx={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
         <Typography variant="h6" sx={{ fontWeight: 600, color: "text.primary", fontSize: "16px" }}>
           {header}
@@ -43,6 +45,12 @@ const CustomSwitch: React.FC<CustomSwitchProps> = ({
               <Switch
                 checked={user.settings[settingKey]}
                 onChange={handleToggle}
+                onKeyUp={(e) => {
+                  if (e.key === "Enter" && !disabled) {
+                    e.preventDefault();
+                    handleToggle();
+                  }
+                }}
                 disabled={disabled}
               />
             }
