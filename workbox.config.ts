@@ -1,16 +1,17 @@
 import type { GenerateSWOptions, StrategyName } from "workbox-build/build/types";
+import { EmojiStyle } from "emoji-picker-react";
 
 const isDev = process.env.NODE_ENV === "development";
 // Dev: avoid API spam and hitting rate limits | Prod: fast loads with background updates
 const apiCacheStrategy: StrategyName = isDev ? "CacheFirst" : "StaleWhileRevalidate";
 
 // Precache emoji previews for settings dialog
-export const settingsEmojiPreviewAssets = (["facebook", "twitter", "apple", "google"] as const).map(
-  (platform) => ({
+export const settingsEmojiPreviewAssets = Object.values(EmojiStyle)
+  .filter((style): style is Exclude<EmojiStyle, EmojiStyle.NATIVE> => style !== EmojiStyle.NATIVE)
+  .map((platform) => ({
     url: `https://cdn.jsdelivr.net/npm/emoji-datasource-${platform}/img/${platform}/64/1f60e.png`,
     revision: null,
-  }),
-);
+  }));
 
 const workbox: Partial<GenerateSWOptions> = {
   cleanupOutdatedCaches: true,

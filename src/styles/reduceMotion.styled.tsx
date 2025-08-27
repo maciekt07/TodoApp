@@ -11,14 +11,14 @@ import type { Properties } from "csstype";
 export const reduceMotion = (
   theme: Theme,
   options?: Partial<Properties<string | number>>,
-): SerializedStyles | undefined => {
+): SerializedStyles | null => {
+  if (theme.reduceMotion === "off") return null;
+
   const disableStyles = css({
     animation: "none !important",
     transition: "none !important",
     ...options,
   });
-
-  if (theme.reduceMotion === "off") return undefined;
 
   if (theme.reduceMotion === "on") return disableStyles;
 

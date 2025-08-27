@@ -23,6 +23,10 @@ const emojiStyles: OptionItem<EmojiStyle>[] = [
   icon: <Emoji emojiStyle={value} unified="1f60e" size={OPTION_ICON_SIZE} />,
 }));
 
+const offlineDisabledEmojiStyles = emojiStyles
+  .map((option) => option.value)
+  .filter((value) => value !== EmojiStyle.NATIVE);
+
 export default function EmojiTab() {
   const { user, setUser } = useContext(UserContext);
   const [emojiStyleValue, setEmojiStyleValue] = useState<EmojiStyle>(user.emojisStyle);
@@ -47,11 +51,7 @@ export default function EmojiTab() {
             emojisStyle: val,
           }));
         }}
-        disabledOptions={
-          !isOnline
-            ? [EmojiStyle.APPLE, EmojiStyle.FACEBOOK, EmojiStyle.TWITTER, EmojiStyle.GOOGLE]
-            : []
-        }
+        disabledOptions={isOnline ? [] : offlineDisabledEmojiStyles}
       />
 
       {!isOnline && (
@@ -60,12 +60,10 @@ export default function EmojiTab() {
           You are currently offline. Non-native emoji styles may not load.
         </Alert>
       )}
-      <SectionHeading>Simple Emoji Picker</SectionHeading>
       <CustomSwitch
         settingKey="simpleEmojiPicker"
-        header="Enable simple emoji picker"
-        text="
-                      Use a simple emoji picker with only recently used emojis. This will make the emoji picker load faster."
+        header="Simple Emoji Picker"
+        text="Show only recent emojis for faster loading."
       />
       <SectionHeading>Emoji Data</SectionHeading>
       <SectionDescription> Clear data about recently used emojis</SectionDescription>

@@ -1,8 +1,8 @@
 import type { PaletteMode, Theme } from "@mui/material";
 import { createTheme } from "@mui/material";
 import type { SystemTheme } from "../hooks/useSystemTheme";
-import type { User } from "../types/user";
-import { getFontColor } from "../utils";
+import type { DarkModeOptions } from "../types/user";
+import { isDark } from "../utils";
 import { muiComponentsProps } from "./muiComponents";
 import { ColorPalette, themeConfig } from "./themeConfig";
 
@@ -44,7 +44,7 @@ export const createCustomTheme = (
  */
 export const Themes: { name: string; MuiTheme: Theme }[] = Object.entries(themeConfig).map(
   ([name, config]) => ({
-    name: name as string,
+    name,
     MuiTheme: createCustomTheme(config.primaryColor, config.secondaryColor),
   }),
 );
@@ -53,7 +53,7 @@ export const Themes: { name: string; MuiTheme: Theme }[] = Object.entries(themeC
  * Determines if dark mode should be enabled based on user preference, system theme, and background color
  */
 export const isDarkMode = (
-  darkmode: User["darkmode"],
+  darkmode: DarkModeOptions,
   systemTheme: SystemTheme,
   backgroundColor: string,
 ): boolean => {
@@ -65,7 +65,7 @@ export const isDarkMode = (
     case "system":
       return systemTheme === "dark";
     case "auto":
-      return getFontColor(backgroundColor) === ColorPalette.fontLight;
+      return isDark(backgroundColor);
     default:
       return false;
   }

@@ -85,8 +85,19 @@ export default function ReadAloudTab() {
     if (!readAloudEnabled) {
       return;
     }
-    const availableVoices = getAvailableVoices();
-    setAvailableVoices(availableVoices ?? []);
+
+    const loadVoices = () => {
+      const voices = getAvailableVoices();
+      setAvailableVoices(voices ?? []);
+    };
+
+    loadVoices();
+
+    window.speechSynthesis.onvoiceschanged = loadVoices;
+
+    return () => {
+      window.speechSynthesis.onvoiceschanged = null;
+    };
   }, [readAloudEnabled]);
 
   // Ensure the voices are loaded before calling getAvailableVoices

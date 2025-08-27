@@ -7,7 +7,7 @@ export const ColorPalette = {
   red: "#ff3131",
   orange: "#ff9318",
   orangeDark: "#ff9500",
-} as const;
+} as const satisfies Record<string, string>;
 
 export const themeConfig: { [key: string]: { primaryColor: string; secondaryColor?: string } } = {
   "Dark Purple": {
