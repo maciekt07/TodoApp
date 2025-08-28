@@ -273,8 +273,13 @@ export default function ReadAloudTab() {
               PaperProps: {
                 style: {
                   maxHeight: 500,
-                  padding: "0px 6px",
                 },
+              },
+            }}
+            sx={{
+              // fix: stop hidden input from triggering caret/keyboard on this select
+              "& .MuiSelect-nativeInput": {
+                pointerEvents: "none",
               },
             }}
           >
