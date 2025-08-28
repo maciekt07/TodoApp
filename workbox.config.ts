@@ -15,7 +15,8 @@ export const settingsEmojiPreviewAssets = Object.values(EmojiStyle)
 
 const workbox: Partial<GenerateSWOptions> = {
   cleanupOutdatedCaches: true,
-  globPatterns: ["**/*.{js,css,html,svg,png,webmanifest}"],
+  globDirectory: "dist",
+  globPatterns: ["**/*.{js,css,html,svg,png,webmanifest,webp}"],
   additionalManifestEntries: [...settingsEmojiPreviewAssets],
   // Use runtime caching for dynamic imports and external resources
   runtimeCaching: [
