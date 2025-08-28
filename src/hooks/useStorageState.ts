@@ -36,7 +36,7 @@ export function useStorageState<T>(
   useEffect(() => {
     const handleStorageChange = (event: StorageEvent) => {
       if (event.key === key && event.newValue !== null && event.key !== "") {
-        setValue(JSON.parse(event.newValue));
+        setValue(event.newValue);
       }
     };
 
