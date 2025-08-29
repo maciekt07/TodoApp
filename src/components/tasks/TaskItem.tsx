@@ -20,6 +20,7 @@ import {
   TaskCategoriesContainer,
   SharedByContainer,
   TaskActionsContainer,
+  DragHandle,
 } from "./tasks.styled";
 import { calculateDateDifference, formatDate, getFontColor, systemInfo } from "../../utils";
 import { RenderTaskDescription } from "./RenderTaskDescription";
@@ -119,12 +120,9 @@ export const TaskItem = memo(
         {...attributes}
       >
         {enableMoveMode && moveMode && (
-          <span
-            {...listeners}
-            style={{ display: "flex", alignItems: "center", padding: "6px", cursor: "grab" }}
-          >
+          <DragHandle {...listeners}>
             <DragIndicatorRounded sx={{ mr: "4px", ml: "-8px" }} />
-          </span>
+          </DragHandle>
         )}
         {enableSelection && selectedIds.length > 0 && (
           <StyledRadio

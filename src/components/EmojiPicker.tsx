@@ -331,6 +331,11 @@ export const CustomEmojiPicker = ({ emoji, setEmoji, color, name, type }: EmojiP
               autoFocusSearch={false}
             />
           </Suspense>
+          {currentEmoji && (
+            <Button onClick={handleRemoveEmoji} fullWidth variant="outlined" color="error">
+              <RemoveCircleOutline /> &nbsp; Remove Emoji
+            </Button>
+          )}
         </SimplePickerContainer>
       )}
 
@@ -450,6 +455,8 @@ const SimplePickerContainer = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+  flex-direction: column;
+  gap: 8px;
   margin: 16px;
   animation: ${fadeIn} 0.4s ease-in;
   padding: 0;

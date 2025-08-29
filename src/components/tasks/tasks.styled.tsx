@@ -185,6 +185,13 @@ export const SharedByContainer = styled.div`
   }
 `;
 
+export const DragHandle = styled.span`
+  display: flex;
+  align-items: center;
+  padding: 6px;
+  cursor: grab;
+`;
+
 export const Pinned = styled.div`
   display: flex;
   justify-content: left;

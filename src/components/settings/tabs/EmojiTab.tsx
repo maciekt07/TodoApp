@@ -64,6 +64,8 @@ export default function EmojiTab() {
         settingKey="simpleEmojiPicker"
         header="Simple Emoji Picker"
         text="Show only recent emojis for faster loading."
+        disabled={!localStorage.getItem("epr_suggested")}
+        disabledReason="No recent emojis available."
       />
       <SectionHeading>Emoji Data</SectionHeading>
       <SectionDescription> Clear data about recently used emojis</SectionDescription>
@@ -73,6 +75,12 @@ export default function EmojiTab() {
         onClick={() => {
           localStorage.removeItem("epr_suggested");
           showToast("Removed emoji data.");
+          if (user.settings.simpleEmojiPicker) {
+            setUser((prev) => ({
+              ...prev,
+              settings: { ...prev.settings, simpleEmojiPicker: false },
+            }));
+          }
         }}
       >
         <DeleteRounded /> &nbsp; Clear Emoji Data
