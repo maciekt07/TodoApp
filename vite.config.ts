@@ -9,8 +9,12 @@ import basicSsl from "@vitejs/plugin-basic-ssl";
 
 const isDevHost = process.env.npm_lifecycle_event === "dev:host";
 
-const DEV_ENABLE_HTTPS = isDevHost; // Enable HTTPS with npm run dev:host
-const DEV_ENABLE_PWA = false; // Enable to test PWA functionality in dev, but it may slow down HMR.
+// Enable HTTPS (required for camera access, etc.)
+const DEV_ENABLE_HTTPS = isDevHost;
+
+// Enable to test PWA functionality in dev, but it may slow down HMR.
+// NOTE: PWA + HTTPS only works on localhost, not network IPs. Set DEV_ENABLE_HTTPS to `false` for mobile testing.
+const DEV_ENABLE_PWA = false;
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -26,9 +30,7 @@ export default defineConfig({
     }),
     DEV_ENABLE_HTTPS && basicSsl(),
     // Generate QR code for npm run dev:host
-    qrcode({
-      filter: (url) => url.startsWith("http://192.168.0.") || url.startsWith("https://192.168.0."),
-    }),
+    qrcode({ filter: (url) => /^https?:\/\/192\.168\.0\./.test(url) }),
     // https://vite-pwa-org.netlify.app/
     VitePWA({
       manifest, // manifest.ts
