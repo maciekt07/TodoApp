@@ -30,6 +30,9 @@ const offlineDisabledEmojiStyles = emojiStyles
 export default function EmojiTab() {
   const { user, setUser } = useContext(UserContext);
   const [emojiStyleValue, setEmojiStyleValue] = useState<EmojiStyle>(user.emojisStyle);
+  const [hasEmojiData, setHasEmojiData] = useState<boolean>(
+    !!localStorage.getItem("epr_suggested"),
+  );
 
   const isOnline = useOnlineStatus();
   // update local state when user settings change (e.g. after P2P sync)
@@ -64,7 +67,7 @@ export default function EmojiTab() {
         settingKey="simpleEmojiPicker"
         header="Simple Emoji Picker"
         text="Show only recent emojis for faster loading."
-        disabled={!localStorage.getItem("epr_suggested")}
+        disabled={!hasEmojiData}
         disabledReason="No recent emojis available."
       />
       <SectionHeading>Emoji Data</SectionHeading>
@@ -75,6 +78,7 @@ export default function EmojiTab() {
         onClick={() => {
           localStorage.removeItem("epr_suggested");
           showToast("Removed emoji data.");
+          setHasEmojiData(false);
           if (user.settings.simpleEmojiPicker) {
             setUser((prev) => ({
               ...prev,
