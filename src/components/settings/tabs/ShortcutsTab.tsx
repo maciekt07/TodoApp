@@ -1,5 +1,4 @@
 import { systemInfo } from "../../../utils";
-import { TabHeading } from "../settings.styled";
 import ShortcutItem from "../ShortcutItem";
 
 export default function ShortcutsTab() {
@@ -7,7 +6,6 @@ export default function ShortcutsTab() {
 
   return (
     <>
-      <TabHeading>Keyboard Shortcuts</TabHeading>
       <ShortcutItem
         name="Quick Export"
         description="Save all tasks and download as JSON file"

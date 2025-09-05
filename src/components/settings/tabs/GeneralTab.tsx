@@ -1,11 +1,9 @@
 import { systemInfo } from "../../../utils";
 import CustomSwitch from "../CustomSwitch";
-import { TabHeading } from "../settings.styled";
 
 export default function GeneralTab() {
   return (
     <>
-      <TabHeading>General Settings</TabHeading>
       <CustomSwitch
         settingKey="enableCategories"
         header="Enable Categories"

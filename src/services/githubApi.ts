@@ -1,20 +1,26 @@
 import type { GitHubBranchResponse, GitHubInfoResponse, GitHubRepoResponse } from "../types/github";
 import { showToast } from "../utils";
 
+const username = "maciekt07";
+const repo = "TodoApp";
+const branch = "main";
+
+const repoURL = `https://api.github.com/repos/${username}/${repo}`;
+const branchURL = `${repoURL}/branches/${branch}`;
+
+// default value in case of error
+const EMPTY_GITHUB_INFO = {
+  repoData: {},
+  branchData: {},
+} as GitHubInfoResponse;
+
 /**
  * Function to fetch GitHub repository and branch information.
  * @returns {Promise<GitHubInfoResponse>} Promise that resolves to an object containing repository and branch data.
  */
 export const fetchGitHubInfo = async (): Promise<GitHubInfoResponse> => {
-  const username = "maciekt07";
-  const repo = "TodoApp";
-  const branch = "main";
-
   try {
-    const [repoResponse, branchResponse] = await Promise.all([
-      fetch(`https://api.github.com/repos/${username}/${repo}`),
-      fetch(`https://api.github.com/repos/${username}/${repo}/branches/${branch}`),
-    ]);
+    const [repoResponse, branchResponse] = await Promise.all([fetch(repoURL), fetch(branchURL)]);
 
     if (repoResponse.ok && branchResponse.ok) {
       const [repoData, branchData] = await Promise.all([
@@ -29,22 +35,31 @@ export const fetchGitHubInfo = async (): Promise<GitHubInfoResponse> => {
     } else {
       // Check if rate limit exceeded
       if (repoResponse.status === 403 && branchResponse.status === 403) {
-        if (process.env.NODE_ENV === "development")
-          return { repoData: {}, branchData: {} } as GitHubInfoResponse; // Skip in dev mode
+        if (process.env.NODE_ENV === "development") return EMPTY_GITHUB_INFO; // Skip in dev mode
         showToast("Github API rate limit exceeded temporarily for your IP address.", {
           type: "error",
           disableVibrate: true,
         });
-      } else {
-        throw new Error("Failed to fetch repository or branch information");
       }
+      // Handle not found
+      if (repoResponse.status === 404 || branchResponse.status === 404) {
+        console.error("GitHub API Error: Repository or branch not found (404).");
+        return EMPTY_GITHUB_INFO;
+      }
+      throw new Error(
+        `Failed to fetch repository or branch information: ${repoResponse.status}, ${branchResponse.status}`,
+      );
     }
-  } catch (error) {
-    console.error(error);
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      console.error("GitHub fetch error:", error.message);
+    } else {
+      console.error("Unknown error:", error);
+    }
     if (navigator.onLine) {
-      showToast("Failed to fetch Github API.", { type: "error", disableVibrate: true });
+      showToast("Failed to fetch GitHub API.", { type: "error", disableVibrate: true });
     }
   }
   // Return a default value in case of error
-  return { repoData: {}, branchData: {} } as GitHubInfoResponse;
+  return EMPTY_GITHUB_INFO;
 };

@@ -1,5 +1,4 @@
 import { Box, Divider, FormGroup, FormLabel, Link, Typography } from "@mui/material";
-import { TabHeading } from "../settings.styled";
 import { useEffect, useState } from "react";
 import baner from "../../../assets/baner.webp";
 import { Inventory2Rounded } from "@mui/icons-material";
@@ -18,7 +17,6 @@ export default function AboutTab() {
 
   return (
     <>
-      <TabHeading>About Todo App</TabHeading>
       <Typography variant="body1" sx={{ mb: 2 }}>
         📝 A simple todo app project made using React.js and MUI with many features, including
         sharing tasks via link, P2P synchronization using WebRTC, theme customization and offline

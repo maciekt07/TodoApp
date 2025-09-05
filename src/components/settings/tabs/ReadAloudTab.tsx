@@ -38,7 +38,6 @@ import {
   SectionHeading,
   StyledListSubheader,
   StyledSelect,
-  TabHeading,
   VolumeSlider,
 } from "../settings.styled";
 
@@ -217,7 +216,6 @@ export default function ReadAloudTab() {
 
   return (
     <>
-      <TabHeading>Read Aloud Settings</TabHeading>
       {!("speechSynthesis" in window) && (
         <Alert severity="error">
           <AlertTitle>Speech Synthesis Not Supported</AlertTitle>

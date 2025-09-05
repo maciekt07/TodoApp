@@ -5,7 +5,6 @@ import {
   SectionHeading,
   StyledMenuItem,
   StyledSelect,
-  TabHeading,
 } from "../settings.styled";
 import { UserContext } from "../../../contexts/UserContext";
 import {
@@ -91,7 +90,6 @@ export default function AppearanceTab() {
 
   return (
     <>
-      <TabHeading>Appearance</TabHeading>
       <SectionHeading>Dark Mode Options</SectionHeading>
       <CustomRadioGroup
         options={darkModeOptions}

@@ -1,6 +1,6 @@
 import { Emoji, EmojiStyle } from "emoji-picker-react";
 import CustomRadioGroup from "../CustomRadioGroup";
-import { SectionDescription, SectionHeading, TabHeading } from "../settings.styled";
+import { SectionDescription, SectionHeading } from "../settings.styled";
 import { useOnlineStatus } from "../../../hooks/useOnlineStatus";
 import { useContext, useEffect, useState } from "react";
 import { UserContext } from "../../../contexts/UserContext";
@@ -42,7 +42,6 @@ export default function EmojiTab() {
 
   return (
     <>
-      <TabHeading>Emoji Settings</TabHeading>
       <SectionHeading>Emoji Style</SectionHeading>
       <CustomRadioGroup
         options={emojiStyles}

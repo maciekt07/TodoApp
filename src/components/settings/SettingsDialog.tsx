@@ -21,20 +21,27 @@ import {
   LazyExoticComponent,
   ReactElement,
   Suspense,
+  useCallback,
   useContext,
   useEffect,
   useState,
-  useCallback,
 } from "react";
+import { useNavigate } from "react-router-dom";
 import { CustomDialogTitle, TabGroupProvider } from "..";
 import { UserContext } from "../../contexts/UserContext";
 import { useResponsiveDisplay } from "../../hooks/useResponsiveDisplay";
-import { CloseButton, CloseButtonContainer, StyledTab, StyledTabPanel } from "./settings.styled";
-import { useNavigate } from "react-router-dom";
 import { showToast } from "../../utils";
+import {
+  CloseButton,
+  CloseButtonContainer,
+  StyledTab,
+  StyledTabPanel,
+  TabHeading,
+} from "./settings.styled";
 
 const settingsTabs: {
   label: string;
+  heading?: string;
   icon: ReactElement;
   Component: LazyExoticComponent<() => JSX.Element>;
 }[] = [
@@ -45,26 +52,31 @@ const settingsTabs: {
   },
   {
     label: "General",
+    heading: "General Settings",
     icon: <SettingsRounded />,
     Component: lazy(() => import("./tabs/GeneralTab")),
   },
   {
     label: "Emoji",
+    heading: "Emoji Settings",
     icon: <EmojiEmotionsRounded />,
     Component: lazy(() => import("./tabs/EmojiTab")),
   },
   {
     label: "Read Aloud",
+    heading: "Read Aloud Settings",
     icon: <RecordVoiceOverRounded />,
     Component: lazy(() => import("./tabs/ReadAloudTab")),
   },
   {
     label: "Shortcuts",
+    heading: "Keyboard Shortcuts",
     icon: <KeyboardCommandKeyRounded />,
     Component: lazy(() => import("./tabs/ShortcutsTab")),
   },
   {
     label: "About",
+    heading: "About This App",
     icon: <InfoRounded />,
     Component: lazy(() => import("./tabs/AboutTab")),
   },
@@ -274,6 +286,7 @@ export const SettingsDialog = ({ open, onClose, handleOpen }: SettingsProps) => 
                       </Box>
                     }
                   >
+                    <TabHeading>{tab.heading ?? tab.label}</TabHeading>
                     <tab.Component />
                   </Suspense>
                 )}
