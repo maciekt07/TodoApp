@@ -291,7 +291,7 @@ export const TaskMenu = () => {
               setSearch("");
               handleCloseMoreMenu();
               if (user.settings.sortOption !== "custom") {
-                showToast("Changed sort option to: Custom", { type: "blank" }); //TODO: add info type
+                showToast("Changed sort option to: Custom", { type: "info" });
               }
               setUser((prevUser) => ({
                 ...prevUser,

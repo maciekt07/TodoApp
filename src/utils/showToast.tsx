@@ -1,27 +1,73 @@
+import { PriorityHighRounded } from "@mui/icons-material";
 import { Button } from "@mui/material";
-import { ReactNode } from "react";
-import toast, { Toast, ToastOptions, ToastType } from "react-hot-toast";
+import type { Property } from "csstype";
+import type { Renderable, Toast, ToastOptions, ToastType } from "react-hot-toast";
+import toast from "react-hot-toast";
+import { ToastIconWrapper } from "../styles";
+import { ColorPalette } from "../theme/themeConfig";
+
+//FIXME: hmr
+
+type CustomToastType = "warning" | "info";
+type ExtendedToastType = CustomToastType | ToastType;
+
+interface CustomTypeConfig {
+  icon: Renderable;
+  borderColor: Property.BorderColor;
+}
+
+const customTypeConfig: Record<CustomToastType, CustomTypeConfig> = {
+  warning: {
+    icon: (
+      <ToastIconWrapper bgColor={ColorPalette.orange}>
+        <PriorityHighRounded />
+      </ToastIconWrapper>
+    ),
+    borderColor: ColorPalette.orange,
+  },
+  info: {
+    icon: (
+      <ToastIconWrapper bgColor={ColorPalette.blue}>
+        <PriorityHighRounded style={{ transform: "rotate(180deg)" }} />
+      </ToastIconWrapper>
+    ),
+    borderColor: ColorPalette.blue,
+  },
+};
 
 interface BaseToastProps extends ToastOptions {
+  /**
+   * The type of toast to display.
+   * @default "success"
+   */
+  type?: ExtendedToastType;
   /** Prevent closing toast by clicking on it */
   disableClickDismiss?: boolean;
   /** Disable device vibration when toast appears */
   disableVibrate?: boolean;
   /** Show dismiss button inside toast and not close it on click */
   dismissButton?: boolean;
-  type?: ToastType;
 }
 
-type ToastProps = BaseToastProps &
-  (
-    | {
-        /** ‼️ requires `id` and `visibleToasts` */
-        preventDuplicate: true;
-        id: string;
-        visibleToasts: Toast[];
-      }
-    | { preventDuplicate?: false; id?: string; visibleToasts?: Toast[] }
-  );
+/**
+ * Duplicate prevention props
+ *
+ * Ensures `id` + `visibleToasts` are required when `preventDuplicate: true`.
+ */
+type DuplicateProps =
+  | {
+      /** ‼️ requires `id` and `visibleToasts` */
+      preventDuplicate: true;
+      id: string;
+      visibleToasts: Toast[];
+    }
+  | {
+      preventDuplicate?: false;
+      id?: string;
+      visibleToasts?: Toast[];
+    };
+
+type ToastProps = BaseToastProps & DuplicateProps;
 
 /**
  * Displays a configurable toast notification
@@ -31,21 +77,25 @@ type ToastProps = BaseToastProps &
  *
  * @example
  * // basic usage
- * showToast('Update successful!', {type: "success"});
+ * showToast('Update successful!', { type: "success" });
  *
  * @example
  * // with duplicate prevention
+ * import { useToasterStore } from "react-hot-toast";
+ *
+ * const { toasts } = useToasterStore();
+ *
  * showToast('Only show once at a time', {
  *   preventDuplicate: true,
  *   id: 'unique-message',
- *   visibleToasts: activeToasts
+ *   visibleToasts: toasts
  * });
  */
 
 export const showToast = (
-  message: string | ReactNode,
+  message: Renderable,
   {
-    type,
+    type = "success",
     disableClickDismiss,
     disableVibrate,
     dismissButton,
@@ -65,14 +115,16 @@ export const showToast = (
     if (alreadyVisible) return;
   }
 
-  // Selects the appropriate toast function based on the specified type or defaults to success.
+  // Selects the appropriate toast function based on the specified type
   const toastFunction = {
     error: toast.error,
     success: toast.success,
     loading: toast.loading,
-    blank: toast,
     custom: toast.custom,
-  }[type || "success"];
+    blank: toast,
+    warning: toast,
+    info: toast,
+  }[type];
 
   // Vibrates the device based on the toast type, unless disabled or not supported.
   if (!disableVibrate && "vibrate" in navigator) {
@@ -82,6 +134,16 @@ export const showToast = (
     } catch (err) {
       console.error(err);
     }
+  }
+
+  // handle custom types
+  if (type in customTypeConfig) {
+    const { icon, borderColor } = customTypeConfig[type as CustomToastType];
+    toastOptions.icon = icon;
+    toastOptions.style = {
+      ...toastOptions.style,
+      borderColor,
+    };
   }
 
   // Display the toast notification.

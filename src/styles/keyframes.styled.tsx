@@ -1,4 +1,5 @@
-import { Keyframes, keyframes } from "@emotion/react";
+import { keyframes } from "@emotion/react";
+import type { Keyframes } from "@emotion/react";
 
 export const fadeInLeft = keyframes`
 from {
@@ -18,7 +19,7 @@ from {
 `;
 
 export const slideIn = keyframes`
-  from{
+  from {
     transform: translateX(-100%);
   }
   to {

@@ -28,6 +28,9 @@ export const createCustomTheme = (
       warning: {
         main: mode === "dark" ? ColorPalette.orange : ColorPalette.orangeDark,
       },
+      info: {
+        main: ColorPalette.blue,
+      },
       error: {
         main: ColorPalette.red,
       },

@@ -2,7 +2,8 @@ import styled from "@emotion/styled";
 import { Avatar, AvatarProps, Button, css } from "@mui/material";
 import { getFontColor } from "../utils";
 import { CSSProperties } from "react";
-import { pulseAnimation } from "./keyframes.styled";
+import { pulseAnimation, scale } from "./keyframes.styled";
+import { reduceMotion } from "./reduceMotion.styled";
 
 export const DialogBtn = styled(Button)`
   padding: 10px 16px;
@@ -145,4 +146,20 @@ export const VisuallyHiddenInput = styled.input`
   left: 0;
   white-space: nowrap;
   width: 1;
+`;
+
+export const ToastIconWrapper = styled.div<{ bgColor: string }>`
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: ${({ bgColor }) => bgColor};
+  flex-shrink: 0;
+  animation: ${scale} 0.4s ease-in-out;
+  ${({ theme }) => reduceMotion(theme)}
+  & svg {
+    font-size: 16px;
+  }
 `;

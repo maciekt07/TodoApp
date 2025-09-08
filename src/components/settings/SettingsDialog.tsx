@@ -154,7 +154,7 @@ export const SettingsDialog = ({ open, onClose, handleOpen }: SettingsProps) => 
       const invalidSlug = hash.match(/^#settings\/(\w+)/)?.[1];
       if (invalidSlug) {
         showToast(`Invalid settings tab: "${invalidSlug}". Redirecting to default tab.`, {
-          type: "error", // TODO: add warning type
+          type: "warning",
         });
         replaceWithTab(0);
         setTabValue(0);
