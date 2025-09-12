@@ -24,6 +24,7 @@ import {
   useCallback,
   useContext,
   useEffect,
+  useRef,
   useState,
 } from "react";
 import { useNavigate } from "react-router-dom";
@@ -110,6 +111,9 @@ interface SettingsProps {
 export const SettingsDialog = ({ open, onClose, handleOpen }: SettingsProps) => {
   const { user } = useContext(UserContext);
   const [tabValue, setTabValue] = useState<number>(0);
+
+  const scrollRef = useRef<HTMLDivElement | null>(null);
+
   const navigate = useNavigate();
   const isMobile = useResponsiveDisplay();
   const muiTheme = useTheme();
@@ -125,6 +129,10 @@ export const SettingsDialog = ({ open, onClose, handleOpen }: SettingsProps) => 
   const handleTabChange = (_: React.SyntheticEvent, newValue: number) => {
     setTabValue(newValue);
     navigateToTab(newValue);
+    // reset scroll instantly for new tab
+    requestAnimationFrame(() => {
+      scrollRef.current?.scrollTo({ top: 0 });
+    });
   };
 
   // validate tab
@@ -263,11 +271,22 @@ export const SettingsDialog = ({ open, onClose, handleOpen }: SettingsProps) => 
           }}
         >
           {settingsTabs.map((tab, index) => (
-            <StyledTab icon={tab.icon} label={tab.label} {...a11yProps(index)} key={index} />
+            <StyledTab
+              icon={tab.icon}
+              label={tab.label}
+              key={index}
+              {...a11yProps(index)}
+              onClick={() => {
+                if (index === tabValue) {
+                  scrollRef.current?.scrollTo({ top: 0, behavior: "smooth" });
+                }
+              }}
+            />
           ))}
         </Tabs>
         <Box
           className="customScrollbar"
+          ref={scrollRef}
           sx={{ flex: 1, p: 0, m: isMobile ? "0 12px" : "0 20px 0 20px", overflowY: "auto" }}
         >
           <TabGroupProvider value={tabValue} name="settings">
