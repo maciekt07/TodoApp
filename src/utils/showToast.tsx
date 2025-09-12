@@ -72,7 +72,7 @@ type ToastProps = BaseToastProps & DuplicateProps;
 /**
  * Displays a configurable toast notification
  *
- * @param {string|ReactNode} message - Content to display in the toast
+ * @param {Renderable} message - Content to display in the toast
  * @param {ToastProps} [options] - Configuration options for toast behavior and appearance
  *
  * @example

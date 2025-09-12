@@ -322,7 +322,6 @@ export const CustomEmojiPicker = ({ emoji, setEmoji, color, name, type }: EmojiP
             <EmojiPicker
               style={{ border: "none" }}
               reactionsDefaultOpen
-              lazyLoadEmojis
               reactions={getFrequentlyUsedEmojis()}
               emojiStyle={emojisStyle}
               onReactionClick={handleEmojiClick}
@@ -398,10 +397,7 @@ export const CustomEmojiPicker = ({ emoji, setEmoji, color, name, type }: EmojiP
                   <EmojiPicker
                     width="100vw"
                     height="550px"
-                    reactionsDefaultOpen={
-                      settings.simpleEmojiPicker && getFrequentlyUsedEmojis().length !== 0
-                    }
-                    reactions={getFrequentlyUsedEmojis()}
+                    lazyLoadEmojis
                     emojiStyle={emojisStyle}
                     theme={emotionTheme.darkmode ? Theme.DARK : Theme.LIGHT}
                     suggestedEmojisMode={SuggestionMode.FREQUENT}

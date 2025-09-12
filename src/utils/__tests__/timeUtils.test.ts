@@ -1,4 +1,4 @@
-import { timeAgo, formatDate, calculateDateDifference } from "../timeUtils";
+import { timeAgo, formatDate, calculateDateDifference, shortRelativeTime } from "../timeUtils";
 
 describe("Date Utility Functions", () => {
   beforeEach(() => {
@@ -7,25 +7,20 @@ describe("Date Utility Functions", () => {
   });
 
   describe("timeAgo", () => {
-    it('should return "now" for recent dates', () => {
-      const now = new Date();
-      expect(timeAgo(now)).toBe("now");
-    });
-    it('should return "1 minute ago"', () => {
-      const oneMinAgo = new Date(Date.now() - 60 * 1000);
-      expect(timeAgo(oneMinAgo)).toBe("1 minute ago");
-    });
-    it('should return "2 hours ago"', () => {
-      const minAgo = new Date(Date.now() - 2 * 60 * 60 * 1000);
-      expect(timeAgo(minAgo)).toBe("2 hours ago");
-    });
-    it('should return "2 days ago" for a date 2 days in the past', () => {
-      const twoDaysAgo = new Date(Date.now() - 2 * 24 * 60 * 60 * 1000);
-      expect(timeAgo(twoDaysAgo)).toBe("2 days ago");
-    });
-    it('should return "367 ago" for a date 367 days ago', () => {
-      const oneYearAgo = new Date(Date.now() - 367 * 24 * 60 * 60 * 1000);
-      expect(timeAgo(oneYearAgo)).toBe("367 days ago");
+    const timeAgoCases: [number, string][] = [
+      // [ms ago, expected output]
+      [0, "now"], // now
+      [60 * 1000, "1 minute ago"], // 1 minute ago
+      [2 * 60 * 60 * 1000, "2 hours ago"], // 2 hours ago
+      [2 * 24 * 60 * 60 * 1000, "2 days ago"], // 2 days ago
+      [367 * 24 * 60 * 60 * 1000, "367 days ago"], // 367 days ago
+    ];
+
+    timeAgoCases.forEach(([msAgo, expected]) => {
+      it(`should return "${expected}"`, () => {
+        const date = new Date(Date.now() - msAgo);
+        expect(timeAgo(date)).toBe(expected);
+      });
     });
   });
 
@@ -182,6 +177,45 @@ describe("with Polish locale", () => {
     it('should return "wczoraj" for yesterday\'s date', () => {
       const yesterday = new Date(Date.now() - 24 * 60 * 60 * 1000);
       expect(formatDate(yesterday)).toMatch(/^wczoraj \d{1,2}:\d{2}$/);
+    });
+  });
+});
+
+describe("shortRelativeTime", () => {
+  const now = new Date();
+
+  beforeEach(() => {
+    vi.setSystemTime(now);
+  });
+
+  afterEach(() => {
+    vi.useRealTimers();
+  });
+
+  const cases: [number, string][] = [
+    // [ms ago, expected output]
+    [0, "1m"], // 0 seconds
+    [32 * 1000, "1m"], // 32 seconds
+    [4 * 60 * 1000, "4m"], // 4 minutes
+    [59 * 60 * 1000, "59m"], // 59 minutes
+    [60 * 60 * 1000, "1h"], // 1 hour
+    [12 * 60 * 60 * 1000, "12h"], // 12 hours
+    [23.98 * 60 * 60 * 1000, "23h"], // 23h 59m
+    [24 * 60 * 60 * 1000, "1d"], // 1 day
+    [7 * 24 * 60 * 60 * 1000, "7d"], // 1 week
+    [30 * 24 * 60 * 60 * 1000, "30d"], // 30 days
+    [32 * 24 * 60 * 60 * 1000, "1mo"], // 32 days
+    [60 * 24 * 60 * 60 * 1000, "2mo"], // 2 months
+    [365 * 24 * 60 * 60 * 1000, "12mo"], // 1 year
+    [730 * 24 * 60 * 60 * 1000, "24mo"], // 2 years
+  ];
+
+  cases.forEach(([msAgo, expected]) => {
+    const date = new Date(now.getTime() - msAgo);
+    const readableTime = timeAgo(date);
+    it(`should return "${expected}" for ${readableTime} (${msAgo}ms ago)`, () => {
+      const date = new Date(now.getTime() - msAgo);
+      expect(shortRelativeTime(date)).toBe(expected);
     });
   });
 });

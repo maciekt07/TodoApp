@@ -1,6 +1,7 @@
 import { keyframes, useTheme } from "@emotion/react";
 import styled from "@emotion/styled";
 import {
+  AccessTimeFilledRounded,
   AddRounded,
   AdjustRounded,
   BugReportRounded,
@@ -44,7 +45,13 @@ import { fetchBMCInfo } from "../services/bmcApi";
 import { fetchGitHubInfo } from "../services/githubApi";
 import { DialogBtn, UserAvatar, pulseAnimation, reduceMotion, ring } from "../styles";
 import { ColorPalette } from "../theme/themeConfig";
-import { getProfilePictureFromDB, showToast, systemInfo, timeAgo } from "../utils";
+import {
+  getProfilePictureFromDB,
+  shortRelativeTime,
+  showToast,
+  systemInfo,
+  timeAgo,
+} from "../utils";
 
 export const ProfileSidebar = () => {
   const { user, setUser } = useContext(UserContext);
@@ -292,6 +299,16 @@ export const ProfileSidebar = () => {
         <MenuLink to="/sync">
           <StyledMenuItem onClick={handleClose}>
             <PhonelinkRounded /> &nbsp; Sync Devices
+            {user.lastSyncedAt && (
+              <Tooltip title={`Last synced ${timeAgo(new Date(user.lastSyncedAt))}`}>
+                <MenuLabel>
+                  <span>
+                    <AccessTimeFilledRounded style={{ fontSize: "16px" }} />
+                    {shortRelativeTime(new Date(user.lastSyncedAt))}
+                  </span>
+                </MenuLabel>
+              </Tooltip>
+            )}
           </StyledMenuItem>
         </MenuLink>
 
@@ -303,9 +320,9 @@ export const ProfileSidebar = () => {
             {stars && (
               <Tooltip title={`${stars} stars on Github`}>
                 <MenuLabel clr="#ff9d00">
-                  <span style={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
+                  <span>
                     <StarRounded style={{ fontSize: "18px" }} />
-                    &nbsp;{stars}
+                    {stars}
                   </span>
                 </MenuLabel>
               </Tooltip>
@@ -319,9 +336,8 @@ export const ProfileSidebar = () => {
             {Boolean(issuesCount || issuesCount === 0) && (
               <Tooltip title={`${issuesCount} open issues`}>
                 <MenuLabel clr="#3bb61c">
-                  <span style={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
+                  <span>
                     <AdjustRounded style={{ fontSize: "18px" }} />
-                    &nbsp;
                     {issuesCount}
                   </span>
                 </MenuLabel>
@@ -337,9 +353,9 @@ export const ProfileSidebar = () => {
             {bmcSupporters && (
               <Tooltip title={`${bmcSupporters} supporters on Buy me a coffee`}>
                 <MenuLabel clr="#f93c58">
-                  <span style={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
+                  <span>
                     <FavoriteRounded style={{ fontSize: "16px" }} />
-                    &nbsp;{bmcSupporters}
+                    {bmcSupporters}
                   </span>
                 </MenuLabel>
               </Tooltip>
@@ -668,6 +684,12 @@ const MenuLabel = styled.span<{ clr?: string }>`
   padding: 2px 12px;
   border-radius: 32px;
   font-size: 14px;
+  & span {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+  }
 `;
 
 const StyledDivider = styled(Divider)`
