@@ -25,3 +25,6 @@ dist-ssr
 
 # Local PWA dist folder
 dev-dist
+
+# Vite cache
+/.cache

@@ -18,20 +18,23 @@ const DEV_ENABLE_PWA = false;
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  test: {
-    globals: true,
-  },
+  cacheDir: ".cache/vite",
   optimizeDeps: {
     include: ["react", "react-dom", "@emotion/react", "@emotion/styled"],
     esbuildOptions: {
       target: "esnext",
     },
   },
+  test: {
+    globals: true,
+    include: ["src/**/*.test.ts"],
+  },
   plugins: [
     react({
       jsxImportSource: "@emotion/react",
       babel: {
         plugins: ["@emotion/babel-plugin"],
+        compact: true,
       },
     }),
     DEV_ENABLE_HTTPS && basicSsl(),
