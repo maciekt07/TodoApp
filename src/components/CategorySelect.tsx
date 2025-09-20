@@ -28,7 +28,7 @@ import type { Category, UUID } from "../types/user";
 import { getFontColor, showToast } from "../utils";
 import { ColorPalette } from "../theme/themeConfig";
 import { useSystemTheme } from "../hooks/useSystemTheme";
-import { isDarkMode } from "../theme/createTheme";
+import { isDarkMode } from "../utils/colorUtils";
 
 interface CategorySelectProps {
   selectedCategories: Category[];

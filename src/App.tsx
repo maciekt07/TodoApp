@@ -10,10 +10,11 @@ import { UserContext } from "./contexts/UserContext";
 import { useSystemTheme } from "./hooks/useSystemTheme";
 import AppRouter from "./router";
 import { GlobalStyles } from "./styles";
-import { Themes, createCustomTheme, isDarkMode } from "./theme/createTheme";
+import { Themes, createCustomTheme } from "./theme/createTheme";
 import { showToast } from "./utils";
 import { GlobalQuickSaveHandler } from "./components/GlobalQuickSaveHandler";
 import type { Category, UUID } from "./types/user";
+import { isDarkMode } from "./utils/colorUtils";
 
 function App() {
   const { user, setUser } = useContext(UserContext);

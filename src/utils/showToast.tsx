@@ -28,7 +28,7 @@ const customTypeConfig: Record<CustomToastType, CustomTypeConfig> = {
   info: {
     icon: (
       <ToastIconWrapper bgColor={ColorPalette.blue}>
-        <PriorityHighRounded style={{ transform: "rotate(180deg)" }} />
+        <PriorityHighRounded sx={{ transform: "rotate(180deg)" }} />
       </ToastIconWrapper>
     ),
     borderColor: ColorPalette.blue,
@@ -110,7 +110,6 @@ export const showToast = (
       console.error("[Toast] `preventDuplicate: true` requires both `id` and `visibleToasts`.");
       return;
     }
-    console.log("[Toast] prevented duplicate toast", toastOptions.id);
     const alreadyVisible = visibleToasts.some((t) => t.id === toastOptions.id && t.visible);
     if (alreadyVisible) return;
   }

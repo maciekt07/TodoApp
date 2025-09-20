@@ -179,7 +179,7 @@ const updateIndexHtml = () => {
       `${prefix} Completed successfully in ${((endTime - startTime) / 1000).toFixed(2)}s`,
     );
   } catch (error) {
-    console.error(`${prefix} ❌ Error:`, error.message);
+    console.error(`${prefix} ❌ Error:`, error instanceof Error ? error.message : error);
     process.exit(1);
   }
 })();

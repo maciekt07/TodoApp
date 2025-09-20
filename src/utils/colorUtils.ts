@@ -1,4 +1,7 @@
+import type { SystemTheme } from "../hooks/useSystemTheme";
 import { ColorPalette } from "../theme/themeConfig";
+import type { DarkModeOptions } from "../types/user";
+
 /**
  * Checks if a given string is a valid hexadecimal color code (starting with "#").
  * @param {string} value - The string to validate as a hex color.
@@ -45,4 +48,26 @@ export const getFontColor = (backgroundColor: string): string => {
  */
 export const isDark = (color: string): boolean => {
   return getFontColor(color) === ColorPalette.fontLight;
+};
+
+/**
+ * Determines if dark mode should be enabled based on user preference, system theme, and background color
+ */
+export const isDarkMode = (
+  darkmode: DarkModeOptions,
+  systemTheme: SystemTheme,
+  backgroundColor: string,
+): boolean => {
+  switch (darkmode) {
+    case "light":
+      return false;
+    case "dark":
+      return true;
+    case "system":
+      return systemTheme === "dark";
+    case "auto":
+      return isDark(backgroundColor);
+    default:
+      return false;
+  }
 };

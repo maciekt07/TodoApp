@@ -5,10 +5,9 @@ import { DialogBtn } from "../styles";
 import { SaveAltRounded } from "@mui/icons-material";
 import { UserContext } from "../contexts/UserContext";
 import { exportTasksToJson } from "../utils";
-
-import { isDarkMode } from "../theme/createTheme";
 import { useTheme } from "@emotion/react";
 import { useSystemTheme } from "../hooks/useSystemTheme";
+import { isDarkMode } from "../utils/colorUtils";
 
 export const GlobalQuickSaveHandler = ({ children }: { children: ReactNode }) => {
   const [isOpen, setIsOpen] = useState(false);
