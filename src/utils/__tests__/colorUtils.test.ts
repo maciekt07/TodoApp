@@ -1,5 +1,7 @@
+import type { SystemTheme } from "../../hooks/useSystemTheme";
 import { ColorPalette } from "../../theme/themeConfig";
-import { getFontColor, isDark, isHexColor } from "../colorUtils";
+import type { DarkModeOptions } from "../../types/user";
+import { getFontColor, isDark, isDarkMode, isHexColor } from "../colorUtils";
 
 describe("isHexColor", () => {
   it("validates correct hex colors", () => {
@@ -59,4 +61,22 @@ describe("isDark", () => {
     expect(isDark("#F0F0F0")).toBe(false);
     expect(isDark("#abcdef")).toBe(false);
   });
+});
+
+const isDarkModeCases: [string, DarkModeOptions, SystemTheme, string, boolean][] = [
+  ["force light mode", "light", "dark", "#000000", false],
+  ["force dark mode", "dark", "light", "#ffffff", true],
+  ["auto mode with system light", "auto", "light", "#ffffff", false],
+  ["auto mode with system dark", "auto", "dark", "#ffffff", false],
+  ["auto mode with dark background", "auto", "light", "#000000", true],
+  ["auto mode with light background", "auto", "dark", "#ffffff", false],
+];
+
+describe("isDarkMode", () => {
+  test.each(isDarkModeCases)(
+    "should return correct value for %s",
+    (_, darkmode, systemTheme, backgroundColor, expected) => {
+      expect(isDarkMode(darkmode, systemTheme, backgroundColor)).toBe(expected);
+    },
+  );
 });
