@@ -105,16 +105,41 @@ The app automatically generates custom splash screens from a single HTML templat
 
 <img src="https://raw.githubusercontent.com/maciekt07/TodoApp/main/screenshots/SplashScreen.png" alt="Splash Screen Example" width="450px" />
 
-To generate splash screens: `npm run generate-splash`
+To generate splash screens:
+
+```bash
+npm run generate-splash
+```
+
+Code: [scripts/splash-screens](https://github.com/maciekt07/TodoApp/blob/main/scripts/splash-screens)
 
 ## 👨‍💻 Installation
 
 To install and run the project locally, follow these steps:
 
-- Clone the repository: `git clone https://github.com/maciekt07/TodoApp.git`
-- Navigate to the project directory: `cd TodoApp`
-- Install the dependencies: `npm install`
-- Start the development server: `npm run dev`
+1. Clone the repository:
+
+```bash
+git clone https://github.com/maciekt07/TodoApp.git
+```
+
+2. Navigate to the project directory:
+
+```bash
+cd TodoApp
+```
+
+3. Install the dependencies:
+
+```bash
+npm install
+```
+
+4. Start the development server:
+
+```bash
+npm run dev
+```
 
 The app will now be running at [http://localhost:5173/](http://localhost:5173/).
 
