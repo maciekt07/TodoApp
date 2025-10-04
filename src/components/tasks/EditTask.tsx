@@ -21,6 +21,8 @@ import { useTheme } from "@emotion/react";
 import { ColorPalette } from "../../theme/themeConfig";
 import { CategorySelect } from "../CategorySelect";
 
+const DEFAULT_EDIT_TASK_SUBTITLE = "Edit the details of the task.";
+
 interface EditTaskProps {
   open: boolean;
   task?: Task;
@@ -33,6 +35,7 @@ export const EditTask = ({ open, task, onClose }: EditTaskProps) => {
   const [editedTask, setEditedTask] = useState<Task | undefined>(task);
   const [emoji, setEmoji] = useState<string | null>(null);
   const [selectedCategories, setSelectedCategories] = useState<Category[]>([]);
+  const [editLastSaveLabel, setEditLastSaveLabel] = useState<string>(DEFAULT_EDIT_TASK_SUBTITLE);
 
   const theme = useTheme();
 
@@ -58,6 +61,13 @@ export const EditTask = ({ open, task, onClose }: EditTaskProps) => {
   useEffect(() => {
     setEditedTask(task);
     setSelectedCategories(task?.category as Category[]);
+    if (task?.lastSave) {
+      setEditLastSaveLabel(
+        `Last edited ${timeAgo(new Date(task.lastSave))} • ${formatDate(new Date(task.lastSave))}`,
+      );
+    } else {
+      setEditLastSaveLabel(DEFAULT_EDIT_TASK_SUBTITLE);
+    }
   }, [task]);
 
   // Event handler for input changes in the form fields.
@@ -149,14 +159,11 @@ export const EditTask = ({ open, task, onClose }: EditTaskProps) => {
     >
       <CustomDialogTitle
         title="Edit Task"
-        subTitle={
-          editedTask?.lastSave
-            ? `Last edited ${timeAgo(new Date(editedTask.lastSave))} • ${formatDate(new Date(editedTask.lastSave))}`
-            : "Edit the details of the task."
-        }
+        subTitle={editLastSaveLabel}
         icon={<EditCalendarRounded />}
         onClose={onClose}
       />
+
       <DialogContent>
         <CustomEmojiPicker
           emoji={editedTask?.emoji || undefined}

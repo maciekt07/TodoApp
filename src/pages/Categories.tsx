@@ -44,6 +44,8 @@ import InputThemeProvider from "../contexts/InputThemeProvider";
 import { useToasterStore } from "react-hot-toast";
 import { TaskContext } from "../contexts/TaskContext";
 
+const DEFAULT_EDIT_CATEGORY_SUBTITLE = "Edit the details of the category.";
+
 const NotFound = lazy(() => import("./NotFound"));
 
 const Categories = () => {
@@ -64,6 +66,9 @@ const Categories = () => {
   const [editNameError, setEditNameError] = useState<string>("");
   const [editEmoji, setEditEmoji] = useState<string | null>(null);
   const [editColor, setEditColor] = useState<string>(ColorPalette.purple);
+  const [editLastSaveLabel, setEditLastSaveLabel] = useState<string>(
+    DEFAULT_EDIT_CATEGORY_SUBTITLE,
+  );
 
   const n = useNavigate();
   const { toasts } = useToasterStore();
@@ -81,11 +86,18 @@ const Categories = () => {
   }, [n, name.length, user.settings]);
 
   useEffect(() => {
-    setEditColor(
-      user.categories.find((cat) => cat.id === selectedCategoryId)?.color || ColorPalette.purple,
-    );
-    setEditName(user.categories.find((cat) => cat.id === selectedCategoryId)?.name || "");
-    setEditNameError("");
+    const cat = user.categories.find((cat) => cat.id === selectedCategoryId);
+    if (cat) {
+      setEditColor(cat.color || ColorPalette.purple);
+      setEditName(cat.name || "");
+      setEditEmoji(cat.emoji || null);
+      setEditNameError("");
+      setEditLastSaveLabel(
+        cat.lastSave
+          ? `Last edited ${timeAgo(new Date(cat.lastSave))} • ${formatDate(new Date(cat.lastSave))}`
+          : DEFAULT_EDIT_CATEGORY_SUBTITLE,
+      );
+    }
   }, [selectedCategoryId, user.categories]);
 
   const handleDelete = (categoryId: UUID | undefined) => {
@@ -425,11 +437,7 @@ const Categories = () => {
         >
           <CustomDialogTitle
             title="Edit Category"
-            subTitle={
-              selectedCategory?.lastSave
-                ? `Last edited ${timeAgo(new Date(selectedCategory.lastSave))} • ${formatDate(new Date(selectedCategory.lastSave))}`
-                : "Edit the details of the category."
-            }
+            subTitle={editLastSaveLabel}
             icon={<Edit />}
             onClose={handleEditDimiss}
           />
