@@ -29,6 +29,7 @@ import { getFontColor, showToast } from "../utils";
 import { ColorPalette } from "../theme/themeConfig";
 import { useSystemTheme } from "../hooks/useSystemTheme";
 import { isDarkMode } from "../utils/colorUtils";
+import { useToasterStore } from "react-hot-toast";
 
 interface CategorySelectProps {
   selectedCategories: Category[];
@@ -53,6 +54,7 @@ export const CategorySelect: React.FC<CategorySelectProps> = ({
 
   const muiTheme = useTheme();
   const systemTheme = useSystemTheme();
+  const { toasts } = useToasterStore();
 
   const handleCategoryChange = (event: SelectChangeEvent<unknown>): void => {
     const selectedCategoryIds = event.target.value as UUID[];
@@ -60,6 +62,10 @@ export const CategorySelect: React.FC<CategorySelectProps> = ({
       showToast(`You cannot add more than ${MAX_CATEGORIES_IN_TASK} categories`, {
         type: "error",
         position: "top-center",
+        id: "max-categories-toast",
+        preventDuplicate: true,
+        disableVibrate: true,
+        visibleToasts: toasts,
       });
 
       return;

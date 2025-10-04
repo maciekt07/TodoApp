@@ -107,11 +107,17 @@ export const showToast = (
   // Prevent showing duplicate of toasts if enabled
   if (preventDuplicate) {
     if (!toastOptions.id || !visibleToasts) {
-      console.error("[Toast] `preventDuplicate: true` requires both `id` and `visibleToasts`.");
-      return;
+      throw new Error("[Toast] `preventDuplicate: true` requires both `id` and `visibleToasts`.");
     }
     const alreadyVisible = visibleToasts.some((t) => t.id === toastOptions.id && t.visible);
-    if (alreadyVisible) return;
+    if (alreadyVisible) {
+      //TODO: reset toast duration
+      const elem = document.getElementById(toastOptions.id);
+      if (elem) {
+        applyBounce(elem);
+      }
+      return;
+    }
   }
 
   // Selects the appropriate toast function based on the specified type
@@ -168,4 +174,37 @@ export const showToast = (
       ...toastOptions, // Passes any additional toast options.
     },
   );
+};
+
+// helper to bounce toast using Web Animations API
+export const applyBounce = (element: HTMLElement) => {
+  const inner = element.firstElementChild as HTMLElement | null;
+  if (!inner) return;
+
+  // cancel any ongoing bounce
+  inner.getAnimations().forEach((anim) => anim.cancel());
+
+  const BOUNCE_KEYFRAMES: Keyframe[] = [
+    { transform: "scale(1)" },
+    { transform: "scale(1.1)" },
+    { transform: "scale(0.95)" },
+    { transform: "scale(1.05)" },
+    { transform: "scale(1)" },
+  ];
+
+  const BOUNCE_OPTIONS: KeyframeAnimationOptions = {
+    duration: 400,
+    easing: "ease",
+  };
+
+  const { transform, transition, animation } = inner.style;
+
+  const animationInstance = inner.animate(BOUNCE_KEYFRAMES, BOUNCE_OPTIONS);
+
+  animationInstance.onfinish = () => {
+    if (!inner.isConnected) return;
+    inner.style.transform = transform;
+    inner.style.transition = transition;
+    inner.style.animation = animation;
+  };
 };

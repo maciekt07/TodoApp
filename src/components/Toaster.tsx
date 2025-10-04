@@ -9,11 +9,12 @@ import { useContext } from "react";
 import { UserContext } from "../contexts/UserContext";
 
 export const CustomToaster = () => {
+  const { user } = useContext(UserContext);
   const isMobile = useResponsiveDisplay();
   const theme = useTheme();
-  const { user } = useContext(UserContext);
 
   const prefersReducedMotion = usePrefersReducedMotion(user.settings.reduceMotion);
+
   return (
     <ToasterContainer>
       <Toaster
@@ -54,19 +55,21 @@ export const CustomToaster = () => {
           },
         }}
       >
-        {(t) =>
-          prefersReducedMotion ? (
-            <ToastBar
-              toast={t}
-              style={{
-                ...t.style,
-                animation: t.visible ? "custom-enter 1s ease" : "custom-exit 1s ease forwards",
-              }}
-            />
-          ) : (
-            <ToastBar toast={t} style={t.style} />
-          )
-        }
+        {(t) => (
+          <div id={t.id}>
+            {prefersReducedMotion ? (
+              <ToastBar
+                toast={t}
+                style={{
+                  ...t.style,
+                  animation: t.visible ? "custom-enter 1s ease" : "custom-exit 1s ease forwards",
+                }}
+              />
+            ) : (
+              <ToastBar toast={t} style={t.style} />
+            )}
+          </div>
+        )}
       </Toaster>
     </ToasterContainer>
   );

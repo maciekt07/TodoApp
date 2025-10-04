@@ -301,6 +301,7 @@ export default function ReadAloudTab() {
                     padding: "10px",
                     borderRadius: "8px",
                     cursor: voice.localService === false && !isOnline ? "not-allowed" : "pointer",
+                    transition: "opacity 0.3s ease",
                   }}
                 >
                   {voice.name.startsWith("Google") && <Google sx={{ mr: "8px" }} />}
@@ -426,6 +427,7 @@ const ReadAloudWrapper = styled.fieldset<{ active: boolean }>`
   border: none;
   margin: 0;
   padding: 0;
+  transition: opacity 0.3s ease;
 
   button,
   input,
@@ -434,5 +436,6 @@ const ReadAloudWrapper = styled.fieldset<{ active: boolean }>`
   a {
     pointer-events: ${({ active }) => (active ? "auto" : "none")};
     ${({ active }) => (!active ? "tab-index: -1;" : "")}
+    transition: opacity 0.3s ease;
   }
 `;
