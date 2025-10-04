@@ -223,7 +223,24 @@ export const SettingsDialog = ({ open, onClose, handleOpen }: SettingsProps) => 
         e.preventDefault();
         handleDialogClose();
         navigate("/");
-        setTimeout(() => window.print(), 500);
+        setTimeout(async () => {
+          // ensure all emojis are loaded before printing
+          await Promise.all(
+            Array.from(
+              document.querySelectorAll<HTMLImageElement>("img.epr-emoji-img[loading='lazy']"),
+            ).map((img) =>
+              img.complete
+                ? Promise.resolve()
+                : new Promise<void>((resolve) => {
+                    const preloader = new Image();
+                    preloader.src = img.src;
+                    preloader.onload = () => resolve();
+                    preloader.onerror = () => resolve();
+                  }),
+            ),
+          );
+          window.print();
+        }, 500);
       }
     };
 
