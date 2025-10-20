@@ -113,6 +113,7 @@ const Home = () => {
             , <span>{name}</span>
           </span>
         )}
+        <h1>Gand test</h1>
       </GreetingHeader>
 
       <AnimatedGreeting />
