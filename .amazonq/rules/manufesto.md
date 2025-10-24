@@ -1,8 +1,8 @@
 # Productivity Analytics Framework
 
 ## Project Foundation
-**Project**: [CONFIGURE_PROJECT_NAME]  
-**Client**: [CONFIGURE_CLIENT_NAME]  
+**Project**: TodoApp React PWA  
+**Client**: Internal Development  
 **Focus**: Productivity Metrics & Code Contributions  
 **Output**: Always generate MD + HTML reports in `output/` folder
 
@@ -10,24 +10,24 @@
 ```yaml
 # REPLACE WITH YOUR TEAMS
 team_1:
-  name: "[TEAM_1_NAME]"
-  members: ["[MEMBER_1]", "[MEMBER_2]"]
-  repos: ["[REPO_1]", "[REPO_2]"]
+  name: "Gandu team"
+  members: ["ariel.ganduglia@globant.com"]
+  repos: ["https://github.com/ariel-ganduglia-glb/TodoApp"]
   
-team_2:
-  name: "[TEAM_2_NAME]"
-  members: ["[MEMBER_3]", "[MEMBER_4]"]
-  repos: ["[REPO_3]", "[REPO_4]"]
+#team_2:
+#  name: "[TEAM_2_NAME]"
+#  members: ["[MEMBER_3]", "[MEMBER_4]"]
+#  repos: ["[REPO_3]", "[REPO_4]"]
 ```
 
 ## Repository Configuration
 ```yaml
 # REPLACE WITH YOUR REPOSITORIES
 repositories:
-  [REPO_1]: { branch: "[BRANCH_1]", type: "[TYPE_1]" }
-  [REPO_2]: { branch: "[BRANCH_2]", type: "[TYPE_2]" }
-  [REPO_3]: { branch: "[BRANCH_3]", type: "[TYPE_3]" }
-  [REPO_4]: { branch: "[BRANCH_4]", type: "[TYPE_4]" }
+  https://github.com/ariel-ganduglia-glb/TodoApp: { branch: "main", type: "frontend" }
+# [REPO_2]: { branch: "[BRANCH_2]", type: "[TYPE_2]" }
+#  [REPO_3]: { branch: "[BRANCH_3]", type: "[TYPE_3]" }
+#  [REPO_4]: { branch: "[BRANCH_4]", type: "[TYPE_4]" }
 ```
 
 ## Core Rules
@@ -43,10 +43,7 @@ repositories:
 **Repository sync commands**:
 ```bash
 # REPLACE WITH YOUR REPOS AND BRANCHES
-cd [REPO_1] && git pull origin [BRANCH_1] && cd ..
-cd [REPO_2] && git pull origin [BRANCH_2] && cd ..
-cd [REPO_3] && git pull origin [BRANCH_3] && cd ..
-cd [REPO_4] && git pull origin [BRANCH_4] && cd ..
+cd TodoApp && git pull origin main && cd ..
 ```
 
 ### MANDATORY: Dual Output Format
