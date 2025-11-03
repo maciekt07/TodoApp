@@ -1,7 +1,7 @@
 import styled from "@emotion/styled";
 import {
   AccessTimeRounded,
-  CloudSyncRounded,
+  DevicesRounded,
   QrCodeRounded,
   QrCodeScannerRounded,
   RestartAltRounded,
@@ -100,9 +100,7 @@ export default function Sync() {
         {!mode && (
           <>
             <FeatureDescription>
-              <CloudSyncRounded
-                sx={{ fontSize: 40, color: (theme) => theme.palette.primary.main }}
-              />
+              <DevicesRounded sx={{ fontSize: 40, color: (theme) => theme.palette.primary.main }} />
               <Typography variant="h5" sx={{ fontWeight: 600, mb: 1 }}>
                 Sync Data Between Devices
               </Typography>
