@@ -144,7 +144,7 @@ npm run dev
 The app will now be running at [http://localhost:5173/](http://localhost:5173/).
 
 > [!TIP]
-> For mobile device testing, use `npm run dev:host` to preview the app on your local network with HTTPS (required for camera features) and a QR code in the terminal for quick access. To enable PWA features in development, see `vite.config.ts`.
+> For mobile device testing, use `npm run dev:host` to preview the app on your local network with HTTPS (required for camera features) and a QR code in the terminal for quick access. To enable PWA features in development, see [vite.config.ts](vite.config.ts).
 
 ## 📷 Screenshots
 
