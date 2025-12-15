@@ -191,7 +191,7 @@ const Home = () => {
                   {t("home.dueTodayTasks", { count: taskStats.tasksWithDeadlineTodayCount })}
                   :&nbsp;
                   <span translate="no">
-                    {new Intl.ListFormat("en", { style: "long" }).format(
+                    {new Intl.ListFormat(user.settings.language, { style: "long" }).format(
                       taskStats.tasksDueTodayNames,
                     )}
                   </span>

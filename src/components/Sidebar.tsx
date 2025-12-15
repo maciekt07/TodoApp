@@ -87,13 +87,12 @@ export const ProfileSidebar = () => {
       if (supportersCount > 0) {
         setBmcSupporters(supportersCount);
       } else {
-        console.error(t("errors.noBmcSupporters"));
+        console.error("No BMC supporters found.");
       }
     };
 
     fetchBMC();
     fetchRepoInfo();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const [avatarSrc, setAvatarSrc] = useState<string | null>(null);
@@ -391,12 +390,10 @@ export const ProfileSidebar = () => {
               onClick={() => {
                 showToast(
                   <div style={{ display: "inline-block" }}>
-                    {t("sidebar.installOnIOS", {
-                      icon: <IosShareRounded sx={{ verticalAlign: "middle", mb: "4px" }} />,
-                      bold: (
-                        <span style={{ fontWeight: "bold" }}>{t("sidebar.addToHomeScreen")}</span>
-                      ),
-                    })}
+                    {t("sidebar.installOnIOSPart1")}{" "}
+                    <IosShareRounded sx={{ verticalAlign: "middle", mb: "4px" }} />{" "}
+                    {t("sidebar.installOnIOSPart2")}{" "}
+                    <span style={{ fontWeight: "bold" }}>{t("sidebar.addToHomeScreen")}</span>.
                   </div>,
                   { type: "blank", duration: 8000 },
                 );
