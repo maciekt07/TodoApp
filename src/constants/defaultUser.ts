@@ -27,6 +27,7 @@ export const defaultUser: User = {
     showProgressBar: true,
     sortOption: "dateCreated",
     reduceMotion: "system",
+    language: "en",
   },
   categories: [
     { id: "857f0db6-43b2-43eb-8143-ec4e26472516", name: "Home", emoji: "1f3e0", color: "#53e45d" },

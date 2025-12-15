@@ -1,0 +1,98 @@
+{
+  "common": {
+    "user": "User",
+    "tasks": "Tasks",
+    "addTask": "Add Task",
+    "categories": "Categories",
+    "settings": "Settings",
+    "profile": "Profile",
+    "logout": "Logout",
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "edit": "Edit",
+    "done": "Done",
+    "undo": "Undo",
+    "close": "Close",
+    "gotIt": "Got it"
+  },
+  "greetings": {
+    "morning": "Good morning",
+    "afternoon": "Good afternoon",
+    "evening": "Good evening"
+  },
+  "home": {
+    "offline": "You're offline but you can use the app!",
+    "tasksToDo": "tasks to do",
+    "addNewTask": "Add New Task",
+    "progressBarHidden": "Progress bar hidden. You can enable it in settings.",
+    "tasksCompletedOutOf": "{{completed}} tasks out of {{total}} completed",
+    "dueTodayTasks": "{{count}} tasks due today",
+    "completion": {
+      "noTasks": "No tasks completed yet. Keep going!",
+      "allCompleted": "Congratulations! All tasks completed!",
+      "almostThere": "Almost there!",
+      "halfway": "You're halfway there! Keep it up!",
+      "goodProgress": "You're making good progress.",
+      "justStarted": "You're just getting started."
+    }
+  },
+  "sidebar": {
+    "purgeTasks": "Purge Tasks",
+    "transfer": "Transfer",
+    "syncDevices": "Sync Devices",
+    "lastSynced": "Last synced {{time}}",
+    "github": "Github",
+    "starsOnGithub": "{{count}} stars on Github",
+    "reportIssue": "Report Issue",
+    "openIssues": "{{count}} open issues",
+    "buyMeACoffee": "Buy me a coffee",
+    "supporters": "{{count}} supporters on Buy me a coffee",
+    "installApp": "Install App",
+    "installOnIOS": "To install the app on iOS Safari, click on {{icon}} and then {{bold}}.",
+    "addToHomeScreen": "Add to Home Screen",
+    "madeWith": "Made with",
+    "by": "by",
+    "lastUpdate": "Last update: {{date}}"
+  },
+  "pwa": {
+    "appInstalled": "App installed successfully!",
+    "installationDismissed": "Installation dismissed.",
+    "runningAsPWA": "The app is now running as a PWA.",
+    "offlineSupport": "You can access it from your home screen, with offline support and features like shortcuts and badges."
+  },
+  "settings": {
+    "title": "Settings",
+    "appearance": "Appearance",
+    "general": "General",
+    "generalSettings": "General Settings",
+    "emoji": "Emoji",
+    "emojiSettings": "Emoji Settings",
+    "readAloud": "Read Aloud",
+    "readAloudSettings": "Read Aloud Settings",
+    "shortcuts": "Shortcuts",
+    "keyboardShortcuts": "Keyboard Shortcuts",
+    "about": "About",
+    "aboutThisApp": "About This App",
+    "language": "Language",
+    "selectLanguage": "Select Language"
+  },
+  "languages": {
+    "en": "English",
+    "zh-CN": "简体中文",
+    "zh-TW": "繁體中文"
+  },
+  "addTask": {
+    "title": "Add Task",
+    "taskName": "Task Name",
+    "description": "Description",
+    "category": "Category",
+    "deadline": "Deadline",
+    "color": "Color",
+    "emoji": "Emoji"
+  },
+  "errors": {
+    "profilePictureError": "Error in profile picture URL",
+    "noBmcSupporters": "No BMC supporters found."
+  }
+}

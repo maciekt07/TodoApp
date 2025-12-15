@@ -1,0 +1,98 @@
+{
+  "common": {
+    "user": "用户",
+    "tasks": "任务",
+    "addTask": "添加任务",
+    "categories": "分类",
+    "settings": "设置",
+    "profile": "个人资料",
+    "logout": "登出",
+    "save": "保存",
+    "cancel": "取消",
+    "delete": "删除",
+    "edit": "编辑",
+    "done": "完成",
+    "undo": "撤销",
+    "close": "关闭",
+    "gotIt": "知道了"
+  },
+  "greetings": {
+    "morning": "早上好",
+    "afternoon": "下午好",
+    "evening": "晚上好"
+  },
+  "home": {
+    "offline": "您处于离线状态，但仍可使用应用！",
+    "tasksToDo": "待办任务",
+    "addNewTask": "添加新任务",
+    "progressBarHidden": "进度条已隐藏。您可以在设置中启用它。",
+    "tasksCompletedOutOf": "{{total}} 个任务中已完成 {{completed}} 个",
+    "dueTodayTasks": "今天到期 {{count}} 个任务",
+    "completion": {
+      "noTasks": "尚未完成任何任务。继续加油！",
+      "allCompleted": "恭喜！所有任务已完成！",
+      "almostThere": "快完成了！",
+      "halfway": "已完成一半！继续加油！",
+      "goodProgress": "进展不错。",
+      "justStarted": "刚刚开始。"
+    }
+  },
+  "sidebar": {
+    "purgeTasks": "清除任务",
+    "transfer": "转移",
+    "syncDevices": "同步设备",
+    "lastSynced": "上次同步 {{time}}",
+    "github": "Github",
+    "starsOnGithub": "在 Github 上有 {{count}} 个星标",
+    "reportIssue": "报告问题",
+    "openIssues": "{{count}} 个未解决问题",
+    "buyMeACoffee": "请我喝杯咖啡",
+    "supporters": "在 Buy me a coffee 上有 {{count}} 位支持者",
+    "installApp": "安装应用",
+    "installOnIOS": "要在 iOS Safari 上安装应用，请点击 {{icon}}，然后点击{{bold}}。",
+    "addToHomeScreen": "添加到主屏幕",
+    "madeWith": "用",
+    "by": "制作，作者",
+    "lastUpdate": "最后更新：{{date}}"
+  },
+  "pwa": {
+    "appInstalled": "应用安装成功！",
+    "installationDismissed": "已取消安装。",
+    "runningAsPWA": "应用现在作为 PWA 运行。",
+    "offlineSupport": "您可以从主屏幕访问它，支持离线使用以及快捷方式和徽章等功能。"
+  },
+  "settings": {
+    "title": "设置",
+    "appearance": "外观",
+    "general": "常规",
+    "generalSettings": "常规设置",
+    "emoji": "表情符号",
+    "emojiSettings": "表情符号设置",
+    "readAloud": "朗读",
+    "readAloudSettings": "朗读设置",
+    "shortcuts": "快捷键",
+    "keyboardShortcuts": "键盘快捷键",
+    "about": "关于",
+    "aboutThisApp": "关于此应用",
+    "language": "语言",
+    "selectLanguage": "选择语言"
+  },
+  "languages": {
+    "en": "English",
+    "zh-CN": "简体中文",
+    "zh-TW": "繁體中文"
+  },
+  "addTask": {
+    "title": "添加任务",
+    "taskName": "任务名称",
+    "description": "描述",
+    "category": "分类",
+    "deadline": "截止日期",
+    "color": "颜色",
+    "emoji": "表情符号"
+  },
+  "errors": {
+    "profilePictureError": "个人资料图片 URL 错误",
+    "noBmcSupporters": "未找到 BMC 支持者。"
+  }
+}

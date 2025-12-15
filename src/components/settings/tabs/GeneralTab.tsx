@@ -1,9 +1,11 @@
 import { systemInfo } from "../../../utils";
 import CustomSwitch from "../CustomSwitch";
+import { LanguageSelect } from "../LanguageSelect";
 
 export default function GeneralTab() {
   return (
     <>
+      <LanguageSelect />
       <CustomSwitch
         settingKey="enableCategories"
         header="Enable Categories"
