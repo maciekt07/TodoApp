@@ -35,6 +35,7 @@ import {
   useEffect,
   useState,
 } from "react";
+import { useTranslation } from "react-i18next";
 import { CATEGORY_NAME_MAX_LENGTH, TASK_NAME_MAX_LENGTH } from "../constants";
 import { UserContext } from "../contexts/UserContext";
 import { useOnlineStatus } from "../hooks/useOnlineStatus";
@@ -53,6 +54,7 @@ interface EmojiPickerProps {
 }
 
 export const CustomEmojiPicker = ({ emoji, setEmoji, color, name, type }: EmojiPickerProps) => {
+  const { t } = useTranslation();
   const { user, setUser } = useContext(UserContext);
   const { emojisStyle, settings } = user;
   const [showEmojiPicker, setShowEmojiPicker] = useState<boolean>(false);
@@ -77,10 +79,7 @@ export const CustomEmojiPicker = ({ emoji, setEmoji, color, name, type }: EmojiP
     }
 
     frequentlyUsedEmojis.sort((a, b) => b.count - a.count);
-    const topEmojis: EmojiItem[] = frequentlyUsedEmojis.slice(0, 6);
-    const topUnified: string[] = topEmojis.map((item) => item.unified);
-
-    return topUnified;
+    return frequentlyUsedEmojis.slice(0, 6).map((item) => item.unified);
   };
 
   // When the currentEmoji state changes, update the parent component's emoji state
@@ -141,8 +140,10 @@ export const CustomEmojiPicker = ({ emoji, setEmoji, color, name, type }: EmojiP
       console.log("Full AI response:", response);
 
       // this doesn't split emojis into separate characters
+      // 替换为兼容性更好的 emoji 匹配正则
+      // 参考：https://thekevinscott.com/emojis-in-javascript/
       const emojiRegex =
-        /\p{RI}\p{RI}|\p{Emoji}(\p{EMod}+|\u{FE0F}\u{20E3}?|[\u{E0020}-\u{E007E}]+\u{E007F})?(\u{200D}\p{Emoji}(\p{EMod}+|\u{FE0F}\u{20E3}?|[\u{E0020}-\u{E007E}]+\u{E007F})?)+|\p{EPres}(\p{EMod}+|\u{FE0F}\u{20E3}?|[\u{E0020}-\u{E007E}]+\u{E007F})?|\p{Emoji}(\p{EMod}+|\u{FE0F}\u{20E3}?|[\u{E0020}-\u{E007E}]+\u{E007F})/gu;
+        /([\u231A-\u231B]|[\u23E9-\u23EC]|[\u23F0]|[\u23F3]|[\u25FD-\u25FE]|[\u2614-\u2615]|[\u2648-\u2653]|[\u267F]|[\u2693]|[\u26A1]|[\u26AA-\u26AB]|[\u26BD-\u26BE]|[\u26C4-\u26C5]|[\u26CE]|[\u26D4]|[\u26EA]|[\u26F2-\u26F3]|[\u26F5]|[\u26FA]|[\u26FD]|[\u2705]|[\u270A-\u270B]|[\u2728]|[\u274C]|[\u274E]|[\u2753-\u2755]|[\u2757]|[\u2795-\u2797]|[\u27B0]|[\u27BF]|[\u2B1B-\u2B1C]|[\u2B50]|[\u2B55]|[\u1F004]|[\u1F0CF]|[\u1F18E]|[\u1F191-\u1F19A]|[\u1F1E6-\u1F1FF]|[\u1F201-\u1F202]|[\u1F21A]|[\u1F22F]|[\u1F232-\u1F23A]|[\u1F250-\u1F251]|[\u1F300-\u1F320]|[\u1F32D-\u1F335]|[\u1F337-\u1F37C]|[\u1F37E-\u1F393]|[\u1F3A0-\u1F3CA]|[\u1F3CF-\u1F3D3]|[\u1F3E0-\u1F3F0]|[\u1F3F4]|[\u1F3F8-\u1F43E]|[\u1F440]|[\u1F442-\u1F4FC]|[\u1F4FF-\u1F53D]|[\u1F54B-\u1F54E]|[\u1F550-\u1F567]|[\u1F57A]|[\u1F595-\u1F596]|[\u1F5A4]|[\u1F5FB-\u1F64F]|[\u1F680-\u1F6C5]|[\u1F6CC]|[\u1F6D0]|[\u1F6D1-\u1F6D2]|[\u1F6EB-\u1F6EC]|[\u1F6F4-\u1F6F8]|[\u1F910-\u1F93A]|[\u1F93C-\u1F93E]|[\u1F940-\u1F945]|[\u1F947-\u1F94C]|[\u1F950-\u1F96B]|[\u1F980-\u1F997]|[\u1F9C0]|[\u1F9D0-\u1F9E6]|[\u1FA70-\u1FA73]|[\u1FA78-\u1FA7A]|[\u1FA80-\u1FA82]|[\u1FA90-\u1FA95])/g;
 
       const extractedEmojis = response.trim().replace(/\*/g, "").match(emojiRegex) || [];
 
@@ -154,7 +155,11 @@ export const CustomEmojiPicker = ({ emoji, setEmoji, color, name, type }: EmojiP
         setCurrentEmoji(null);
         showToast(
           <div>
-            <b>No emoji found.</b> <br /> Please try again with different {type} name.
+            <b>{t("emojiPicker.noEmojiFoundTitle", { defaultValue: "No emoji found." })}</b> <br />
+            {t("emojiPicker.noEmojiFound", {
+              defaultValue: "Please try again with different {{type}} name.",
+              type,
+            })}
           </div>,
           {
             type: "error",
@@ -194,7 +199,11 @@ export const CustomEmojiPicker = ({ emoji, setEmoji, color, name, type }: EmojiP
         setCurrentEmoji(null);
         showToast(
           <div>
-            <b>Invalid emoji.</b> <br /> Please try again with different {type} name.
+            <b>{t("emojiPicker.invalidEmojiTitle", { defaultValue: "Invalid emoji." })}</b> <br />
+            {t("emojiPicker.invalidEmoji", {
+              defaultValue: "Please try again with different {{type}} name.",
+              type,
+            })}
           </div>,
           {
             type: "error",
@@ -208,9 +217,11 @@ export const CustomEmojiPicker = ({ emoji, setEmoji, color, name, type }: EmojiP
       console.error(error);
       showToast(
         <div>
-          <b>Falied to generate emoji.</b>
+          <b>
+            {t("emojiPicker.failedToGenerateTitle", { defaultValue: "Failed to generate emoji." })}
+          </b>
           <br />
-          {String(error)}
+          {t("emojiPicker.failedToGenerate", { defaultValue: "{{error}}", error: String(error) })}
         </div>,
         { type: "error", duration: 8000 },
       );
@@ -297,7 +308,16 @@ export const CustomEmojiPicker = ({ emoji, setEmoji, color, name, type }: EmojiP
         </Badge>
       </EmojiContainer>
       {"LanguageModel" in window && name !== undefined && (
-        <Tooltip title={!name ? `Enter a name for the ${type} to find emoji` : undefined}>
+        <Tooltip
+          title={
+            !name
+              ? t("emojiPicker.enterNameForAI", {
+                  defaultValue: `Enter a name for the ${type} to find emoji`,
+                  type,
+                })
+              : undefined
+          }
+        >
           <div style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
             <DisabledThemeProvider>
               <Button
@@ -309,7 +329,8 @@ export const CustomEmojiPicker = ({ emoji, setEmoji, color, name, type }: EmojiP
                     : name.length > CATEGORY_NAME_MAX_LENGTH)
                 }
               >
-                <AutoAwesome /> &nbsp; Find emoji with AI
+                <AutoAwesome /> &nbsp;{" "}
+                {t("emojiPicker.findWithAI", { defaultValue: "Find emoji with AI" })}
               </Button>
             </DisabledThemeProvider>
           </div>
@@ -332,7 +353,8 @@ export const CustomEmojiPicker = ({ emoji, setEmoji, color, name, type }: EmojiP
           </Suspense>
           {currentEmoji && (
             <Button onClick={handleRemoveEmoji} fullWidth variant="outlined" color="error">
-              <RemoveCircleOutline /> &nbsp; Remove Emoji
+              <RemoveCircleOutline /> &nbsp;{" "}
+              {t("emojiPicker.remove", { defaultValue: "Remove Emoji" })}
             </Button>
           )}
         </SimplePickerContainer>
@@ -354,8 +376,11 @@ export const CustomEmojiPicker = ({ emoji, setEmoji, color, name, type }: EmojiP
             }}
           >
             <CustomDialogTitle
-              title="Choose Emoji"
-              subTitle={`Choose the perfect emoji for your ${type}.`}
+              title={t("emojiPicker.title", { defaultValue: "Choose Emoji" })}
+              subTitle={t("emojiPicker.subtitle", {
+                defaultValue: `Choose the perfect emoji for your ${type}.`,
+                type,
+              })}
               onClose={toggleEmojiPicker}
               icon={<AddReaction />}
             />
@@ -363,8 +388,10 @@ export const CustomEmojiPicker = ({ emoji, setEmoji, color, name, type }: EmojiP
               {!isOnline && emojisStyle !== EmojiStyle.NATIVE && (
                 <Box sx={{ mx: "14px", mb: "16px" }}>
                   <Alert severity="warning">
-                    Emojis may not load correctly when offline. Try switching to the native emoji
-                    style.
+                    {t("emojiPicker.offlineWarning", {
+                      defaultValue:
+                        "Emojis may not load correctly when offline. Try switching to the native emoji style.",
+                    })}
                   </Alert>
                   <Button
                     variant="outlined"
@@ -380,7 +407,8 @@ export const CustomEmojiPicker = ({ emoji, setEmoji, color, name, type }: EmojiP
                       setTimeout(() => setShowEmojiPicker(true), 100);
                     }}
                   >
-                    <EmojiEmotions /> &nbsp; Switch to Native Emoji
+                    <EmojiEmotions /> &nbsp;{" "}
+                    {t("emojiPicker.switchToNative", { defaultValue: "Switch to Native Emoji" })}
                   </Button>
                 </Box>
               )}
@@ -403,10 +431,15 @@ export const CustomEmojiPicker = ({ emoji, setEmoji, color, name, type }: EmojiP
                     suggestedEmojisMode={SuggestionMode.FREQUENT}
                     autoFocusSearch={false}
                     onEmojiClick={handleEmojiClick}
-                    searchPlaceHolder="Search emoji"
+                    searchPlaceHolder={t("emojiPicker.searchPlaceholder", {
+                      defaultValue: "Search emoji",
+                    })}
                     previewConfig={{
                       defaultEmoji: "1f4dd",
-                      defaultCaption: `Choose the perfect emoji for your ${type}`,
+                      defaultCaption: t("emojiPicker.previewCaption", {
+                        defaultValue: `Choose the perfect emoji for your ${type}`,
+                        type,
+                      }),
                     }}
                   />
                 </Suspense>
@@ -415,13 +448,14 @@ export const CustomEmojiPicker = ({ emoji, setEmoji, color, name, type }: EmojiP
             <DialogActions>
               {currentEmoji && (
                 <DialogBtn color="error" onClick={handleRemoveEmoji}>
-                  <RemoveCircleOutline /> &nbsp; Remove Emoji
+                  <RemoveCircleOutline /> &nbsp;{" "}
+                  {t("emojiPicker.remove", { defaultValue: "Remove Emoji" })}
                 </DialogBtn>
               )}
-              {/* <DialogBtn onClick={() => n("#settings/Emoji")}>
-                <SettingsRounded /> &nbsp; Settings
-              </DialogBtn> */}
-              <DialogBtn onClick={toggleEmojiPicker}>Cancel</DialogBtn>
+              {/* <DialogBtn onClick={() => n("#settings/Emoji")}>*/}
+              <DialogBtn onClick={toggleEmojiPicker}>
+                {t("common.cancel", { defaultValue: "Cancel" })}
+              </DialogBtn>
             </DialogActions>
           </Dialog>
         </>
@@ -484,7 +518,6 @@ const PickerLoader = styled.div<PickerLoaderProps>`
   justify-content: center;
   width: ${({ width }) => width || "350px"};
   height: 500px;
-  width: 100vw;
   padding: 8px;
   border-radius: 20px;
   background: transparent;

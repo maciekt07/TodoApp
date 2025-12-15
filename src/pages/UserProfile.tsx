@@ -14,6 +14,7 @@ import {
   Typography,
 } from "@mui/material";
 import { useContext, useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import styled from "@emotion/styled";
 import {
   AddAPhotoRounded,
@@ -45,6 +46,7 @@ import { ColorPalette } from "../theme/themeConfig";
 // TODO: move this to settings dialog
 const UserProfile = () => {
   const { user, setUser } = useContext(UserContext);
+  const { t } = useTranslation();
   const { name, profilePicture, createdAt } = user;
   const [userName, setUserName] = useState<string>("");
   const [profilePictureURL, setProfilePictureURL] = useState<string>("");
@@ -54,7 +56,7 @@ const UserProfile = () => {
   const [showBrokenPfpAlert, setShowBrokenPfpAlert] = useState(false);
 
   useEffect(() => {
-    document.title = `Todo App - User ${name ? `(${name})` : ""}`;
+    document.title = `Todo App - ${t("userProfile.title", { defaultValue: `User ${name ? `(${name})` : ""}` })}`;
   }, [name]);
 
   useEffect(() => {
@@ -206,9 +208,9 @@ const UserProfile = () => {
 
   return (
     <>
-      <TopBar title="User Profile" />
+      <TopBar title={t("userProfile.titleSimple", { defaultValue: "User Profile" })} />
       <Container glow={user.settings.enableGlow}>
-        <Tooltip title="App Settings">
+        <Tooltip title={t("userProfile.appSettings", { defaultValue: "App Settings" })}>
           <IconButton
             onClick={() => (window.location.hash = "#settings")}
             aria-label="Settings"
@@ -222,7 +224,13 @@ const UserProfile = () => {
             <Settings fontSize="large" />
           </IconButton>
         </Tooltip>
-        <Tooltip title={profilePicture ? "Change profile picture" : "Add profile picture"}>
+        <Tooltip
+          title={
+            profilePicture
+              ? t("userProfile.changeProfilePicture", { defaultValue: "Change profile picture" })
+              : t("userProfile.addProfilePicture", { defaultValue: "Add profile picture" })
+          }
+        >
           <Badge
             overlap="circular"
             anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
@@ -262,7 +270,9 @@ const UserProfile = () => {
           (!avatarSrc || !avatarSrc.startsWith("data:")) &&
           profilePicture?.startsWith("LOCAL_FILE") && (
             <BrokenPfpAlert severity="warning" variant="outlined">
-              Profile picture might be broken. You can try removing it.
+              {t("userProfile.profilePictureBroken", {
+                defaultValue: "Profile picture might be broken. You can try removing it.",
+              })}
             </BrokenPfpAlert>
           )}
         <UserName translate={name ? "no" : "yes"}>{name || "User"}</UserName>
@@ -274,13 +284,21 @@ const UserProfile = () => {
         >
           <CreatedAtDate>
             <TodayRounded fontSize="small" />
-            &nbsp;Registered {timeAgo(createdAt)}
+            &nbsp;
+            {t("userProfile.registered", {
+              defaultValue: "Registered {{time}}",
+              time: timeAgo(createdAt),
+            })}
           </CreatedAtDate>
         </Tooltip>
 
         <TextField
           sx={{ width: "300px", marginTop: "8px" }}
-          label={name === null ? "Add Name" : "Change Name"}
+          label={
+            name === null
+              ? t("userProfile.addName", { defaultValue: "Add Name" })
+              : t("userProfile.changeName", { defaultValue: "Change Name" })
+          }
           value={userName}
           onChange={(e) => setUserName(e.target.value)}
           onKeyDown={(e) => e.key === "Enter" && handleSaveName()}
@@ -301,7 +319,7 @@ const UserProfile = () => {
           onClick={handleSaveName}
           disabled={userName.length > USER_NAME_MAX_LENGTH || userName === name}
         >
-          Save name
+          {t("userProfile.saveName", { defaultValue: "Save name" })}
         </SaveBtn>
         <Button
           color="error"
@@ -310,20 +328,26 @@ const UserProfile = () => {
           onClick={() => setOpenLogoutDialog(true)}
         >
           <Logout />
-          &nbsp; Logout
+          &nbsp; {t("userProfile.logout", { defaultValue: "Logout" })}
         </Button>
       </Container>
       <Dialog open={openChangeImage} onClose={handleCloseImageDialog}>
         <CustomDialogTitle
-          title="Profile Picture"
-          subTitle="Change or delete profile picture"
+          title={t("userProfile.profilePictureTitle", { defaultValue: "Profile Picture" })}
+          subTitle={t("userProfile.profilePictureSubtitle", {
+            defaultValue: "Change or delete profile picture",
+          })}
           onClose={handleCloseImageDialog}
           icon={<AddAPhotoRounded />}
         />
         <DialogContent>
           <TextField
-            label="Link to profile picture"
-            placeholder="Enter link to profile picture..."
+            label={t("userProfile.linkToProfilePicture", {
+              defaultValue: "Link to profile picture",
+            })}
+            placeholder={t("userProfile.enterLinkToProfilePicture", {
+              defaultValue: "Enter link to profile picture...",
+            })}
             sx={{ my: "8px", width: "100%" }}
             value={profilePictureURL}
             onChange={(e) => {
@@ -350,7 +374,7 @@ const UserProfile = () => {
           />
 
           <StyledDivider>
-            <span style={{ opacity: 0.8 }}>or</span>
+            <span style={{ opacity: 0.8 }}>{t("userProfile.or", { defaultValue: "or" })}</span>
           </StyledDivider>
 
           <Button
@@ -361,7 +385,8 @@ const UserProfile = () => {
             fullWidth
             sx={{ my: "8px" }}
           >
-            <UploadRounded /> &nbsp; Upload from file
+            <UploadRounded /> &nbsp;{" "}
+            {t("userProfile.uploadFromFile", { defaultValue: "Upload from file" })}
             <VisuallyHiddenInput accept="image/*" type="file" onChange={handleFileUpload} />
           </Button>
 
@@ -384,7 +409,11 @@ const UserProfile = () => {
                   handleDeleteImage(() => {
                     setUser((prevUser) => ({ ...prevUser, profilePicture: null }));
                     handleCloseImageDialog();
-                    showToast("Profile picture removed.");
+                    showToast(
+                      t("userProfile.profilePictureRemoved", {
+                        defaultValue: "Profile picture removed.",
+                      }),
+                    );
                   });
                 }}
                 color="error"
@@ -397,7 +426,9 @@ const UserProfile = () => {
           )}
         </DialogContent>
         <DialogActions>
-          <DialogBtn onClick={handleCloseImageDialog}>Cancel</DialogBtn>
+          <DialogBtn onClick={handleCloseImageDialog}>
+            {t("common.cancel", { defaultValue: "Cancel" })}
+          </DialogBtn>
           <DialogBtn
             disabled={
               profilePictureURL.length > PROFILE_PICTURE_MAX_LENGTH ||

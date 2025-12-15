@@ -30,6 +30,7 @@ import { ColorPalette } from "../theme/themeConfig";
 import { useSystemTheme } from "../hooks/useSystemTheme";
 import { isDarkMode } from "../utils/colorUtils";
 import { useToasterStore } from "react-hot-toast";
+import { useTranslation } from "react-i18next";
 
 interface CategorySelectProps {
   selectedCategories: Category[];
@@ -48,6 +49,7 @@ export const CategorySelect: React.FC<CategorySelectProps> = ({
   fontColor,
 }) => {
   const { user } = useContext(UserContext);
+  const { t } = useTranslation();
   const { categories, emojisStyle, favoriteCategories } = user;
   const [selectedCats, setSelectedCats] = useState<Category[]>(selectedCategories);
   const [isOpen, setIsOpen] = useState<boolean>(false);
@@ -59,14 +61,20 @@ export const CategorySelect: React.FC<CategorySelectProps> = ({
   const handleCategoryChange = (event: SelectChangeEvent<unknown>): void => {
     const selectedCategoryIds = event.target.value as UUID[];
     if (selectedCategoryIds.length > MAX_CATEGORIES_IN_TASK) {
-      showToast(`You cannot add more than ${MAX_CATEGORIES_IN_TASK} categories`, {
-        type: "error",
-        position: "top-center",
-        id: "max-categories-toast",
-        preventDuplicate: true,
-        disableVibrate: true,
-        visibleToasts: toasts,
-      });
+      showToast(
+        t("categories.maxExceeded", {
+          defaultValue: `You cannot add more than ${MAX_CATEGORIES_IN_TASK} categories`,
+          count: MAX_CATEGORIES_IN_TASK,
+        }),
+        {
+          type: "error",
+          position: "top-center",
+          id: "max-categories-toast",
+          preventDuplicate: true,
+          disableVibrate: true,
+          visibleToasts: toasts,
+        },
+      );
 
       return;
     }
@@ -92,7 +100,7 @@ export const CategorySelect: React.FC<CategorySelectProps> = ({
           fontWeight: 500,
         }}
       >
-        Category
+        {t("categories.fieldLabel", { defaultValue: "Category" })}
       </FormLabel>
 
       <StyledSelect
@@ -131,7 +139,9 @@ export const CategorySelect: React.FC<CategorySelectProps> = ({
               ))}
             </Box>
           ) : (
-            <Box sx={{ color: fontColor }}>Select Categories</Box>
+            <Box sx={{ color: fontColor }}>
+              {t("categories.selectCategories", { defaultValue: "Select Categories" })}
+            </Box>
           )
         }
         MenuProps={{
@@ -163,7 +173,7 @@ export const CategorySelect: React.FC<CategorySelectProps> = ({
               {selectedCats.some((cat) => cat.id === category.id) && <RadioButtonChecked />}
               {category.emoji && <Emoji unified={category.emoji} emojiStyle={emojisStyle} />}
               &nbsp;
-              {category.name}
+              {t(category.name)}
             </CategoriesMenu>
           );
           const createCategoryGroup = (
@@ -186,7 +196,7 @@ export const CategorySelect: React.FC<CategorySelectProps> = ({
               <HeaderMenuItem key="header-info" disabled>
                 <div style={{ display: "flex", flexDirection: "column", gap: "2px" }}>
                   <b>
-                    Select Categories{" "}
+                    {t("categories.selectCategories", { defaultValue: "Select Categories" })}{" "}
                     <span
                       style={{
                         transition: ".3s color",
@@ -196,18 +206,29 @@ export const CategorySelect: React.FC<CategorySelectProps> = ({
                             : "currentcolor",
                       }}
                     >
-                      {categories.length > 3 && <span>(max {MAX_CATEGORIES_IN_TASK})</span>}
+                      {categories.length > 3 && (
+                        <span>
+                          (
+                          {t("categories.maxLabel", {
+                            defaultValue: `最多${MAX_CATEGORIES_IN_TASK}个`,
+                            max: MAX_CATEGORIES_IN_TASK,
+                          })}
+                          )
+                        </span>
+                      )}
                     </span>
                   </b>
                   <SelectedNames>
-                    Selected:{" "}
+                    {t("categories.selectedLabel", { defaultValue: "Selected:" })}{" "}
                     {selectedCats.length > 0 ? (
-                      new Intl.ListFormat("en", {
+                      new Intl.ListFormat(navigator.language || "en", {
                         style: "long",
                         type: "conjunction",
-                      }).format(selectedCats.map((category) => category.name))
+                      }).format(selectedCats.map((category) => t(category.name)))
                     ) : (
-                      <span style={{ fontStyle: "italic" }}>none</span>
+                      <span style={{ fontStyle: "italic" }}>
+                        {t("categories.noneLabel", { defaultValue: "none" })}
+                      </span>
                     )}
                   </SelectedNames>
                 </div>
@@ -216,20 +237,24 @@ export const CategorySelect: React.FC<CategorySelectProps> = ({
                 favoriteCats,
                 <>
                   <StarRounded color="warning" sx={{ fontSize: "18px" }} />
-                  &nbsp;Favorite Categories
+                  &nbsp;
+                  {t("categories.favoriteCategories", { defaultValue: "Favorite Categories" })}
                 </>,
                 "header-favorites",
               ),
               ...createCategoryGroup(
                 otherCats,
-                favoriteCats.length > 0 ? "Other Categories" : "",
+                favoriteCats.length > 0
+                  ? t("categories.otherCategories", { defaultValue: "Other Categories" })
+                  : "",
                 "header-others",
               ),
               <div key="footer" style={{ margin: "8px" }}>
                 <Divider sx={{ mb: "12px", mt: "16px" }} />
                 <Link to="/categories">
                   <Button fullWidth variant="outlined" sx={{ mb: "8px", mt: "2px" }}>
-                    <EditRounded /> &nbsp; Modify Categories
+                    <EditRounded /> &nbsp;{" "}
+                    {t("categories.modifyCategories", { defaultValue: "Modify Categories" })}
                   </Button>
                 </Link>
               </div>,
@@ -237,10 +262,13 @@ export const CategorySelect: React.FC<CategorySelectProps> = ({
           } else {
             return [
               <NoCategories key="no-categories" disableTouchRipple>
-                <p>You don't have any categories</p>
+                <p>
+                  {t("categories.noCategories", { defaultValue: "You don't have any categories" })}
+                </p>
                 <Link to="/categories" style={{ width: "100%" }}>
                   <Button fullWidth variant="outlined">
-                    <AddRounded /> &nbsp; Create Category
+                    <AddRounded /> &nbsp;{" "}
+                    {t("categories.createCategory", { defaultValue: "Create Category" })}
                   </Button>
                 </Link>
               </NoCategories>,
@@ -272,14 +300,14 @@ const CategoriesMenu = styled(MenuItem)<{ clr: string; disable?: boolean }>`
   transition: 0.2s all;
   color: ${(props) => getFontColor(props.clr || ColorPalette.fontLight)};
   background: ${({ clr }) => clr};
-  opacity: ${({ disable }) => (disable ? ".6" : "none")};
+  opacity: ${({ disable }) => (disable ? ".6" : "1")};
   &:hover {
     background: ${({ clr }) => clr};
-    opacity: ${({ disable }) => (disable ? "none" : ".8")};
+    opacity: ${({ disable }) => (disable ? ".6" : ".8")};
   }
 
   &:focus {
-    opacity: none;
+    opacity: 1;
   }
 
   &:focus-visible {

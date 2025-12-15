@@ -1,4 +1,5 @@
 import { useCallback, useContext, useEffect, useRef, useState } from "react";
+import { useTranslation } from "react-i18next";
 import Button from "@mui/material/Button";
 import Checkbox from "@mui/material/Checkbox";
 import { TopBar } from "../components";
@@ -36,6 +37,7 @@ import { Link, useNavigate } from "react-router-dom";
 import QRCodeScannerDialog from "../components/QRCodeScannerDialog";
 const Transfer = () => {
   const { user, setUser } = useContext(UserContext);
+  const { t } = useTranslation();
   const [selectedTasks, setSelectedTasks] = useStorageState<UUID[]>(
     [],
     "tasksToExport",
@@ -48,7 +50,7 @@ const Transfer = () => {
   const n = useNavigate();
 
   useEffect(() => {
-    document.title = "Todo App - Transfer tasks";
+    document.title = `Todo App - ${t("transfer.title", { defaultValue: "Transfer" })}`;
   }, []);
 
   // clear file input after logout
@@ -368,16 +370,20 @@ const Transfer = () => {
 
   return (
     <>
-      <TopBar title="Transfer" />
-      <ManagementHeader>Sync All Data</ManagementHeader>
+      <TopBar title={t("transfer.title", { defaultValue: "Transfer" })} />
+      <ManagementHeader>
+        {t("transfer.syncAllData", { defaultValue: "Sync All Data" })}
+      </ManagementHeader>
       <ManagementButtonsContainer>
         <Link to="/sync" tabIndex={-1}>
           <ManagementButton variant="contained" size="large" sx={{ mb: 1 }}>
-            <PhonelinkRounded /> &nbsp; Sync With Other Device
+            <PhonelinkRounded /> &nbsp; {t("sidebar.syncDevices", { defaultValue: "Sync Devices" })}
           </ManagementButton>
         </Link>
       </ManagementButtonsContainer>
-      <ManagementHeader>Export Tasks to JSON</ManagementHeader>
+      <ManagementHeader>
+        {t("transfer.exportTasks", { defaultValue: "Export Tasks to JSON" })}
+      </ManagementHeader>
       <ManagementContainer>
         {user.tasks.length > 0 ? (
           user.tasks.map((task: Task) => (
@@ -400,7 +406,9 @@ const Transfer = () => {
             </TaskManagementContainer>
           ))
         ) : (
-          <h3 style={{ opacity: 0.8, fontStyle: "italic" }}>You don't have any tasks to export</h3>
+          <h3 style={{ opacity: 0.8, fontStyle: "italic" }}>
+            {t("transfer.noTasksToExport", { defaultValue: "You don't have any tasks to export" })}
+          </h3>
         )}
       </ManagementContainer>
 
@@ -408,7 +416,8 @@ const Transfer = () => {
         <Tooltip
           title={
             selectedTasks.length > 0
-              ? `Selected tasks: ${new Intl.ListFormat("en", {
+              ? t("transfer.selectedTasks", { defaultValue: "Selected tasks: " }) +
+                new Intl.ListFormat(navigator.language || "en", {
                   style: "long",
                   type: "conjunction",
                 }).format(
@@ -416,20 +425,24 @@ const Transfer = () => {
                     const selectedTask = user.tasks.find((task) => task.id === taskId);
                     return selectedTask ? selectedTask.name : "";
                   }),
-                )}`
+                )
               : undefined
           }
         >
           <ManagementButton onClick={handleExport} disabled={selectedTasks.length === 0}>
-            <FileDownload /> &nbsp; Export Selected to JSON{" "}
+            <FileDownload /> &nbsp;{" "}
+            {t("transfer.exportSelected", { defaultValue: "Export Selected to JSON" })}{" "}
             {selectedTasks.length > 0 && `[${selectedTasks.length}]`}
           </ManagementButton>
         </Tooltip>
         <ManagementButton onClick={handleExportAll} disabled={user.tasks.length === 0}>
-          <FileDownload /> &nbsp; Export All Tasks to JSON
+          <FileDownload /> &nbsp;{" "}
+          {t("transfer.exportAll", { defaultValue: "Export All Tasks to JSON" })}
         </ManagementButton>
 
-        <h2 style={{ textAlign: "center" }}>Import Tasks From JSON</h2>
+        <h2 style={{ textAlign: "center" }}>
+          {t("transfer.importFromJson", { defaultValue: "Import Tasks From JSON" })}
+        </h2>
 
         {systemInfo.os !== "Android" && systemInfo.os !== "iOS" && (
           <div style={{ width: "300px" }}>
@@ -440,7 +453,11 @@ const Transfer = () => {
               isDragging={isDragging}
             >
               <FileUpload fontSize="large" color="primary" />
-              <div>Drop JSON file here to import tasks </div>
+              <div>
+                {t("transfer.dropJsonHere", {
+                  defaultValue: "Drop JSON file here to import tasks",
+                })}
+              </div>
             </DropZone>
           </div>
         )}
@@ -456,7 +473,7 @@ const Transfer = () => {
             width: "300px",
           }}
         >
-          <FileUpload /> &nbsp; Select JSON File
+          <FileUpload /> &nbsp; {t("transfer.selectJsonFile", { defaultValue: "Select JSON File" })}
           <VisuallyHiddenInput
             accept=".json"
             type="file"
@@ -466,19 +483,23 @@ const Transfer = () => {
         </Button>
 
         <ManagementButton onClick={handleImportFromClipboard}>
-          <IntegrationInstructionsRounded /> &nbsp; Import JSON from clipboard
+          <IntegrationInstructionsRounded /> &nbsp;{" "}
+          {t("transfer.importFromClipboard", { defaultValue: "Import JSON from clipboard" })}
         </ManagementButton>
-        <h2 style={{ textAlign: "center" }}>Import Task From a Link</h2>
+        <h2 style={{ textAlign: "center" }}>
+          {t("transfer.importFromLink", { defaultValue: "Import Task From a Link" })}
+        </h2>
         <ManagementButton onClick={() => setIsScannerOpen(true)}>
-          <QrCodeScannerRounded /> &nbsp; Scan QR Code
+          <QrCodeScannerRounded /> &nbsp;{" "}
+          {t("transfer.scanQrCode", { defaultValue: "Scan QR Code" })}
         </ManagementButton>
         {/* Solution for PWA on iOS: */}
         <ManagementButton onClick={handleImportFromLink}>
-          <LinkIcon /> &nbsp; Paste Link
+          <LinkIcon /> &nbsp; {t("transfer.pasteLink", { defaultValue: "Paste Link" })}
         </ManagementButton>
       </ManagementButtonsContainer>
       <QRCodeScannerDialog
-        subTitle="Import task by scanning a QR code"
+        subTitle={t("transfer.qrSubtitle", { defaultValue: "Import task by scanning a QR code" })}
         open={isScannerOpen}
         onClose={() => setIsScannerOpen(false)}
         onScan={(result) => {

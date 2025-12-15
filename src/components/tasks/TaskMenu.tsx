@@ -18,6 +18,7 @@ import {
 } from "@mui/icons-material";
 import { Divider, IconButton, Menu, MenuItem } from "@mui/material";
 import { JSX, useContext, useMemo, useState } from "react";
+import { useTranslation } from "react-i18next";
 import Marquee from "react-fast-marquee";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
@@ -37,6 +38,7 @@ import { usePrefersReducedMotion } from "../../hooks/usePrefersReducedMotion";
 export const TaskMenu = () => {
   const { user, setUser } = useContext(UserContext);
   const { tasks, settings } = user;
+  const { t } = useTranslation();
   const {
     selectedTaskId,
     anchorEl,
@@ -86,9 +88,9 @@ export const TaskMenu = () => {
       if (allTasksDone) {
         showToast(
           <div>
-            <b>All tasks done</b>
+            <b>{t("taskMenu.allTasksDone")}</b>
             <br />
-            <span>You've checked off all your todos. Well done!</span>
+            <span>{t("taskMenu.allTasksDoneMessage")}</span>
           </div>,
           {
             icon: (
@@ -198,10 +200,11 @@ export const TaskMenu = () => {
         return (
           <ReadAloudContainer>
             <ReadAloudHeader translate="yes">
-              <RecordVoiceOver /> Read aloud: <span translate="no">{selectedTask?.name}</span>
+              <RecordVoiceOver /> {t("taskMenu.readAloudLabel")}{" "}
+              <span translate="no">{selectedTask?.name}</span>
             </ReadAloudHeader>
             <span translate="yes" style={{ marginTop: "8px", fontSize: "16px" }}>
-              Voice: <span translate="no">{utterThis.voice?.name || "Default"}</span>
+              {t("taskMenu.voice")}: <span translate="no">{utterThis.voice?.name || "Default"}</span>
             </span>
             <div translate="no">
               <Marquee delay={0.6} play={isPlaying}>
@@ -261,12 +264,13 @@ export const TaskMenu = () => {
   const menuItems: JSX.Element[] = [
     <StyledMenuItem key="done" onClick={handleMarkAsDone}>
       {selectedTask.done ? <Close /> : <Done />}
-      &nbsp; {selectedTask.done ? "Mark as not done" : "Mark as done"}
+      &nbsp;{" "}
+      {selectedTask.done ? t("taskMenu.markAsNotDone") : t("taskMenu.markAsDone")}
     </StyledMenuItem>,
 
     <StyledMenuItem key="pin" onClick={handlePin}>
       <PushPinRounded sx={{ textDecoration: "line-through" }} />
-      &nbsp; {selectedTask.pinned ? "Unpin" : "Pin"}
+      &nbsp; {selectedTask.pinned ? t("taskMenu.unpin") : t("taskMenu.pin")}
     </StyledMenuItem>,
 
     ...(multipleSelectedTasks.length === 0
@@ -276,7 +280,7 @@ export const TaskMenu = () => {
             onClick={() => handleSelectTask(selectedTaskId || generateUUID())}
             disabled={moveMode}
           >
-            <RadioButtonChecked /> &nbsp; Select
+            <RadioButtonChecked /> &nbsp; {t("taskMenu.select")}
           </StyledMenuItem>,
         ]
       : []),
@@ -291,7 +295,7 @@ export const TaskMenu = () => {
               setSearch("");
               handleCloseMoreMenu();
               if (user.settings.sortOption !== "custom") {
-                showToast("Changed sort option to: Custom", { type: "info" });
+                showToast(t("taskMenu.changedSortOption"), { type: "info" });
               }
               setUser((prevUser) => ({
                 ...prevUser,
@@ -302,13 +306,13 @@ export const TaskMenu = () => {
               }));
             }}
           >
-            <MoveUpRounded /> &nbsp; Move
+            <MoveUpRounded /> &nbsp; {t("taskMenu.move")}
           </StyledMenuItem>,
         ]
       : []),
 
     <StyledMenuItem key="details" onClick={redirectToTaskDetails}>
-      <LaunchRounded /> &nbsp; Task details
+      <LaunchRounded /> &nbsp; {t("taskMenu.taskDetails")}
     </StyledMenuItem>,
 
     ...(settings.enableReadAloud && "speechSynthesis" in window
@@ -321,7 +325,7 @@ export const TaskMenu = () => {
               (window.speechSynthesis.speaking || window.speechSynthesis.pending)
             }
           >
-            <RecordVoiceOverRounded /> &nbsp; Read Aloud
+            <RecordVoiceOverRounded /> &nbsp; {t("taskMenu.readAloud")}
           </StyledMenuItem>,
         ]
       : []),
@@ -333,7 +337,7 @@ export const TaskMenu = () => {
         handleCloseMoreMenu();
       }}
     >
-      <LinkRounded /> &nbsp; Share
+      <LinkRounded /> &nbsp; {t("taskMenu.share")}
     </StyledMenuItem>,
 
     <Divider key="divider-1" />,
@@ -345,11 +349,11 @@ export const TaskMenu = () => {
         handleCloseMoreMenu();
       }}
     >
-      <EditRounded /> &nbsp; Edit
+      <EditRounded /> &nbsp; {t("common.edit")}
     </StyledMenuItem>,
 
     <StyledMenuItem key="duplicate" onClick={handleDuplicateTask}>
-      <ContentCopy /> &nbsp; Duplicate
+      <ContentCopy /> &nbsp; {t("taskMenu.duplicate")}
     </StyledMenuItem>,
 
     <Divider key="divider-2" />,
@@ -362,7 +366,7 @@ export const TaskMenu = () => {
         handleCloseMoreMenu();
       }}
     >
-      <DeleteRounded /> &nbsp; Delete
+      <DeleteRounded /> &nbsp; {t("common.delete")}
     </StyledMenuItem>,
   ];
 

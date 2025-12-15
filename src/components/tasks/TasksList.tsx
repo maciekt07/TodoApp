@@ -21,6 +21,7 @@ import {
   Tooltip,
 } from "@mui/material";
 import { useCallback, useContext, useEffect, useMemo, useState, memo, useRef } from "react";
+import { useTranslation } from "react-i18next";
 import { CategoryBadge, CustomDialogTitle, EditTask, TaskItem } from "..";
 import { TaskContext } from "../../contexts/TaskContext";
 import { UserContext } from "../../contexts/UserContext";
@@ -82,6 +83,7 @@ const TaskMenuButton = memo(
  */
 export const TasksList: React.FC = () => {
   const { user, setUser } = useContext(UserContext);
+  const { t } = useTranslation();
   const {
     selectedTaskId,
     setSelectedTaskId,
@@ -248,7 +250,7 @@ export const TasksList: React.FC = () => {
     setDeleteDialogOpen(false);
     showToast(
       <div>
-        Deleted Task - <b translate="no">{taskToDelete?.name}</b>
+        {t("taskList.taskDeleted")} - <b translate="no">{taskToDelete?.name}</b>
       </div>,
     );
     setTaskToDelete(null);
@@ -337,7 +339,12 @@ export const TasksList: React.FC = () => {
 
         showToast(
           <div translate="no" style={{ wordBreak: "break-word" }}>
-            <b translate="yes">Overdue task{overdueTasks.length > 1 && "s"}: </b>
+            <b translate="yes">
+              {t("taskList.overdueTasks", {
+                count: overdueTasks.length,
+                defaultValue: `Overdue task${overdueTasks.length > 1 ? "s" : ""}:`,
+              })}{" "}
+            </b>
             {listFormat.format(taskNames)}
           </div>,
           {
@@ -356,7 +363,7 @@ export const TasksList: React.FC = () => {
         );
       }
     },
-    [listFormat, toasts, user.settings.enableGlow],
+    [listFormat, toasts, user.settings.enableGlow, t],
   );
 
   useEffect(() => {
@@ -411,7 +418,7 @@ export const TasksList: React.FC = () => {
               <SearchInput
                 inputRef={searchRef}
                 color="primary"
-                placeholder="Search for task..."
+                placeholder={t("taskList.search")}
                 autoComplete="off"
                 value={search}
                 disabled={moveMode}
@@ -496,8 +503,8 @@ export const TasksList: React.FC = () => {
           <TaskActionContainer>
             <div>
               <h3>
-                <RadioButtonChecked /> &nbsp; Selected {multipleSelectedTasks.length} task
-                {multipleSelectedTasks.length > 1 ? "s" : ""}
+                <RadioButtonChecked /> &nbsp;{" "}
+                {t("taskList.selectedTasks", { count: multipleSelectedTasks.length })}
               </h3>
               <span translate="no" style={{ fontSize: "14px", opacity: 0.8 }}>
                 {listFormat.format(
@@ -509,7 +516,9 @@ export const TasksList: React.FC = () => {
             </div>
             {/* TODO: add more features */}
             <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-              <Tooltip title="Mark selected as done">
+              <Tooltip
+                title={t("taskList.markSelectedAsDone", { defaultValue: "Mark selected as done" })}
+              >
                 <IconButton
                   sx={{ color: getFontColor(theme.secondary) }}
                   size="large"
@@ -518,12 +527,15 @@ export const TasksList: React.FC = () => {
                   <DoneAll />
                 </IconButton>
               </Tooltip>
-              <Tooltip title="Delete selected">
+              <Tooltip title={t("taskList.deleteSelected", { defaultValue: "Delete selected" })}>
                 <IconButton color="error" size="large" onClick={handleDeleteSelected}>
                   <Delete />
                 </IconButton>
               </Tooltip>
-              <Tooltip sx={{ color: getFontColor(theme.secondary) }} title="Cancel">
+              <Tooltip
+                sx={{ color: getFontColor(theme.secondary) }}
+                title={t("taskList.cancel", { defaultValue: "Cancel" })}
+              >
                 <IconButton size="large" onClick={() => setMultipleSelectedTasks([])}>
                   <CancelRounded />
                 </IconButton>
@@ -535,12 +547,17 @@ export const TasksList: React.FC = () => {
           <TaskActionContainer>
             <div>
               <h3>
-                <MoveUpRounded /> &nbsp; Move Mode Enabled
+                <MoveUpRounded /> &nbsp;{" "}
+                {t("taskList.moveModeEnabled", { defaultValue: "Move Mode Enabled" })}
               </h3>
-              <span>Organize tasks by dragging and dropping.</span>
+              <span>
+                {t("taskList.moveModeInstructions", {
+                  defaultValue: "Organize tasks by dragging and dropping.",
+                })}
+              </span>
             </div>
             <Button variant="contained" onClick={() => setMoveMode(false)}>
-              Done
+              {t("taskList.done", { defaultValue: "Done" })}
             </Button>
           </TaskActionContainer>
         )}
@@ -554,8 +571,10 @@ export const TasksList: React.FC = () => {
             }}
           >
             <b>
-              Found {orderedTasks.length} task
-              {orderedTasks.length > 1 ? "s" : ""}
+              {t("taskList.foundTasks", {
+                count: orderedTasks.length,
+                defaultValue: `Found ${orderedTasks.length} task${orderedTasks.length > 1 ? "s" : ""}`,
+              })}
             </b>
           </div>
         )}
@@ -666,16 +685,18 @@ export const TasksList: React.FC = () => {
           )
         ) : (
           <NoTasks>
-            <span>You don't have any tasks yet</span>
+            <span>{t("taskList.noTasks")}</span>
             <br />
-            Click on the <span>+</span> button to add one
+            {t("taskList.noTasksSubtitle")}
           </NoTasks>
         )}
         {search && orderedTasks.length === 0 && user.tasks.length > 0 ? (
           <TaskNotFound>
-            <b>No tasks found</b>
+            <b>{t("taskList.noTasksFound")}</b>
             <br />
-            Try searching with different keywords.
+            {t("taskList.tryDifferentKeywords", {
+              defaultValue: "Try searching with different keywords.",
+            })}
             <div style={{ marginTop: "14px" }}>
               <TaskIcon scale={0.8} />
             </div>
@@ -689,8 +710,8 @@ export const TasksList: React.FC = () => {
       </TasksContainer>
       <Dialog open={deleteDialogOpen} onClose={cancelDeleteTask}>
         <CustomDialogTitle
-          title="Delete Task"
-          subTitle="Are you sure you want to delete this task?"
+          title={t("taskList.deleteTask")}
+          subTitle={t("taskList.deleteTaskConfirm", { name: taskToDelete?.name || "" })}
           onClose={cancelDeleteTask}
           icon={<Delete />}
         />
@@ -706,17 +727,17 @@ export const TasksList: React.FC = () => {
         </DialogContent>
         <DialogActions>
           <DialogBtn onClick={cancelDeleteTask} color="primary">
-            Cancel
+            {t("common.cancel")}
           </DialogBtn>
           <DialogBtn onClick={confirmDeleteTask} color="error">
-            <DeleteRounded /> &nbsp; Confirm Delete
+            <DeleteRounded /> &nbsp; {t("common.delete")}
           </DialogBtn>
         </DialogActions>
       </Dialog>
       <Dialog open={deleteSelectedOpen}>
         <CustomDialogTitle
-          title="Delete selected tasks"
-          subTitle="Confirm to delete selected tasks"
+          title={t("taskList.deleteSelected", { count: multipleSelectedTasks.length })}
+          subTitle={t("taskList.deleteTasksConfirm", { count: multipleSelectedTasks.length })}
           icon={<DeleteRounded />}
         />
         <DialogContent translate="no">
@@ -728,7 +749,7 @@ export const TasksList: React.FC = () => {
         </DialogContent>
         <DialogActions>
           <DialogBtn onClick={() => setDeleteSelectedOpen(false)} color="primary">
-            Cancel
+            {t("common.cancel")}
           </DialogBtn>
           <DialogBtn
             onClick={() => {
@@ -746,7 +767,7 @@ export const TasksList: React.FC = () => {
             }}
             color="error"
           >
-            Delete
+            {t("common.delete")}
           </DialogBtn>
         </DialogActions>
       </Dialog>

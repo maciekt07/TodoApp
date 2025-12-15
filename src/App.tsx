@@ -2,6 +2,7 @@ import { ThemeProvider as EmotionThemeProvider } from "@emotion/react";
 import { DataObjectRounded, DeleteForeverRounded } from "@mui/icons-material";
 import { ThemeProvider as MuiThemeProvider, type Theme } from "@mui/material";
 import { useCallback, useContext, useEffect } from "react";
+import { useTranslation } from "react-i18next";
 import ErrorBoundary from "./components/ErrorBoundary";
 import MainLayout from "./layouts/MainLayout";
 import { CustomToaster } from "./components/Toaster";
@@ -19,6 +20,14 @@ import { isDarkMode } from "./utils/colorUtils";
 function App() {
   const { user, setUser } = useContext(UserContext);
   const systemTheme = useSystemTheme();
+  const { i18n } = useTranslation();
+
+  // Sync i18n language with user settings
+  useEffect(() => {
+    if (user.settings.language && i18n.language !== user.settings.language) {
+      i18n.changeLanguage(user.settings.language);
+    }
+  }, [user.settings.language, i18n]);
 
   // Initialize user properties if they are undefined
   // this allows to add new properties to the user object without error

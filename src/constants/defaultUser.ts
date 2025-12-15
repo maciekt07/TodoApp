@@ -27,31 +27,42 @@ export const defaultUser: User = {
     showProgressBar: true,
     sortOption: "dateCreated",
     reduceMotion: "system",
+    language: "en",
   },
   categories: [
-    { id: "857f0db6-43b2-43eb-8143-ec4e26472516", name: "Home", emoji: "1f3e0", color: "#53e45d" },
-    { id: "0292cba5-f6e2-41c4-b5a7-c59a0aaecfe3", name: "Work", emoji: "1f3e2", color: "#248eff" },
+    {
+      id: "857f0db6-43b2-43eb-8143-ec4e26472516",
+      name: "category.home",
+      emoji: "1f3e0",
+      color: "#53e45d",
+    },
+    {
+      id: "0292cba5-f6e2-41c4-b5a7-c59a0aaecfe3",
+      name: "category.work",
+      emoji: "1f3e2",
+      color: "#248eff",
+    },
     {
       id: "ebe6ce8b-471f-4632-a23b-578e1038ce51",
-      name: "Coding",
+      name: "category.coding",
       emoji: "1f4bb",
       color: "#835CF0",
     },
     {
       id: "393068a9-9db7-4dfa-a00f-cd359f8024e8",
-      name: "Health/Fitness",
+      name: "category.health",
       emoji: "1f4aa",
       color: "#fee567",
     },
     {
       id: "afa0fdb4-f668-4d5a-9ad0-4e22d2b8e841",
-      name: "Education",
+      name: "category.education",
       emoji: "1f4da",
       color: "#ff9e42",
     },
     {
       id: "a47a4af1-d720-41eb-9121-d3728605a62b",
-      name: "Personal",
+      name: "category.personal",
       emoji: "1f464",
       color: "#f086fe",
     },
@@ -75,3 +86,4 @@ export const defaultUser: User = {
     "#FF2F2F",
   ],
 };
+// 需要在UI中通过i18n.t(category.name)获取显示文本

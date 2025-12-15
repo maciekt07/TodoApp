@@ -1,63 +1,65 @@
-const recentGreetings: Set<number> = new Set();
-export const maxRecentGreetings = 8; // Number of recent greetings to track
+import i18n from "../i18n/config";
 
 const hoursLeft = 24 - new Date().getHours();
 
-const greetingsText: string[] = [
-  "Let's make today count! **1f680**",
-  "Get things done and conquer the day!",
-  "Embrace the power of productivity!",
-  "Set your goals, crush them, repeat.",
-  "Today is a new opportunity to be productive!",
-  "Make every moment count.",
-  "Stay organized, stay ahead.",
-  "Take charge of your day!",
-  "One task at a time, you've got this!",
-  "Productivity is the key to success. **1f511**",
-  "Let's turn plans into accomplishments!",
-  "Start small, achieve big.",
-  "Be efficient, be productive.",
-  "Harness the power of productivity!",
-  "Get ready to make things happen!",
-  "It's time to check off those tasks! **2705**",
-  "Start your day with a plan! **1f5d3-fe0f**",
-  "Stay focused, stay productive.",
-  "Unlock your productivity potential. **1f513**",
-  "Turn your to-do list into a to-done list! **1f4dd**",
-  `Have a wonderful ${new Date().toLocaleDateString("en", {
-    weekday: "long",
-  })}!`,
-  `Happy ${new Date().toLocaleDateString("en", {
-    month: "long",
-  })}! A great month for productivity!`,
-  hoursLeft > 4
-    ? `${hoursLeft} hours left in the day. Use them wisely!`
-    : `Only ${hoursLeft} hours left in the day`,
-];
+export const maxRecentGreetings = 8; // Number of recent greetings to track per language
+
+// Track recent indices per language to avoid repeating greetings
+const recentGreetingsPerLang: Map<string, number[]> = new Map();
 
 /**
- * Returns a random greeting message to inspire productivity.
- * @returns {string} A random greeting message with optional emoji code.
+ * Returns a random greeting message using i18n `greetings.list`.
+ * It avoids recently shown greetings per language.
  */
 export const getRandomGreeting = (): string => {
-  // Function to get a new greeting that hasn't been used recently
-  const getUniqueGreeting = (): string => {
-    let randomIndex: number;
-    do {
-      randomIndex = Math.floor(Math.random() * greetingsText.length);
-    } while (recentGreetings.has(randomIndex));
+  const lang = i18n.language || i18n.options.lng || "en";
 
-    // Update recent greetings
-    recentGreetings.add(randomIndex);
-    if (recentGreetings.size > maxRecentGreetings) {
-      const firstEntry = Array.from(recentGreetings).shift();
-      if (firstEntry !== undefined) {
-        recentGreetings.delete(firstEntry);
-      }
-    }
+  // Get greetings list from translations. returnObjects allows arrays to be returned.
+  const list = i18n.t("greetings.list", { returnObjects: true }) as string[] | undefined;
 
-    return greetingsText[randomIndex];
-  };
+  if (!Array.isArray(list) || list.length === 0) {
+    // Fallback to a simple localized greeting
+    return i18n.t("greetings.morning");
+  }
 
-  return getUniqueGreeting();
+  // Build interpolation values
+  const weekday = new Date().toLocaleDateString(lang.startsWith("zh") ? "zh-CN" : "en", {
+    weekday: "long",
+  });
+  const month = new Date().toLocaleDateString(lang.startsWith("zh") ? "zh-CN" : "en", {
+    month: "long",
+  });
+
+  const hoursLeftText = hoursLeft > 4 ? `${hoursLeft}` : `${hoursLeft}`;
+
+  // Ensure recent list exists
+  if (!recentGreetingsPerLang.has(lang)) {
+    recentGreetingsPerLang.set(lang, []);
+  }
+
+  const recent = recentGreetingsPerLang.get(lang)!;
+
+  // Pick a random index not in recent (with a fallback after attempts)
+  let randomIndex = 0;
+  const maxAttempts = 10;
+  let attempts = 0;
+  do {
+    randomIndex = Math.floor(Math.random() * list.length);
+    attempts += 1;
+    if (attempts >= maxAttempts) break;
+  } while (recent.includes(randomIndex) && recent.length < list.length);
+
+  // Update recent history for this language
+  recent.push(randomIndex);
+  if (recent.length > maxRecentGreetings) {
+    recent.shift();
+  }
+  recentGreetingsPerLang.set(lang, recent);
+
+  // Return interpolated string using i18n to process placeholders
+  return i18n.t(`greetings.list.${randomIndex}`, {
+    weekday,
+    month,
+    hoursLeft: hoursLeftText,
+  });
 };

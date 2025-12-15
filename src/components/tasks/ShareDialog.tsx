@@ -1,4 +1,5 @@
 import { useContext, useState } from "react";
+import { useTranslation } from "react-i18next";
 import type { Task } from "../../types/user";
 import { UserContext } from "../../contexts/UserContext";
 import { saveQRCode, showToast, systemInfo } from "../../utils";
@@ -43,13 +44,21 @@ export const ShareDialog = ({ open, onClose, selectedTask }: ShareDialogProps) =
   const { user } = useContext(UserContext);
   const { settings, name } = user;
   const { toasts } = useToasterStore();
+  const { t } = useTranslation();
 
   const [shareTabVal, setShareTabVal] = useState<number>(0);
 
   const tabs: { label: string; icon: React.ReactElement; disabled?: boolean }[] = [
-    { label: "Link", icon: <LinkRounded /> },
-    { label: "QR Code", icon: <QrCode2Rounded /> },
-    ...(systemInfo.isAppleDevice ? [{ label: "Calendar", icon: <CalendarTodayRounded /> }] : []),
+    { label: t("share.tab.link", { defaultValue: "Link" }), icon: <LinkRounded /> },
+    { label: t("share.tab.qr", { defaultValue: "QR Code" }), icon: <QrCode2Rounded /> },
+    ...(systemInfo.isAppleDevice
+      ? [
+          {
+            label: t("share.tab.calendar", { defaultValue: "Calendar" }),
+            icon: <CalendarTodayRounded />,
+          },
+        ]
+      : []),
   ];
 
   const generateShareableLink = (task: Task, userName: string): string => {
@@ -162,8 +171,8 @@ export const ShareDialog = ({ open, onClose, selectedTask }: ShareDialogProps) =
       }}
     >
       <CustomDialogTitle
-        title="Share Task"
-        subTitle="Share your task with others."
+        title={t("share.title", { defaultValue: "Share Task" })}
+        subTitle={t("share.subtitle", { defaultValue: "Share your task with others." })}
         onClose={onClose}
         icon={<IosShare />}
       />
@@ -195,7 +204,7 @@ export const ShareDialog = ({ open, onClose, selectedTask }: ShareDialogProps) =
               value={generateShareableLink(selectedTask, name || "User")}
               fullWidth
               variant="outlined"
-              label="Shareable Link"
+              label={t("share.shareableLinkLabel", { defaultValue: "Shareable Link" })}
               slotProps={{
                 input: {
                   readOnly: true,
@@ -210,7 +219,7 @@ export const ShareDialog = ({ open, onClose, selectedTask }: ShareDialogProps) =
                         onClick={handleCopyToClipboard}
                         sx={{ p: "12px", borderRadius: "14px", mr: "4px" }}
                       >
-                        <ContentCopyRounded /> &nbsp; Copy
+                        <ContentCopyRounded /> &nbsp; {t("share.copy", { defaultValue: "Copy" })}
                       </Button>
                     </InputAdornment>
                   ),
@@ -234,7 +243,8 @@ export const ShareDialog = ({ open, onClose, selectedTask }: ShareDialogProps) =
                 variant="outlined"
                 onClick={() => saveQRCode(selectedTask.name || "")}
               >
-                <DownloadRounded /> &nbsp; Download QR Code
+                <DownloadRounded /> &nbsp;{" "}
+                {t("share.downloadQr", { defaultValue: "Download QR Code" })}
               </DownloadQrCodeBtn>
             </QRCodeContainer>
           </TabPanel>
@@ -250,7 +260,8 @@ export const ShareDialog = ({ open, onClose, selectedTask }: ShareDialogProps) =
                 }}
               >
                 <Button variant="contained" color="inherit" onClick={handleAddToAppleCalendar}>
-                  <Apple /> &nbsp; Add to Apple Calendar
+                  <Apple /> &nbsp;{" "}
+                  {t("share.addToAppleCalendar", { defaultValue: "Add to Apple Calendar" })}
                 </Button>
               </Box>
             </TabPanel>
@@ -263,15 +274,18 @@ export const ShareDialog = ({ open, onClose, selectedTask }: ShareDialogProps) =
             //@ts-expect-error it works
             color="primary"
           >
-            <AlertTitle>Share Your Task</AlertTitle>
-            Copy the link to share manually or use the share button to send it via other apps.
+            <AlertTitle>{t("share.alert.title", { defaultValue: "Share Your Task" })}</AlertTitle>
+            {t("share.alert.description", {
+              defaultValue:
+                "Copy the link to share manually or use the share button to send it via other apps.",
+            })}
           </Alert>
         )}
       </DialogContent>
       <DialogActions>
-        <DialogBtn onClick={onClose}>Close</DialogBtn>
+        <DialogBtn onClick={onClose}>{t("common.close", { defaultValue: "Close" })}</DialogBtn>
         <DialogBtn onClick={handleShare}>
-          <IosShare sx={{ mb: "4px" }} /> &nbsp; Share
+          <IosShare sx={{ mb: "4px" }} /> &nbsp; {t("share.shareButton", { defaultValue: "Share" })}
         </DialogBtn>
       </DialogActions>
     </Dialog>
