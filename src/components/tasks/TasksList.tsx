@@ -339,7 +339,12 @@ export const TasksList: React.FC = () => {
 
         showToast(
           <div translate="no" style={{ wordBreak: "break-word" }}>
-            <b translate="yes">Overdue task{overdueTasks.length > 1 && "s"}: </b>
+            <b translate="yes">
+              {t("taskList.overdueTasks", {
+                count: overdueTasks.length,
+                defaultValue: `Overdue task${overdueTasks.length > 1 ? "s" : ""}:`,
+              })}{" "}
+            </b>
             {listFormat.format(taskNames)}
           </div>,
           {
@@ -358,7 +363,7 @@ export const TasksList: React.FC = () => {
         );
       }
     },
-    [listFormat, toasts, user.settings.enableGlow],
+    [listFormat, toasts, user.settings.enableGlow, t],
   );
 
   useEffect(() => {
@@ -498,8 +503,8 @@ export const TasksList: React.FC = () => {
           <TaskActionContainer>
             <div>
               <h3>
-                <RadioButtonChecked /> &nbsp; Selected {multipleSelectedTasks.length} task
-                {multipleSelectedTasks.length > 1 ? "s" : ""}
+                <RadioButtonChecked /> &nbsp;{" "}
+                {t("taskList.selectedTasks", { count: multipleSelectedTasks.length })}
               </h3>
               <span translate="no" style={{ fontSize: "14px", opacity: 0.8 }}>
                 {listFormat.format(
@@ -511,7 +516,9 @@ export const TasksList: React.FC = () => {
             </div>
             {/* TODO: add more features */}
             <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-              <Tooltip title="Mark selected as done">
+              <Tooltip
+                title={t("taskList.markSelectedAsDone", { defaultValue: "Mark selected as done" })}
+              >
                 <IconButton
                   sx={{ color: getFontColor(theme.secondary) }}
                   size="large"
@@ -520,12 +527,15 @@ export const TasksList: React.FC = () => {
                   <DoneAll />
                 </IconButton>
               </Tooltip>
-              <Tooltip title="Delete selected">
+              <Tooltip title={t("taskList.deleteSelected", { defaultValue: "Delete selected" })}>
                 <IconButton color="error" size="large" onClick={handleDeleteSelected}>
                   <Delete />
                 </IconButton>
               </Tooltip>
-              <Tooltip sx={{ color: getFontColor(theme.secondary) }} title="Cancel">
+              <Tooltip
+                sx={{ color: getFontColor(theme.secondary) }}
+                title={t("taskList.cancel", { defaultValue: "Cancel" })}
+              >
                 <IconButton size="large" onClick={() => setMultipleSelectedTasks([])}>
                   <CancelRounded />
                 </IconButton>
@@ -537,12 +547,17 @@ export const TasksList: React.FC = () => {
           <TaskActionContainer>
             <div>
               <h3>
-                <MoveUpRounded /> &nbsp; Move Mode Enabled
+                <MoveUpRounded /> &nbsp;{" "}
+                {t("taskList.moveModeEnabled", { defaultValue: "Move Mode Enabled" })}
               </h3>
-              <span>Organize tasks by dragging and dropping.</span>
+              <span>
+                {t("taskList.moveModeInstructions", {
+                  defaultValue: "Organize tasks by dragging and dropping.",
+                })}
+              </span>
             </div>
             <Button variant="contained" onClick={() => setMoveMode(false)}>
-              Done
+              {t("taskList.done", { defaultValue: "Done" })}
             </Button>
           </TaskActionContainer>
         )}
@@ -556,8 +571,10 @@ export const TasksList: React.FC = () => {
             }}
           >
             <b>
-              Found {orderedTasks.length} task
-              {orderedTasks.length > 1 ? "s" : ""}
+              {t("taskList.foundTasks", {
+                count: orderedTasks.length,
+                defaultValue: `Found ${orderedTasks.length} task${orderedTasks.length > 1 ? "s" : ""}`,
+              })}
             </b>
           </div>
         )}
@@ -677,7 +694,9 @@ export const TasksList: React.FC = () => {
           <TaskNotFound>
             <b>{t("taskList.noTasksFound")}</b>
             <br />
-            Try searching with different keywords.
+            {t("taskList.tryDifferentKeywords", {
+              defaultValue: "Try searching with different keywords.",
+            })}
             <div style={{ marginTop: "14px" }}>
               <TaskIcon scale={0.8} />
             </div>
@@ -748,7 +767,7 @@ export const TasksList: React.FC = () => {
             }}
             color="error"
           >
-            Delete
+            {t("common.delete")}
           </DialogBtn>
         </DialogActions>
       </Dialog>

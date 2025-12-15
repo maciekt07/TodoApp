@@ -1,30 +1,42 @@
+import { useTranslation } from "react-i18next";
 import { systemInfo } from "../../../utils";
 import ShortcutItem from "../ShortcutItem";
 
 export default function ShortcutsTab() {
+  const { t } = useTranslation();
   const cmdOrCtrl = systemInfo.isAppleDevice ? "Cmd" : "Ctrl";
 
   return (
     <>
       <ShortcutItem
-        name="Quick Export"
-        description="Save all tasks and download as JSON file"
+        name={t("shortcuts.quickExport.name", { defaultValue: "Quick Export" })}
+        description={t("shortcuts.quickExport.description", {
+          defaultValue: "Save all tasks and download as JSON file",
+        })}
         keys={[cmdOrCtrl, "S"]}
       />
-      <ShortcutItem name="Quick Search" description="Focus search input" keys={[cmdOrCtrl, "/"]} />
       <ShortcutItem
-        name="Print Tasks"
-        description="Print the current task list"
+        name={t("shortcuts.quickSearch.name", { defaultValue: "Quick Search" })}
+        description={t("shortcuts.quickSearch.description", { defaultValue: "Focus search input" })}
+        keys={[cmdOrCtrl, "/"]}
+      />
+      <ShortcutItem
+        name={t("shortcuts.printTasks.name", { defaultValue: "Print Tasks" })}
+        description={t("shortcuts.printTasks.description", {
+          defaultValue: "Print the current task list",
+        })}
         keys={[cmdOrCtrl, "P"]}
       />
       <ShortcutItem
-        name="Toggle Theme"
-        description="Switch between light and dark mode"
+        name={t("shortcuts.toggleTheme.name", { defaultValue: "Toggle Theme" })}
+        description={t("shortcuts.toggleTheme.description", {
+          defaultValue: "Switch between light and dark mode",
+        })}
         keys={[cmdOrCtrl, "Shift", "L"]}
       />
       {/* <ShortcutItem
-        name="Toggle Sidebar"
-        description="Open or close the sidebar"
+        name={t("shortcuts.toggleSidebar.name", { defaultValue: "Toggle Sidebar" })}
+        description={t("shortcuts.toggleSidebar.description", { defaultValue: "Open or close the sidebar" })}
         keys={[cmdOrCtrl, "B"]}
       /> */}
     </>

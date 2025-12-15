@@ -25,6 +25,7 @@ import {
   Typography,
 } from "@mui/material";
 import { useContext, useEffect, useRef, useState } from "react";
+import { useTranslation } from "react-i18next";
 import QRCode from "react-qr-code";
 import { TopBar } from "../components";
 import QRCodeScannerDialog from "../components/QRCodeScannerDialog";
@@ -38,6 +39,7 @@ import DisabledThemeProvider from "../contexts/DisabledThemeProvider";
 
 export default function Sync() {
   const { user } = useContext(UserContext);
+  const { t } = useTranslation();
 
   const isMobile = useResponsiveDisplay();
   const isOnline = useOnlineStatus();
@@ -63,7 +65,7 @@ export default function Sync() {
   }, [otherDataSyncOption]);
 
   useEffect(() => {
-    document.title = "Todo App - Sync Data";
+    document.title = `Todo App - ${t("sync.title", { defaultValue: "Sync Data" })}`;
   }, []);
 
   const handleScan = (text: string | null) => {
@@ -95,19 +97,20 @@ export default function Sync() {
 
   return (
     <>
-      <TopBar title="Sync Data" />
+      <TopBar title={t("sync.title", { defaultValue: "Sync Data" })} />
       <MainContainer>
         {!mode && (
           <>
             <FeatureDescription>
               <DevicesRounded sx={{ fontSize: 40, color: (theme) => theme.palette.primary.main }} />
               <Typography variant="h5" sx={{ fontWeight: 600, mb: 1 }}>
-                Sync Data Between Devices
+                {t("sync.featureTitle", { defaultValue: "Sync Data Between Devices" })}
               </Typography>
               <Typography variant="body1" sx={{ mb: 2, opacity: 0.9 }}>
-                Securely transfer your tasks, categories and other data between devices with a
-                single QR Code scan using peer-to-peer connection. No data is stored or processed on
-                external servers.
+                {t("sync.featureDescription", {
+                  defaultValue:
+                    "Securely transfer your tasks, categories and other data between devices with a single QR Code scan using peer-to-peer connection. No data is stored or processed on external servers.",
+                })}
               </Typography>
               {user.lastSyncedAt && (
                 <Tooltip
@@ -124,8 +127,11 @@ export default function Sync() {
               )}
               {!isOnline && (
                 <Alert icon={<WifiOffRounded />} severity="error" sx={{ textAlign: "left", mt: 4 }}>
-                  <AlertTitle>Offline</AlertTitle>
-                  You're offline. Both devices must be online to start a peer-to-peer sync.
+                  <AlertTitle>{t("sync.offlineTitle", { defaultValue: "Offline" })}</AlertTitle>
+                  {t("sync.offlineMessage", {
+                    defaultValue:
+                      "You're offline. Both devices must be online to start a peer-to-peer sync.",
+                  })}
                 </Alert>
               )}
             </FeatureDescription>
@@ -141,7 +147,7 @@ export default function Sync() {
                   }}
                   startIcon={<QrCodeRounded />}
                 >
-                  Display QR Code
+                  {t("sync.displayQRCode", { defaultValue: "Display QR Code" })}
                 </SyncButton>
                 <SyncButton
                   variant="outlined"
@@ -151,7 +157,7 @@ export default function Sync() {
                   }}
                   startIcon={<QrCodeScannerRounded />}
                 >
-                  Scan QR Code
+                  {t("sync.scanQRCode", { defaultValue: "Scan QR Code" })}
                 </SyncButton>
               </DisabledThemeProvider>
             </ModeSelectionContainer>
@@ -161,7 +167,7 @@ export default function Sync() {
         {mode === "display" && (
           <StyledPaper>
             <ModeHeader>
-              <WifiTetheringRounded /> Host Mode
+              <WifiTetheringRounded /> {t("sync.hostMode", { defaultValue: "Host Mode" })}
             </ModeHeader>
             {hostPeerId ? (
               isSeverity(syncStatus.severity, "success") ? (
@@ -178,10 +184,16 @@ export default function Sync() {
                     size={300}
                     style={{ backgroundColor: "white", borderRadius: "8px", padding: "8px" }}
                   />
-                  <QRCodeLabel>Scan this QR code with another device to sync data</QRCodeLabel>
+                  <QRCodeLabel>
+                    {t("sync.scanQRCodeLabel", {
+                      defaultValue: "Scan this QR code with another device to sync data",
+                    })}
+                  </QRCodeLabel>
                   <FormControl>
                     <StyledFormLabel id="sync-radio-buttons-group-label">
-                      Sync App Settings & Other Data
+                      {t("sync.syncSettingsLabel", {
+                        defaultValue: "Sync App Settings & Other Data",
+                      })}
                     </StyledFormLabel>
                     <RadioGroup
                       row={!isMobile}
@@ -195,17 +207,17 @@ export default function Sync() {
                       <StyledFormControlLabel
                         value="this_device"
                         control={<Radio />}
-                        label="This Device"
+                        label={t("sync.thisDevice", { defaultValue: "This Device" })}
                       />
                       <StyledFormControlLabel
                         value="other_device"
                         control={<Radio />}
-                        label="Other Device"
+                        label={t("sync.otherDevice", { defaultValue: "Other Device" })}
                       />
                       <StyledFormControlLabel
                         value="no_sync"
                         control={<Radio />}
-                        label="Don't Sync"
+                        label={t("sync.dontSync", { defaultValue: "Don't Sync" })}
                       />
                     </RadioGroup>
                   </FormControl>
@@ -215,7 +227,9 @@ export default function Sync() {
                       color: (theme) => (theme.palette.mode === "dark" ? "#ffffff" : "#000000"),
                     }}
                   >
-                    Tasks and categories will be synced automatically.
+                    {t("sync.tasksWillBeSynced", {
+                      defaultValue: "Tasks and categories will be synced automatically.",
+                    })}
                   </Typography>
                   <SyncStatusAlert syncStatus={syncStatus} />
                   <SyncButton
@@ -224,10 +238,10 @@ export default function Sync() {
                     color={isSeverity(syncStatus.severity, "error") ? "error" : "primary"}
                   >
                     {isSeverity(syncStatus.severity, "error") ? (
-                      "Try Again"
+                      t("sync.tryAgain", { defaultValue: "Try Again" })
                     ) : (
                       <>
-                        <RestartAltRounded /> &nbsp; Reset
+                        <RestartAltRounded /> &nbsp; {t("sync.reset", { defaultValue: "Reset" })}
                       </>
                     )}
                   </SyncButton>
@@ -236,7 +250,9 @@ export default function Sync() {
             ) : (
               <LoadingContainer>
                 <CircularProgress size={24} />
-                <LoadingText>Initializing...</LoadingText>
+                <LoadingText>
+                  {t("sync.initializing", { defaultValue: "Initializing..." })}
+                </LoadingText>
               </LoadingContainer>
             )}
           </StyledPaper>
@@ -245,7 +261,7 @@ export default function Sync() {
         {mode === "scan" && (
           <StyledPaper>
             <ModeHeader>
-              <QrCodeScannerRounded /> Scan Mode
+              <QrCodeScannerRounded /> {t("sync.scanMode", { defaultValue: "Scan Mode" })}
             </ModeHeader>
             {isSeverity(syncStatus.severity, "success") ? (
               <SyncSuccessScreen
@@ -261,7 +277,9 @@ export default function Sync() {
                   syncStatus.message === "Connected, sending your data...") && (
                   <LoadingContainer>
                     <CircularProgress size={24} />
-                    <LoadingText>{syncStatus.message}</LoadingText>
+                    <LoadingText>
+                      {t(syncStatus.message, { defaultValue: syncStatus.message })}
+                    </LoadingText>
                   </LoadingContainer>
                 )}
                 <SyncButton
@@ -270,10 +288,10 @@ export default function Sync() {
                   color={isSeverity(syncStatus.severity, "error") ? "error" : "primary"}
                 >
                   {isSeverity(syncStatus.severity, "error") ? (
-                    "Try Again"
+                    t("sync.tryAgain", { defaultValue: "Try Again" })
                   ) : (
                     <>
-                      <RestartAltRounded /> &nbsp; Reset
+                      <RestartAltRounded /> &nbsp; {t("sync.reset", { defaultValue: "Reset" })}
                     </>
                   )}
                 </SyncButton>
@@ -283,7 +301,7 @@ export default function Sync() {
         )}
 
         <QRCodeScannerDialog
-          subTitle="Scan a QR code to sync."
+          subTitle={t("sync.scanSubtitle", { defaultValue: "Scan a QR code to sync." })}
           open={scannerOpen}
           onClose={() => setScannerOpen(false)}
           onScan={(result) => {
@@ -291,7 +309,9 @@ export default function Sync() {
           }}
           onError={(err) => {
             console.error("QR scan error:", err);
-            showToast("Error scanning QR.", { type: "error" });
+            showToast(t("sync.errorScanning", { defaultValue: "Error scanning QR." }), {
+              type: "error",
+            });
             setScannerOpen(false);
           }}
         />
@@ -310,11 +330,12 @@ export function SyncSuccessScreen({
   getOtherDataSourceLabel: (src: OtherDataSyncOption | null) => string | null;
   resetAll: () => void;
 }) {
+  const { t } = useTranslation();
   return (
     <Stack spacing={2} alignItems="center">
       <StyledAlert severity={syncStatus.severity} icon={undefined}>
-        <b>Sync Complete</b>
-        <div>{syncStatus.message || "Idle"}</div>
+        <b>{t("sync.syncComplete", { defaultValue: "Sync Complete" })}</b>
+        <div>{syncStatus.message || t("sync.idle", { defaultValue: "Idle" })}</div>
       </StyledAlert>
       {otherDataSource && (
         <Typography
@@ -324,12 +345,13 @@ export function SyncSuccessScreen({
             color: (theme) => (theme.palette.mode === "dark" ? "#ffffff" : "#000000"),
           }}
         >
-          Settings and other data{" "}
+          {t("sync.settingsPrefix", { defaultValue: "Settings and other data" })}{" "}
           {otherDataSource === "no_sync" ? (
-            "were not synced."
+            t("sync.settingsNotSynced", { defaultValue: "were not synced." })
           ) : (
             <>
-              were imported from <b>{getOtherDataSourceLabel(otherDataSource)}.</b>
+              {t("sync.wereImportedFrom", { defaultValue: "were imported from" })}{" "}
+              <b>{getOtherDataSourceLabel(otherDataSource)}.</b>
             </>
           )}
         </Typography>
@@ -339,13 +361,14 @@ export function SyncSuccessScreen({
         onClick={resetAll}
         color={syncStatus.severity === "success" ? "success" : "primary"}
       >
-        Done
+        {t("common.done", { defaultValue: "Done" })}
       </SyncButton>
     </Stack>
   );
 }
 
 function SyncStatusAlert({ syncStatus }: { syncStatus: SyncStatus }) {
+  const { t } = useTranslation();
   return (
     <StyledAlert
       severity={syncStatus.severity}
@@ -359,12 +382,12 @@ function SyncStatusAlert({ syncStatus }: { syncStatus: SyncStatus }) {
     >
       <AlertTitle>
         {syncStatus.severity === "error"
-          ? "Error"
+          ? t("sync.alertError", { defaultValue: "Error" })
           : syncStatus.severity === "warning"
-            ? "Warning"
-            : "Status"}
+            ? t("sync.alertWarning", { defaultValue: "Warning" })
+            : t("sync.alertStatus", { defaultValue: "Status" })}
       </AlertTitle>
-      {syncStatus.message || "Idle"}
+      {syncStatus.message || t("sync.idle", { defaultValue: "Idle" })}
     </StyledAlert>
   );
 }

@@ -5,6 +5,7 @@ import type { OptionItem } from "./settingsTypes";
 import { useEffect, useState } from "react";
 import { SyncAltRounded } from "@mui/icons-material";
 import { css } from "@emotion/react";
+import { useTranslation } from "react-i18next";
 
 interface CustomRadioGroupProps<T> {
   options: OptionItem<T>[];
@@ -19,6 +20,7 @@ const CustomRadioGroup = <T extends string>({
   disabledOptions = [],
   onChange,
 }: CustomRadioGroupProps<T>) => {
+  const { t } = useTranslation();
   const [focusedValue, setFocusedValue] = useState<T | null>(null);
   const [keyboardFocus, setKeyboardFocus] = useState<boolean>(false);
 
@@ -80,7 +82,8 @@ const CustomRadioGroup = <T extends string>({
       </StyledRadioGroup>
       {focusedValue && keyboardFocus && (
         <FocusHint>
-          <SyncAltRounded /> Navigate with arrow keys
+          <SyncAltRounded />{" "}
+          {t("settings.radioGroupNavigateHint", { defaultValue: "Navigate with arrow keys" })}
         </FocusHint>
       )}
     </>
@@ -102,11 +105,6 @@ const StyledRadioGroup = styled(RadioGroup)`
   width: 100%;
   max-width: calc(100% - 16px);
   box-sizing: border-box;
-  @media (max-width: 768px) {
-    gap: 12px;
-    margin: 12px 0 0 0;
-    max-width: calc(100% - 8px);
-  }
 `;
 
 // make radio control invisible but accessible with keyboard navigation
@@ -157,13 +155,7 @@ const StyledLabelBox = styled(Box)<StyledLabelBoxProps>`
     css`
       outline: 3px solid ${theme.primary};
       outline-offset: 3px;
-      box-shadow: 0 0 8px ${theme.primary}AA;
     `}
-
-  @media (max-width: 768px) {
-    width: 80px;
-    height: 80px;
-  }
 `;
 
 const IconWrapper = styled.div`

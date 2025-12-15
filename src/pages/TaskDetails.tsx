@@ -2,7 +2,6 @@ import { useParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { CategoryBadge, TopBar } from "../components";
 import styled from "@emotion/styled";
-import { PathName } from "../styles";
 import NotFound from "./NotFound";
 import { Clear, Done } from "@mui/icons-material";
 import { Emoji } from "emoji-picker-react";
@@ -23,15 +22,7 @@ const TaskDetails = () => {
   }, [task?.name, t]);
 
   if (!task) {
-    return (
-      <NotFound
-        message={
-          <div>
-            {t("taskDetails.notFound", { id: formattedId })}
-          </div>
-        }
-      />
-    );
+    return <NotFound message={<div>{t("taskDetails.notFound", { id: formattedId })}</div>} />;
   }
 
   const dateFormatter = new Intl.DateTimeFormat(settings.language, {

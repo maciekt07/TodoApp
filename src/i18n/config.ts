@@ -2,13 +2,11 @@ import i18n from "i18next";
 import { initReactI18next } from "react-i18next";
 import en from "./locales/en.json";
 import zhCN from "./locales/zh-CN.json";
-import zhTW from "./locales/zh-TW.json";
 
 // Define supported languages
 export const languages = {
   en: { nativeName: "English", translation: en },
   "zh-CN": { nativeName: "简体中文", translation: zhCN },
-  "zh-TW": { nativeName: "繁體中文", translation: zhTW },
 };
 
 // Get browser language with fallback
@@ -38,12 +36,8 @@ const getBrowserLanguage = (): string => {
 };
 
 i18n.use(initReactI18next).init({
-  resources: Object.entries(languages).reduce(
-    (acc, [key, { translation }]) => {
-      acc[key] = { translation };
-      return acc;
-    },
-    {} as Record<string, { translation: typeof en }>,
+  resources: Object.fromEntries(
+    Object.entries(languages).map(([key, { translation }]) => [key, { translation }]),
   ),
   lng: getBrowserLanguage(),
   fallbackLng: "en",

@@ -29,6 +29,7 @@ import { ColorPalette } from "../theme/themeConfig";
 import { getFontColor, isDark, isHexColor, showToast } from "../utils";
 import { CustomDialogTitle } from "./DialogTitle";
 import { usePrefersReducedMotion } from "../hooks/usePrefersReducedMotion";
+import { useTranslation } from "react-i18next";
 
 interface ColorPickerProps {
   color: string;
@@ -62,6 +63,7 @@ export const ColorPicker: React.FC<ColorPickerProps> = ({
   const theme = useTheme();
 
   const prefersReducedMotion = usePrefersReducedMotion(user.settings.reduceMotion);
+  const { t } = useTranslation();
 
   useEffect(() => {
     // Update the selected color when the color prop changes
@@ -160,6 +162,11 @@ export const ColorPicker: React.FC<ColorPickerProps> = ({
     });
   };
 
+  // 替换颜色名为i18n
+  function getI18nColorName(name: string) {
+    return t(`colorPicker.colorNames.${name}`, { defaultValue: name });
+  }
+
   return (
     <>
       <StyledAccordion
@@ -180,19 +187,19 @@ export const ColorPicker: React.FC<ColorPickerProps> = ({
         >
           <SummaryContent clr={fontColor || ColorPalette.fontLight}>
             {!accordionExpanded && <AccordionPreview clr={selectedColor} />}
-            {label || "Color"}
-            {!accordionExpanded && ` - ${getColorName(selectedColor).name}`}
+            {label || t("addTask.color")}
+            {!accordionExpanded && ` - ${getI18nColorName(getColorName(selectedColor).name)}`}
           </SummaryContent>
         </AccordionSummary>
         <AccordionDetails>
           <ColorPreview maxWidth={width || 400} clr={selectedColor}>
-            {selectedColor.toUpperCase()} - {getColorName(selectedColor).name}
+            {selectedColor.toUpperCase()} - {getI18nColorName(getColorName(selectedColor).name)}
           </ColorPreview>
           <Grid container maxWidth={width || 400}>
             <Grid container spacing={1} maxWidth={width || 400} m={1}>
               {[theme.primary, ...colorList].map((color, index) => (
                 <Grid key={color}>
-                  <Tooltip title={getColorName(color).name}>
+                  <Tooltip title={getI18nColorName(getColorName(color).name)}>
                     <ColorElement
                       ref={(element: HTMLButtonElement | null) => {
                         colorElementRefs.current[index] = element;
@@ -247,13 +254,13 @@ export const ColorPicker: React.FC<ColorPickerProps> = ({
                   >
                     <div>
                       <DeleteColorBtn onClick={() => handleDeleteColor(color)}>
-                        Delete
+                        {t("colorPicker.delete")}
                       </DeleteColorBtn>
                     </div>
                   </Popover>
                 </Grid>
               ))}
-              <Tooltip title="Add new color">
+              <Tooltip title={t("colorPicker.addNewColor")}>
                 <Grid>
                   <ColorElement
                     style={{ border: "2px solid", color: fontColor || ColorPalette.fontLight }}
@@ -267,52 +274,46 @@ export const ColorPicker: React.FC<ColorPickerProps> = ({
           </Grid>
           <StyledInfo clr={fontColor || ColorPalette.fontLight}>
             <InfoRounded fontSize="small" />{" "}
-            {window.matchMedia("(pointer:fine)").matches ? "Right click" : "Double tap"} to remove
-            color from list
+            {window.matchMedia("(pointer:fine)").matches
+              ? t("colorPicker.rightClickRemove")
+              : t("colorPicker.doubleTapRemove")}
           </StyledInfo>
         </AccordionDetails>
       </StyledAccordion>
       <Dialog open={openAddDialog} onClose={handleAddDialogClose}>
         <CustomDialogTitle
-          title="Choose a color"
-          subTitle="Add a new color to the color list."
+          title={t("colorPicker.chooseAColor")}
+          subTitle={t("colorPicker.addNewColor")}
           icon={<ColorLensRounded />}
           onClose={handleAddDialogClose}
         />
         <DialogContent>
           <DialogPreview>
-            {addColorVal.toUpperCase()} - {getColorName(addColorVal).name}
+            {addColorVal.toUpperCase()} - {getI18nColorName(getColorName(addColorVal).name)}
           </DialogPreview>
           <div style={{ position: "relative" }}>
             <StyledColorPicker
               type="color"
-              // list={systemInfo.os === "iOS" ? "color-list" : undefined}
               value={addColorVal}
               onChange={(e) => setAddColorVal(e.target.value as string)}
             />
-            {/* <datalist id="color-list">
-              <option value={theme.primary} />
-              {colorList.map((color) => (
-                <option value={color} key={color} />
-              ))}
-            </datalist> */}
             <PickerLabel clr={getFontColor(addColorVal)}>
-              <ColorizeRounded /> Choose color
+              <ColorizeRounded /> {t("colorPicker.chooseColor")}
             </PickerLabel>
           </div>
         </DialogContent>
         <DialogActions>
-          <DialogBtn onClick={handleAddDialogClose}>Cancel</DialogBtn>
+          <DialogBtn onClick={handleAddDialogClose}>{t("colorPicker.cancel")}</DialogBtn>
           <DialogBtn
             onClick={() => {
               onColorChange(addColorVal);
               handleAddDialogClose();
             }}
           >
-            <ColorizeRounded /> &nbsp; Set
+            <ColorizeRounded /> &nbsp; {t("colorPicker.set")}
           </DialogBtn>
           <DialogBtn onClick={handleAddColor}>
-            <AddRounded /> &nbsp; Add
+            <AddRounded /> &nbsp; {t("colorPicker.addToList")}
           </DialogBtn>
         </DialogActions>
       </Dialog>

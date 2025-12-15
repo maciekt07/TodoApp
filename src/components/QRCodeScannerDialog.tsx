@@ -3,6 +3,7 @@ import { CustomDialogTitle } from "./DialogTitle";
 import { QrCodeScannerRounded } from "@mui/icons-material";
 import { showToast } from "../utils";
 import { IScannerProps, Scanner } from "@yudiel/react-qr-scanner";
+import { useTranslation } from "react-i18next";
 
 interface QRCodeScannerDialogProps extends IScannerProps {
   open: boolean;
@@ -16,11 +17,14 @@ export default function QRCodeScannerDialog({
   subTitle,
   ...scannerProps
 }: QRCodeScannerDialogProps) {
+  const { t } = useTranslation();
   return (
     <Dialog open={open} onClose={onClose} fullWidth>
       <CustomDialogTitle
-        title="QR Code Scanner"
-        subTitle={subTitle || "Scan a QR code to proceed"}
+        title={t("qrScanner.title", { defaultValue: "QR Code Scanner" })}
+        subTitle={
+          subTitle || t("qrScanner.subtitle", { defaultValue: "Scan a QR code to proceed" })
+        }
         icon={<QrCodeScannerRounded />}
         onClose={onClose}
       />
@@ -38,7 +42,10 @@ export default function QRCodeScannerDialog({
           }}
           onError={(error) => {
             console.error("QR Scanner Error:", error);
-            showToast("Error scanning QR code. Please try again.", { type: "error" });
+            showToast(
+              t("qrScanner.error", { defaultValue: "Error scanning QR code. Please try again." }),
+              { type: "error" },
+            );
           }}
           {...scannerProps}
         />

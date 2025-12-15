@@ -131,7 +131,9 @@ export const EditTask = ({ open, task, onClose }: EditTaskProps) => {
   useEffect(() => {
     const handleBeforeUnload = (e: BeforeUnloadEvent) => {
       if (JSON.stringify(editedTask) !== JSON.stringify(task) && open) {
-        const message = "You have unsaved changes. Are you sure you want to leave?";
+        const message = t("editTask.beforeUnload", {
+          defaultValue: "You have unsaved changes. Are you sure you want to leave?",
+        });
         e.returnValue = message;
         return message;
       }
@@ -142,7 +144,7 @@ export const EditTask = ({ open, task, onClose }: EditTaskProps) => {
     return () => {
       window.removeEventListener("beforeunload", handleBeforeUnload);
     };
-  }, [editedTask, open, task]);
+  }, [editedTask, open, task, t]);
 
   return (
     <Dialog
@@ -185,11 +187,14 @@ export const EditTask = ({ open, task, onClose }: EditTaskProps) => {
           helperText={
             editedTask?.name
               ? editedTask?.name.length === 0
-                ? t("addTask.taskName") + " is required"
+                ? t("validation.required", { field: t("addTask.taskName") })
                 : editedTask?.name.length > TASK_NAME_MAX_LENGTH
-                  ? `Name is too long (maximum ${TASK_NAME_MAX_LENGTH} characters)`
+                  ? t("validation.maxLength", {
+                      field: t("addTask.taskName"),
+                      max: TASK_NAME_MAX_LENGTH,
+                    })
                   : `${editedTask?.name?.length}/${TASK_NAME_MAX_LENGTH}`
-              : t("addTask.taskName") + " is required"
+              : t("validation.required", { field: t("addTask.taskName") })
           }
         />
         <StyledInput
@@ -206,7 +211,10 @@ export const EditTask = ({ open, task, onClose }: EditTaskProps) => {
             editedTask?.description === "" || editedTask?.description === undefined
               ? undefined
               : descriptionError
-                ? `Description is too long (maximum ${DESCRIPTION_MAX_LENGTH} characters)`
+                ? t("validation.maxLength", {
+                    field: t("addTask.description"),
+                    max: DESCRIPTION_MAX_LENGTH,
+                  })
                 : `${editedTask?.description?.length}/${DESCRIPTION_MAX_LENGTH}`
           }
         />
@@ -277,6 +285,7 @@ export const EditTask = ({ open, task, onClose }: EditTaskProps) => {
                 color: color,
               }));
             }}
+            label={t("addTask.color")}
           />
         </div>
       </DialogContent>

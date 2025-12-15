@@ -40,8 +40,10 @@ import {
   StyledSelect,
   VolumeSlider,
 } from "../settings.styled";
+import { useTranslation } from "react-i18next";
 
 export default function ReadAloudTab() {
+  const { t } = useTranslation();
   const { user, setUser } = useContext(UserContext);
   const [availableVoices, setAvailableVoices] = useState<SpeechSynthesisVoice[]>([]);
   const [voiceVolume, setVoiceVolume] = useState<number>(user.settings.voiceVolume);
@@ -218,18 +220,18 @@ export default function ReadAloudTab() {
     <>
       {!("speechSynthesis" in window) && (
         <Alert severity="error">
-          <AlertTitle>Speech Synthesis Not Supported</AlertTitle>
-          Your browser does not support built in text-to-speech.
+          <AlertTitle>{t("settingsTabs.readAloud.speechNotSupported")}</AlertTitle>
+          {t("settingsTabs.readAloud.speechNotSupportedText")}
         </Alert>
       )}
       <CustomSwitch
         settingKey="enableReadAloud"
-        header="Enable Read Aloud"
-        text="Loads voices and shows Read Aloud in the task menu."
+        header={t("settingsTabs.readAloud.enableReadAloud")}
+        text={t("settingsTabs.readAloud.enableReadAloudText")}
         disabled={!("speechSynthesis" in window)}
       />
       <ReadAloudWrapper active={readAloudEnabled} disabled={!readAloudEnabled}>
-        <SectionHeading>Play Sample</SectionHeading>
+        <SectionHeading>{t("settingsTabs.readAloud.playSample")}</SectionHeading>
         <Button
           variant="contained"
           disabled={!("speechSynthesis" in window)}
@@ -240,7 +242,7 @@ export default function ReadAloudTab() {
             if (isSampleReading) {
               window.speechSynthesis.pause();
             } else {
-              const textToRead = "This is a sample text for testing the speech synthesis feature.";
+              const textToRead = t("settingsTabs.readAloud.sampleText");
               const utterance = new SpeechSynthesisUtterance(textToRead);
               const voices = window.speechSynthesis.getVoices() ?? [];
               utterance.voice =
@@ -256,9 +258,10 @@ export default function ReadAloudTab() {
             setIsSampleReading((prev) => !prev);
           }}
         >
-          {isSampleReading ? <StopCircleRounded /> : <RecordVoiceOverRounded />} &nbsp; Play Sample
+          {isSampleReading ? <StopCircleRounded /> : <RecordVoiceOverRounded />} &nbsp;{" "}
+          {t("settingsTabs.readAloud.playSampleButton")}
         </Button>
-        <SectionHeading>Voice Selection</SectionHeading>
+        <SectionHeading>{t("settingsTabs.readAloud.voiceSelection")}</SectionHeading>
         {filteredVoices.length !== 0 ? (
           <StyledSelect
             value={user.settings.voice}
@@ -321,14 +324,19 @@ export default function ReadAloudTab() {
                     }
                   />
                   {voice.default && systemInfo.os !== "iOS" && systemInfo.os !== "macOS" && (
-                    <span style={{ fontWeight: 600 }}>&nbsp; Default</span>
+                    <span style={{ fontWeight: 600 }}>
+                      &nbsp; {t("settingsTabs.readAloud.default")}
+                    </span>
                   )}
                   {voice.localService === false && (
                     <span style={{ marginLeft: "auto", display: "flex", alignItems: "center" }}>
                       {!isOnline ? (
                         <CloudOffRounded sx={{ fontSize: "18px" }} />
                       ) : (
-                        <Tooltip title="Requires Internet Connection" placement="left">
+                        <Tooltip
+                          title={t("settingsTabs.readAloud.requiresInternet")}
+                          placement="left"
+                        >
                           <CloudQueueRounded sx={{ fontSize: "18px" }} />
                         </Tooltip>
                       )}
@@ -355,18 +363,22 @@ export default function ReadAloudTab() {
               return [
                 ...createVoiceGroup(
                   matchingLanguageVoices,
-                  `Your Language (${getLanguageRegion(navigator.language)})`,
+                  `${t("settingsTabs.readAloud.yourLanguage")} (${getLanguageRegion(navigator.language)})`,
                   "header-matching",
                 ),
-                ...createVoiceGroup(otherVoices, "Other Languages", "header-other"),
+                ...createVoiceGroup(
+                  otherVoices,
+                  t("settingsTabs.readAloud.otherLanguages"),
+                  "header-other",
+                ),
               ];
             })()}
           </StyledSelect>
         ) : (
           <NoVoiceStyles>
-            There are no voice styles available.
+            {t("settingsTabs.readAloud.noVoiceStyles")}
             {user.settings.enableReadAloud && "speechSynthesis" in window && (
-              <Tooltip title="Refetch voices">
+              <Tooltip title={t("settingsTabs.readAloud.refetchVoices")}>
                 <IconButton
                   size="large"
                   onClick={() => setAvailableVoices(getAvailableVoices() ?? [])}
@@ -379,11 +391,11 @@ export default function ReadAloudTab() {
         )}
         {!isOnline && availableVoices.some((voice) => voice.localService === false) && (
           <Alert severity="warning" sx={{ mt: "8px" }} icon={<WifiOffRounded />}>
-            <AlertTitle>Offline Mode</AlertTitle>
-            You are currently offline. Some Voices may require an internet connection to work.
+            <AlertTitle>{t("settingsTabs.readAloud.offlineMode")}</AlertTitle>
+            {t("settingsTabs.readAloud.offlineModeText")}
           </Alert>
         )}
-        <SectionHeading>Voice Volume</SectionHeading>
+        <SectionHeading>{t("settingsTabs.readAloud.voiceVolume")}</SectionHeading>
         <div style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
           <VolumeSlider spacing={2} direction="row" alignItems="center">
             {/* <Tooltip title={voiceVolume ? "Mute" : "Unmute"}> */}
@@ -410,7 +422,7 @@ export default function ReadAloudTab() {
               aria-label="Volume Slider"
               valueLabelFormat={() => {
                 const vol = Math.floor(voiceVolume * 100);
-                return vol === 0 ? "Muted" : vol + "%";
+                return vol === 0 ? t("settingsTabs.readAloud.muted") : vol + "%";
               }}
               valueLabelDisplay="auto"
             />
