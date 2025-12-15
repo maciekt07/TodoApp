@@ -93,6 +93,7 @@ export const ProfileSidebar = () => {
 
     fetchBMC();
     fetchRepoInfo();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const [avatarSrc, setAvatarSrc] = useState<string | null>(null);
@@ -340,7 +341,7 @@ export const ProfileSidebar = () => {
           <StyledMenuItem>
             <BugReportRounded className="BugReportRoundedIcon" /> &nbsp; {t("sidebar.reportIssue")}{" "}
             {Boolean(issuesCount || issuesCount === 0) && (
-              <Tooltip title={t("sidebar.openIssues", { count: issuesCount })}>
+              <Tooltip title={t("sidebar.openIssues", { count: issuesCount || 0 })}>
                 <MenuLabel clr="#3bb61c">
                   <span>
                     <AdjustRounded style={{ fontSize: "18px" }} />

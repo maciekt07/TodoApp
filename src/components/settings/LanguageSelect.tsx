@@ -1,17 +1,17 @@
-import { LanguageRounded } from "@mui/icons-material";
-import { MenuItem, Select, SelectChangeEvent } from "@mui/material";
+import { ExpandMoreRounded, LanguageRounded } from "@mui/icons-material";
+import { SelectChangeEvent } from "@mui/material";
 import { useContext } from "react";
 import { useTranslation } from "react-i18next";
 import { UserContext } from "../../contexts/UserContext";
 import { languages } from "../../i18n/config";
-import { SettingLabel, SettingsContainer } from "./settings.styled";
+import { SectionHeading, StyledMenuItem, StyledSelect } from "./settings.styled";
 
 export const LanguageSelect = () => {
   const { user, setUser } = useContext(UserContext);
   const { t, i18n } = useTranslation();
 
-  const handleLanguageChange = (event: SelectChangeEvent<string>) => {
-    const newLanguage = event.target.value;
+  const handleLanguageChange = (event: SelectChangeEvent<unknown>) => {
+    const newLanguage = event.target.value as string;
 
     // Update user settings
     setUser((prevUser) => ({
@@ -27,24 +27,22 @@ export const LanguageSelect = () => {
   };
 
   return (
-    <SettingsContainer>
-      <SettingLabel>
-        <LanguageRounded /> {t("settings.language")}
-      </SettingLabel>
-      <Select
+    <>
+      <SectionHeading>
+        <LanguageRounded sx={{ fontSize: "18px", verticalAlign: "middle" }} />{" "}
+        {t("settings.language")}
+      </SectionHeading>
+      <StyledSelect
         value={user.settings.language}
         onChange={handleLanguageChange}
-        sx={{
-          width: "200px",
-          borderRadius: "14px",
-        }}
+        IconComponent={ExpandMoreRounded}
       >
         {Object.entries(languages).map(([code, { nativeName }]) => (
-          <MenuItem key={code} value={code}>
+          <StyledMenuItem key={code} value={code}>
             {nativeName}
-          </MenuItem>
+          </StyledMenuItem>
         ))}
-      </Select>
-    </SettingsContainer>
+      </StyledSelect>
+    </>
   );
 };
