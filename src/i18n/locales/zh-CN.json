@@ -140,7 +140,7 @@
     "createTask": "点击此处创建名为此的任务",
     "deleteSelected": "删除 {{count}} 个选定的任务",
     "deleteTask": "删除任务",
-    "deleteTaskConfirm": "您确定要删除任务"{{name}}"吗？",
+    "deleteTaskConfirm": "您确定要删除任务「{{name}}」吗？",
     "deleteTasksConfirm": "您确定要删除 {{count}} 个任务吗？",
     "tasksDeleted": "已删除 {{count}} 个任务",
     "taskDeleted": "任务已删除",

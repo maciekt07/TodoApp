@@ -43,7 +43,6 @@
     "@mui/material": "^7.0.2",
     "@yudiel/react-qr-scanner": "^2.3.1",
     "emoji-picker-react": "^4.12.2",
-    "i18next": "^25.7.2",
     "lz-string": "^1.5.0",
     "ntc-ts": "^0.0.8",
     "peerjs": "^1.5.4",
@@ -51,7 +50,6 @@
     "react-dom": "^19.1.0",
     "react-fast-marquee": "^1.6.5",
     "react-hot-toast": "^2.5.2",
-    "react-i18next": "^16.5.0",
     "react-qr-code": "^2.0.15",
     "react-router-dom": "^7.5.1",
     "react-spring-bottom-sheet": "^3.4.1"
