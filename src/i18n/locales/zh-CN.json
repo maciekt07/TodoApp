@@ -92,6 +92,113 @@
     "color": "颜色",
     "emoji": "表情符号"
   },
+  "taskMenu": {
+    "markAsDone": "标记为完成",
+    "markAsNotDone": "标记为未完成",
+    "pin": "置顶",
+    "unpin": "取消置顶",
+    "select": "选择",
+    "move": "移动",
+    "taskDetails": "任务详情",
+    "readAloud": "朗读",
+    "share": "分享",
+    "duplicate": "复制",
+    "allTasksDone": "所有任务已完成",
+    "allTasksDoneMessage": "您已完成所有待办事项。做得好！",
+    "changedSortOption": "已更改排序选项为：自定义",
+    "readAloudLabel": "朗读：",
+    "voice": "语音"
+  },
+  "taskDetails": {
+    "title": "任务详情",
+    "task": "任务",
+    "emoji": "表情符号",
+    "id": "ID",
+    "description": "描述",
+    "color": "颜色",
+    "created": "创建时间",
+    "lastEdited": "上次编辑",
+    "taskDeadline": "任务截止日期",
+    "done": "已完成",
+    "pinned": "已置顶",
+    "categories": "分类",
+    "sharedBy": "分享者",
+    "none": "无",
+    "notFound": "未找到 ID 为 {{id}} 的任务。"
+  },
+  "editTask": {
+    "title": "编辑任务",
+    "subtitle": "编辑任务的详细信息。",
+    "lastEdited": "上次编辑 {{time}} • {{date}}",
+    "taskSaved": "任务保存成功"
+  },
+  "taskList": {
+    "search": "搜索...",
+    "noTasks": "您还没有任何任务",
+    "noTasksSubtitle": "点击 + 按钮添加一个",
+    "noTasksFound": "未找到任务",
+    "createTask": "点击此处创建名为此的任务",
+    "deleteSelected": "删除 {{count}} 个选定的任务",
+    "deleteTask": "删除任务",
+    "deleteTaskConfirm": "您确定要删除任务"{{name}}"吗？",
+    "deleteTasksConfirm": "您确定要删除 {{count}} 个任务吗？",
+    "tasksDeleted": "已删除 {{count}} 个任务",
+    "taskDeleted": "任务已删除",
+    "selectAll": "全选",
+    "clearSelection": "清除选择",
+    "completeAll": "全部完成",
+    "moveTask": "移动任务",
+    "moveTaskInstructions": "选择您要移动的任务"
+  },
+  "settingsTabs": {
+    "appearance": {
+      "title": "外观",
+      "darkMode": "深色模式选项",
+      "auto": "自动",
+      "system": "系统",
+      "light": "浅色",
+      "dark": "深色",
+      "themeSelection": "主题选择",
+      "reduceMotion": "减少动画选项",
+      "reduceMotionDescription": "减少动画和过渡效果，提供更稳定的体验。",
+      "always": "始终",
+      "never": "从不",
+      "enableGlow": "启用发光效果",
+      "enableGlowDescription": "为任务添加柔和的发光效果，提高可见性。"
+    },
+    "general": {
+      "enableCategories": "启用分类",
+      "enableCategoriesDescription": "启用分类以组织您的任务。",
+      "appBadge": "应用徽章",
+      "appBadgeDescription": "在 PWA 图标上显示徽章以指示未完成任务的数量。",
+      "appBadgeDisabled": "此功能需要将应用安装为 PWA 并且您的浏览器支持。",
+      "doneToBottom": "已完成任务置底",
+      "doneToBottomDescription": "将已完成的任务移到列表底部，使您的活动任务更加显眼。",
+      "showProgressBar": "显示进度条",
+      "showProgressBarDescription": "在屏幕顶部显示进度条以可视化您的任务完成情况。"
+    },
+    "emoji": {
+      "title": "表情符号设置",
+      "emojiStyle": "表情符号样式",
+      "emojiStyleDescription": "选择您喜欢的表情符号样式。",
+      "native": "原生",
+      "apple": "苹果",
+      "google": "谷歌",
+      "twitter": "推特",
+      "facebook": "脸书",
+      "simpleEmojiPicker": "简单表情选择器",
+      "simpleEmojiPickerDescription": "使用更简单的表情选择器，选项更少，选择更快。"
+    },
+    "readAloud": {
+      "title": "朗读设置",
+      "enableReadAloud": "启用朗读",
+      "enableReadAloudDescription": "启用朗读功能以收听您的任务。",
+      "voiceSelection": "语音选择",
+      "voiceVolume": "语音音量",
+      "noVoices": "没有可用的语音",
+      "noVoicesDescription": "您的浏览器不支持文本转语音或没有可用的语音。"
+    }
+  },
   "errors": {
     "profilePictureError": "个人资料图片 URL 错误",
     "noBmcSupporters": "未找到 BMC 支持者。"

@@ -21,6 +21,7 @@ import {
   Tooltip,
 } from "@mui/material";
 import { useCallback, useContext, useEffect, useMemo, useState, memo, useRef } from "react";
+import { useTranslation } from "react-i18next";
 import { CategoryBadge, CustomDialogTitle, EditTask, TaskItem } from "..";
 import { TaskContext } from "../../contexts/TaskContext";
 import { UserContext } from "../../contexts/UserContext";
@@ -82,6 +83,7 @@ const TaskMenuButton = memo(
  */
 export const TasksList: React.FC = () => {
   const { user, setUser } = useContext(UserContext);
+  const { t } = useTranslation();
   const {
     selectedTaskId,
     setSelectedTaskId,
@@ -248,7 +250,7 @@ export const TasksList: React.FC = () => {
     setDeleteDialogOpen(false);
     showToast(
       <div>
-        Deleted Task - <b translate="no">{taskToDelete?.name}</b>
+        {t("taskList.taskDeleted")} - <b translate="no">{taskToDelete?.name}</b>
       </div>,
     );
     setTaskToDelete(null);
@@ -411,7 +413,7 @@ export const TasksList: React.FC = () => {
               <SearchInput
                 inputRef={searchRef}
                 color="primary"
-                placeholder="Search for task..."
+                placeholder={t("taskList.search")}
                 autoComplete="off"
                 value={search}
                 disabled={moveMode}
@@ -666,14 +668,14 @@ export const TasksList: React.FC = () => {
           )
         ) : (
           <NoTasks>
-            <span>You don't have any tasks yet</span>
+            <span>{t("taskList.noTasks")}</span>
             <br />
-            Click on the <span>+</span> button to add one
+            {t("taskList.noTasksSubtitle")}
           </NoTasks>
         )}
         {search && orderedTasks.length === 0 && user.tasks.length > 0 ? (
           <TaskNotFound>
-            <b>No tasks found</b>
+            <b>{t("taskList.noTasksFound")}</b>
             <br />
             Try searching with different keywords.
             <div style={{ marginTop: "14px" }}>
@@ -689,8 +691,8 @@ export const TasksList: React.FC = () => {
       </TasksContainer>
       <Dialog open={deleteDialogOpen} onClose={cancelDeleteTask}>
         <CustomDialogTitle
-          title="Delete Task"
-          subTitle="Are you sure you want to delete this task?"
+          title={t("taskList.deleteTask")}
+          subTitle={t("taskList.deleteTaskConfirm", { name: taskToDelete?.name || "" })}
           onClose={cancelDeleteTask}
           icon={<Delete />}
         />
@@ -706,17 +708,17 @@ export const TasksList: React.FC = () => {
         </DialogContent>
         <DialogActions>
           <DialogBtn onClick={cancelDeleteTask} color="primary">
-            Cancel
+            {t("common.cancel")}
           </DialogBtn>
           <DialogBtn onClick={confirmDeleteTask} color="error">
-            <DeleteRounded /> &nbsp; Confirm Delete
+            <DeleteRounded /> &nbsp; {t("common.delete")}
           </DialogBtn>
         </DialogActions>
       </Dialog>
       <Dialog open={deleteSelectedOpen}>
         <CustomDialogTitle
-          title="Delete selected tasks"
-          subTitle="Confirm to delete selected tasks"
+          title={t("taskList.deleteSelected", { count: multipleSelectedTasks.length })}
+          subTitle={t("taskList.deleteTasksConfirm", { count: multipleSelectedTasks.length })}
           icon={<DeleteRounded />}
         />
         <DialogContent translate="no">
@@ -728,7 +730,7 @@ export const TasksList: React.FC = () => {
         </DialogContent>
         <DialogActions>
           <DialogBtn onClick={() => setDeleteSelectedOpen(false)} color="primary">
-            Cancel
+            {t("common.cancel")}
           </DialogBtn>
           <DialogBtn
             onClick={() => {

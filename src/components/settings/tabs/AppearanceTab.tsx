@@ -1,4 +1,5 @@
 import { useContext, useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import CustomRadioGroup from "../CustomRadioGroup";
 import {
   SectionDescription,
@@ -25,49 +26,50 @@ import { useSystemTheme } from "../../../hooks/useSystemTheme";
 import { Themes } from "../../../theme/createTheme";
 import { ColorElement } from "../../../styles";
 
-const darkModeOptions: OptionItem<DarkModeOptions>[] = [
-  {
-    label: "Auto",
-    value: "auto",
-    icon: <BrightnessAutoRounded sx={{ fontSize: OPTION_ICON_SIZE }} />,
-  },
-  {
-    label: "System",
-    value: "system",
-    icon: <PersonalVideoRounded sx={{ fontSize: OPTION_ICON_SIZE }} />,
-  },
-  {
-    label: "Light",
-    value: "light",
-    icon: <LightModeRounded sx={{ fontSize: OPTION_ICON_SIZE }} />,
-  },
-  {
-    label: "Dark",
-    value: "dark",
-    icon: <DarkModeRounded sx={{ fontSize: OPTION_ICON_SIZE }} />,
-  },
-];
-
-const reduceMotionOptions: OptionItem<ReduceMotionOption>[] = [
-  {
-    label: "System",
-    value: "system",
-    icon: <PersonalVideoRounded sx={{ fontSize: OPTION_ICON_SIZE }} />,
-  },
-  {
-    label: "Always",
-    value: "on",
-    icon: <MotionPhotosOffRounded sx={{ fontSize: OPTION_ICON_SIZE }} />,
-  },
-  {
-    label: "Never",
-    value: "off",
-    icon: <MotionPhotosAutoRounded sx={{ fontSize: OPTION_ICON_SIZE }} />,
-  },
-];
-
 export default function AppearanceTab() {
   const { user, setUser } = useContext(UserContext);
+  const { t } = useTranslation();
+
+  const darkModeOptions: OptionItem<DarkModeOptions>[] = [
+    {
+      label: t("settingsTabs.appearance.auto"),
+      value: "auto",
+      icon: <BrightnessAutoRounded sx={{ fontSize: OPTION_ICON_SIZE }} />,
+    },
+    {
+      label: t("settingsTabs.appearance.system"),
+      value: "system",
+      icon: <PersonalVideoRounded sx={{ fontSize: OPTION_ICON_SIZE }} />,
+    },
+    {
+      label: t("settingsTabs.appearance.light"),
+      value: "light",
+      icon: <LightModeRounded sx={{ fontSize: OPTION_ICON_SIZE }} />,
+    },
+    {
+      label: t("settingsTabs.appearance.dark"),
+      value: "dark",
+      icon: <DarkModeRounded sx={{ fontSize: OPTION_ICON_SIZE }} />,
+    },
+  ];
+
+  const reduceMotionOptions: OptionItem<ReduceMotionOption>[] = [
+    {
+      label: t("settingsTabs.appearance.system"),
+      value: "system",
+      icon: <PersonalVideoRounded sx={{ fontSize: OPTION_ICON_SIZE }} />,
+    },
+    {
+      label: t("settingsTabs.appearance.always"),
+      value: "on",
+      icon: <MotionPhotosOffRounded sx={{ fontSize: OPTION_ICON_SIZE }} />,
+    },
+    {
+      label: t("settingsTabs.appearance.never"),
+      value: "off",
+      icon: <MotionPhotosAutoRounded sx={{ fontSize: OPTION_ICON_SIZE }} />,
+    },
+  ];
   const [darkModeValue, setDarkModeValue] = useState<DarkModeOptions>(user.darkmode);
   const [reduceMotionValue, setReduceMotionValue] = useState<ReduceMotionOption>(
     user.settings.reduceMotion,
@@ -90,7 +92,7 @@ export default function AppearanceTab() {
 
   return (
     <>
-      <SectionHeading>Dark Mode Options</SectionHeading>
+      <SectionHeading>{t("settingsTabs.appearance.darkMode")}</SectionHeading>
       <CustomRadioGroup
         options={darkModeOptions}
         value={darkModeValue}
@@ -102,7 +104,7 @@ export default function AppearanceTab() {
           }));
         }}
       />
-      <SectionHeading>Theme Selection</SectionHeading>
+      <SectionHeading>{t("settingsTabs.appearance.themeSelection")}</SectionHeading>
       <StyledSelect
         value={user.theme}
         onChange={handleAppThemeChange}
@@ -110,7 +112,8 @@ export default function AppearanceTab() {
       >
         <StyledMenuItem value="system">
           <PersonalVideoRounded />
-          &nbsp; System ({systemTheme === "dark" ? Themes[0].name : Themes[1].name})
+          &nbsp; {t("settingsTabs.appearance.system")} (
+          {systemTheme === "dark" ? Themes[0].name : Themes[1].name})
         </StyledMenuItem>
         {Themes.map((theme) => (
           <StyledMenuItem key={theme.name} value={theme.name}>
@@ -127,10 +130,8 @@ export default function AppearanceTab() {
           </StyledMenuItem>
         ))}
       </StyledSelect>
-      <SectionHeading>Reduce Motion Options</SectionHeading>
-      <SectionDescription>
-        Reduce animations and transitions for a more stable experience.
-      </SectionDescription>
+      <SectionHeading>{t("settingsTabs.appearance.reduceMotion")}</SectionHeading>
+      <SectionDescription>{t("settingsTabs.appearance.reduceMotionDescription")}</SectionDescription>
       <CustomRadioGroup
         options={reduceMotionOptions}
         value={reduceMotionValue}
@@ -147,8 +148,8 @@ export default function AppearanceTab() {
       />
       <CustomSwitch
         settingKey="enableGlow"
-        header="Enable Glow Effect"
-        text="Add a soft glow to tasks for better visibility."
+        header={t("settingsTabs.appearance.enableGlow")}
+        text={t("settingsTabs.appearance.enableGlowDescription")}
       />
     </>
   );

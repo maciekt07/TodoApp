@@ -92,6 +92,113 @@
     "color": "Color",
     "emoji": "Emoji"
   },
+  "taskMenu": {
+    "markAsDone": "Mark as done",
+    "markAsNotDone": "Mark as not done",
+    "pin": "Pin",
+    "unpin": "Unpin",
+    "select": "Select",
+    "move": "Move",
+    "taskDetails": "Task details",
+    "readAloud": "Read Aloud",
+    "share": "Share",
+    "duplicate": "Duplicate",
+    "allTasksDone": "All tasks done",
+    "allTasksDoneMessage": "You've checked off all your todos. Well done!",
+    "changedSortOption": "Changed sort option to: Custom",
+    "readAloudLabel": "Read aloud:",
+    "voice": "Voice"
+  },
+  "taskDetails": {
+    "title": "Task Details",
+    "task": "Task",
+    "emoji": "Emoji",
+    "id": "ID",
+    "description": "Description",
+    "color": "Color",
+    "created": "Created",
+    "lastEdited": "Last edited",
+    "taskDeadline": "Task deadline",
+    "done": "Done",
+    "pinned": "Pinned",
+    "categories": "Categories",
+    "sharedBy": "Shared by",
+    "none": "none",
+    "notFound": "Task with id {{id}} was not found."
+  },
+  "editTask": {
+    "title": "Edit Task",
+    "subtitle": "Edit the details of the task.",
+    "lastEdited": "Last edited {{time}} • {{date}}",
+    "taskSaved": "Task saved successfully"
+  },
+  "taskList": {
+    "search": "Search...",
+    "noTasks": "You don't have any tasks yet",
+    "noTasksSubtitle": "Click on the + button to add one",
+    "noTasksFound": "No tasks found",
+    "createTask": "Click here to create a task with this name",
+    "deleteSelected": "Delete {{count}} selected tasks",
+    "deleteTask": "Delete Task",
+    "deleteTaskConfirm": "Are you sure you want to delete the task \"{{name}}\"?",
+    "deleteTasksConfirm": "Are you sure you want to delete {{count}} tasks?",
+    "tasksDeleted": "{{count}} tasks deleted",
+    "taskDeleted": "Task deleted",
+    "selectAll": "Select All",
+    "clearSelection": "Clear Selection",
+    "completeAll": "Complete All",
+    "moveTask": "Move task",
+    "moveTaskInstructions": "Select the task you want to move"
+  },
+  "settingsTabs": {
+    "appearance": {
+      "title": "Appearance",
+      "darkMode": "Dark Mode Options",
+      "auto": "Auto",
+      "system": "System",
+      "light": "Light",
+      "dark": "Dark",
+      "themeSelection": "Theme Selection",
+      "reduceMotion": "Reduce Motion Options",
+      "reduceMotionDescription": "Reduce animations and transitions for a more stable experience.",
+      "always": "Always",
+      "never": "Never",
+      "enableGlow": "Enable Glow Effect",
+      "enableGlowDescription": "Add a soft glow to tasks for better visibility."
+    },
+    "general": {
+      "enableCategories": "Enable Categories",
+      "enableCategoriesDescription": "Enable categories to organize your tasks.",
+      "appBadge": "App Badge",
+      "appBadgeDescription": "Show a badge on the PWA icon to indicate the number of not done tasks.",
+      "appBadgeDisabled": "This feature requires the app to be installed as a PWA and supported by your browser.",
+      "doneToBottom": "Completed Tasks at Bottom",
+      "doneToBottomDescription": "Move completed tasks to the bottom of the list to keep your active tasks more visible.",
+      "showProgressBar": "Show Progress Bar",
+      "showProgressBarDescription": "Display a progress bar at the top of the screen to visualize your task completion."
+    },
+    "emoji": {
+      "title": "Emoji Settings",
+      "emojiStyle": "Emoji Style",
+      "emojiStyleDescription": "Choose your preferred emoji style.",
+      "native": "Native",
+      "apple": "Apple",
+      "google": "Google",
+      "twitter": "Twitter",
+      "facebook": "Facebook",
+      "simpleEmojiPicker": "Simple Emoji Picker",
+      "simpleEmojiPickerDescription": "Use a simpler emoji picker with fewer options for faster selection."
+    },
+    "readAloud": {
+      "title": "Read Aloud Settings",
+      "enableReadAloud": "Enable Read Aloud",
+      "enableReadAloudDescription": "Enable the read aloud feature to listen to your tasks.",
+      "voiceSelection": "Voice Selection",
+      "voiceVolume": "Voice Volume",
+      "noVoices": "No voices available",
+      "noVoicesDescription": "Your browser doesn't support text-to-speech or no voices are available."
+    }
+  },
   "errors": {
     "profilePictureError": "Error in profile picture URL",
     "noBmcSupporters": "No BMC supporters found."
