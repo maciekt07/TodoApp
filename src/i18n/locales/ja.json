@@ -480,5 +480,12 @@
     "health": "健康・フィットネス",
     "education": "教育",
     "personal": "個人"
+  },
+  "sort": {
+    "sortBy": "並び替え",
+    "dateCreated": "作成日",
+    "dueDate": "期限日",
+    "alphabetical": "アルファベット順",
+    "custom": "カスタム"
   }
 }

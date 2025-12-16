@@ -477,5 +477,12 @@
     "health": "건강/피트니스",
     "education": "교육",
     "personal": "개인"
+  },
+  "sort": {
+    "sortBy": "정렬 기준",
+    "dateCreated": "생성일",
+    "dueDate": "마감일",
+    "alphabetical": "알파벳순",
+    "custom": "사용자 지정"
   }
 }

@@ -486,5 +486,12 @@
     "health": "Santé/Fitness",
     "education": "Éducation",
     "personal": "Personnel"
+  },
+  "sort": {
+    "sortBy": "Trier par",
+    "dateCreated": "Date de création",
+    "dueDate": "Date d'échéance",
+    "alphabetical": "Alphabétique",
+    "custom": "Personnalisé"
   }
 }

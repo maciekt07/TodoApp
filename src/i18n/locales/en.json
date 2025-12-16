@@ -477,5 +477,12 @@
     "health": "Health/Fitness",
     "education": "Education",
     "personal": "Personal"
+  },
+  "sort": {
+    "sortBy": "Sort by",
+    "dateCreated": "Date Created",
+    "dueDate": "Due Date",
+    "alphabetical": "Alphabetical",
+    "custom": "Custom"
   }
 }

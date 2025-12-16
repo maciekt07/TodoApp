@@ -423,5 +423,12 @@
     "health": "健康/健身",
     "education": "教育",
     "personal": "个人"
+  },
+  "sort": {
+    "sortBy": "排序方式",
+    "dateCreated": "创建日期",
+    "dueDate": "截止日期",
+    "alphabetical": "字母顺序",
+    "custom": "自定义"
   }
 }
