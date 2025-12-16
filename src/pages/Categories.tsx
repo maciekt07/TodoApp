@@ -291,7 +291,14 @@ const Categories = () => {
                       )}
                     </span>
                     &nbsp;
-                    <span style={{ wordBreak: "break-all", fontWeight: 600 }}>{category.name}</span>
+                    <span style={{ wordBreak: "break-all", fontWeight: 600 }}>
+                      {t(
+                        category.name.startsWith("category.")
+                          ? category.name
+                          : `category.${category.name}`,
+                        { defaultValue: category.name.replace(/^category\./, "") },
+                      )}
+                    </span>
                     {totalTasksCount > 0 && (
                       <Tooltip
                         title={t("categories.completionPercentageTooltip", {

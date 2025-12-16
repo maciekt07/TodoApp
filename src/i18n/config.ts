@@ -2,11 +2,21 @@ import i18n from "i18next";
 import { initReactI18next } from "react-i18next";
 import en from "./locales/en.json";
 import zhCN from "./locales/zh-CN.json";
+import es from "./locales/es.json";
+import de from "./locales/de.json";
+import fr from "./locales/fr.json";
+import ja from "./locales/ja.json";
+import ko from "./locales/ko.json";
 
 // Define supported languages
 export const languages = {
   en: { nativeName: "English", translation: en },
   "zh-CN": { nativeName: "简体中文", translation: zhCN },
+  es: { nativeName: "Español", translation: es },
+  de: { nativeName: "Deutsch", translation: de },
+  fr: { nativeName: "Français", translation: fr },
+  ja: { nativeName: "日本語", translation: ja },
+  ko: { nativeName: "한국어", translation: ko },
 };
 
 // Get browser language with fallback
