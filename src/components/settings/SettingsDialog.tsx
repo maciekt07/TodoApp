@@ -39,68 +39,7 @@ import {
   StyledTabPanel,
   TabHeading,
 } from "./settings.styled";
-
-const settingsTabs: {
-  label: string;
-  heading?: string;
-  icon: ReactElement;
-  Component: LazyExoticComponent<() => JSX.Element>;
-}[] = [
-  {
-    label: "Appearance",
-    icon: <PaletteRounded />,
-    Component: lazy(() => import("./tabs/AppearanceTab")),
-  },
-  {
-    label: "General",
-    heading: "General Settings",
-    icon: <SettingsRounded />,
-    Component: lazy(() => import("./tabs/GeneralTab")),
-  },
-  {
-    label: "Emoji",
-    heading: "Emoji Settings",
-    icon: <EmojiEmotionsRounded />,
-    Component: lazy(() => import("./tabs/EmojiTab")),
-  },
-  {
-    label: "Read Aloud",
-    heading: "Read Aloud Settings",
-    icon: <RecordVoiceOverRounded />,
-    Component: lazy(() => import("./tabs/ReadAloudTab")),
-  },
-  {
-    label: "Shortcuts",
-    heading: "Keyboard Shortcuts",
-    icon: <KeyboardCommandKeyRounded />,
-    Component: lazy(() => import("./tabs/ShortcutsTab")),
-  },
-  {
-    label: "About",
-    heading: "About This App",
-    icon: <InfoRounded />,
-    Component: lazy(() => import("./tabs/AboutTab")),
-  },
-];
-
-// hash routing utils
-const createTabSlug = (label: string): string => label.replace(/\s+/g, "");
-
-const navigateToTab = (tabIndex: number): void => {
-  const tabSlug = createTabSlug(settingsTabs[tabIndex].label);
-  window.location.hash = `#settings/${tabSlug}`;
-};
-
-const replaceWithTab = (tabIndex: number): void => {
-  const tabSlug = createTabSlug(settingsTabs[tabIndex].label);
-  history.replaceState(
-    null,
-    "",
-    `${window.location.pathname}${window.location.search}#settings/${tabSlug}`,
-  );
-};
-
-const isSettingsHash = (hash: string): boolean => /^#settings(\/.*)?$/.test(hash);
+import { useTranslation } from "react-i18next";
 
 interface SettingsProps {
   open: boolean;
@@ -109,6 +48,7 @@ interface SettingsProps {
 }
 
 export const SettingsDialog = ({ open, onClose, handleOpen }: SettingsProps) => {
+  const { t } = useTranslation();
   const { user } = useContext(UserContext);
   const [tabValue, setTabValue] = useState<number>(0);
 
@@ -117,6 +57,72 @@ export const SettingsDialog = ({ open, onClose, handleOpen }: SettingsProps) => 
   const navigate = useNavigate();
   const isMobile = useResponsiveDisplay();
   const muiTheme = useTheme();
+
+  // --- 修复：tab slug与label分离 ---
+  const settingsTabs: {
+    slug: string;
+    label: string;
+    heading?: string;
+    icon: ReactElement;
+    Component: LazyExoticComponent<() => JSX.Element>;
+  }[] = [
+    {
+      slug: "appearance",
+      label: t("settings.appearance"),
+      icon: <PaletteRounded />,
+      Component: lazy(() => import("./tabs/AppearanceTab")),
+    },
+    {
+      slug: "general",
+      label: t("settings.general"),
+      heading: t("settings.generalSettings"),
+      icon: <SettingsRounded />,
+      Component: lazy(() => import("./tabs/GeneralTab")),
+    },
+    {
+      slug: "emoji",
+      label: t("settings.emoji"),
+      heading: t("settings.emojiSettings"),
+      icon: <EmojiEmotionsRounded />,
+      Component: lazy(() => import("./tabs/EmojiTab")),
+    },
+    {
+      slug: "readAloud",
+      label: t("settings.readAloud"),
+      heading: t("settings.readAloudSettings"),
+      icon: <RecordVoiceOverRounded />,
+      Component: lazy(() => import("./tabs/ReadAloudTab")),
+    },
+    {
+      slug: "shortcuts",
+      label: t("settings.shortcuts"),
+      heading: t("settings.keyboardShortcuts"),
+      icon: <KeyboardCommandKeyRounded />,
+      Component: lazy(() => import("./tabs/ShortcutsTab")),
+    },
+    {
+      slug: "about",
+      label: t("settings.about"),
+      heading: t("settings.aboutThisApp"),
+      icon: <InfoRounded />,
+      Component: lazy(() => import("./tabs/AboutTab")),
+    },
+  ];
+  // --- end ---
+
+  const isSettingsHash = (hash: string): boolean => /^#settings(\/.*)?$/.test(hash);
+  const navigateToTab = (tabIndex: number): void => {
+    const tabSlug = settingsTabs[tabIndex].slug;
+    window.location.hash = `#settings/${tabSlug}`;
+  };
+  const replaceWithTab = (tabIndex: number): void => {
+    const tabSlug = settingsTabs[tabIndex].slug;
+    history.replaceState(
+      null,
+      "",
+      `${window.location.pathname}${window.location.search}#settings/${tabSlug}`,
+    );
+  };
 
   const handleDialogClose = useCallback(() => {
     if (window.speechSynthesis) {
@@ -154,7 +160,7 @@ export const SettingsDialog = ({ open, onClose, handleOpen }: SettingsProps) => 
     if (!match) return -1;
 
     const slug = match[1];
-    const tabIndex = settingsTabs.findIndex((tab) => createTabSlug(tab.label) === slug);
+    const tabIndex = settingsTabs.findIndex((tab) => tab.slug === slug);
 
     if (tabIndex !== -1) {
       setTabValue(tabIndex);
@@ -168,7 +174,7 @@ export const SettingsDialog = ({ open, onClose, handleOpen }: SettingsProps) => 
         setTabValue(0);
       }
     }
-  }, [onClose]);
+  }, [onClose, settingsTabs, replaceWithTab]);
 
   const handleHashOpen = useCallback(() => {
     if (window.location.hash.startsWith("#settings")) {
@@ -195,7 +201,7 @@ export const SettingsDialog = ({ open, onClose, handleOpen }: SettingsProps) => 
         navigateToTab(0);
       }
     }
-  }, [open]);
+  }, [open, navigateToTab]);
 
   // theme color management
   useEffect(() => {
@@ -269,8 +275,8 @@ export const SettingsDialog = ({ open, onClose, handleOpen }: SettingsProps) => 
     >
       <CustomDialogTitle
         icon={<SettingsRounded />}
-        title="Settings"
-        subTitle="Manage Your settings and preferences"
+        title={t("settings.title")}
+        subTitle={t("settings.subtitle")}
         onClose={handleDialogClose}
         removeDivider
       />
@@ -334,7 +340,7 @@ export const SettingsDialog = ({ open, onClose, handleOpen }: SettingsProps) => 
       {isMobile && (
         <CloseButtonContainer>
           <CloseButton variant="contained" onClick={handleDialogClose}>
-            Close
+            {t("settings.close")}
           </CloseButton>
         </CloseButtonContainer>
       )}

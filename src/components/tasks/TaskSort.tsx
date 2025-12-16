@@ -10,6 +10,7 @@ import { TaskContext } from "../../contexts/TaskContext";
 import styled from "@emotion/styled";
 import { SortOption } from "../../types/user";
 import { getFontColor, isDark } from "../../utils";
+import { useTranslation } from "react-i18next";
 
 const sortOptions: {
   value: SortOption;
@@ -18,22 +19,22 @@ const sortOptions: {
 }[] = [
   {
     value: "dateCreated",
-    label: "Date Created",
+    label: "sort.dateCreated", // i18n key
     icon: <AccessTimeRounded fontSize="small" />,
   },
   {
     value: "dueDate",
-    label: "Due Date",
+    label: "sort.dueDate",
     icon: <CalendarTodayRounded fontSize="small" />,
   },
   {
     value: "alphabetical",
-    label: "Alphabetical",
+    label: "sort.alphabetical",
     icon: <SortByAlphaRounded fontSize="small" />,
   },
   {
     value: "custom",
-    label: "Custom",
+    label: "sort.custom",
     icon: <MoveUpRounded fontSize="small" />,
   },
 ];
@@ -42,6 +43,7 @@ export const TaskSort = () => {
   const { sortOption, setSortOption, sortAnchorEl, setSortAnchorEl, moveMode } =
     useContext(TaskContext);
   const sortOpen = Boolean(sortAnchorEl);
+  const { t } = useTranslation();
 
   const handleSortClick = (event: React.MouseEvent<HTMLElement>) => {
     setSortAnchorEl(event.currentTarget);
@@ -68,8 +70,8 @@ export const TaskSort = () => {
       >
         {currentSortOption?.icon}
         <ButtonContent>
-          <SortLabel>Sort by</SortLabel>
-          <SortValue>{currentSortOption?.label}</SortValue>
+          <SortLabel>{t("sort.sortBy")}</SortLabel>
+          <SortValue>{currentSortOption ? t(currentSortOption.label) : ""}</SortValue>
         </ButtonContent>
       </SortButton>
 
@@ -101,7 +103,7 @@ export const TaskSort = () => {
             selected={sortOption === value}
           >
             <ListItemIcon>{icon}</ListItemIcon>
-            <ListItemText>{label}</ListItemText>
+            <ListItemText>{t(label)}</ListItemText>
           </StyledMenuItem>
         ))}
       </Menu>
@@ -118,27 +120,28 @@ const StyledMenuItem = styled(MenuItem)<{ clr?: string }>`
   color: ${({ clr }) => clr || "unset"};
 `;
 
-const SortButton = styled(Button)<{ isMenuOpen: boolean }>`
-  gap: 8px;
-  text-transform: none;
-  border-radius: 16px;
-  height: 60px;
-  padding: 16px 28px;
-  background: ${({ theme }) => (isDark(theme.secondary) ? "#090b2258" : "#ffffff3e")};
-  color: ${({ theme }) => getFontColor(theme.secondary)};
-  border: 1px solid ${({ theme }) => (isDark(theme.secondary) ? "#44479cb7" : theme.primary)} !important;
-  transition: width 0.2s ease;
-  ${({ isMenuOpen, theme }) =>
-    isMenuOpen &&
-    css`
-      background: ${isDark(theme.secondary)} ? "#090b228e" : "#ffffff8e";
-      box-shadow: 
-        ${isDark(theme.secondary) ? "0 0 0 4px #1a1e4a7f" : `0 0 0 4px ${theme.primary}64`};
-    `}
-  @media print {
-    display: none;
-  }
-`;
+const SortButton = styled(Button)<{ isMenuOpen: boolean }>(({ isMenuOpen, theme }) => [
+  {
+    gap: "8px",
+    textTransform: "none",
+    borderRadius: "16px",
+    height: "60px",
+    padding: "16px 28px",
+    background: isDark(theme.secondary) ? "#090b2258" : "#ffffff3e",
+    color: getFontColor(theme.secondary),
+    border: `1px solid ${isDark(theme.secondary) ? "#44479cb7" : theme.primary} !important`,
+    transition: "width 0.2s ease",
+  },
+  isMenuOpen && {
+    background: isDark(theme.secondary) ? "#090b228e" : "#ffffff8e",
+    boxShadow: isDark(theme.secondary) ? "0 0 0 4px #1a1e4a7f" : `0 0 0 4px ${theme.primary}64`,
+  },
+  css`
+    @media print {
+      display: none !important;
+    }
+  `,
+]);
 
 const ButtonContent = styled.div`
   display: flex;

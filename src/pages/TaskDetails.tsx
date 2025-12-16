@@ -1,7 +1,7 @@
 import { useParams } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { CategoryBadge, TopBar } from "../components";
 import styled from "@emotion/styled";
-import { PathName } from "../styles";
 import NotFound from "./NotFound";
 import { Clear, Done } from "@mui/icons-material";
 import { Emoji } from "emoji-picker-react";
@@ -11,43 +11,36 @@ import { getColorName } from "ntc-ts";
 
 const TaskDetails = () => {
   const { user } = useContext(UserContext);
-  const { tasks, emojisStyle } = user;
+  const { tasks, emojisStyle, settings } = user;
+  const { t } = useTranslation();
   const { id } = useParams();
   const formattedId = id?.replace(".", "");
   const task = tasks.find((task) => task.id.toString().replace(".", "") === formattedId);
 
   useEffect(() => {
-    document.title = `Todo App - ${task?.name || "Task Details"}`;
-  }, [task?.name]);
+    document.title = `Todo App - ${task?.name || t("taskDetails.title")}`;
+  }, [task?.name, t]);
 
   if (!task) {
-    return (
-      <NotFound
-        message={
-          <div>
-            Task with id <PathName>{formattedId}</PathName> was not found.
-          </div>
-        }
-      />
-    );
+    return <NotFound message={<div>{t("taskDetails.notFound", { id: formattedId })}</div>} />;
   }
 
-  const dateFormatter = new Intl.DateTimeFormat(navigator.language, {
+  const dateFormatter = new Intl.DateTimeFormat(settings.language, {
     dateStyle: "full",
     timeStyle: "short",
   });
 
   return (
     <>
-      <TopBar title="Task Details" />
+      <TopBar title={t("taskDetails.title")} />
       <Container>
         <TaskName>
-          Task: <span translate="no">{task.name}</span>
+          {t("taskDetails.task")}: <span translate="no">{task.name}</span>
         </TaskName>
         <TaskTable>
           <tbody>
             <TableRow>
-              <TableHeader>Emoji:</TableHeader>
+              <TableHeader>{t("taskDetails.emoji")}:</TableHeader>
               <TableData>
                 {task.emoji ? (
                   <>
@@ -55,62 +48,62 @@ const TaskDetails = () => {
                     {task.emoji})
                   </>
                 ) : (
-                  <i>none</i>
+                  <i>{t("taskDetails.none")}</i>
                 )}
               </TableData>
             </TableRow>
             <TableRow>
-              <TableHeader>ID:</TableHeader>
+              <TableHeader>{t("taskDetails.id")}:</TableHeader>
               <TableData>{task?.id}</TableData>
             </TableRow>
             <TableRow>
-              <TableHeader>Description:</TableHeader>
-              <TableData translate="no">{task?.description}</TableData>
+              <TableHeader>{t("taskDetails.description")}:</TableHeader>
+              <TableData translate="no">{task?.description || t("taskDetails.none")}</TableData>
             </TableRow>
             <TableRow>
-              <TableHeader>Color:</TableHeader>
+              <TableHeader>{t("taskDetails.color")}:</TableHeader>
               <TableData>
                 <ColorSquare clr={task.color} />
                 {getColorName(task.color).name} ({task.color.toUpperCase()})
               </TableData>
             </TableRow>
             <TableRow>
-              <TableHeader>Created:</TableHeader>
+              <TableHeader>{t("taskDetails.created")}:</TableHeader>
               <TableData>{dateFormatter.format(new Date(task.date))}</TableData>
             </TableRow>
             {task?.lastSave && (
               <TableRow>
-                <TableHeader>Last edited:</TableHeader>
+                <TableHeader>{t("taskDetails.lastEdited")}:</TableHeader>
                 <TableData>{dateFormatter.format(new Date(task.lastSave))}</TableData>
               </TableRow>
             )}
             {task?.deadline && (
               <TableRow>
-                <TableHeader>Task deadline:</TableHeader>
+                <TableHeader>{t("taskDetails.taskDeadline")}:</TableHeader>
                 <TableData>{dateFormatter.format(new Date(task.deadline))}</TableData>
               </TableRow>
             )}
             <TableRow>
-              <TableHeader>Done:</TableHeader>
+              <TableHeader>{t("taskDetails.done")}:</TableHeader>
               <TableData>
                 {task?.done ? <Done /> : <Clear />} {task?.done.toString()}
               </TableData>
             </TableRow>
             <TableRow>
-              <TableHeader>Pinned:</TableHeader>
+              <TableHeader>{t("taskDetails.pinned")}:</TableHeader>
               <TableData>
                 {task?.pinned ? <Done /> : <Clear />} {task?.pinned.toString()}
               </TableData>
             </TableRow>
             {task?.sharedBy && (
               <TableRow>
-                <TableHeader>Shared by: </TableHeader>
+                <TableHeader>{t("taskDetails.sharedBy")}: </TableHeader>
                 <TableData>{task.sharedBy}</TableData>
               </TableRow>
             )}
             {task.category && task.category.length > 0 && (
               <TableRow>
-                <TableHeader>Categories:</TableHeader>
+                <TableHeader>{t("taskDetails.categories")}:</TableHeader>
                 <TableData>
                   <CategoryContainer>
                     {task?.category?.map((category) => (

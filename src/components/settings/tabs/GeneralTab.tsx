@@ -1,30 +1,35 @@
+import { useTranslation } from "react-i18next";
 import { systemInfo } from "../../../utils";
 import CustomSwitch from "../CustomSwitch";
+import { LanguageSelect } from "../LanguageSelect";
 
 export default function GeneralTab() {
+  const { t } = useTranslation();
+
   return (
     <>
+      <LanguageSelect />
       <CustomSwitch
         settingKey="enableCategories"
-        header="Enable Categories"
-        text="Enable categories to organize your tasks."
+        header={t("settingsTabs.general.enableCategories")}
+        text={t("settingsTabs.general.enableCategoriesDescription")}
       />
       <CustomSwitch
         settingKey="appBadge"
-        header="App Badge"
-        text="Show a badge on the PWA icon to indicate the number of not done tasks."
+        header={t("settingsTabs.general.appBadge")}
+        text={t("settingsTabs.general.appBadgeDescription")}
         disabled={!systemInfo.isPWA || !("setAppBadge" in navigator)}
-        disabledReason="This feature requires the app to be installed as a PWA and supported by your browser."
+        disabledReason={t("settingsTabs.general.appBadgeDisabled")}
       />
       <CustomSwitch
         settingKey="doneToBottom"
-        header="Completed Tasks at Bottom"
-        text="Move completed tasks to the bottom of the list to keep your active tasks more visible."
+        header={t("settingsTabs.general.doneToBottom")}
+        text={t("settingsTabs.general.doneToBottomDescription")}
       />
       <CustomSwitch
         settingKey="showProgressBar"
-        header="Show Progress Bar"
-        text="Display a progress bar at the top of the screen to visualize your task completion."
+        header={t("settingsTabs.general.showProgressBar")}
+        text={t("settingsTabs.general.showProgressBarDescription")}
       />
     </>
   );

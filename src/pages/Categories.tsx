@@ -1,5 +1,6 @@
 import { Emoji } from "emoji-picker-react";
 import { lazy, useContext, useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import {
   CategoryBadge,
@@ -51,6 +52,7 @@ const NotFound = lazy(() => import("./NotFound"));
 const Categories = () => {
   const { user, setUser } = useContext(UserContext);
   const { updateCategory } = useContext(TaskContext);
+  const { t } = useTranslation();
   const theme = useTheme();
 
   const [name, setName] = useStorageState<string>("", "catName", "sessionStorage");
@@ -76,14 +78,18 @@ const Categories = () => {
   const selectedCategory = user.categories.find((cat) => cat.id === selectedCategoryId);
 
   useEffect(() => {
-    document.title = "Todo App - Categories";
+    document.title = `Todo App - ${t("categories.title", { defaultValue: "Categories" })}`;
     if (!user.settings.enableCategories) {
       n("/");
     }
     if (name.length > CATEGORY_NAME_MAX_LENGTH) {
-      setNameError(`Name is too long (maximum ${CATEGORY_NAME_MAX_LENGTH} characters)`);
+      setNameError(
+        t("categories.nameTooLong", {
+          defaultValue: `Name is too long (maximum ${CATEGORY_NAME_MAX_LENGTH} characters)`,
+        }),
+      );
     }
-  }, [n, name.length, user.settings]);
+  }, [n, name.length, user.settings, t]);
 
   useEffect(() => {
     const cat = user.categories.find((cat) => cat.id === selectedCategoryId);
@@ -94,11 +100,14 @@ const Categories = () => {
       setEditNameError("");
       setEditLastSaveLabel(
         cat.lastSave
-          ? `Last edited ${timeAgo(new Date(cat.lastSave))} • ${formatDate(new Date(cat.lastSave))}`
-          : DEFAULT_EDIT_CATEGORY_SUBTITLE,
+          ? t("categories.lastEditedOn", {
+              defaultValue: `Last edited ${timeAgo(new Date(cat.lastSave))} • ${formatDate(new Date(cat.lastSave))}`,
+              date: formatDate(new Date(cat.lastSave)),
+            })
+          : t("categories.editDefaultSubtitle", { defaultValue: DEFAULT_EDIT_CATEGORY_SUBTITLE }),
       );
     }
-  }, [selectedCategoryId, user.categories]);
+  }, [selectedCategoryId, user.categories, t]);
 
   const handleDelete = (categoryId: UUID | undefined) => {
     if (!categoryId) return;
@@ -129,7 +138,8 @@ const Categories = () => {
 
     showToast(
       <div>
-        Deleted category - <b translate="no">{categoryName}.</b>
+        {t("categories.deletedPrefix", { defaultValue: "Deleted category - " })}
+        <b translate="no">{categoryName}.</b>
       </div>,
     );
   };
@@ -138,7 +148,11 @@ const Categories = () => {
     const newName = event.target.value;
     setName(newName);
     if (newName.length > CATEGORY_NAME_MAX_LENGTH) {
-      setNameError(`Name is too long (maximum ${CATEGORY_NAME_MAX_LENGTH} characters)`);
+      setNameError(
+        t("categories.nameTooLong", {
+          defaultValue: `Name is too long (maximum ${CATEGORY_NAME_MAX_LENGTH} characters)`,
+        }),
+      );
     } else {
       setNameError("");
     }
@@ -148,7 +162,11 @@ const Categories = () => {
     const newName = event.target.value;
     setEditName(newName);
     if (newName.length > CATEGORY_NAME_MAX_LENGTH) {
-      setEditNameError(`Name is too long (maximum ${CATEGORY_NAME_MAX_LENGTH} characters)`);
+      setEditNameError(
+        t("categories.nameTooLong", {
+          defaultValue: `Name is too long (maximum ${CATEGORY_NAME_MAX_LENGTH} characters)`,
+        }),
+      );
     } else {
       setEditNameError("");
     }
@@ -169,7 +187,8 @@ const Categories = () => {
 
       showToast(
         <div>
-          Added category - <b translate="no">{newCategory.name}</b>
+          {t("categories.addedPrefix", { defaultValue: "Added category - " })}
+          <b translate="no">{newCategory.name}</b>
         </div>,
       );
 
@@ -182,7 +201,7 @@ const Categories = () => {
       setColor(theme.primary);
       setEmoji("");
     } else {
-      showToast("Category name is required.", {
+      showToast(t("categories.nameRequired", { defaultValue: "Category name is required." }), {
         type: "error",
         preventDuplicate: true,
         id: "category-name-required",
@@ -210,7 +229,8 @@ const Categories = () => {
 
     showToast(
       <div>
-        Updated category - <b translate="no">{editName}</b>
+        {t("categories.updatedPrefix", { defaultValue: "Updated category - " })}
+        <b translate="no">{editName}</b>
       </div>,
     );
 
@@ -234,12 +254,16 @@ const Categories = () => {
   };
 
   if (!user.settings.enableCategories) {
-    return <NotFound message="Categories are not enabled." />;
+    return (
+      <NotFound
+        message={t("categories.notEnabled", { defaultValue: "Categories are not enabled." })}
+      />
+    );
   }
 
   return (
     <>
-      <TopBar title="Categories" />
+      <TopBar title={t("categories.title", { defaultValue: "Categories" })} />
       <CategoriesContainer>
         {user.categories.length > 0 ? (
           <CategoryElementsContainer>
@@ -267,9 +291,21 @@ const Categories = () => {
                       )}
                     </span>
                     &nbsp;
-                    <span style={{ wordBreak: "break-all", fontWeight: 600 }}>{category.name}</span>
+                    <span style={{ wordBreak: "break-all", fontWeight: 600 }}>
+                      {t(
+                        category.name.startsWith("category.")
+                          ? category.name
+                          : `category.${category.name}`,
+                        { defaultValue: category.name.replace(/^category\./, "") },
+                      )}
+                    </span>
                     {totalTasksCount > 0 && (
-                      <Tooltip title="The percentage of completion of tasks assigned to this category">
+                      <Tooltip
+                        title={t("categories.completionPercentageTooltip", {
+                          defaultValue:
+                            "The percentage of completion of tasks assigned to this category",
+                        })}
+                      >
                         <span style={{ opacity: 0.8, fontStyle: "italic" }}>
                           {displayPercentage}
                         </span>
@@ -323,10 +359,10 @@ const Categories = () => {
             })}
           </CategoryElementsContainer>
         ) : (
-          <p>You don't have any categories</p>
+          <p>{t("categories.noCategories", { defaultValue: "You don't have any categories" })}</p>
         )}
         <AddContainer>
-          <h2>Add New Category</h2>
+          <h2>{t("categories.addNewCategory", { defaultValue: "Add New Category" })}</h2>
           <CustomEmojiPicker
             emoji={typeof emoji === "string" ? emoji : undefined}
             setEmoji={setEmoji}
@@ -337,8 +373,10 @@ const Categories = () => {
           <InputThemeProvider>
             <CategoryInput
               required
-              label="Category name"
-              placeholder="Enter category name"
+              label={t("categories.categoryNameLabel", { defaultValue: "Category name" })}
+              placeholder={t("categories.categoryNamePlaceholder", {
+                defaultValue: "Enter category name",
+              })}
               value={name}
               onChange={handleNameChange}
               error={nameError !== ""}
@@ -363,13 +401,15 @@ const Categories = () => {
             onClick={handleAddCategory}
             disabled={name.length > CATEGORY_NAME_MAX_LENGTH}
           >
-            Create Category
+            {t("categories.createCategory", { defaultValue: "Create Category" })}
           </AddCategoryButton>
         </AddContainer>
         <Dialog open={openDeleteDialog} onClose={() => setOpenDeleteDialog(false)}>
           <CustomDialogTitle
-            title="Delete this category?"
-            subTitle="This action cannot be undone."
+            title={t("categories.deleteTitle", { defaultValue: "Delete this category?" })}
+            subTitle={t("categories.deleteSubtitle", {
+              defaultValue: "This action cannot be undone.",
+            })}
             icon={<DeleteRounded />}
             onClose={() => setOpenDeleteDialog(false)}
           />
@@ -386,7 +426,10 @@ const Categories = () => {
                   <AssociatedTasksAccordion>
                     <AccordionSummary expandIcon={<ExpandMoreRounded />}>
                       <span style={{ fontWeight: 600 }}>
-                        {`Associated Tasks (${getAssociatedTasks(selectedCategoryId!).length})`}
+                        {t("categories.associatedTasks", {
+                          defaultValue: `Associated Tasks (${getAssociatedTasks(selectedCategoryId!).length})`,
+                          count: getAssociatedTasks(selectedCategoryId!).length,
+                        })}
                       </span>
                     </AccordionSummary>
                     <AccordionDetails sx={{ p: 0, m: 0 }}>
@@ -409,15 +452,17 @@ const Categories = () => {
           </DialogContent>
 
           <DialogActions>
-            <DialogBtn onClick={() => setOpenDeleteDialog(false)}>Cancel</DialogBtn>
+            <DialogBtn onClick={() => setOpenDeleteDialog(false)}>
+              {t("common.cancel", { defaultValue: "Cancel" })}
+            </DialogBtn>
             <DialogBtn
+              color="error"
               onClick={() => {
                 handleDelete(selectedCategoryId);
                 setOpenDeleteDialog(false);
               }}
-              color="error"
             >
-              <DeleteRounded /> &nbsp; Delete
+              <DeleteRounded /> &nbsp; {t("categories.deleteButton", { defaultValue: "Delete" })}
             </DialogBtn>
           </DialogActions>
         </Dialog>
@@ -485,7 +530,9 @@ const Categories = () => {
             </div>
           </DialogContent>
           <DialogActions>
-            <DialogBtn onClick={handleEditDimiss}>Cancel</DialogBtn>
+            <DialogBtn onClick={handleEditDimiss}>
+              {t("common.cancel", { defaultValue: "Cancel" })}
+            </DialogBtn>
             <DialogBtn
               onClick={handleEditCategory}
               disabled={editNameError !== "" || editName.length === 0}

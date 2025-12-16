@@ -10,6 +10,7 @@ import CustomSwitch from "../CustomSwitch";
 import { showToast } from "../../../utils";
 import type { OptionItem } from "../settingsTypes";
 import { OPTION_ICON_SIZE } from "../settingsConstants";
+import { useTranslation } from "react-i18next";
 
 const emojiStyles: OptionItem<EmojiStyle>[] = [
   { label: "Apple", value: EmojiStyle.APPLE },
@@ -28,6 +29,7 @@ const offlineDisabledEmojiStyles = emojiStyles
   .filter((value) => value !== EmojiStyle.NATIVE);
 
 export default function EmojiTab() {
+  const { t } = useTranslation();
   const { user, setUser } = useContext(UserContext);
   const [emojiStyleValue, setEmojiStyleValue] = useState<EmojiStyle>(user.emojisStyle);
   const [hasEmojiData, setHasEmojiData] = useState<boolean>(
@@ -42,9 +44,12 @@ export default function EmojiTab() {
 
   return (
     <>
-      <SectionHeading>Emoji Style</SectionHeading>
+      <SectionHeading>{t("settingsTabs.emoji.emojiStyle")}</SectionHeading>
       <CustomRadioGroup
-        options={emojiStyles}
+        options={emojiStyles.map((option) => ({
+          ...option,
+          label: t(`settingsTabs.emoji.${option.value.toLowerCase()}`),
+        }))}
         value={emojiStyleValue}
         onChange={(val) => {
           setEmojiStyleValue(val);
@@ -58,25 +63,37 @@ export default function EmojiTab() {
 
       {!isOnline && (
         <Alert severity="warning" sx={{ mt: "8px" }} icon={<WifiOffRounded />}>
-          <AlertTitle>Offline Mode</AlertTitle>
-          You are currently offline. Non-native emoji styles may not load.
+          <AlertTitle>
+            {t("settingsTabs.emoji.offlineTitle", { defaultValue: "Offline Mode" })}
+          </AlertTitle>
+          {t("settingsTabs.emoji.offlineWarning", {
+            defaultValue: "You are currently offline. Non-native emoji styles may not load.",
+          })}
         </Alert>
       )}
       <CustomSwitch
         settingKey="simpleEmojiPicker"
-        header="Simple Emoji Picker"
-        text="Show only recent emojis for faster loading."
+        header={t("settingsTabs.emoji.simpleEmojiPicker")}
+        text={t("settingsTabs.emoji.simpleEmojiPickerDescription")}
         disabled={!hasEmojiData}
-        disabledReason="No recent emojis available."
+        disabledReason={t("settingsTabs.emoji.noRecentEmojis", {
+          defaultValue: "No recent emojis available.",
+        })}
       />
-      <SectionHeading>Emoji Data</SectionHeading>
-      <SectionDescription> Clear data about recently used emojis</SectionDescription>
+      <SectionHeading>{t("settingsTabs.emoji.emojiData")}</SectionHeading>
+      <SectionDescription>
+        {t("settingsTabs.emoji.emojiDataDescription", {
+          defaultValue: "Clear data about recently used emojis",
+        })}
+      </SectionDescription>
       <Button
         variant="contained"
         color="error"
         onClick={() => {
           localStorage.removeItem("epr_suggested");
-          showToast("Removed emoji data.");
+          showToast(
+            t("settingsTabs.emoji.removedEmojiData", { defaultValue: "Removed emoji data." }),
+          );
           setHasEmojiData(false);
           if (user.settings.simpleEmojiPicker) {
             setUser((prev) => ({
@@ -86,7 +103,8 @@ export default function EmojiTab() {
           }
         }}
       >
-        <DeleteRounded /> &nbsp; Clear Emoji Data
+        <DeleteRounded /> &nbsp;{" "}
+        {t("settingsTabs.emoji.clearEmojiData", { defaultValue: "Clear Emoji Data" })}
       </Button>
     </>
   );

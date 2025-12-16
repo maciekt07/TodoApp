@@ -3,6 +3,7 @@ import { Box, Switch, Typography, FormControlLabel, FormGroup } from "@mui/mater
 import { User } from "../../types/user";
 import { UserContext } from "../../contexts/UserContext";
 import { InfoOutlined } from "@mui/icons-material";
+import { useTranslation } from "react-i18next";
 
 interface CustomSwitchProps {
   header: string;
@@ -21,6 +22,7 @@ const CustomSwitch: React.FC<CustomSwitchProps> = ({
   disabled,
   disabledReason,
 }) => {
+  const { t } = useTranslation();
   const { user, setUser } = useContext(UserContext);
 
   const handleToggle = () => {
@@ -60,13 +62,13 @@ const CustomSwitch: React.FC<CustomSwitchProps> = ({
       </Box>
       {text && (
         <Typography variant="body2" sx={{ color: "text.secondary", mt: 0 }}>
-          {text}
+          {t(text)}
         </Typography>
       )}
       {disabled && disabledReason && (
         <Box sx={{ display: "flex", alignItems: "center", mt: 0.5 }}>
           <InfoOutlined fontSize="small" sx={{ mr: 0.5 }} />
-          <Typography variant="caption">{disabledReason}</Typography>
+          <Typography variant="caption">{t(disabledReason)}</Typography>
         </Box>
       )}
     </Box>

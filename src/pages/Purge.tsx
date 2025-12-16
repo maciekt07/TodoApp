@@ -1,4 +1,5 @@
 import { useContext, useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { CustomDialogTitle, TopBar } from "../components";
 import {
   DialogBtn,
@@ -26,6 +27,7 @@ import { showToast } from "../utils";
 
 const Purge = () => {
   const { user, setUser } = useContext(UserContext);
+  const { t } = useTranslation();
   const { tasks } = user;
 
   const [selectedTasks, setSelectedTasks] = useStorageState<UUID[]>(
@@ -37,7 +39,7 @@ const Purge = () => {
   const [deleteAllDialog, setDeleteAllDialog] = useState<boolean>(false);
 
   useEffect(() => {
-    document.title = "Todo App - Purge tasks";
+    document.title = `Todo App - ${t("purge.title", { defaultValue: "Purge Tasks" })}`;
   }, []);
 
   const doneTasks = tasks.filter((task) => task.done);
@@ -134,13 +136,19 @@ const Purge = () => {
 
   return (
     <>
-      <TopBar title="Purge Tasks" />
-      <ManagementHeader>Select Tasks To Purge</ManagementHeader>
+      <TopBar title={t("purge.title", { defaultValue: "Purge Tasks" })} />
+      <ManagementHeader>
+        {t("purge.selectTasks", { defaultValue: "Select Tasks To Purge" })}
+      </ManagementHeader>
       <ManagementContainer>
-        {doneTasks.length > 0 && renderTasks(doneTasks, "Done Tasks")}
-        {notDoneTasks.length > 0 && renderTasks(notDoneTasks, "Not Done Tasks")}
+        {doneTasks.length > 0 &&
+          renderTasks(doneTasks, t("purge.doneTasks", { defaultValue: "Done Tasks" }))}
+        {notDoneTasks.length > 0 &&
+          renderTasks(notDoneTasks, t("purge.notDoneTasks", { defaultValue: "Not Done Tasks" }))}
         {tasks.length === 0 && (
-          <h3 style={{ opacity: 0.8, fontStyle: "italic" }}>You don't have any tasks to purge</h3>
+          <h3 style={{ opacity: 0.8, fontStyle: "italic" }}>
+            {t("purge.noTasks", { defaultValue: "You don't have any tasks to purge" })}
+          </h3>
         )}
       </ManagementContainer>
       <ManagementButtonsContainer>
@@ -148,42 +156,49 @@ const Purge = () => {
           title={
             selectedTasks.length > 0 ? (
               <div>
-                <span>Selected Tasks: </span>
+                <span>{t("purge.selectedTasks", { defaultValue: "Selected Tasks: " })}</span>
                 <span translate="no">{selectedNamesList}</span>
               </div>
             ) : undefined
           }
         >
           <ManagementButton onClick={handlePurgeSelected} disabled={selectedTasks.length === 0}>
-            <DeleteSweepRounded /> &nbsp; Purge Selected{" "}
+            <DeleteSweepRounded /> &nbsp;{" "}
+            {t("purge.purgeSelected", { defaultValue: "Purge Selected" })}{" "}
             {selectedTasks.length > 0 && `[${selectedTasks.length}]`}
           </ManagementButton>
         </Tooltip>
         <ManagementButton onClick={handlePurgeDone} disabled={doneTasks.length === 0}>
-          <DoneAllRounded /> &nbsp; Purge Done
+          <DoneAllRounded /> &nbsp; {t("purge.purgeDone", { defaultValue: "Purge Done" })}
         </ManagementButton>
         <ManagementButton color="error" onClick={handlePurgeAll} disabled={tasks.length === 0}>
-          <DeleteForeverRounded /> &nbsp; Purge All Tasks
+          <DeleteForeverRounded /> &nbsp; {t("purge.purgeAll", { defaultValue: "Purge All Tasks" })}
         </ManagementButton>
       </ManagementButtonsContainer>
       <Dialog open={deleteAllDialog} onClose={() => setDeleteAllDialog(false)}>
         <CustomDialogTitle
-          title="Purge All Tasks"
-          subTitle="Confirm that you want to purge all tasks"
+          title={t("purge.purgeAllConfirmTitle", { defaultValue: "Purge All Tasks" })}
+          subTitle={t("purge.purgeAllConfirmSubtitle", {
+            defaultValue: "Confirm that you want to purge all tasks",
+          })}
           onClose={() => setDeleteAllDialog(false)}
           icon={<DeleteForeverRounded />}
         />
         <DialogContent>
-          This action cannot be undone. Are you sure you want to proceed?
+          {t("purge.purgeAllConfirmContent", {
+            defaultValue: "This action cannot be undone. Are you sure you want to proceed?",
+          })}
         </DialogContent>
         <DialogActions>
-          <DialogBtn onClick={() => setDeleteAllDialog(false)}>Cancel</DialogBtn>
+          <DialogBtn onClick={() => setDeleteAllDialog(false)}>
+            {t("common.cancel", { defaultValue: "Cancel" })}
+          </DialogBtn>
           <DialogBtn
             color="error"
             onClick={() => {
               purgeTasks(tasks);
               setDeleteAllDialog(false);
-              showToast("Purged all tasks");
+              showToast(t("purge.purgedAll", { defaultValue: "Purged all tasks" }));
             }}
           >
             <DeleteForeverRounded /> &nbsp; Purge

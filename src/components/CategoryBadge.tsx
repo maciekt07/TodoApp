@@ -5,6 +5,7 @@ import { UserContext } from "../contexts/UserContext";
 import { fadeIn } from "../styles";
 import type { Category } from "../types/user";
 import { getFontColor } from "../utils";
+import { useTranslation } from "react-i18next";
 
 interface CategoryBadgeProps extends ChipProps, StyledBadgeProps {
   category: Category;
@@ -14,6 +15,7 @@ interface CategoryBadgeProps extends ChipProps, StyledBadgeProps {
 export const CategoryBadge: React.FC<CategoryBadgeProps> = ({ category, emojiSizes, ...props }) => {
   const { user } = useContext(UserContext);
   const { emojisStyle, settings } = user;
+  const { t } = useTranslation();
 
   const emojiSize = emojiSizes
     ? emojisStyle !== EmojiStyle.NATIVE
@@ -24,14 +26,14 @@ export const CategoryBadge: React.FC<CategoryBadgeProps> = ({ category, emojiSiz
   return (
     <StyledCategoryBadge
       key={category.id}
-      label={category.name}
+      label={t(category.name)}
       variant="outlined"
       backgroundclr={category.color}
       glow={settings.enableGlow}
       translate="no"
       avatar={
         category.emoji ? (
-          <Avatar alt={category.name} sx={{ background: "transparent", borderRadius: "0px" }}>
+          <Avatar alt={t(category.name)} sx={{ background: "transparent", borderRadius: "0px" }}>
             <Emoji lazyLoad size={emojiSize} unified={category.emoji} emojiStyle={emojisStyle} />
           </Avatar>
         ) : undefined
