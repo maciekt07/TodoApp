@@ -6,7 +6,7 @@ import styled from "@emotion/styled";
 import { getRandomGreeting } from "../utils";
 
 export const AnimatedGreeting = memo(() => {
-  const [randomGreeting, setRandomGreeting] = useState<string>("");
+  const [randomGreeting, setRandomGreeting] = useState<string>(() => getRandomGreeting());
   const [greetingKey, setGreetingKey] = useState<number>(0);
   const { user } = useContext(UserContext);
   const { emojisStyle } = user;
@@ -35,9 +35,6 @@ export const AnimatedGreeting = memo(() => {
   );
 
   useEffect(() => {
-    const initialGreeting = getRandomGreeting();
-    setRandomGreeting(initialGreeting);
-
     const updateInterval = 6000;
 
     const updateGreeting = (timestamp: number) => {

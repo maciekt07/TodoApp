@@ -1,4 +1,4 @@
-import { useMediaQuery } from "@mui/material";
+import { useEffect, useState } from "react";
 import type { ReduceMotionOption } from "../types/user";
 
 /**
@@ -9,10 +9,30 @@ import type { ReduceMotionOption } from "../types/user";
  * @example const prefersReducedMotion = usePrefersReducedMotion(user.settings.reduceMotion);
  */
 export function usePrefersReducedMotion(reduceMotionSetting: ReduceMotionOption): boolean {
-  const systemPrefersReducedMotion = useMediaQuery("(prefers-reduced-motion: reduce)");
+  const [systemPrefersReducedMotion, setSystemPrefersReducedMotion] = useState(() => {
+    return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  });
 
-  if (reduceMotionSetting === "on") return true;
-  if (reduceMotionSetting === "off") return false;
+  useEffect(() => {
+    const mediaQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
+
+    const handler = (e: MediaQueryListEvent) => {
+      setSystemPrefersReducedMotion(e.matches);
+    };
+
+    mediaQuery.addEventListener("change", handler);
+    return () => {
+      mediaQuery.removeEventListener("change", handler);
+    };
+  }, []);
+
+  if (reduceMotionSetting === "on") {
+    return true;
+  }
+
+  if (reduceMotionSetting === "off") {
+    return false;
+  }
 
   // system fallback
   return systemPrefersReducedMotion;

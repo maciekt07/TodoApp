@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext, useState } from "react";
 import CustomRadioGroup from "../CustomRadioGroup";
 import {
   SectionDescription,
@@ -68,19 +68,24 @@ const reduceMotionOptions: OptionItem<ReduceMotionOption>[] = [
 
 export default function AppearanceTab() {
   const { user, setUser } = useContext(UserContext);
-  const [darkModeValue, setDarkModeValue] = useState<DarkModeOptions>(user.darkmode);
+  const [darkModeValue, setDarkModeValue] = useState<DarkModeOptions>(() => user.darkmode);
   const [reduceMotionValue, setReduceMotionValue] = useState<ReduceMotionOption>(
-    user.settings.reduceMotion,
+    () => user.settings.reduceMotion,
   );
-
   const systemTheme = useSystemTheme();
 
-  // update local state when user settings change (e.g. after P2P sync)
-  useEffect(() => {
-    setDarkModeValue(user.darkmode);
-  }, [user.darkmode, user.emojisStyle]);
+  const disableTransitions = () => {
+    // if (!prefersReducedMotion) return;
+    const root = document.documentElement; // <html>
+    root.classList.add("no-transition");
+
+    requestAnimationFrame(() => {
+      root.classList.remove("no-transition");
+    });
+  };
 
   const handleAppThemeChange = (event: SelectChangeEvent<unknown>) => {
+    disableTransitions();
     const selectedTheme = event.target.value as string;
     setUser((prevUser) => ({
       ...prevUser,
@@ -95,6 +100,7 @@ export default function AppearanceTab() {
         options={darkModeOptions}
         value={darkModeValue}
         onChange={(val) => {
+          disableTransitions();
           setDarkModeValue(val);
           setUser((prevUser) => ({
             ...prevUser,

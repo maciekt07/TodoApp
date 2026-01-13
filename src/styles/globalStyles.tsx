@@ -9,7 +9,9 @@ import { usePrefersReducedMotion } from "../hooks/usePrefersReducedMotion";
 export const GlobalStyles = () => {
   const theme = useTheme();
   const { user } = useContext(UserContext);
-  const prefersReducedMotion = usePrefersReducedMotion(user.settings.reduceMotion);
+
+  const reduceMotionSetting = user?.settings?.reduceMotion ?? "system";
+  const prefersReducedMotion = usePrefersReducedMotion(reduceMotionSetting);
 
   return (
     <Global
@@ -37,7 +39,11 @@ export const GlobalStyles = () => {
           --rsbs-backdrop-bg: rgba(0, 0, 0, 0.3);
           --rsbs-bg: ${theme.darkmode ? "#383838" : "#ffffff"};
         }
-
+        .no-transition *,
+        .no-transition *::before,
+        .no-transition *::after {
+          transition: none !important;
+        }
         input[type="datetime-local"]:placeholder-shown {
           color: transparent !important;
         }
@@ -237,7 +243,8 @@ export const GlobalStyles = () => {
         }
 
         .MuiDialog-container,
-        .MuiPaper-root {
+        .MuiPaper-root,
+        .MuiModal-backdrop {
           ${reduceMotion(theme)}
         }
 
